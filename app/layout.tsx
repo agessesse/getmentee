@@ -1,0 +1,19 @@
+import type { Metadata } from 'next';
+import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'Mentee - Find Your Mentor',
+  description: 'Connect with mentors who understand your path',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className="bg-cream-50 text-navy-900">{children}</body>
+    </html>
+  );
+}
