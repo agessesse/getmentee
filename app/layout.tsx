@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { AuthProvider } from '@/lib/auth-context';
 
 export const metadata: Metadata = {
   title: 'Mentee - Find Your Mentor',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-cream-50 text-navy-900">{children}</body>
+      <body className="bg-cream-50 text-navy-900">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
