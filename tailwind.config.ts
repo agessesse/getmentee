@@ -11,6 +11,8 @@ const config: Config = {
           700: '#3d4a8f',
           600: '#5265b0',
           500: '#6b84c8',
+          100: '#dde3f5',
+          50: '#f0f2fb',
         },
         cream: {
           50: '#fffbf7',
