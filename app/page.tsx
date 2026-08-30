@@ -1,22 +1,32 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, Star, Users, Calendar, MessageSquare, TrendingUp, Shield } from 'lucide-react';
+import IntroSequence from '@/components/marketing/IntroSequence';
+import FloatingProfile from '@/components/marketing/FloatingProfile';
+import StoryCarousel from '@/components/marketing/StoryCarousel';
+import MatchPreview from '@/components/marketing/MatchPreview';
+import LifecycleSection from '@/components/marketing/LifecycleSection';
 
-const MENTOR_LOGOS = [
-  { name: 'Goldman Sachs', abbr: 'GS' },
-  { name: 'McKinsey & Company', abbr: 'McK' },
-  { name: 'Blackstone', abbr: 'BX' },
-  { name: 'Sequoia Capital', abbr: 'SEQ' },
-  { name: 'JPMorgan', abbr: 'JPM' },
-  { name: 'BCG', abbr: 'BCG' },
-  { name: 'KKR', abbr: 'KKR' },
-  { name: 'Google', abbr: 'GOOG' },
+// PLACEHOLDER: Firm names reflect where seed/demo mentors work.
+// They do NOT imply partnership, endorsement, or affiliation with these firms.
+// Replace with actual mentor employer data before public launch.
+const MENTOR_FIRMS = [
+  'Goldman Sachs',
+  'McKinsey & Company',
+  'Blackstone',
+  'Sequoia Capital',
+  'JPMorgan',
+  'BCG',
+  'KKR',
+  'Google',
 ];
 
+// PLACEHOLDER: These statistics are not backed by verified production data.
+// Replace with real Supabase-derived metrics before public launch.
 const STATS = [
-  { value: '500+', label: 'Verified Mentors' },
-  { value: '94%', label: 'Offer Rate' },
+  { value: '500+', label: 'Mentors' },
   { value: '40+', label: 'Top Firms' },
-  { value: '2,000+', label: 'Sessions Completed' },
+  { value: '4.9', label: 'Avg. Session Rating' },
+  { value: '< 48h', label: 'Avg. First Response' },
 ];
 
 const HOW_IT_WORKS = [
@@ -42,23 +52,25 @@ const HOW_IT_WORKS = [
   },
 ];
 
+// PLACEHOLDER: These testimonials are illustrative — not verified real-user stories.
+// Replace with consent-confirmed, real user quotes before public launch.
 const TESTIMONIALS = [
   {
-    quote: 'I went from knowing nobody in finance to landing a Goldman Sachs offer in 4 months. My mentor was everything — real advice, real connections.',
+    quote: 'I went from knowing nobody in finance to landing an offer in four months. My mentor gave me real advice, real context, real connections.',
     name: 'Jordan T.',
-    detail: 'UNC Chapel Hill → Goldman Sachs IBD',
+    detail: 'UNC Chapel Hill → Investment Banking',
     initials: 'JT',
   },
   {
-    quote: 'Case prep with someone who went through McKinsey recruiting a year ago is completely different from any book or app. You can\'t replicate that.',
+    quote: 'Case prep with someone who went through consulting recruiting a year ago is completely different from any book or app. You can\'t replicate that.',
     name: 'Maya W.',
-    detail: 'Darden MBA → McKinsey & Company',
+    detail: 'MBA → Strategy Consulting',
     initials: 'MW',
   },
   {
-    quote: 'I was stuck between Big 4 and IB. My mentor had done both. Three sessions later I had a plan — and a job offer.',
+    quote: 'I was stuck between two career paths. My mentor had done both. Three sessions later I had a plan — and an offer.',
     name: 'Ethan R.',
-    detail: 'Georgia Tech → Stripe PM',
+    detail: 'Georgia Tech → Product Management',
     initials: 'ER',
   },
 ];
@@ -67,12 +79,12 @@ const FEATURES = [
   {
     icon: Users,
     title: 'Curated mentor network',
-    description: 'Every mentor is a verified professional at a top firm. No random freelancers.',
+    description: 'Mentors are professionals at leading firms — not random freelancers.',
   },
   {
     icon: TrendingUp,
-    title: 'Matching that works',
-    description: 'We surface mentors based on your goals, school, industry, and career stage — not just keywords.',
+    title: 'Matching that explains itself',
+    description: 'We surface mentors based on your goals, school, industry, and career stage — and show you exactly why they match.',
   },
   {
     icon: Calendar,
@@ -96,9 +108,46 @@ const FEATURES = [
   },
 ];
 
+// Floating hero profile data — illustrative, not real users
+const FLOATING_PROFILES = [
+  {
+    name: 'Marcus W.',
+    title: 'VP, Investment Banking',
+    company: 'Morgan Stanley',
+    role: 'Mentor' as const,
+    initials: 'MW',
+    color: '#1a1f3a',
+    floatClass: 'animate-float-a',
+    className: 'top-20 -left-8',
+  },
+  {
+    name: 'Priya N.',
+    title: 'Finance, Class of 2026',
+    company: 'University of Virginia',
+    role: 'Mentee' as const,
+    initials: 'PN',
+    color: '#3d4a8f',
+    floatClass: 'animate-float-b',
+    className: '-top-4 right-0',
+  },
+  {
+    name: 'James L.',
+    title: 'Associate',
+    company: 'Bain Capital',
+    role: 'Mentor' as const,
+    initials: 'JL',
+    color: '#5265b0',
+    floatClass: 'animate-float-c',
+    className: 'bottom-8 -right-6',
+  },
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Intro sequence — client component, session-gated, aria-hidden */}
+      <IntroSequence />
+
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -122,68 +171,80 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="pt-36 pb-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-navy-50 text-navy-700 text-xs font-medium px-3 py-1.5 rounded-full mb-8 border border-navy-100">
-            <span className="w-1.5 h-1.5 bg-navy-600 rounded-full" />
-            500+ mentors at Goldman, McKinsey, Blackstone, and beyond
-          </div>
+        <div className="max-w-5xl mx-auto">
+          {/* Floating profiles sit beside the hero on xl screens */}
+          <div className="relative">
+            {FLOATING_PROFILES.map((p) => (
+              <FloatingProfile key={p.name} {...p} />
+            ))}
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-navy-900 leading-[1.05] tracking-tight mb-8">
-            Find the mentor{' '}
-            <span className="relative">
-              <span className="relative z-10">who changes</span>
-              <span
-                aria-hidden="true"
-                className="absolute bottom-2 left-0 right-0 h-3 bg-navy-100 -z-10 -rotate-1"
-              />
-            </span>{' '}
-            everything.
-          </h1>
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 bg-navy-50 text-navy-700 text-xs font-medium px-3 py-1.5 rounded-full mb-8 border border-navy-100">
+                <span className="w-1.5 h-1.5 bg-navy-600 rounded-full" aria-hidden="true" />
+                Mentors from Goldman, McKinsey, Blackstone, and beyond
+              </div>
 
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-12 font-light">
-            Mentee connects ambitious students and early-career professionals
-            with verified mentors at the firms they want to join.
-          </p>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-navy-900 leading-[1.05] tracking-tight mb-8">
+                Find the mentor{' '}
+                <span className="relative">
+                  <span className="relative z-10">who changes</span>
+                  <span
+                    aria-hidden="true"
+                    className="absolute bottom-2 left-0 right-0 h-3 bg-navy-100 -z-10 -rotate-1"
+                  />
+                </span>{' '}
+                everything.
+              </h1>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center gap-2 bg-navy-900 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-navy-800 transition-colors"
-            >
-              Find your mentor
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center gap-2 border border-gray-200 text-navy-900 px-8 py-4 rounded-xl font-medium text-base hover:bg-gray-50 transition-colors"
-            >
-              Become a mentor
-            </Link>
+              <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-12 font-light">
+                Mentee connects ambitious students and early-career professionals
+                with experienced mentors who have already traveled the path they want to pursue.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center justify-center gap-2 bg-navy-900 text-white px-8 py-4 rounded-xl font-medium text-base hover:bg-navy-800 transition-colors"
+                >
+                  Find your mentor
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center justify-center gap-2 border border-gray-200 text-navy-900 px-8 py-4 rounded-xl font-medium text-base hover:bg-gray-50 transition-colors"
+                >
+                  Become a mentor
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Firm logos */}
+      {/* Firm strip */}
       <section className="py-12 border-y border-gray-100 bg-gray-50/50">
         <div className="max-w-5xl mx-auto px-6">
           <p className="text-center text-xs font-medium text-gray-400 uppercase tracking-widest mb-8">
-            Mentors from
+            Our mentors work at
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {MENTOR_LOGOS.map((firm) => (
+            {MENTOR_FIRMS.map((firm) => (
               <span
-                key={firm.abbr}
+                key={firm}
                 className="text-sm font-semibold text-gray-400 hover:text-gray-600 transition-colors cursor-default"
               >
-                {firm.name}
+                {firm}
               </span>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Story Carousel */}
+      <StoryCarousel />
+
       {/* Stats */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {STATS.map((stat) => (
@@ -196,6 +257,47 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Matching preview */}
+      <section className="py-24 px-6 bg-navy-900">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="text-xs font-semibold text-navy-400 uppercase tracking-widest mb-4">
+                Intelligent matching
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                More than a search bar.
+              </h2>
+              <p className="text-navy-300 font-light leading-relaxed mb-8">
+                Mentee doesn&apos;t just list mentors. It helps you understand exactly why
+                a particular person could be relevant to your goals — so your first message
+                isn&apos;t cold, it&apos;s informed.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  'Match on industry, school, goals, and career stage',
+                  'See a clear explanation of why each mentor fits',
+                  'Filter by availability, format, and focus area',
+                  'Save mentors you want to revisit',
+                ].map((point) => (
+                  <li key={point} className="flex items-start gap-3">
+                    <CheckCircle className="w-4 h-4 text-navy-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <span className="text-sm text-navy-300">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex justify-center lg:justify-end">
+              <MatchPreview />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lifecycle */}
+      <LifecycleSection />
+
       {/* How it works */}
       <section className="py-24 px-6 bg-navy-900 text-white">
         <div className="max-w-5xl mx-auto">
@@ -205,7 +307,7 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {HOW_IT_WORKS.map((step) => (
-              <div key={step.step} className="relative">
+              <div key={step.step}>
                 <div className="text-6xl font-bold text-navy-700 mb-4 leading-none">{step.step}</div>
                 <h3 className="text-lg font-semibold mb-3">{step.title}</h3>
                 <p className="text-navy-300 text-sm leading-relaxed font-light">{step.description}</p>
@@ -231,9 +333,12 @@ export default function LandingPage() {
             {FEATURES.map((feature) => {
               const Icon = feature.icon;
               return (
-                <div key={feature.title} className="p-6 rounded-2xl border border-gray-100 hover:border-navy-100 hover:shadow-sm transition-all">
+                <div
+                  key={feature.title}
+                  className="p-6 rounded-2xl border border-gray-100 hover:border-navy-100 hover:shadow-sm transition-all"
+                >
                   <div className="w-10 h-10 bg-navy-50 rounded-xl flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-navy-700" />
+                    <Icon className="w-5 h-5 text-navy-700" aria-hidden="true" />
                   </div>
                   <h3 className="font-semibold text-navy-900 mb-2">{feature.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">{feature.description}</p>
@@ -248,7 +353,7 @@ export default function LandingPage() {
       <section className="py-24 px-6 bg-cream-50">
         <div className="max-w-5xl mx-auto">
           <div className="mb-16 text-center">
-            <div className="flex justify-center gap-1 mb-4">
+            <div className="flex justify-center gap-1 mb-4" aria-hidden="true">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
               ))}
@@ -264,7 +369,7 @@ export default function LandingPage() {
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-navy-100 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0">
                     <span className="text-xs font-bold text-navy-700">{t.initials}</span>
                   </div>
                   <div>
@@ -285,14 +390,15 @@ export default function LandingPage() {
             Ready to find your mentor?
           </h2>
           <p className="text-navy-300 text-lg font-light mb-10 max-w-xl mx-auto">
-            Join thousands of students and professionals who found their edge through the right relationship.
+            Join students and professionals building meaningful relationships with mentors
+            who have already traveled their path.
           </p>
           <Link
             href="/signup"
             className="inline-flex items-center gap-2 bg-white text-navy-900 px-10 py-4 rounded-xl font-semibold text-base hover:bg-gray-100 transition-colors"
           >
             Get started — it&apos;s free
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
           <p className="text-navy-500 text-sm mt-6">No credit card required.</p>
         </div>
