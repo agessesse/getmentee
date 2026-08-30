@@ -23,29 +23,19 @@
   to   { transform: translateX(0); }
 }
 
-@keyframes float-a {
-  0%, 100% { transform: translateY(0px) rotate(-1deg); }
-  50%       { transform: translateY(-10px) rotate(-1deg); }
+/* Intro streaks — thin energy lines racing toward center */
+@keyframes streak-l {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  18%  { opacity: 1; }
+  78%  { opacity: 0.55; }
+  100% { transform: translateX(22%); opacity: 0; }
 }
 
-@keyframes float-b {
-  0%, 100% { transform: translateY(0px) rotate(1deg); }
-  50%       { transform: translateY(-14px) rotate(1deg); }
-}
-
-@keyframes float-c {
-  0%, 100% { transform: translateY(0px) rotate(0.5deg); }
-  50%       { transform: translateY(-8px) rotate(0.5deg); }
-}
-
-@keyframes intro-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes intro-fade-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+@keyframes streak-r {
+  0%   { transform: translateX(100%); opacity: 0; }
+  18%  { opacity: 1; }
+  78%  { opacity: 0.55; }
+  100% { transform: translateX(-22%); opacity: 0; }
 }
 
 .animate-carousel-left {
@@ -56,24 +46,9 @@
   animation: carousel-right 45s linear infinite;
 }
 
-.animate-float-a {
-  animation: float-a 6s ease-in-out infinite;
-}
-
-.animate-float-b {
-  animation: float-b 7s ease-in-out infinite;
-}
-
-.animate-float-c {
-  animation: float-c 8s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-carousel-left,
-  .animate-carousel-right,
-  .animate-float-a,
-  .animate-float-b,
-  .animate-float-c {
+  .animate-carousel-right {
     animation: none;
   }
 }
