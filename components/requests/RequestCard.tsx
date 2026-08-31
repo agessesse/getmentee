@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
+import { GraduationCap, Briefcase } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -23,6 +24,11 @@ interface RequestCardProps {
   onDecline?: () => void;
   onCancel?: () => void;
   actionLoading?: boolean;
+  // Context fields for mentor view (populated from mentee profile)
+  menteeHeadline?: string | null;
+  menteeUniversity?: string | null;
+  menteeBio?: string | null;
+  menteeExperienceLevel?: string | null;
 }
 
 const statusVariant: Record<RequestStatus, 'green' | 'red' | 'yellow'> = {
@@ -45,12 +51,21 @@ export default function RequestCard({
   onDecline,
   onCancel,
   actionLoading,
+  menteeHeadline,
+  menteeUniversity,
+  menteeBio,
+  menteeExperienceLevel,
 }: RequestCardProps) {
   const fullName = `${partnerFirstName} ${partnerLastName}`;
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const showMenteeContext =
+    userRole === 'mentor' &&
+    status === 'pending' &&
+    (menteeHeadline || menteeUniversity || menteeBio || menteeExperienceLevel);
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card className="flex flex-col gap-4">
+      {/* Header row */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <Avatar src={partnerAvatarUrl} name={fullName} size="md" />
@@ -67,26 +82,54 @@ export default function RequestCard({
         <Badge label={status} variant={statusVariant[status]} />
       </div>
 
+      {/* Mentee context — shown to mentor on pending requests */}
+      {showMenteeContext && (
+        <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+          {menteeHeadline && (
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+              <p className="text-sm text-gray-700">{menteeHeadline}</p>
+            </div>
+          )}
+          {menteeUniversity && (
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+              <p className="text-sm text-gray-700">{menteeUniversity}</p>
+            </div>
+          )}
+          {menteeExperienceLevel && (
+            <p className="text-xs text-gray-400 capitalize">
+              {menteeExperienceLevel} level
+            </p>
+          )}
+          {menteeBio && (
+            <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+              {menteeBio}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Goals */}
       {goals && (
-        <div className="text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
-          <span className="font-medium text-gray-700">Goals: </span>
+        <div className="text-sm text-gray-600 bg-navy-50 rounded-lg px-3 py-2">
+          <span className="font-medium text-navy-700">Their goals: </span>
           {goals}
         </div>
       )}
 
+      {/* Personal message */}
       {message && (
-        <p className="text-sm text-gray-600 italic">&ldquo;{message}&rdquo;</p>
+        <p className="text-sm text-gray-600 italic border-l-2 border-gray-200 pl-3">
+          &ldquo;{message}&rdquo;
+        </p>
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 mt-1">
+      <div className="flex gap-2 mt-1 flex-wrap">
         {userRole === 'mentor' && status === 'pending' && (
           <>
-            <Button
-              size="sm"
-              onClick={onApprove}
-              loading={actionLoading}
-            >
+            <Button size="sm" onClick={onApprove} loading={actionLoading}>
               Approve
             </Button>
             <Button

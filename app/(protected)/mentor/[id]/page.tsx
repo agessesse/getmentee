@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Star, MapPin, Building2, GraduationCap, Globe, CheckCircle, ArrowLeft, Bookmark, BookmarkCheck, Link as LinkIcon } from 'lucide-react';
+import { Star, MapPin, Building2, GraduationCap, Globe, CheckCircle, ArrowLeft, Bookmark, BookmarkCheck, Link as LinkIcon, Award } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
@@ -34,6 +34,7 @@ interface MentorDetail {
     title: string | null;
     industry: string | null;
     is_verified: boolean;
+    is_founding_mentor: boolean;
     max_mentees: number;
     communication_preference: string | null;
     languages: string[];
@@ -234,10 +235,16 @@ export default function MentorProfilePage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-2xl font-bold text-navy-900">{fullName}</h1>
                   {mp.is_verified && (
                     <CheckCircle className="w-5 h-5 text-blue-500" />
+                  )}
+                  {mp.is_founding_mentor && (
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
+                      <Award className="w-3 h-3" />
+                      Founding Mentor
+                    </span>
                   )}
                 </div>
                 {mentor.headline && (

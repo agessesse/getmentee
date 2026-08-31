@@ -15,6 +15,7 @@ import {
   Network,
   Users,
   X,
+  BarChart2,
 } from 'lucide-react';
 
 interface NavItem {
@@ -37,6 +38,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/discover', label: 'Discover', icon: Search, menteeOnly: true },
       { href: '/mentees', label: 'Mentees', icon: Users, mentorOnly: true },
+      { href: '/impact', label: 'My Impact', icon: BarChart2, mentorOnly: true },
     ],
   },
   {
