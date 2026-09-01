@@ -63,7 +63,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     // TODO: Confirm title and company with Christopher before publishing.
     title: '—',
     company: '—',
-    headshot: '/mentors/christopher-floyd.jpg',
+    headshot: '/people/christopher-floyd.jpg',
     accentColor: '#1a1f3a',
     // Founder-written editorial bio — requires Christopher's approval before launch.
     shortBio:
@@ -80,7 +80,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     // TODO: Confirm title and company with Peter before publishing.
     title: '—',
     company: '—',
-    headshot: '/mentors/peter-keane.jpg',
+    headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
     // Founder-written editorial bio — requires Peter's approval before launch.
     shortBio:
@@ -97,7 +97,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     // TODO: Confirm all fields with David before publishing.
     title: '—',
     company: '—',
-    headshot: '/mentors/david-sheffer.jpg',
+    headshot: '/people/david-sheffer.jpg',
     accentColor: '#3d4a8f',
     shortBio:
       'David has been part of the network of mentors and professionals who have helped shape the founder\'s academic and professional development.',
