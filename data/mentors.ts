@@ -6,7 +6,9 @@
 //   • Headshots live in /public/people/ — use the path shown in `headshot`.
 //   • Set whyLabel to 'In their words' ONLY after the mentor has personally
 //     approved the whyIMentor text as their own statement.
-//   • To add a mentor, append an object matching the Mentor interface.
+//   • imagePosition: CSS object-position value for the portrait crop.
+//     Format: '<x%> <y%>' e.g. '50% 15%' — x=horizontal, y=vertical offset.
+//     Leave undefined to use the default '50% 20%'.
 //
 // IMPORTANT: All text fields must use verified information only.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,10 +41,17 @@ export interface Mentor {
   whyIMentor: string;
   /** Verified mentee count — leave null until confirmed */
   menteesMentored: string | null;
+  /**
+   * CSS object-position for the portrait crop: '<x%> <y%>'.
+   * Determined per-image to keep the face centered in the frame.
+   * Defaults to '50% 20%' if omitted.
+   */
+  imagePosition?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Featured mentors — exactly six people who directly inspired Mentee.
+// imagePosition values are set per-image based on actual photo inspection.
 // ─────────────────────────────────────────────────────────────────────────────
 export const FEATURED_MENTORS: Mentor[] = [
   {
@@ -52,6 +61,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Bondway.ai',
     headshot: '/people/christopher-floyd.jpg',
     accentColor: '#1a1f3a',
+    imagePosition: '50% 15%',
     shortBio:
       "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
@@ -66,6 +76,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: '—',
     headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
+    imagePosition: '50% 12%',
     shortBio:
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
@@ -80,6 +91,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'UNC Kenan-Flagler Business School',
     headshot: '/people/travis-melvin.jpg',
     accentColor: '#3d4a8f',
+    imagePosition: '50% 10%',
     shortBio:
       'Finance, real-estate and public-policy professional affiliated with UNC Kenan-Flagler. Travis founded the J.R.R. Scholarship Foundation, mentors through Wall Street Oasis, and guest-lectures at universities across the country.',
     whyIMentor:
@@ -94,6 +106,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'MyEyeDr.',
     headshot: '/people/david-sheffer.jpg',
     accentColor: '#1a1f3a',
+    imagePosition: '46% 12%',
     shortBio:
       'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
     whyIMentor:
@@ -108,6 +121,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Engineered Land Solutions',
     headshot: '/people/drew-nations.jpg',
     accentColor: '#2d3668',
+    imagePosition: '50% 20%',
     shortBio:
       'Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew built his company at the intersection of commercial real estate, land development and finance.',
     whyIMentor:
@@ -122,6 +136,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Beds for Kids',
     headshot: '/people/zach-smith.jpg',
     accentColor: '#3d4a8f',
+    imagePosition: '50% 10%',
     shortBio:
       'Executive Director of Beds for Kids and UNC alumnus. Zach grew from delivery driver to leading the organization over roughly nine years, building operational and leadership experience in the nonprofit sector.',
     whyIMentor:

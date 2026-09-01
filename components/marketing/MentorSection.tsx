@@ -19,19 +19,20 @@ function MentorProfile({
   return (
     <article className="grid grid-cols-1 lg:grid-cols-2 border-t border-gray-100">
       {/* Portrait */}
-      <div className={`lg:h-[580px] ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
+      <div className={`lg:h-[500px] ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
         <MentorPortrait
           name={mentor.name}
           headshot={mentor.headshot}
           initials={mentor.initials}
           accentColor={mentor.accentColor}
           priority={index === 0}
+          imagePosition={mentor.imagePosition}
         />
       </div>
 
       {/* Content */}
       <div
-        className={`flex flex-col justify-center px-8 py-14 lg:px-16 lg:py-20 lg:h-[580px] overflow-y-auto ${
+        className={`flex flex-col justify-center px-8 py-10 lg:px-16 lg:py-14 lg:h-[500px] overflow-y-auto ${
           reversed ? 'lg:order-1' : 'lg:order-2'
         }`}
       >
@@ -48,13 +49,13 @@ function MentorProfile({
         </div>
 
         {/* Bio */}
-        <p className="text-gray-600 leading-relaxed mb-10 font-light text-[15px]">
+        <p className="text-gray-600 leading-relaxed mb-6 font-light text-[15px]">
           {mentor.shortBio}
         </p>
 
         {/* Why I Mentor — rendered only when there is real content */}
         {!isPlaceholder && (
-          <div className="mb-10">
+          <div className="mb-6">
             <div className="flex items-center gap-3 mb-4">
               <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.15em]">
                 Why I mentor
@@ -104,7 +105,7 @@ export default function MentorSection() {
     <section aria-labelledby="mentors-heading">
 
       {/* Philosophy intro */}
-      <div className="px-8 py-20 lg:py-28 max-w-3xl mx-auto text-center">
+      <div className="px-8 py-14 lg:py-20 max-w-3xl mx-auto text-center">
         <p className="text-xs font-semibold text-navy-600 uppercase tracking-[0.15em] mb-6">
           The people behind Mentee
         </p>
@@ -139,7 +140,7 @@ export default function MentorSection() {
       </div>
 
       {/* Bridge into the product */}
-      <div className="px-8 py-16 lg:py-20 max-w-2xl mx-auto text-center border-t border-gray-100">
+      <div className="px-8 py-10 lg:py-12 max-w-2xl mx-auto text-center border-t border-gray-100">
         <p className="text-gray-400 text-base font-light leading-relaxed">
           The relationships that change trajectories shouldn&apos;t be left to chance.
           <br className="hidden md:block" />

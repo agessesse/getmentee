@@ -36,9 +36,9 @@ const STEPS = [
 
 export default function LifecycleSection() {
   return (
-    <section className="py-24 px-6 bg-gray-50">
+    <section className="py-16 px-6 bg-gray-50">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <p className="text-xs font-semibold text-navy-600 uppercase tracking-widest mb-3">
             Not a directory. A relationship.
           </p>

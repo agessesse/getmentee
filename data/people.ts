@@ -66,6 +66,11 @@ export interface SourcedNearPeer {
   /** Factual third-person bio */
   bio: string;
   image?: string;
+  /**
+   * CSS object-position for the portrait crop: '<x%> <y%>'.
+   * Defaults to '50% 20%' if omitted.
+   */
+  portraitPosition?: string;
   interestTags: string[];
   distinctions?: string[];
   organization?: string;
@@ -283,6 +288,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     location: 'Chapel Hill, North Carolina',
     bio: "UNC student studying innovation in global development and public policy with a minor in data science. Bethlehem's experience spans business, community engagement, global development and student leadership, including Kenan-Flagler Assured Admission, Honors Carolina and NC Fellows.",
     image: '/people/bethlehem-agegne.png',
+    portraitPosition: '50% 10%',
     interestTags: [
       'Leadership',
       'Global Development',
@@ -320,6 +326,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     location: 'Chapel Hill, North Carolina',
     bio: 'UNC student with experience across investment banking and capital markets, including an incoming Markets Summer Analyst role at Wells Fargo and prior investment banking experience at Envoy Capital Advisors.',
     image: '/people/abel-gessesse.jpg',
+    portraitPosition: '52% 15%',
     interestTags: [
       'Fixed Income',
       'Markets',
@@ -357,6 +364,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     location: 'Chapel Hill, North Carolina',
     bio: 'UNC student, builder and founder of PlugVerse, a technology platform for local music booking. Cooper works at the intersection of entrepreneurship, software, product and music.',
     image: '/people/cooper-delo.png',
+    portraitPosition: '42% 8%',
     interestTags: [
       'Entrepreneurship',
       'Startups',
@@ -393,6 +401,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     location: 'Boston, Massachusetts',
     bio: "Columbia student and QuestBridge Scholar studying psychology with a business-management concentration. Teagan's experience includes Goldman Sachs and mentoring children through Columbia Youth Adventurers.",
     image: '/people/teagan-fitzgerald.png',
+    portraitPosition: '50% 8%',
     interestTags: [
       'Psychology',
       'Business',
@@ -428,6 +437,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     location: 'New York, New York',
     bio: 'Duke student and Reginaldo Howard Memorial Scholar focused on political economy, global markets and international policy. Jaden has markets experience at J.P. Morgan spanning Fixed Income Treasury Sales and Securitized Products Sales.',
     image: '/people/jaden-small.jpg',
+    portraitPosition: '50% 18%',
     interestTags: [
       'Markets',
       'Fixed Income',

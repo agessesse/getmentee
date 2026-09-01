@@ -9,54 +9,52 @@ import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 
 function MenteeCard({ person }: { person: SourcedNearPeer }) {
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
-  const displaySchool =
-    person.school.length > 48 ? person.school.slice(0, 45) + '…' : person.school;
 
   return (
-    <article className="snap-start flex-none w-[288px] sm:w-[320px] bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow">
-      {/* Avatar */}
-      <div className="flex items-center gap-4">
+    <article className="snap-start flex-none w-[220px] sm:w-[252px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
+      {/* Portrait */}
+      <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
         {person.image ? (
-          <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
-            <Image
-              src={person.image}
-              alt={`${person.firstName} ${person.lastName}`}
-              fill
-              className="object-cover object-top"
-              sizes="56px"
-            />
-          </div>
+          <Image
+            src={person.image}
+            alt={`${person.firstName} ${person.lastName}`}
+            fill
+            className="object-cover"
+            style={{ objectPosition: person.portraitPosition ?? '50% 20%' }}
+            sizes="(max-width: 640px) 220px, 252px"
+          />
         ) : (
-          <div className="w-14 h-14 rounded-xl flex-shrink-0 bg-navy-100 flex items-center justify-center">
-            <span className="text-lg font-bold text-navy-600">{initials}</span>
+          <div className="w-full h-full flex items-center justify-center bg-navy-100">
+            <span className="text-3xl font-bold text-navy-500">{initials}</span>
           </div>
         )}
-        <div className="min-w-0">
-          <p className="font-semibold text-navy-900 text-sm leading-tight">
-            {person.firstName} {person.lastName}
-          </p>
-          <p className="text-xs text-gray-400 mt-0.5 leading-tight line-clamp-2">{displaySchool}</p>
-          {person.expectedGraduation && (
-            <p className="text-[10px] text-navy-500 font-medium mt-0.5">
-              Class of {person.expectedGraduation}
-            </p>
-          )}
-        </div>
       </div>
 
-      {/* Bio */}
-      <p className="text-xs text-gray-500 leading-relaxed font-light line-clamp-3">{person.bio}</p>
+      {/* Info */}
+      <div className="p-4">
+        <p className="font-semibold text-navy-900 text-sm leading-tight">
+          {person.firstName} {person.lastName}
+        </p>
+        <p className="text-[11px] text-gray-400 mt-0.5 leading-tight line-clamp-1">
+          {person.school.length > 32 ? person.school.slice(0, 30) + '…' : person.school}
+        </p>
+        {person.expectedGraduation && (
+          <p className="text-[10px] text-navy-500 font-medium mt-0.5">
+            Class of {person.expectedGraduation}
+          </p>
+        )}
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 mt-auto">
-        {person.interestTags.slice(0, 4).map((tag) => (
-          <span
-            key={tag}
-            className="text-[10px] font-medium text-navy-700 bg-navy-50 px-2 py-0.5 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1 mt-3">
+          {person.interestTags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] font-medium text-navy-700 bg-navy-50 px-2 py-0.5 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </article>
   );
@@ -87,14 +85,14 @@ export default function MenteeCarousel() {
   function scroll(direction: 'left' | 'right') {
     const el = trackRef.current;
     if (!el) return;
-    const cardWidth = el.firstElementChild?.clientWidth ?? 320;
+    const cardWidth = el.firstElementChild?.clientWidth ?? 252;
     el.scrollBy({ left: direction === 'right' ? cardWidth + 16 : -(cardWidth + 16), behavior: 'smooth' });
   }
 
   return (
-    <section className="py-20 bg-gray-50/60" aria-labelledby="mentees-heading">
+    <section className="py-12 bg-gray-50/60" aria-labelledby="mentees-heading">
       {/* Header */}
-      <div className="max-w-5xl mx-auto px-6 mb-10 flex items-end justify-between">
+      <div className="max-w-5xl mx-auto px-6 mb-8 flex items-end justify-between">
         <div>
           <p className="text-xs font-semibold text-navy-600 uppercase tracking-[0.15em] mb-3">
             Current mentees
@@ -165,7 +163,7 @@ export default function MenteeCarousel() {
         </div>
       </div>
 
-      {/* Mobile nav dots */}
+      {/* Mobile nav */}
       <div className="flex sm:hidden justify-center gap-2 mt-6 px-6">
         <button
           onClick={() => scroll('left')}

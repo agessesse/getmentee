@@ -9,6 +9,7 @@ interface MentorPortraitProps {
   initials: string;
   accentColor: string;
   priority?: boolean;
+  imagePosition?: string;
 }
 
 export default function MentorPortrait({
@@ -17,6 +18,7 @@ export default function MentorPortrait({
   initials,
   accentColor,
   priority = false,
+  imagePosition,
 }: MentorPortraitProps) {
   const [imgError, setImgError] = useState(false);
 
@@ -39,7 +41,8 @@ export default function MentorPortrait({
         src={headshot}
         alt={`Portrait of ${name}`}
         fill
-        className="object-cover object-top"
+        className="object-cover"
+        style={{ objectPosition: imagePosition ?? '50% 20%' }}
         sizes="(max-width: 1024px) 100vw, 45vw"
         priority={priority}
         onError={() => setImgError(true)}

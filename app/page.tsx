@@ -109,7 +109,7 @@ export default function LandingPage() {
       </nav>
 
       {/* B — Hero */}
-      <section className="pt-40 pb-28 px-6">
+      <section className="pt-32 pb-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-xs font-semibold text-navy-600 uppercase tracking-[0.18em] mb-8">
             Mentorship changes trajectories
@@ -127,7 +127,7 @@ export default function LandingPage() {
             everything.
           </h1>
 
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-12 font-light">
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-8 font-light">
             Mentee connects ambitious students and early-career professionals
             with people who have already traveled the path ahead of them.
           </p>
@@ -151,9 +151,9 @@ export default function LandingPage() {
       </section>
 
       {/* C — Employer credibility strip */}
-      <section className="py-12 border-y border-gray-100 bg-gray-50/50">
+      <section className="py-8 border-y border-gray-100 bg-gray-50/50">
         <div className="max-w-5xl mx-auto px-6">
-          <p className="text-center text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-8">
+          <p className="text-center text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-6">
             Our mentors work at
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
@@ -176,7 +176,7 @@ export default function LandingPage() {
       <MenteeCarousel />
 
       {/* H — Intelligent matching */}
-      <section className="py-24 px-6 bg-navy-900">
+      <section className="py-16 px-6 bg-navy-900">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -216,9 +216,9 @@ export default function LandingPage() {
       <LifecycleSection />
 
       {/* G — How it works */}
-      <section className="py-24 px-6 bg-navy-900 text-white">
+      <section className="py-16 px-6 bg-navy-900 text-white">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-16 text-center">
+          <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How it works</h2>
             <p className="text-navy-300 text-lg font-light">
               From signup to your first session in under a week.
@@ -237,9 +237,9 @@ export default function LandingPage() {
       </section>
 
       {/* G — Platform features */}
-      <section className="py-24 px-6">
+      <section className="py-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-16 text-center">
+          <div className="mb-10 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
               Built for serious outcomes
             </h2>
@@ -269,7 +269,7 @@ export default function LandingPage() {
       </section>
 
       {/* H — Final CTA */}
-      <section className="py-28 px-6 bg-navy-900 text-white text-center">
+      <section className="py-20 px-6 bg-navy-900 text-white text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs font-semibold text-navy-400 uppercase tracking-[0.18em] mb-8">
             Get started
@@ -277,7 +277,7 @@ export default function LandingPage() {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
             Ready to find your mentor?
           </h2>
-          <p className="text-navy-300 text-lg font-light mb-12 max-w-xl mx-auto">
+          <p className="text-navy-300 text-lg font-light mb-8 max-w-xl mx-auto">
             Join students and professionals building relationships with mentors
             who have already traveled their path.
           </p>
@@ -293,7 +293,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-gray-100">
+      <footer className="py-10 px-6 border-t border-gray-100">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="text-lg font-bold text-navy-900 tracking-tight">Mentee</span>
           <div className="flex gap-8 text-sm text-gray-400">
