@@ -5,6 +5,7 @@ import Modal from '@/components/ui/Modal';
 import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
+import VoiceInputButton from '@/components/voice/VoiceInputButton';
 
 interface RequestModalProps {
   open: boolean;
@@ -57,20 +58,42 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Textarea
-          label="Why do you want to work with this mentor? (optional)"
-          placeholder="Share what drew you to this mentor and what you hope to learn..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={3}
-        />
-        <Textarea
-          label="What are your goals? (optional)"
-          placeholder="e.g. Break into tech, learn React, improve system design skills..."
-          value={goals}
-          onChange={(e) => setGoals(e.target.value)}
-          rows={2}
-        />
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-gray-700">
+              Why do you want to work with this mentor? <span className="text-gray-400">(optional)</span>
+            </span>
+            <VoiceInputButton
+              context="message"
+              onTranscript={(t) => setMessage((p) => p ? `${p} ${t}` : t)}
+              disabled={loading}
+            />
+          </div>
+          <Textarea
+            placeholder="Share what drew you to this mentor and what you hope to learn…"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={3}
+          />
+        </div>
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-gray-700">
+              What are your goals? <span className="text-gray-400">(optional)</span>
+            </span>
+            <VoiceInputButton
+              context="goal"
+              onTranscript={(t) => setGoals((p) => p ? `${p} ${t}` : t)}
+              disabled={loading}
+            />
+          </div>
+          <Textarea
+            placeholder="e.g. Break into investment banking, improve my financial modeling skills…"
+            value={goals}
+            onChange={(e) => setGoals(e.target.value)}
+            rows={2}
+          />
+        </div>
 
         {error && (
           <p className="text-sm text-red-600">{error}</p>

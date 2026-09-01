@@ -77,13 +77,11 @@ export interface SourcedNearPeer {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SOURCED MENTORS (7)
+// SOURCED MENTORS (6)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SOURCED_MENTORS: SourcedProfile[] = [
   {
-    // Initial sourced profile.
-    // Professional fields derived from publicly available professional information.
     slug: 'christopher-floyd',
     firstName: 'Christopher',
     lastName: 'Floyd',
@@ -104,15 +102,10 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
       'Career Development',
       'Leadership',
     ],
-    education: [
-      { institution: 'University of Pennsylvania' },
-    ],
+    education: [{ institution: 'University of Pennsylvania' }],
     experience: [
       { title: 'Head of Institutional Sales', organization: 'Bondway.ai' },
-      {
-        title: 'Managing Director, Co-Head of Investment Grade Sales & Trading',
-        organization: 'Wells Fargo',
-      },
+      { title: 'Managing Director, Co-Head of Investment Grade Sales & Trading', organization: 'Wells Fargo' },
       { organization: 'Morgan Stanley' },
       { organization: 'SMBC' },
       { organization: 'Fifth Third Securities' },
@@ -122,12 +115,27 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     is_founding_mentor: false,
   },
   {
-    // Initial sourced profile.
+    slug: 'peter-keane',
+    firstName: 'Peter',
+    lastName: 'Keane',
+    // Employer and title not confirmed — omitted per data policy.
+    location: 'Charlotte, North Carolina',
+    bio: "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
+    image: '/people/peter-keane.jpg',
+    expertiseTags: [
+      'Career Development',
+      'Leadership',
+      'Mentorship',
+      'Professional Guidance',
+    ],
+    status: 'sourced',
+    is_founding_mentor: false,
+  },
+  {
     slug: 'travis-melvin',
     firstName: 'Travis',
     lastName: 'Melvin',
     headline: 'UNC Kenan-Flagler Business School',
-    // Exact current title not confirmed — displaying organization only.
     organization: 'UNC Kenan-Flagler Business School',
     location: 'Chapel Hill, North Carolina',
     bio: 'Finance, real-estate and public-policy professional affiliated with UNC Kenan-Flagler, with experience spanning investing, education and mentorship. Travis also founded the J.R.R. Scholarship Foundation and mentors through Wall Street Oasis.',
@@ -151,15 +159,12 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
       'Guest Lecturer, University of Novi Sad',
       'Series 65 · SIE · Prior Series 79',
     ],
-    education: [
-      { institution: 'London School of Economics and Political Science' },
-    ],
+    education: [{ institution: 'London School of Economics and Political Science' }],
     linkedInUrl: 'https://www.linkedin.com/in/travis-melvin/',
     status: 'sourced',
     is_founding_mentor: false,
   },
   {
-    // Initial sourced profile.
     slug: 'david-sheffer',
     firstName: 'David',
     lastName: 'Sheffer',
@@ -181,10 +186,7 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
       'Leadership',
     ],
     education: [
-      {
-        institution: 'University of North Carolina at Chapel Hill',
-        degree: 'Bachelor of Business Administration',
-      },
+      { institution: 'University of North Carolina at Chapel Hill', degree: 'Bachelor of Business Administration' },
     ],
     experience: [
       { title: 'Senior Advisor', organization: 'MyEyeDr.' },
@@ -198,44 +200,6 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     is_founding_mentor: false,
   },
   {
-    // Initial sourced profile.
-    slug: 'mark-decherd',
-    firstName: 'Mark',
-    lastName: 'Decherd',
-    headline: 'First Vice President · CBRE',
-    title: 'First Vice President',
-    organization: 'CBRE',
-    location: 'Charlotte, North Carolina',
-    bio: 'First Vice President at CBRE with more than three decades of commercial real-estate experience. Mark specializes in tenant representation, negotiations, acquisitions, dispositions and real-estate strategy.',
-    image: '/people/mark-decherd.jpg',
-    expertiseTags: [
-      'Commercial Real Estate',
-      'Tenant Representation',
-      'Real Estate Finance',
-      'Negotiation',
-      'Acquisitions',
-      'Career Development',
-      'Charlotte',
-      'Leadership',
-      'Business',
-    ],
-    education: [
-      {
-        institution: 'University of Texas at Austin',
-        degree: 'BBA',
-        field: 'Accounting',
-      },
-    ],
-    experience: [
-      { title: 'First Vice President', organization: 'CBRE', description: 'Since 2007' },
-      { organization: 'Trammell Crow Company', description: 'Approximately 18 years' },
-    ],
-    linkedInUrl: 'https://www.linkedin.com/in/markdecherd1/',
-    status: 'sourced',
-    is_founding_mentor: false,
-  },
-  {
-    // Initial sourced profile.
     slug: 'drew-nations',
     firstName: 'Drew',
     lastName: 'Nations',
@@ -243,7 +207,7 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     title: 'Founder & CEO',
     organization: 'Engineered Land Solutions',
     location: 'Charlotte, North Carolina',
-    bio: "Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew's background spans real-estate development, finance, land strategy and entrepreneurship. Areas where Drew may be particularly helpful include entrepreneurship, commercial real estate, development and navigating UNC Kenan-Flagler.",
+    bio: "Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew's background spans real-estate development, finance, land strategy and entrepreneurship.",
     image: '/people/drew-nations.jpg',
     expertiseTags: [
       'Entrepreneurship',
@@ -257,11 +221,7 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
       'Founding a Company',
     ],
     education: [
-      {
-        institution: 'UNC Kenan-Flagler Business School',
-        field: 'Finance and Real Estate',
-        years: '2011–2015',
-      },
+      { institution: 'UNC Kenan-Flagler Business School', field: 'Finance and Real Estate', years: '2011–2015' },
     ],
     experience: [
       { title: 'Founder & CEO', organization: 'Engineered Land Solutions' },
@@ -272,7 +232,6 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     is_founding_mentor: false,
   },
   {
-    // Initial sourced profile.
     slug: 'zach-smith',
     firstName: 'Zach',
     lastName: 'Smith',
@@ -293,63 +252,15 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
       'Charlotte',
       'Mission-Driven Careers',
     ],
-    education: [
-      {
-        institution: 'University of North Carolina at Chapel Hill',
-        years: '2013–2017',
-      },
-    ],
+    education: [{ institution: 'University of North Carolina at Chapel Hill', years: '2013–2017' }],
     experience: [
       {
         title: 'Executive Director',
         organization: 'Beds for Kids',
-        description:
-          'Grew through delivery driver, volunteer coordinator, grant writer, and Director of Operations roles over approximately nine years.',
+        description: 'Grew through delivery driver, volunteer coordinator, grant writer, and Director of Operations roles over approximately nine years.',
       },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/zach-smith-201a3990/',
-    status: 'sourced',
-    is_founding_mentor: false,
-  },
-  {
-    // Initial sourced profile.
-    slug: 'will-varnum',
-    firstName: 'Will',
-    lastName: 'Varnum',
-    headline: 'Co-Founder · Alyra Technology',
-    title: 'Co-Founder',
-    organization: 'Alyra Technology',
-    location: 'Charlotte, North Carolina',
-    bio: 'Co-founder of Alyra Technology and CLT Lifting Club, building businesses at the intersection of technology, operations and community. Will focuses on practical AI implementation, entrepreneurship and disciplined company building.',
-    image: '/people/will-varnum.png',
-    expertiseTags: [
-      'Entrepreneurship',
-      'Artificial Intelligence',
-      'Startups',
-      'Technology',
-      'Business Operations',
-      'Bootstrapping',
-      'Finance',
-      'Leadership',
-      'Charlotte',
-    ],
-    distinctions: [
-      'Co-Founder, Alyra Technology',
-      'Co-Founder, CLT Lifting Club',
-      'Bloomberg Market Concepts',
-    ],
-    education: [
-      { institution: 'Liberty University' },
-    ],
-    experience: [
-      {
-        title: 'Co-Founder',
-        organization: 'Alyra Technology',
-        description: 'AI consulting and implementation for businesses.',
-      },
-      { title: 'Co-Founder', organization: 'CLT Lifting Club' },
-    ],
-    linkedInUrl: 'https://www.linkedin.com/in/willvarnum/',
     status: 'sourced',
     is_founding_mentor: false,
   },
@@ -364,7 +275,6 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
 
 export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
   {
-    // Initial sourced profile.
     slug: 'bethlehem-agegne',
     firstName: 'Bethlehem',
     lastName: 'Agegne',
@@ -397,14 +307,11 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
         years: '2024–2028',
       },
     ],
-    experience: [
-      { organization: 'JPMorganChase', title: undefined },
-    ],
+    experience: [{ organization: 'JPMorganChase' }],
     linkedInUrl: 'https://www.linkedin.com/in/bethlehem-agegne/',
     status: 'sourced',
   },
   {
-    // Initial sourced profile.
     slug: 'abel-gessesse',
     firstName: 'Abel',
     lastName: 'Gessesse',
@@ -412,8 +319,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     expectedGraduation: '2028',
     location: 'Chapel Hill, North Carolina',
     bio: 'UNC student with experience across investment banking and capital markets, including an incoming Markets Summer Analyst role at Wells Fargo and prior investment banking experience at Envoy Capital Advisors.',
-    // No headshot provided — will use initials fallback.
-    image: undefined,
+    image: '/people/abel-gessesse.jpg',
     interestTags: [
       'Fixed Income',
       'Markets',
@@ -436,20 +342,13 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     experience: [
-      {
-        title: 'Incoming Markets Summer Analyst — Fixed Income Strategy & Portfolio Management',
-        organization: 'Wells Fargo',
-      },
-      {
-        title: 'Investment Banking Summer Analyst',
-        organization: 'Envoy Capital Advisors',
-      },
+      { title: 'Incoming Markets Summer Analyst — Fixed Income Strategy & Portfolio Management', organization: 'Wells Fargo' },
+      { title: 'Investment Banking Summer Analyst', organization: 'Envoy Capital Advisors' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/abelgessesse/',
     status: 'sourced',
   },
   {
-    // Initial sourced profile.
     slug: 'cooper-delo',
     firstName: 'Cooper',
     lastName: 'Delo',
@@ -474,25 +373,19 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       '3rd place, Innovate Carolina Luby Pitch Competition ($20,000 award)',
     ],
     education: [
-      {
-        institution: 'UNC Kenan-Flagler Business School',
-        field: 'Business and Computer Science',
-        years: '2024–2028',
-      },
+      { institution: 'UNC Kenan-Flagler Business School', field: 'Business and Computer Science', years: '2024–2028' },
     ],
     experience: [
       {
         title: 'Founder',
         organization: 'PlugVerse',
-        description:
-          'Technology platform connecting local and college musicians with venues. Placed 3rd in Innovate Carolina\'s Luby Pitch Competition.',
+        description: "Technology platform connecting local and college musicians with venues. Placed 3rd in Innovate Carolina's Luby Pitch Competition.",
       },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/cooperdelo/',
     status: 'sourced',
   },
   {
-    // Initial sourced profile.
     slug: 'teagan-fitzgerald',
     firstName: 'Teagan',
     lastName: 'Fitzgerald',
@@ -511,21 +404,12 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       'Community Service',
       'Columbia',
     ],
-    distinctions: [
-      'QuestBridge Scholar',
-    ],
+    distinctions: ['QuestBridge Scholar'],
     education: [
-      {
-        institution: 'Columbia University',
-        field: 'Psychology; Special Concentration in Business Management',
-      },
+      { institution: 'Columbia University', field: 'Psychology; Special Concentration in Business Management' },
     ],
     experience: [
-      {
-        // Exact title not confirmed — displaying organization only.
-        organization: 'Goldman Sachs',
-        title: undefined,
-      },
+      { organization: 'Goldman Sachs' },
       {
         title: 'Mentor',
         organization: 'Columbia Youth Adventurers',
@@ -536,7 +420,6 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     status: 'sourced',
   },
   {
-    // Initial sourced profile.
     slug: 'jaden-small',
     firstName: 'Jaden',
     lastName: 'Small',
@@ -569,10 +452,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     experience: [
-      {
-        organization: 'J.P. Morgan',
-        description: 'Fixed Income Treasury Sales; Securitized Products Sales.',
-      },
+      { organization: 'J.P. Morgan', description: 'Fixed Income Treasury Sales; Securitized Products Sales.' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/jadensmall/',
     status: 'sourced',

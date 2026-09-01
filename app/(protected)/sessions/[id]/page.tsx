@@ -7,6 +7,8 @@ import {
   Video, Clock, ExternalLink, Star, ArrowLeft, CheckCircle, Circle,
   Plus, Check, FileText, MessageSquare,
 } from 'lucide-react';
+import VoiceInputButton from '@/components/voice/VoiceInputButton';
+import SessionRecorder from '@/components/voice/SessionRecorder';
 import { createClient } from '@/lib/supabase/client';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
@@ -496,28 +498,55 @@ export default function SessionDetailPage() {
                 <h2 className="text-base font-semibold text-navy-900">
                   Session Recap
                 </h2>
-                <button
-                  onClick={saveRecap}
-                  disabled={recapLoading}
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
-                >
-                  {recapSaved ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-green-500" /> Saved
-                    </>
-                  ) : recapLoading ? (
-                    'Saving...'
-                  ) : (
-                    'Save recap'
-                  )}
-                </button>
+                <div className="flex items-center gap-3">
+                  <VoiceInputButton
+                    context="note"
+                    onTranscript={(t) => setRecap((p) => p ? `${p} ${t}` : t)}
+                    disabled={recapLoading}
+                  />
+                  <button
+                    onClick={saveRecap}
+                    disabled={recapLoading}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                  >
+                    {recapSaved ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-green-500" /> Saved
+                      </>
+                    ) : recapLoading ? (
+                      'Saving...'
+                    ) : (
+                      'Save recap'
+                    )}
+                  </button>
+                </div>
               </div>
               <textarea
                 value={recap}
                 onChange={(e) => setRecap(e.target.value)}
                 rows={5}
-                placeholder={`Summarize what was covered, decisions made, and key takeaways for ${mentee.first_name}…`}
+                placeholder={`Speak or type: summarize what was covered, decisions made, and key takeaways for ${mentee.first_name}…`}
                 className="w-full text-sm text-gray-700 placeholder-gray-400 focus:outline-none resize-none leading-relaxed"
+              />
+            </div>
+          )}
+
+          {/* Session Notes (voice recording + AI summary) */}
+          {process.env.NEXT_PUBLIC_VOICE_ENABLED !== 'false' && (
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-base font-semibold text-navy-900">Session Recording</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Transcribe your session and generate a private summary.
+                  </p>
+                </div>
+              </div>
+              <SessionRecorder
+                sessionId={session?.id ?? ''}
+                mentorName={`${mentor.first_name} ${mentor.last_name}`}
+                menteeName={`${mentee.first_name} ${mentee.last_name}`}
+                disabled={session?.status === 'cancelled'}
               />
             </div>
           )}

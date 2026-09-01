@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle, Calendar, MessageSquare, TrendingUp, Shield, Users } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import MentorSection from '@/components/marketing/MentorSection';
+import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
 
@@ -168,10 +169,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* D + E + F — Philosophy intro → five mentor profiles */}
+      {/* D + E + F — Philosophy intro → six mentor profiles */}
       <MentorSection />
 
-      {/* G — Intelligent matching */}
+      {/* G — Current mentees carousel */}
+      <MenteeCarousel />
+
+      {/* H — Intelligent matching */}
       <section className="py-24 px-6 bg-navy-900">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

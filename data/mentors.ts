@@ -1,22 +1,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// MENTOR DATA — single source of truth for all mentor information on the site.
+// MENTOR DATA — single source of truth for the marketing mentor section.
 //
 // HOW TO EDIT:
 //   • Fill in or update any field below.
-//   • Drop headshot images into /public/mentors/ using the filename shown in
-//     the `headshot` field. Supported: .jpg, .jpeg, .png, .webp
-//   • If a headshot doesn't exist yet, the site shows a tasteful initials
-//     fallback automatically — no code changes needed.
+//   • Headshots live in /public/people/ — use the path shown in `headshot`.
 //   • Set whyLabel to 'In their words' ONLY after the mentor has personally
 //     approved the whyIMentor text as their own statement.
 //   • To add a mentor, append an object matching the Mentor interface.
 //
-// IMPORTANT: All text fields marked with TODO or "coming soon" must be replaced
-// with verified, mentor-approved content before public launch.
+// IMPORTANT: All text fields must use verified information only.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface Mentor {
-  /** Full display name */
+  /** Full display name including credential if applicable */
   name: string;
   /** One or two initials for the fallback avatar */
   initials: string;
@@ -24,51 +20,40 @@ export interface Mentor {
   title: string;
   /** Employer or organisation — use '—' until verified */
   company: string;
-  /**
-   * Path to the portrait photo relative to /public/.
-   * Drop the file at /public/mentors/<filename>.
-   * If missing, the page renders an initials avatar — no code change needed.
-   */
+  /** Path to portrait relative to /public/ */
   headshot: string;
-  /** Hex colour used for the initials fallback avatar background */
+  /** Hex colour used for initials fallback avatar background */
   accentColor: string;
   /** 1–2 sentences describing the mentor's background */
   shortBio: string;
   /**
-   * The mentor's motivation for mentoring.
-   * CRITICAL: this text must NOT be presented as a direct quotation unless
-   * the mentor has personally read and approved it as their own words.
-   * Use whyLabel to control how it is displayed.
-   */
-  whyIMentor: string;
-  /**
-   * Controls how whyIMentor is presented on the page:
-   *   'In their words'     — mentor has approved this as a direct quote.
-   *   'Founder perspective' — editorial copy written by the founder; displayed
-   *                           as a perspective, never as a mentor quotation.
+   * Controls how whyIMentor is presented:
+   *   'In their words'      — mentor has approved this as a direct quote.
+   *   'Founder perspective' — editorial copy written by the founder.
    */
   whyLabel: 'In their words' | 'Founder perspective';
-  /** e.g. "12+" — leave null until you have a verified number */
+  /**
+   * The mentor's motivation for mentoring.
+   * CRITICAL: NOT a direct quotation unless whyLabel === 'In their words'.
+   */
+  whyIMentor: string;
+  /** Verified mentee count — leave null until confirmed */
   menteesMentored: string | null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Featured mentors — the five people whose relationships directly inspired
-// the creation of Mentee. Edit each entry as information is confirmed.
+// Featured mentors — exactly six people who directly inspired Mentee.
 // ─────────────────────────────────────────────────────────────────────────────
 export const FEATURED_MENTORS: Mentor[] = [
   {
-    name: 'Christopher Floyd',
+    name: 'Christopher Floyd, CFA',
     initials: 'CF',
-    // TODO: Confirm title and company with Christopher before publishing.
-    title: '—',
-    company: '—',
+    title: 'Head of Institutional Sales',
+    company: 'Bondway.ai',
     headshot: '/people/christopher-floyd.jpg',
     accentColor: '#1a1f3a',
-    // Founder-written editorial bio — requires Christopher's approval before launch.
     shortBio:
-      'Christopher has been a mentor to Mentee\'s founder since the summer after high school, providing years of perspective, encouragement, and professional guidance.',
-    // Founder-written perspective — NOT a direct quotation from Christopher.
+      "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
       'Mentorship is most powerful when it becomes a long-term investment in someone\'s trajectory.',
     whyLabel: 'Founder perspective',
@@ -77,64 +62,70 @@ export const FEATURED_MENTORS: Mentor[] = [
   {
     name: 'Peter Keane',
     initials: 'PK',
-    // TODO: Confirm title and company with Peter before publishing.
     title: '—',
     company: '—',
     headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
-    // Founder-written editorial bio — requires Peter's approval before launch.
     shortBio:
-      'Peter has supported Mentee\'s founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.',
-    // Founder-written perspective — NOT a direct quotation from Peter.
+      "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
       'Good mentorship goes beyond advice. It means being willing to advocate for someone when an opportunity can change their trajectory.',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },
   {
-    name: 'David Sheffer',
-    initials: 'DS',
-    // TODO: Confirm all fields with David before publishing.
+    name: 'Travis Melvin',
+    initials: 'TM',
     title: '—',
-    company: '—',
-    headshot: '/people/david-sheffer.jpg',
+    company: 'UNC Kenan-Flagler Business School',
+    headshot: '/people/travis-melvin.jpg',
     accentColor: '#3d4a8f',
     shortBio:
-      'David has been part of the network of mentors and professionals who have helped shape the founder\'s academic and professional development.',
-    // TODO: Replace with David's own words or a founder perspective once confirmed.
-    whyIMentor: 'Mentoring story coming soon.',
-    whyLabel: 'Founder perspective',
-    menteesMentored: null,
-  },
-  {
-    name: 'Melvin',
-    initials: 'M',
-    // TODO: Confirm full name, title, and company before publishing.
-    title: '—',
-    company: '—',
-    headshot: '/mentors/melvin.jpg',
-    accentColor: '#5265b0',
-    // TODO: Replace with verified bio once confirmed.
-    shortBio: 'Mentor profile coming soon.',
-    // TODO: Replace with Melvin's own words or a founder perspective once confirmed.
-    whyIMentor: 'Mentoring story coming soon.',
-    whyLabel: 'Founder perspective',
-    menteesMentored: null,
-  },
-  {
-    name: 'Talisha Ukoh',
-    initials: 'TU',
-    // Title kept conservative — do not upgrade without confirmation.
-    title: 'Career Prep Coach',
-    company: 'MLT / Management Leadership for Tomorrow',
-    headshot: '/mentors/talisha-ukoh.jpg',
-    accentColor: '#5265b0',
-    // Founder-written editorial bio — requires Talisha's approval before launch.
-    shortBio:
-      'Talisha has supported Mentee\'s founder through MLT Career Prep, providing structured coaching and professional-development guidance.',
-    // Founder-written perspective — NOT a direct quotation from Talisha.
+      'Finance, real-estate and public-policy professional affiliated with UNC Kenan-Flagler. Travis founded the J.R.R. Scholarship Foundation, mentors through Wall Street Oasis, and guest-lectures at universities across the country.',
     whyIMentor:
-      'Mentorship helps people turn potential into deliberate action through accountability, perspective, and access.',
+      'Access to finance careers has historically depended on who you know. Mentorship is one of the most direct ways to change that.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'David Sheffer',
+    initials: 'DS',
+    title: 'Senior Advisor',
+    company: 'MyEyeDr.',
+    headshot: '/people/david-sheffer.jpg',
+    accentColor: '#1a1f3a',
+    shortBio:
+      'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
+    whyIMentor:
+      'The most useful thing an experienced person can do is give someone an honest view of how decisions actually play out — not how they look on paper.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Drew Nations',
+    initials: 'DN',
+    title: 'Founder & CEO',
+    company: 'Engineered Land Solutions',
+    headshot: '/people/drew-nations.jpg',
+    accentColor: '#2d3668',
+    shortBio:
+      'Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew built his company at the intersection of commercial real estate, land development and finance.',
+    whyIMentor:
+      'Entrepreneurship is hard to navigate without someone who has already made the early mistakes. That context is exactly what a mentor can provide.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Zach Smith',
+    initials: 'ZS',
+    title: 'Executive Director',
+    company: 'Beds for Kids',
+    headshot: '/people/zach-smith.jpg',
+    accentColor: '#3d4a8f',
+    shortBio:
+      'Executive Director of Beds for Kids and UNC alumnus. Zach grew from delivery driver to leading the organization over roughly nine years, building operational and leadership experience in the nonprofit sector.',
+    whyIMentor:
+      'A career defined by mission is its own kind of challenge. Mentorship can make mission-driven paths feel achievable instead of idealistic.',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },

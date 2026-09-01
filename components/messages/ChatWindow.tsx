@@ -5,6 +5,7 @@ import { Send } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import MessageBubble from './MessageBubble';
 import Spinner from '@/components/ui/Spinner';
+import VoiceInputButton from '@/components/voice/VoiceInputButton';
 
 interface Message {
   id: string;
@@ -143,11 +144,16 @@ export default function ChatWindow({ mentorshipId, currentUserId }: ChatWindowPr
 
       {/* Input */}
       <form onSubmit={sendMessage} className="flex items-center gap-2 p-4 border-t border-gray-200 bg-white">
+        <VoiceInputButton
+          context="message"
+          onTranscript={(text) => setInput((prev) => prev ? `${prev} ${text}` : text)}
+          disabled={sending}
+        />
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type or speak a message…"
           className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-navy-500 bg-white"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) sendMessage(e as unknown as React.FormEvent);
