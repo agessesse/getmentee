@@ -12,33 +12,40 @@ function MentorProfile({
   index: number;
 }) {
   const hasVerifiedQuote = mentor.whyLabel === 'In their words';
-  const isPlaceholder    =
+  const isPlaceholder =
     mentor.whyIMentor === 'Mentoring story coming soon.' ||
-    mentor.shortBio    === 'Mentor profile coming soon.';
+    mentor.shortBio === 'Mentor profile coming soon.';
 
   return (
     <article className="grid grid-cols-1 lg:grid-cols-2 border-t border-gray-100">
-      {/* Portrait */}
-      <div className={`lg:h-[580px] ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
-        <MentorPortrait
-          name={mentor.name}
-          headshot={mentor.headshot}
-          initials={mentor.initials}
-          accentColor={mentor.accentColor}
-          priority={index === 0}
-          imagePosition={mentor.imagePosition}
-        />
+      {/* Portrait — subtle scale on hover */}
+      <div
+        className={`lg:h-[620px] overflow-hidden ${reversed ? 'lg:order-2' : 'lg:order-1'}`}
+      >
+        <div className="w-full h-full portrait-hover">
+          <MentorPortrait
+            name={mentor.name}
+            headshot={mentor.headshot}
+            initials={mentor.initials}
+            accentColor={mentor.accentColor}
+            priority={index === 0}
+            imagePosition={mentor.imagePosition}
+          />
+        </div>
       </div>
 
       {/* Content */}
       <div
-        className={`flex flex-col justify-center px-8 py-10 lg:px-16 lg:py-14 lg:h-[580px] overflow-y-auto ${
+        className={`flex flex-col justify-center px-8 py-12 lg:px-16 lg:py-16 ${
           reversed ? 'lg:order-1' : 'lg:order-2'
         }`}
       >
-        {/* Name + title/company */}
-        <div className="mb-6">
-          <h3 className="text-2xl md:text-3xl font-bold text-navy-900 mb-1">
+        {/* Name + title */}
+        <div className="mb-7">
+          <h3
+            className="font-bold text-navy-900 mb-1.5 leading-tight"
+            style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}
+          >
             {mentor.name}
           </h3>
           {(mentor.title !== '—' || mentor.company !== '—') && (
@@ -49,15 +56,15 @@ function MentorProfile({
         </div>
 
         {/* Bio */}
-        <p className="text-gray-600 leading-relaxed mb-6 font-light text-[15px]">
+        <p className="text-gray-600 leading-relaxed mb-7 font-light text-[15px]">
           {mentor.shortBio}
         </p>
 
-        {/* Why I Mentor — rendered only when there is real content */}
+        {/* Why I Mentor */}
         {!isPlaceholder && (
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-4">
-              <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.15em]">
+              <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
                 Why I mentor
               </p>
               {!hasVerifiedQuote && (
@@ -68,14 +75,12 @@ function MentorProfile({
             </div>
 
             {hasVerifiedQuote ? (
-              // Verified direct quote — displayed as a blockquote
-              <blockquote className="border-l-2 border-navy-300 pl-5">
+              <blockquote className="border-l-2 border-navy-200 pl-5">
                 <p className="text-navy-900 text-[15px] leading-relaxed font-light italic">
                   &ldquo;{mentor.whyIMentor}&rdquo;
                 </p>
               </blockquote>
             ) : (
-              // Founder-written editorial copy — plain text, no quotation marks
               <div className="border-l-2 border-gray-200 pl-5">
                 <p className="text-gray-700 text-[15px] leading-relaxed font-light">
                   {mentor.whyIMentor}
@@ -104,30 +109,30 @@ export default function MentorSection() {
   return (
     <section aria-labelledby="mentors-heading">
 
-      {/* Philosophy intro */}
-      <div className="px-8 py-14 lg:py-20 max-w-3xl mx-auto text-center">
-        <p className="text-xs font-semibold text-navy-600 uppercase tracking-[0.15em] mb-6">
+      {/* Philosophy intro — left-aligned on desktop */}
+      <div className="px-6 lg:px-10 py-16 lg:py-24 max-w-6xl mx-auto">
+        <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-6">
           The people behind Mentee
         </p>
         <h2
           id="mentors-heading"
-          className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-900 leading-[1.1] mb-8"
+          className="font-bold text-navy-900 leading-[1.05] mb-8 max-w-3xl"
+          style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
         >
-          Before Mentee was a platform,
+          Before Mentee was a platform,<br className="hidden md:block" />
           it was a pattern.
         </h2>
-        <p className="text-gray-500 text-lg font-light leading-relaxed max-w-2xl mx-auto">
+        <p className="text-gray-500 text-lg font-light leading-relaxed max-w-2xl">
           Pivotal mentors showed up at pivotal moments — through guidance,
           advocacy, accountability, and access. Each one changed the
           trajectory of what was possible.
-          <br className="hidden md:block" />
-          <span className="block mt-4">
-            Access to people like this should not depend on luck.
-          </span>
+        </p>
+        <p className="text-gray-400 text-base font-light leading-relaxed max-w-xl mt-5">
+          Access to people like this should not depend on luck.
         </p>
       </div>
 
-      {/* Mentor profiles — alternating layout */}
+      {/* Mentor profiles — alternating layout, full-bleed */}
       <div className="border-t border-gray-100">
         {FEATURED_MENTORS.map((mentor, i) => (
           <MentorProfile
@@ -140,10 +145,9 @@ export default function MentorSection() {
       </div>
 
       {/* Bridge into the product */}
-      <div className="px-8 py-10 lg:py-12 max-w-2xl mx-auto text-center border-t border-gray-100">
-        <p className="text-gray-400 text-base font-light leading-relaxed">
+      <div className="px-6 lg:px-10 py-12 lg:py-16 max-w-6xl mx-auto border-t border-gray-100">
+        <p className="text-gray-400 text-lg font-light leading-relaxed max-w-xl">
           The relationships that change trajectories shouldn&apos;t be left to chance.
-          <br className="hidden md:block" />
           Mentee is how you find them.
         </p>
       </div>

@@ -1,96 +1,91 @@
-import {
-  Search,
-  MessageSquare,
-  Calendar,
-  Target,
-  TrendingUp,
-} from 'lucide-react';
+// ─── Mentorship Flywheel ──────────────────────────────────────────────────────
+// Replaces the icon-based step flow with an editorial numbered sequence.
+// The concept: mentorship compounds — those who receive it eventually give it back.
 
-const STEPS = [
+const STAGES = [
   {
-    icon: Search,
-    label: 'Match',
-    description: 'Discover mentors based on your goals, industry, and career stage.',
+    number: '01',
+    headline: "Receive guidance\nthat changes what’s possible.",
+    body: "The right mentor opens doors that didn’t exist before — not through connections alone, but through knowledge, honest feedback, and years of context.",
   },
   {
-    icon: MessageSquare,
-    label: 'Connect',
-    description: 'Send a request with a personal note. Start a conversation.',
+    number: '02',
+    headline: 'Build real capability.',
+    body: 'Structured sessions, clear goals, and accountability transform potential into performance. Every session moves something forward.',
   },
   {
-    icon: Calendar,
-    label: 'Meet',
-    description: 'Schedule structured 1:1 sessions with agendas built in.',
+    number: '03',
+    headline: 'Reach the other side.',
+    body: 'The opportunities, offers, and outcomes that once felt out of reach become the new baseline. Then the perspective shift happens.',
   },
   {
-    icon: Target,
-    label: 'Act',
-    description: 'Set goals and action items. Leave every session with next steps.',
+    number: '04',
+    headline: 'Become the mentor.',
+    body: 'The people who received mentorship give it back. Every relationship creates the next one. The network deepens with each cycle.',
   },
-  {
-    icon: TrendingUp,
-    label: 'Grow',
-    description: 'Track your progress. Build the relationship over time.',
-  },
-];
+] as const;
 
 export default function LifecycleSection() {
   return (
-    <section className="py-16 px-6 bg-gray-50">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="text-xs font-semibold text-navy-600 uppercase tracking-widest mb-3">
-            Not a directory. A relationship.
+    <section className="py-24 px-6 lg:px-10 border-t border-gray-100" aria-labelledby="flywheel-heading">
+      <div className="max-w-6xl mx-auto">
+
+        {/* Section heading */}
+        <div className="mb-16">
+          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
+            The mentorship flywheel
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
-            Mentee supports every step.
+          <h2
+            id="flywheel-heading"
+            className="font-bold text-navy-900 leading-tight"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)' }}
+          >
+            Mentorship<br />compounds.
           </h2>
-          <p className="text-gray-500 font-light max-w-xl mx-auto">
-            Finding a mentor is just the beginning. Mentee gives you the tools to build
-            a relationship that actually changes your trajectory.
+          <p className="text-gray-500 font-light mt-4 max-w-sm leading-relaxed text-[15px]">
+            Those who receive great mentorship eventually become the mentors.
+            Every relationship creates the next one.
           </p>
         </div>
 
-        {/* Desktop: horizontal connected steps */}
-        <div className="hidden md:flex items-start gap-0">
-          {STEPS.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div key={step.label} className="flex-1 flex flex-col items-center text-center relative">
-                {/* Connector line */}
-                {i < STEPS.length - 1 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-6 left-1/2 w-full h-px bg-gradient-to-r from-navy-200 to-navy-100"
-                  />
-                )}
-                <div className="relative z-10 w-12 h-12 rounded-full bg-white border-2 border-navy-200 flex items-center justify-center mb-4 shadow-sm">
-                  <Icon className="w-5 h-5 text-navy-700" aria-hidden="true" />
-                </div>
-                <span className="text-sm font-bold text-navy-900 mb-2">{step.label}</span>
-                <p className="text-xs text-gray-500 leading-relaxed px-2">{step.description}</p>
+        {/* Four stages — 2-column grid on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+          {STAGES.map((stage) => (
+            <div key={stage.number} className="flex gap-6 group">
+
+              {/* Large number as visual anchor */}
+              <div
+                className="flex-none font-bold text-gray-100 leading-none select-none transition-colors duration-500 group-hover:text-navy-100"
+                style={{ fontSize: 'clamp(4rem, 8vw, 5rem)' }}
+                aria-hidden="true"
+              >
+                {stage.number}
               </div>
-            );
-          })}
+
+              {/* Content */}
+              <div className="pt-2">
+                <h3 className="text-lg font-bold text-navy-900 mb-3 leading-snug whitespace-pre-line">
+                  {stage.headline}
+                </h3>
+                <p className="text-gray-500 text-[15px] font-light leading-relaxed">
+                  {stage.body}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Mobile: vertical list */}
-        <div className="flex md:hidden flex-col gap-6">
-          {STEPS.map((step) => {
-            const Icon = step.icon;
-            return (
-              <div key={step.label} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-white border-2 border-navy-200 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <Icon className="w-4 h-4 text-navy-700" aria-hidden="true" />
-                </div>
-                <div>
-                  <span className="text-sm font-bold text-navy-900 block mb-1">{step.label}</span>
-                  <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
-                </div>
-              </div>
-            );
-          })}
+        {/* Closing editorial statement */}
+        <div className="mt-16 pt-12 border-t border-gray-100">
+          <p
+            className="font-light text-gray-400 leading-relaxed max-w-2xl"
+            style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)' }}
+          >
+            The cycle begins with one introduction.
+            The impact multiplies.
+          </p>
         </div>
+
       </div>
     </section>
   );
