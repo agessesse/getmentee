@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
+import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 
 // ─── LinkedIn icon — inline SVG, no extra dependency ─────────────────────────
 function LinkedInIcon({ className }: { className?: string }) {
@@ -12,6 +13,24 @@ function LinkedInIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </svg>
+  );
+}
+
+// ─── Logo chip ────────────────────────────────────────────────────────────────
+function LogoChip({ name, url, dim = false }: { name: string; url: string; dim?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt={name}
+      title={name}
+      width={16}
+      height={16}
+      className={`rounded-sm object-contain flex-none ${dim ? 'opacity-40' : 'opacity-75'}`}
+      onError={() => setFailed(true)}
+    />
   );
 }
 
@@ -76,6 +95,26 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
         </div>
       </Link>
 
+      {/* ── Logo chips — school + employer(s) ── */}
+      {(() => {
+        const schoolUrl = person.school ? schoolFaviconUrl(person.school) : null;
+        const employerUrls = (person.experience ?? [])
+          .map((e) => ({ name: e.organization, url: companyFaviconUrl(e.organization) }))
+          .filter((e): e is { name: string; url: string } => e.url !== null);
+        if (!schoolUrl && employerUrls.length === 0) return null;
+        return (
+          <div className="flex items-center gap-1.5 mt-2 px-0.5 flex-wrap">
+            {schoolUrl && <LogoChip name={person.school!} url={schoolUrl} />}
+            {schoolUrl && employerUrls.length > 0 && (
+              <span className="w-px h-3 bg-gray-200 flex-none" aria-hidden="true" />
+            )}
+            {employerUrls.map((e) => (
+              <LogoChip key={e.name} name={e.name} url={e.url} dim />
+            ))}
+          </div>
+        );
+      })()}
+
       {/* ── LinkedIn — OUTSIDE the Link to avoid nested <a> ── */}
       {person.linkedInUrl && (
         <a
@@ -83,7 +122,7 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`View ${fullName} on LinkedIn`}
-          className="inline-flex items-center gap-1.5 mt-2.5 px-0.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
+          className="inline-flex items-center gap-1.5 mt-2 px-0.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
         >
           <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
           <span className="text-[11px] font-medium">LinkedIn</span>

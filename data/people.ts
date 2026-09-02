@@ -565,10 +565,12 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     firstName: 'Pablo',
     lastName: 'N.',
     // Full last name not yet verified — placeholder until confirmed
+    school: 'Queens University',
     bio: 'Student building a path in finance and career development.',
     image: '/people/pablo-n.jpg',
     portraitPosition: '50% 30%',
     interestTags: ['Finance', 'Career Development', 'Leadership'],
+    linkedInUrl: 'https://www.linkedin.com/in/pabloon/',
     status: 'sourced',
   },
 ];

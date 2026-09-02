@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
+import { companyFaviconUrl } from '@/lib/logos';
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -12,10 +13,32 @@ function LinkedInIcon({ className }: { className?: string }) {
   );
 }
 
+function LogoChip({ name, url, dim = false }: { name: string; url: string; dim?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt={name}
+      title={name}
+      width={18}
+      height={18}
+      className={`rounded-sm object-contain flex-none transition-opacity ${dim ? 'opacity-40' : 'opacity-80'}`}
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
   const [imgError, setImgError] = useState(false);
   const showTitle = mentor.title !== '—';
   const showCompany = mentor.company !== '—';
+
+  const currentLogoUrl = companyFaviconUrl(mentor.company);
+  const priorLogos = (mentor.priorCompanies ?? [])
+    .map((name) => ({ name, url: companyFaviconUrl(name) }))
+    .filter((c): c is { name: string; url: string } => c.url !== null);
 
   return (
     <article className="group" aria-label={mentor.name}>
@@ -42,7 +65,7 @@ function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
         )}
       </div>
 
-      {/* Identity */}
+      {/* Placard */}
       <div className="px-0.5">
         <p className="font-bold text-navy-900 text-[15px] leading-tight">{mentor.name}</p>
         {showTitle && (
@@ -51,19 +74,35 @@ function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
         {showCompany && (
           <p className="text-[12px] font-semibold text-navy-700 leading-snug mt-0.5">{mentor.company}</p>
         )}
+
+        {/* Logo chips — current (full) + prior (dim) */}
+        {(currentLogoUrl || priorLogos.length > 0) && (
+          <div className="flex items-center gap-2 mt-2.5 flex-wrap">
+            {currentLogoUrl && (
+              <LogoChip name={mentor.company} url={currentLogoUrl} dim={false} />
+            )}
+            {priorLogos.length > 0 && currentLogoUrl && (
+              <span className="w-px h-3 bg-gray-200 flex-none" aria-hidden="true" />
+            )}
+            {priorLogos.map((co) => (
+              <LogoChip key={co.name} name={co.name} url={co.url} dim />
+            ))}
+          </div>
+        )}
+
         {mentor.linkedInUrl ? (
           <a
             href={mentor.linkedInUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`View ${mentor.name} on LinkedIn`}
-            className="inline-flex items-center gap-1.5 mt-2 text-gray-400 hover:text-[#0A66C2] transition-colors"
+            className="inline-flex items-center gap-1.5 mt-2.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
           >
             <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
             <span className="text-[11px] font-medium">LinkedIn</span>
           </a>
         ) : (
-          <div className="mt-2 h-5" aria-hidden="true" />
+          <div className="mt-2.5 h-5" aria-hidden="true" />
         )}
       </div>
     </article>

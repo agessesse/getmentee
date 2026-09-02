@@ -55,6 +55,11 @@ export interface Mentor {
   thumbnailPosition?: string;
   /** LinkedIn profile URL — omit if not available or unverified */
   linkedInUrl?: string;
+  /**
+   * Prior employers shown as logo chips on the card.
+   * Use the exact string key from COMPANY_LOGO_DOMAINS in lib/logos.ts.
+   */
+  priorCompanies?: string[];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -72,6 +77,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 5%',
     thumbnailPosition: '50% 10%',
     linkedInUrl: 'https://www.linkedin.com/in/christopher-floyd/',
+    priorCompanies: ['Wells Fargo', 'Morgan Stanley', 'SMBC', 'Fifth Third Securities'],
     shortBio:
       "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
