@@ -9,6 +9,7 @@ import Spinner from '@/components/ui/Spinner';
 
 interface Conversation {
   mentorshipId: string;
+  partnerId: string;
   partnerFirstName: string;
   partnerLastName: string;
   partnerAvatarUrl: string | null;
@@ -78,6 +79,7 @@ export default function MessagesPage() {
 
           return {
             mentorshipId: m.id,
+            partnerId,
             partnerFirstName: partner?.first_name ?? 'Unknown',
             partnerLastName: partner?.last_name ?? '',
             partnerAvatarUrl: partner?.avatar_url ?? null,
@@ -113,6 +115,8 @@ export default function MessagesPage() {
     );
   }
 
+  const activeConversation = conversations.find((c) => c.mentorshipId === activeMentorshipId);
+
   return (
     <div className="h-[calc(100vh-8rem)] flex rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
       {/* Conversation list */}
@@ -129,11 +133,14 @@ export default function MessagesPage() {
 
       {/* Chat window */}
       <div className="flex-1 flex flex-col min-w-0">
-        {activeMentorshipId && currentUserId ? (
+        {activeMentorshipId && currentUserId && activeConversation ? (
           <ChatWindow
             key={activeMentorshipId}
             mentorshipId={activeMentorshipId}
             currentUserId={currentUserId}
+            partnerId={activeConversation.partnerId}
+            partnerName={`${activeConversation.partnerFirstName} ${activeConversation.partnerLastName}`}
+            partnerAvatarUrl={activeConversation.partnerAvatarUrl}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">

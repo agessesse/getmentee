@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import RequestModal from '@/components/mentor/RequestModal';
 import Avatar from '@/components/ui/Avatar';
@@ -236,7 +237,7 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
 
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-navy-900 truncate">{fullName}</p>
-        <p className="text-xs text-gray-500 mt-0.5 truncate">{person.school}</p>
+        {person.school && <p className="text-xs text-gray-500 mt-0.5 truncate">{person.school}</p>}
         {person.expectedGraduation && (
           <p className="text-xs text-gray-400">Class of {person.expectedGraduation}</p>
         )}
@@ -389,6 +390,7 @@ function LiveMentorCard({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DiscoverPage() {
+  const router = useRouter();
   const [liveMentors, setLiveMentors] = useState<LiveMentorData[]>([]);
   const [existingRequests, setExistingRequests] = useState<Set<string>>(new Set());
   const [savedMentors, setSavedMentors] = useState<Set<string>>(new Set());
@@ -431,7 +433,10 @@ export default function DiscoverPage() {
 
     setMenteeProfile(menteeProf);
 
-    if (profile?.role === 'mentor') return;
+    if (profile?.role === 'mentor') {
+      router.replace('/dashboard');
+      return;
+    }
 
     const { data } = await supabase
       .from('profiles')
@@ -483,7 +488,7 @@ export default function DiscoverPage() {
 
     setLiveMentors(results);
     setLoading(false);
-  }, []);
+  }, [router]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -522,7 +527,7 @@ export default function DiscoverPage() {
     return (
       p.firstName.toLowerCase().includes(q) ||
       p.lastName.toLowerCase().includes(q) ||
-      p.school.toLowerCase().includes(q) ||
+      (p.school ?? '').toLowerCase().includes(q) ||
       p.interestTags.some((t) => t.toLowerCase().includes(q)) ||
       p.bio.toLowerCase().includes(q)
     );

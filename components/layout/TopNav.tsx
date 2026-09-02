@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bell, Menu, ChevronDown, Check, ClipboardList, MessageSquare, Calendar, Target } from 'lucide-react';
+import { Bell, Menu, ChevronDown, Check, ClipboardList, MessageSquare, Calendar, Target, TrendingUp } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
@@ -27,6 +27,7 @@ interface Notification {
   body: string | null;
   is_read: boolean;
   created_at: string;
+  data?: Record<string, string>;
 }
 
 const NOTIF_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -38,8 +39,23 @@ const NOTIF_ICONS: Record<string, React.ComponentType<{ className?: string }>> =
   session_reminder: Calendar,
   goal_completed: Target,
   action_item_due: Target,
-  review_received: Target,
+  review_received: TrendingUp,
 };
+
+function getNotifHref(type: string, data?: Record<string, string>): string {
+  switch (type) {
+    case 'request_received': return '/requests';
+    case 'request_accepted': return '/mentorships';
+    case 'request_declined': return '/requests';
+    case 'new_message': return data?.mentorship_id ? `/messages?mentorshipId=${data.mentorship_id}` : '/messages';
+    case 'session_scheduled': return '/schedule';
+    case 'session_reminder': return '/schedule';
+    case 'goal_completed': return '/goals';
+    case 'action_item_due': return '/goals';
+    case 'review_received': return '/impact';
+    default: return '/dashboard';
+  }
+}
 
 export default function TopNav({ user, onMenuClick }: TopNavProps) {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -54,7 +70,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
     const supabase = createClient();
     const { data } = await supabase
       .from('notifications')
-      .select('id, type, title, body, is_read, created_at')
+      .select('id, type, title, body, is_read, created_at, data')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(20);
@@ -88,6 +104,13 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
     const supabase = createClient();
     await supabase.from('notifications').update({ is_read: true }).eq('id', id);
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+  };
+
+  const handleNotifClick = async (notif: Notification) => {
+    await markOneRead(notif.id);
+    setNotifDropdown(false);
+    const data = (notif as Notification & { data?: Record<string, string> }).data;
+    router.push(getNotifHref(notif.type, data));
   };
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -156,7 +179,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                     return (
                       <button
                         key={notif.id}
-                        onClick={() => markOneRead(notif.id)}
+                        onClick={() => handleNotifClick(notif)}
                         className={`w-full flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left ${!notif.is_read ? 'bg-navy-50/40' : ''}`}
                       >
                         <div className="w-8 h-8 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0 mt-0.5">

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 
@@ -11,7 +12,10 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
 
   return (
-    <article className="snap-start flex-none w-[220px] sm:w-[252px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow">
+    <Link
+      href={`/people/${person.slug}`}
+      className="snap-start flex-none w-[220px] sm:w-[252px] bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md hover:border-navy-200 transition-all block"
+    >
       {/* Portrait */}
       <div className="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
         {person.image ? (
@@ -35,9 +39,11 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
         <p className="font-semibold text-navy-900 text-sm leading-tight">
           {person.firstName} {person.lastName}
         </p>
-        <p className="text-[11px] text-gray-400 mt-0.5 leading-tight line-clamp-1">
-          {person.school.length > 32 ? person.school.slice(0, 30) + '…' : person.school}
-        </p>
+        {person.school && (
+          <p className="text-[11px] text-gray-400 mt-0.5 leading-tight line-clamp-1">
+            {person.school.length > 32 ? person.school.slice(0, 30) + '…' : person.school}
+          </p>
+        )}
         {person.expectedGraduation && (
           <p className="text-[10px] text-navy-500 font-medium mt-0.5">
             Class of {person.expectedGraduation}
@@ -56,7 +62,7 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
           ))}
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 

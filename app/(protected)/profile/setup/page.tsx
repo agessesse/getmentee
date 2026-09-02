@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
-import { Check } from 'lucide-react';
+import { Check, Trash2 } from 'lucide-react';
 
 // -------------------------------------------------------
 // Shared constants
@@ -297,6 +297,22 @@ export default function ProfileSetupPage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.prompt(
+      'This will permanently delete your account and all your data. Type DELETE to confirm.'
+    );
+    if (confirmed !== 'DELETE') return;
+
+    const res = await fetch('/api/account/delete', { method: 'DELETE' });
+    if (!res.ok) {
+      alert('Failed to delete account. Please contact support.');
+      return;
+    }
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/');
+  };
+
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
   if (!role || !userId) return null;
 
@@ -502,6 +518,22 @@ export default function ProfileSetupPage() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* Danger zone */}
+      <div className="mt-8 bg-white rounded-2xl border border-red-100 p-6">
+        <h2 className="text-sm font-semibold text-red-700 mb-1">Danger zone</h2>
+        <p className="text-xs text-gray-500 mb-4">
+          Permanently delete your account and all associated data. This cannot be undone.
+        </p>
+        <button
+          type="button"
+          onClick={handleDeleteAccount}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-colors"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete account
+        </button>
       </div>
     </div>
   );

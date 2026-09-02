@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, Calendar, MessageSquare, TrendingUp, Shield, Users } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
@@ -5,6 +8,7 @@ import MentorSection from '@/components/marketing/MentorSection';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
+import InviteModal from '@/components/marketing/InviteModal';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -81,8 +85,11 @@ const FEATURES = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
+  const [inviteOpen, setInviteOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-white">
+      <InviteModal open={inviteOpen} onClose={() => setInviteOpen(false)} />
 
       {/* A — Cinematic intro (client, session-gated, aria-hidden) */}
       <IntroSequence />
@@ -291,9 +298,12 @@ export default function LandingPage() {
           <p className="text-navy-500 text-sm mt-6">No credit card required.</p>
           <p className="text-navy-600 text-sm mt-4">
             Know someone who would make a great mentor?{' '}
-            <Link href="/signup" className="text-white underline underline-offset-2 hover:text-navy-200 transition-colors">
+            <button
+              onClick={() => setInviteOpen(true)}
+              className="text-white underline underline-offset-2 hover:text-navy-200 transition-colors"
+            >
               Invite them →
-            </Link>
+            </button>
           </p>
         </div>
       </section>
