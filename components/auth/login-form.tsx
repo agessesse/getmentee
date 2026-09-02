@@ -24,6 +24,7 @@ export function LoginForm() {
       setError(error);
       setLoading(false);
     } else {
+      sessionStorage.setItem('mentee_signin_transition', '1');
       router.push('/dashboard');
     }
   };

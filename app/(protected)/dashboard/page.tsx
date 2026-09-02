@@ -10,6 +10,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
 import { formatDistanceToNow } from 'date-fns';
+import SignInTransition from '@/components/auth/SignInTransition';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -145,6 +146,14 @@ function CapacityBar({
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showTransition, setShowTransition] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('mentee_signin_transition')) {
+      sessionStorage.removeItem('mentee_signin_transition');
+      setShowTransition(true);
+    }
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -333,6 +342,10 @@ export default function DashboardPage() {
   const isMentee = profile.role === 'mentee';
 
   return (
+    <>
+    {showTransition && (
+      <SignInTransition onComplete={() => setShowTransition(false)} />
+    )}
     <div className="max-w-5xl mx-auto space-y-8">
 
       {/* ── Welcome header ────────────────────────────────────────────────── */}
@@ -673,5 +686,6 @@ export default function DashboardPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
