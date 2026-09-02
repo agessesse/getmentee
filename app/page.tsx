@@ -289,6 +289,12 @@ export default function LandingPage() {
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
           <p className="text-navy-500 text-sm mt-6">No credit card required.</p>
+          <p className="text-navy-600 text-sm mt-4">
+            Know someone who would make a great mentor?{' '}
+            <Link href="/signup" className="text-white underline underline-offset-2 hover:text-navy-200 transition-colors">
+              Invite them →
+            </Link>
+          </p>
         </div>
       </section>
 

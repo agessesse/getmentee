@@ -608,8 +608,8 @@ export default function DashboardPage() {
           </h2>
           <p className="text-navy-300 text-sm mb-5 font-light">
             {isMentee
-              ? 'Browse 500+ mentors at top firms — all verified professionals ready to help.'
-              : 'Your profile is live. Complete your availability and start accepting requests.'}
+              ? 'Browse mentors at leading firms — professionals ready to help you build your path.'
+              : 'Your profile is live. Set your availability and start accepting requests.'}
           </p>
           <div className="flex flex-wrap gap-3">
             {isMentee ? (
