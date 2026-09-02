@@ -61,7 +61,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Bondway.ai',
     headshot: '/people/christopher-floyd.jpg',
     accentColor: '#1a1f3a',
-    imagePosition: '50% 15%',
+    imagePosition: '50% 5%',
     shortBio:
       "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
@@ -76,7 +76,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: '—',
     headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
-    imagePosition: '50% 12%',
+    imagePosition: '50% 38%',
     shortBio:
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
@@ -106,7 +106,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'MyEyeDr.',
     headshot: '/people/david-sheffer.jpg',
     accentColor: '#1a1f3a',
-    imagePosition: '46% 12%',
+    imagePosition: '50% 0%',
     shortBio:
       'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
     whyIMentor:
@@ -121,7 +121,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Engineered Land Solutions',
     headshot: '/people/drew-nations.jpg',
     accentColor: '#2d3668',
-    imagePosition: '50% 20%',
+    imagePosition: '50% 0%',
     shortBio:
       'Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew built his company at the intersection of commercial real estate, land development and finance.',
     whyIMentor:
@@ -136,7 +136,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     company: 'Beds for Kids',
     headshot: '/people/zach-smith.jpg',
     accentColor: '#3d4a8f',
-    imagePosition: '50% 10%',
+    imagePosition: '50% 0%',
     shortBio:
       'Executive Director of Beds for Kids and UNC alumnus. Zach grew from delivery driver to leading the organization over roughly nine years, building operational and leadership experience in the nonprofit sector.',
     whyIMentor:

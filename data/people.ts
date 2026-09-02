@@ -60,7 +60,8 @@ export interface SourcedNearPeer {
   slug: string;
   firstName: string;
   lastName: string;
-  school: string;
+  /** Omit if school cannot be verified — never fabricate */
+  school?: string;
   expectedGraduation?: string;
   location?: string;
   /** Factual third-person bio */
@@ -435,7 +436,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     school: 'Duke University',
     expectedGraduation: '2027',
     location: 'New York, New York',
-    bio: 'Duke student and Reginaldo Howard Memorial Scholar focused on political economy, global markets and international policy. Jaden has markets experience at J.P. Morgan spanning Fixed Income Treasury Sales and Securitized Products Sales.',
+    bio: 'Duke student and Reginaldo Howard Memorial Scholar studying Public Policy with a History minor and PPE Certificate. Jaden has markets experience at J.P. Morgan spanning Fixed Income Treasury Sales and Securitized Products Sales.',
     image: '/people/jaden-small.jpg',
     portraitPosition: '50% 18%',
     interestTags: [
@@ -457,7 +458,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     education: [
       {
         institution: 'Duke University',
-        field: 'Political Science — Political Economy concentration; History minor; PPE Certificate',
+        field: 'Public Policy; History minor; PPE Certificate',
         years: '2023–2027',
       },
     ],
@@ -465,6 +466,106 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { organization: 'J.P. Morgan', description: 'Fixed Income Treasury Sales; Securitized Products Sales.' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/jadensmall/',
+    status: 'sourced',
+  },
+  {
+    slug: 'troy-keen-jr',
+    firstName: 'Troy',
+    lastName: 'Keen Jr.',
+    school: 'Georgetown University',
+    expectedGraduation: '2028',
+    bio: 'Georgetown student and NCAA Division I swimmer for the Hoyas. Troy is a North Carolina state record holder in the butterfly and a decorated club swimmer with All-American recognition, pursuing opportunities in finance and business.',
+    image: '/people/troy-keen-jr.jpg',
+    portraitPosition: '50% 22%',
+    interestTags: ['Finance', 'Georgetown', 'Swimming & Diving', 'Career Development', 'Leadership'],
+    distinctions: [
+      'NCAA Division I, Georgetown Swimming & Diving',
+      'North Carolina State Record — Butterfly',
+      'All-American Swimmer',
+    ],
+    linkedInUrl: 'https://www.linkedin.com/in/troy-keen-jr-829717337/',
+    status: 'sourced',
+  },
+  {
+    slug: 'cooper-lipton',
+    firstName: 'Cooper',
+    lastName: 'Lipton',
+    school: 'Duke University',
+    bio: 'Duke University student pursuing opportunities in finance and capital markets.',
+    image: '/people/cooper-lipton.png',
+    portraitPosition: '50% 15%',
+    interestTags: ['Finance', 'Markets', 'Duke'],
+    linkedInUrl: 'https://www.linkedin.com/in/cooper-lipton-199544285/',
+    status: 'sourced',
+  },
+  {
+    slug: 'erick-angwenyi',
+    firstName: 'Erick',
+    lastName: 'Angwenyi',
+    school: 'University of New Hampshire',
+    bio: 'University of New Hampshire student and Paul Scholar with experience in global capital markets through J.P. Morgan. Erick is also a Hamel Scholar and J.P. Morgan Global Markets Fellow building a career in finance.',
+    image: '/people/erick-angwenyi.png',
+    portraitPosition: '50% 12%',
+    interestTags: ['Finance', 'J.P. Morgan', 'UNH', 'Capital Markets', 'Career Development'],
+    distinctions: [
+      'Paul Scholar, University of New Hampshire',
+      'Hamel Scholar',
+      'J.P. Morgan Global Markets Fellow',
+    ],
+    education: [
+      { institution: 'University of New Hampshire' },
+    ],
+    experience: [
+      { organization: 'J.P. Morgan', description: 'Global Markets' },
+    ],
+    linkedInUrl: 'https://www.linkedin.com/in/erick-angwenyi/',
+    status: 'sourced',
+  },
+  {
+    slug: 'eliphaz-getachew',
+    firstName: 'Eliphaz',
+    lastName: 'Getachew',
+    school: 'University of Minnesota',
+    bio: 'University of Minnesota student at the Carlson School of Management with experience in banking and finance, including a role at Bank of America.',
+    image: '/people/eliphaz-getachew.jpg',
+    portraitPosition: '50% 28%',
+    interestTags: ['Finance', 'Carlson', 'Banking', 'University of Minnesota', 'Career Development'],
+    education: [
+      { institution: 'University of Minnesota — Carlson School of Management' },
+    ],
+    experience: [
+      { organization: 'Bank of America' },
+    ],
+    linkedInUrl: 'https://www.linkedin.com/in/eliphaz-getachew/',
+    status: 'sourced',
+  },
+  {
+    slug: 'hugo-canseco',
+    firstName: 'Hugo',
+    lastName: 'Canseco',
+    school: 'UC Berkeley · Haas',
+    bio: 'UC Berkeley Haas student with an incoming Wells Fargo Corporate & Investment Banking Markets Summer Internship in Fixed Income in Charlotte, NC.',
+    image: '/people/hugo-canseco.jpg',
+    portraitPosition: '50% 18%',
+    interestTags: ['Markets', 'Fixed Income', 'Berkeley Haas', 'Wells Fargo', 'Finance'],
+    education: [
+      { institution: 'UC Berkeley — Haas School of Business' },
+    ],
+    experience: [
+      { title: 'Incoming Markets Summer Intern — Fixed Income', organization: 'Wells Fargo Corporate & Investment Banking' },
+    ],
+    linkedInUrl: 'https://www.linkedin.com/in/hugo-canseco/',
+    status: 'sourced',
+  },
+  {
+    slug: 'pablo-n',
+    firstName: 'Pablo',
+    lastName: 'N.',
+    // Full last name not yet verified — placeholder until confirmed
+    bio: 'Student building a path in finance and career development.',
+    image: '/people/pablo-n.jpg',
+    portraitPosition: '50% 30%',
+    interestTags: ['Finance', 'Career Development', 'Leadership'],
     status: 'sourced',
   },
 ];

@@ -19,7 +19,7 @@ function MentorProfile({
   return (
     <article className="grid grid-cols-1 lg:grid-cols-2 border-t border-gray-100">
       {/* Portrait */}
-      <div className={`lg:h-[500px] ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
+      <div className={`lg:h-[580px] ${reversed ? 'lg:order-2' : 'lg:order-1'}`}>
         <MentorPortrait
           name={mentor.name}
           headshot={mentor.headshot}
@@ -32,7 +32,7 @@ function MentorProfile({
 
       {/* Content */}
       <div
-        className={`flex flex-col justify-center px-8 py-10 lg:px-16 lg:py-14 lg:h-[500px] overflow-y-auto ${
+        className={`flex flex-col justify-center px-8 py-10 lg:px-16 lg:py-14 lg:h-[580px] overflow-y-auto ${
           reversed ? 'lg:order-1' : 'lg:order-2'
         }`}
       >

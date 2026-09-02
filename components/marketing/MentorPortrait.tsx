@@ -24,7 +24,7 @@ export default function MentorPortrait({
 
   if (imgError) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-gray-50 min-h-[420px] lg:min-h-0">
+      <div className="w-full h-full flex items-center justify-center bg-gray-50 min-h-[500px] lg:min-h-0">
         <div
           className="w-28 h-28 rounded-full flex items-center justify-center"
           style={{ backgroundColor: accentColor }}
@@ -36,7 +36,7 @@ export default function MentorPortrait({
   }
 
   return (
-    <div className="relative w-full h-full min-h-[420px] lg:min-h-0 bg-gray-100 overflow-hidden">
+    <div className="relative w-full h-full min-h-[500px] lg:min-h-0 bg-gray-100 overflow-hidden">
       <Image
         src={headshot}
         alt={`Portrait of ${name}`}
