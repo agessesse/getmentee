@@ -82,12 +82,13 @@ export const FEATURED_MENTORS: Mentor[] = [
   {
     name: 'Peter Keane',
     initials: 'PK',
-    title: '—',
-    company: '—',
+    title: 'President',
+    company: 'Keane Capital Management',
     headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
     imagePosition: '50% 38%',
     thumbnailPosition: '50% 15%',
+    linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
     shortBio:
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:

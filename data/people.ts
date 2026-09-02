@@ -124,8 +124,11 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     slug: 'peter-keane',
     firstName: 'Peter',
     lastName: 'Keane',
-    // Employer and title not confirmed — omitted per data policy.
+    headline: 'President · Keane Capital Management',
+    title: 'President',
+    organization: 'Keane Capital Management',
     location: 'Charlotte, North Carolina',
+    linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
     bio: "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     image: '/people/peter-keane.jpg',
     expertiseTags: [
