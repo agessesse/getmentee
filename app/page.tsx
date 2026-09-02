@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
 import InviteModal from '@/components/marketing/InviteModal';
+import FirmMarquee from '@/components/marketing/FirmMarquee';
+import TabsSection from '@/components/marketing/TabsSection';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -32,21 +35,6 @@ const HOW_IT_WORKS = [
     step: '04',
     title: 'Start growing',
     description: 'Meet 1:1, work through goals, track action items, and build a relationship that lasts.',
-  },
-];
-
-const WHAT_MENTEE_IS = [
-  {
-    label: 'Curated network',
-    body: 'Mentors are experienced professionals — not freelancers or strangers. Every mentor in the founding cohort has a real relationship with the founder.',
-  },
-  {
-    label: 'Intelligent matching',
-    body: "Mentee surfaces exactly why a mentor is relevant to your goals — industry, school, career stage — so your first message isn't cold, it's informed.",
-  },
-  {
-    label: 'Real relationships',
-    body: 'Not a one-time introduction. Mentee provides tools to track goals, schedule structured sessions, and build a relationship that actually lasts.',
   },
 ];
 
@@ -86,42 +74,91 @@ export default function LandingPage() {
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section className="pt-36 pb-24 px-6 lg:px-10">
         <div className="max-w-6xl mx-auto">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-8">
-            Mentorship changes trajectories
-          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr,360px] gap-12 lg:gap-20 items-center">
 
-          <h1
-            className="font-bold text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
-            style={{ fontSize: 'clamp(2.9rem, 8.5vw, 6.5rem)' }}
-          >
-            The right mentor<br />
-            changes your<br />
-            trajectory.
-          </h1>
+            {/* Text */}
+            <div>
+              <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-8">
+                Mentorship changes trajectories
+              </p>
 
-          <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-12">
-            Mentee connects ambitious students and early-career professionals
-            with people who have already traveled the path ahead.
-          </p>
+              <h1
+                className="font-bold text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
+                style={{ fontSize: 'clamp(2.9rem, 8.5vw, 6.5rem)' }}
+              >
+                The right mentor<br />
+                changes your<br />
+                trajectory.
+              </h1>
 
-          <div className="flex flex-col sm:flex-row items-start gap-5">
-            <Link
-              href="/signup"
-              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl"
-            >
-              Find your mentor
-              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/signup"
-              className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400"
-            >
-              Become a mentor
-              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-            </Link>
+              <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-12">
+                Mentee connects ambitious students and early-career professionals
+                with people who have already traveled the path ahead.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-start gap-5">
+                <Link
+                  href="/signup"
+                  className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl"
+                >
+                  Find your mentor
+                  <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/signup"
+                  className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400"
+                >
+                  Become a mentor
+                  <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Portrait stack — mentor behind, mentee in front */}
+            <div className="hidden lg:block relative h-[420px]" aria-hidden="true">
+              {/* Mentor card — behind, rotated right */}
+              <div className="absolute top-4 right-4 w-[200px] h-[285px] rounded-2xl overflow-hidden shadow-2xl rotate-[2.5deg] border-[3px] border-white">
+                <Image
+                  src="/people/christopher-floyd.jpg"
+                  alt="Christopher Floyd, CFA — Mentor"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: '50% 5%' }}
+                  sizes="200px"
+                  priority
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
+                  <p className="text-[9px] font-semibold text-white/60 uppercase tracking-[0.22em]">Mentor</p>
+                  <p className="text-[11px] font-bold text-white leading-tight">Christopher Floyd, CFA</p>
+                  <p className="text-[9px] text-white/55 mt-0.5 font-light">Head of Institutional Sales</p>
+                </div>
+              </div>
+
+              {/* Mentee card — front, rotated left */}
+              <div className="absolute bottom-4 left-4 w-[172px] h-[245px] rounded-2xl overflow-hidden shadow-2xl rotate-[-2.5deg] border-[3px] border-white">
+                <Image
+                  src="/people/abel-gessesse.jpg"
+                  alt="Abel Gessesse — Mentee"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: '50% 15%' }}
+                  sizes="172px"
+                  priority
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
+                  <p className="text-[9px] font-semibold text-white/60 uppercase tracking-[0.22em]">Mentee</p>
+                  <p className="text-[11px] font-bold text-white leading-tight">Abel Gessesse</p>
+                  <p className="text-[9px] text-white/55 mt-0.5 font-light">UNC Kenan-Flagler</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
+
+      {/* ── Firm marquee ─────────────────────────────────────────────────────── */}
+      <FirmMarquee />
 
       {/* ── Mentor carousel ─────────────────────────────────────────────────── */}
       <MentorCarousel />
@@ -203,34 +240,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── What Mentee is (editorial text columns) ─────────────────────────── */}
-      <section className="py-20 px-6 lg:px-10 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-14">
-            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-              What Mentee is
-            </p>
-            <h2
-              className="font-bold text-navy-900 leading-tight"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)' }}
-            >
-              Not a directory.<br />
-              Not a marketplace.<br />
-              A platform built for outcomes.
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-            {WHAT_MENTEE_IS.map((col) => (
-              <div key={col.label}>
-                <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.2em] mb-3">
-                  {col.label}
-                </p>
-                <p className="text-[15px] text-gray-600 font-light leading-relaxed">{col.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── Tabs section (For mentees / For mentors / The platform) ─────────── */}
+      <TabsSection />
 
       {/* ── Opportunity Fund (editorial) ────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-10 border-t border-gray-100 bg-gray-50/40">
