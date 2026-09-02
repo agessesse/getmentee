@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import IntroSequence from '@/components/marketing/IntroSequence';
-import MentorCarousel from '@/components/marketing/MentorCarousel';
+import MentorGrid from '@/components/marketing/MentorGrid';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
@@ -160,8 +160,8 @@ export default function LandingPage() {
       {/* ── Firm marquee ─────────────────────────────────────────────────────── */}
       <FirmMarquee />
 
-      {/* ── Mentor carousel ─────────────────────────────────────────────────── */}
-      <MentorCarousel />
+      {/* ── Mentor grid ──────────────────────────────────────────────────────── */}
+      <MentorGrid />
 
       {/* ── Bridge: experience flows forward ────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-6 lg:px-10">

@@ -44,7 +44,7 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
               src={person.image}
               alt={fullName}
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-out"
               style={{ objectPosition: person.portraitPosition ?? '50% 20%' }}
               sizes="(max-width: 640px) 200px, 232px"
             />
