@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
-import MentorSection from '@/components/marketing/MentorSection';
+import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
@@ -123,8 +123,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Mentor storytelling ─────────────────────────────────────────────── */}
-      <MentorSection />
+      {/* ── Mentor carousel ─────────────────────────────────────────────────── */}
+      <MentorCarousel />
+
+      {/* ── Bridge: experience flows forward ────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-10">
+        <div className="border-t border-gray-100 pt-8 pb-2">
+          <p className="text-[13px] text-gray-400 font-light italic">
+            And the people whose trajectories they&apos;re shaping.
+          </p>
+        </div>
+      </div>
 
       {/* ── Mentee carousel ─────────────────────────────────────────────────── */}
       <MenteeCarousel />

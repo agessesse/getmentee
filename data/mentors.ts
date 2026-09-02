@@ -42,11 +42,19 @@ export interface Mentor {
   /** Verified mentee count — leave null until confirmed */
   menteesMentored: string | null;
   /**
-   * CSS object-position for the portrait crop: '<x%> <y%>'.
+   * CSS object-position for the large alternating portrait layout: '<x%> <y%>'.
    * Determined per-image to keep the face centered in the frame.
    * Defaults to '50% 20%' if omitted.
    */
   imagePosition?: string;
+  /**
+   * CSS object-position for the small carousel thumbnail (96×96px).
+   * Separate from imagePosition because small thumbnails need different offsets
+   * to center the face correctly. Defaults to '50% 15%' if omitted.
+   */
+  thumbnailPosition?: string;
+  /** LinkedIn profile URL — omit if not available or unverified */
+  linkedInUrl?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -62,6 +70,8 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/christopher-floyd.jpg',
     accentColor: '#1a1f3a',
     imagePosition: '50% 5%',
+    thumbnailPosition: '50% 10%',
+    linkedInUrl: 'https://www.linkedin.com/in/christopher-floyd/',
     shortBio:
       "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
@@ -77,6 +87,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/peter-keane.jpg',
     accentColor: '#2d3668',
     imagePosition: '50% 38%',
+    thumbnailPosition: '50% 15%',
     shortBio:
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
@@ -92,6 +103,8 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/travis-melvin.jpg',
     accentColor: '#3d4a8f',
     imagePosition: '50% 10%',
+    thumbnailPosition: '50% 18%',
+    linkedInUrl: 'https://www.linkedin.com/in/travis-melvin/',
     shortBio:
       'Finance, real-estate and public-policy professional affiliated with UNC Kenan-Flagler. Travis founded the J.R.R. Scholarship Foundation, mentors through Wall Street Oasis, and guest-lectures at universities across the country.',
     whyIMentor:
@@ -107,6 +120,8 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/david-sheffer.jpg',
     accentColor: '#1a1f3a',
     imagePosition: '50% 0%',
+    thumbnailPosition: '50% 8%',
+    linkedInUrl: 'https://www.linkedin.com/in/david-sheffer-4a46045a/',
     shortBio:
       'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
     whyIMentor:
@@ -122,6 +137,8 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/drew-nations.jpg',
     accentColor: '#2d3668',
     imagePosition: '50% 0%',
+    thumbnailPosition: '50% 22%',
+    linkedInUrl: 'https://www.linkedin.com/in/drewnations/',
     shortBio:
       'Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew built his company at the intersection of commercial real estate, land development and finance.',
     whyIMentor:
@@ -137,6 +154,8 @@ export const FEATURED_MENTORS: Mentor[] = [
     headshot: '/people/zach-smith.jpg',
     accentColor: '#3d4a8f',
     imagePosition: '50% 0%',
+    thumbnailPosition: '50% 18%',
+    linkedInUrl: 'https://www.linkedin.com/in/zach-smith-201a3990/',
     shortBio:
       'Executive Director of Beds for Kids and UNC alumnus. Zach grew from delivery driver to leading the organization over roughly nine years, building operational and leadership experience in the nonprofit sector.',
     whyIMentor:
