@@ -8,7 +8,23 @@
 
 ## Current Stage
 
-Pre-revenue. The product is live. The initial mentor and near-peer network has been sourced. No users have paid. No contracts exist. The focus is on validating the core product-market fit before monetising.
+Pre-revenue. The product is live. The initial mentor and near-peer network has been sourced. No users have paid. No contracts exist. The Opportunity Fund is in pilot — infrastructure built, no capital committed. The focus is on validating core product-market fit before monetising.
+
+---
+
+## Critical Distinction: Platform Revenue vs. Restricted Opportunity Fund Capital
+
+These are two fundamentally different financial streams and must never be conflated.
+
+**Platform Revenue:** Money that flows to Mentee as operating income — from institutional contracts, employer partnerships, or premium features. Mentee earns this and can deploy it for operations, salaries, and product development.
+
+**Restricted Opportunity Fund Capital:** Donor or sponsor contributions that are designated for student professional-development support. This capital belongs to the fund, not to Mentee's operations. Mentee administers the disbursement but does not "earn" it as revenue. Accounting, legal, and tax treatment is entirely different from platform revenue.
+
+This distinction matters for:
+- Investor conversations (grant capital should not inflate revenue numbers)
+- Legal structure (restricted funds may require nonprofit status, a DAF, or a fiscal sponsor)
+- Donor relations (sponsors fund students, not the company's runway)
+- Impact reporting (grant outcomes are reported separately from platform metrics)
 
 ---
 
@@ -123,12 +139,29 @@ Pre-revenue. The product is live. The initial mentor and near-peer network has b
 
 ---
 
+## Opportunity Fund Capital Sources (Separate from Platform Revenue)
+
+These are potential sources of restricted capital for the Opportunity Fund — not Mentee operating revenue.
+
+**Employers:** Companies whose employees mentor on Mentee could sponsor cohorts for students targeting their industry. Example: a financial services firm sponsors a "Charlotte Career Access Fund" for students pursuing finance internships.
+
+**Universities:** An alumni office or student success fund could designate Mentee as a disbursement channel for professional-development support. Reduces their administrative burden while adding product infrastructure.
+
+**Alumni networks:** Individual alumni donors fund specific categories (e.g., "Professional Attire for IB Recruiting") with clear eligibility criteria and outcome reporting.
+
+**Foundations:** Mission-aligned foundations funding workforce development, first-generation student support, or professional equity programs.
+
+**Important:** Raising Opportunity Fund capital is not the same as raising operating capital. These require different legal structures, different conversations, and may require Mentee to establish or partner with a 501(c)(3) nonprofit entity. See opportunity-fund-governance.md.
+
+---
+
 ## What Mentee Deliberately Does NOT Plan to Do
 
 - Charge individual users for basic access (suppresses early network growth)
 - Introduce a marketplace take-rate on sessions (positions Mentee as a gig platform, not a relationship platform)
 - Sell user data (incompatible with the trust model the product depends on)
 - Build video infrastructure from scratch (partner with existing providers if needed)
+- Treat Opportunity Fund capital as company revenue (would be misleading and potentially legally problematic)
 
 ---
 

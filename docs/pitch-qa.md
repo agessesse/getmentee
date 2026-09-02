@@ -230,5 +230,254 @@ If the core hypothesis holds:
 - University and employer partnerships providing institutional revenue.
 - Alumni mentorship loops where former mentees become mentors and bring their own networks.
 - A track record of measurable outcomes (internships obtained, careers launched, decisions improved) that makes the value proposition provable.
+- Opportunity Fund programs operating at multiple universities and employer cohorts, with outcome tracking showing what the capital enabled.
 
-What it does NOT look like: a horizontal professional network, a job board, or a LinkedIn competitor. The focus stays on the mentorship relationship — not on professional networking broadly.
+What it does NOT look like: a horizontal professional network, a job board, or a LinkedIn competitor. The focus stays on the mentorship relationship — and on removing the barriers that prevent students from acting on it.
+
+---
+
+---
+
+# Opportunity Fund — Q&A
+
+---
+
+## Why are you adding financial support? Isn't mentorship enough?
+
+Mentorship gives you direction. It does not automatically give you the resources to move. A mentor can tell a student to buy a suit for their interview, attend a conference, travel to an office visit, or meet someone for coffee. For a student with significant financial need, a relatively small expense — $150 for a suit, $30 for a train ticket — can be the actual barrier to acting on that advice. Mentorship closes the relationship gap. The Opportunity Fund is designed to close the resource gap. Together they form a complete pathway from ambition to outcome.
+
+**What we can prove today:** This is a real and documented phenomenon. First-generation and Pell-eligible students consistently report financial barriers to professional-development opportunities in academic literature.
+
+**What we cannot prove yet:** Whether our specific implementation reduces this barrier for our specific users. That requires real grants and outcome tracking.
+
+---
+
+## Are you becoming a scholarship platform?
+
+No. A scholarship platform covers tuition, living expenses, or academic costs. The Opportunity Fund is specifically scoped to targeted professional-development expenses that arise in the context of a mentored career-development pathway. We are not trying to cover rent, food, or academic costs. We are trying to remove the specific, identifiable barriers between a mentor's advice and a mentee's action.
+
+Internal principle: "A mentor can help you identify the door. Mentee wants to make sure financial barriers don't prevent you from walking through it."
+
+---
+
+## Where does the grant money come from?
+
+It does not currently exist. The Opportunity Fund is in its pilot phase. No capital has been committed. When funding is raised, it will come from employers, universities, alumni, foundations, or other mission-aligned sponsors — not from Mentee's operating revenue.
+
+**Important distinction:** Opportunity Fund capital is restricted capital designated for student support. It is not Mentee operating revenue. A judge treating it as revenue or as something Mentee already has would be incorrect.
+
+---
+
+## Who determines eligibility?
+
+Eligibility for the Opportunity Fund is designed to be based on demonstrated financial need. In the current design, this is self-attested by the mentee — they report their Pell status, first-generation status, and whether they receive need-based aid. This is clearly labeled as self-reported in the product.
+
+The platform does not currently verify Pell status automatically. Verification mechanisms — if and when required — will be introduced when specific funded programs launch and will depend on the program design.
+
+**What we deliberately avoided:** FAFSA login, Social Security number collection, or any intrusive data collection that is disproportionate to the information needed.
+
+---
+
+## Why use Pell eligibility?
+
+Pell eligibility is a well-established federal indicator of financial need. It avoids requiring subjective income disclosure and is broadly understood in the university context. However, Pell eligibility is not the only path — the system also accepts other need-based indicators (institutional aid, need-based scholarships) and "prefer not to say." Pell is a convenient anchor, not a gate.
+
+---
+
+## What about financially needy students who are not Pell recipients?
+
+The system explicitly accommodates them. The financial need profile includes:
+1. Pell status (yes / no / prefer not to say)
+2. First-generation status (yes / no / prefer not to say)
+3. Whether they receive need-based aid (yes / no / prefer not to say)
+4. Free-text context for other designations (QuestBridge, Gates, institutional aid, etc.)
+
+Eligibility rules will vary by funded program and are designed to be extensible, not binary.
+
+---
+
+## How do you verify financial need?
+
+Currently: self-attestation. The product marks it as "self-reported" with no verification checkmark. This is intentional honesty — we do not pretend to verify something we cannot verify.
+
+Future verification pathways may include:
+- Manual review of institutional aid letters
+- University financial aid office attestation (requires partnership)
+- Approval pathway where applications are reviewed before awards
+
+None of these pathways exist yet. We are building the infrastructure that will support them, not claiming they exist.
+
+---
+
+## How do you prevent fraud?
+
+This is a serious design question and we take it seriously. Current controls:
+- RLS prevents users from accessing other users' financial data
+- Users cannot approve their own applications or modify fund balances
+- All actions are timestamped for audit purposes
+- Mentor endorsement is separated from financial approval
+
+Controls that must exist before real money moves (and do not yet exist):
+- Admin review workflow with conflict-of-interest controls
+- Duplicate receipt detection
+- Fund balance concurrency control (prevents concurrent approvals from overspending)
+- Document validation
+- Identity verification
+
+**Honest answer:** The code provides a foundation. Fraud prevention at scale requires legal, operational, and technical controls that are not yet fully built. We would not disburse real grants today without those controls in place.
+
+---
+
+## Who approves grants?
+
+Currently, no one — because there are no grants to approve. When programs launch, approval authority will rest with designated reviewers on the Mentee team, not mentors and not sponsors. This separates the mentorship relationship from the financial decision to prevent conflicts of interest.
+
+**What we deliberately designed out:** Mentors do not approve grants. Sponsors do not browse individual student applications. Students cannot approve their own requests.
+
+---
+
+## Can mentors approve money for their own mentees?
+
+No. The design explicitly separates mentor endorsement (which confirms developmental relevance) from grant approval (which is reserved for designated reviewers). A mentor can say "this expense aligns with what we're working toward" but cannot approve money. Approval authority is held by the platform.
+
+---
+
+## What prevents favoritism?
+
+Three things in the design:
+1. Mentors do not have approval authority
+2. Sponsors do not have approval authority over individual applications
+3. All grant decisions are made centrally by designated reviewers with conflict-of-interest policies (to be written before real funds launch)
+
+This does not eliminate favoritism risk entirely — it depends on the integrity of the reviewer team. Human review of any grant program carries this risk; mitigating it requires clear policy and audit trails.
+
+---
+
+## Does the mentor see a student's financial information?
+
+No. The RLS policy on `financial_need_profiles` allows only the owning mentee to read their own record. Mentors have zero access to any financial need data. The only thing a mentor may eventually see is that a student has requested an endorsement, described as something like "Abel has requested support for professional attire for an upcoming interview" — no financial detail.
+
+---
+
+## How do sponsors know their money had impact?
+
+Aggregate impact reporting, not individual student records. A sponsor would receive something like: "In Q1, the Charlotte Career Access Fund supported 12 students. 8 purchased professional attire. 10 completed the opportunity the support was intended for. 4 reported a positive professional outcome (interview, offer, conference connection)." Individual student financial records are never shared with sponsors.
+
+---
+
+## How does Mentee make money if students are free and grant capital goes to students?
+
+Platform revenue and Opportunity Fund capital are completely separate:
+
+**Platform revenue** comes from institutional contracts (universities, employers, professional organisations) who pay for mentorship infrastructure, analytics, and cohort management. This is Mentee's operating income.
+
+**Opportunity Fund capital** is restricted donor/sponsor money designated for student support. Mentee administers it but does not earn it. This is categorically not revenue.
+
+Whether Mentee charges a program administration fee on Opportunity Fund capital — a common nonprofit practice — is a business and legal policy question that has not yet been decided.
+
+---
+
+## Is sponsor money revenue?
+
+No. Restricted charitable contributions are not revenue. If a sponsor designates $50,000 for a student opportunity fund, that $50,000 must go to students, not to Mentee's operations. The accounting treatment and legal structure required to administer this correctly are outlined in opportunity-fund-governance.md and require counsel review.
+
+---
+
+## Why wouldn't a university just do this itself?
+
+Universities operate many financial aid programs but often with high administrative overhead, long processing times, rigid eligibility categories, and poor integration with the actual mentorship relationships that identify the need. A student's financial aid office does not know that their mentor told them they need a suit for a superday next Thursday.
+
+Mentee sits at the point of identified need — the mentor relationship — and can route targeted, time-sensitive support more efficiently than a financial aid office that processes applications over weeks. The value proposition is contextual, not just financial.
+
+**Hypothesis we are testing:** Universities will see Mentee as complementary infrastructure, not competitive. This has not been validated.
+
+---
+
+## How does this improve Mentee's moat?
+
+Combining mentorship infrastructure with opportunity funding creates network effects that are harder to replicate than either alone:
+
+- A mentor who has seen their mentees actually act on advice (because the financial barrier was removed) is more likely to stay and recruit other mentors
+- A student who received support is more likely to become a mentor and fund future students
+- A university or employer who sees measured outcomes from funded mentees is more likely to commit recurring capital
+- The outcome data Mentee accumulates becomes evidence that no new entrant can replicate quickly
+
+The combination of people, guidance, goals, funding, and outcomes makes Mentee structurally different from a matching marketplace.
+
+---
+
+## Does financial assistance actually improve career outcomes?
+
+There is academic evidence that financial barriers prevent professional-development participation for lower-income students. There is not yet Mentee-specific evidence that our specific implementation improves outcomes. That is honest.
+
+The causal claim we will eventually be able to make is narrow: "Mentee-funded support enabled this specific professional-development action." We will not claim that $200 "created a Goldman Sachs offer." We can claim that $200 supported professional attire for an interview process that the student could not have attended otherwise.
+
+---
+
+## What happens when the Opportunity Fund runs out?
+
+If a funded program is exhausted, new applications are not accepted until new capital is committed. The product is designed to show funding status honestly — "Active," "Pilot," or "Closed" — so students are never misled about whether funding is available.
+
+---
+
+## What expenses will you refuse to fund?
+
+The categories are intentionally narrow: professional attire, networking, travel to professional opportunities, career development resources, and approved conferences. Categorical exclusions will include rent, food, general living expenses, personal purchases unrelated to professional development, alcohol, and luxury items. The specific exclusion list will be defined in program terms when programs launch.
+
+---
+
+## Are grants taxable?
+
+This is a legal and tax question that requires attorney review before any grants are issued. In general, grants for tuition and educational expenses may be tax-exempt; grants for professional development expenses may be taxable as ordinary income. We will not disburse grants without legal clarity on this question.
+
+---
+
+## Does Mentee need nonprofit status?
+
+Possibly, for the Opportunity Fund component. A for-profit entity can administer charitable programs in limited circumstances, but the legal and tax structure requires counsel review. Options include establishing a separate 501(c)(3), partnering with a fiscal sponsor, or structuring sponsor contributions as business expenses rather than charitable contributions. See opportunity-fund-governance.md.
+
+---
+
+## Could a corporation restrict funding to certain students?
+
+Sponsor restrictions based on financial need, institution, career path, or geography are generally permissible. Restrictions based on race, religion, national origin, sex, or other protected characteristics are generally prohibited even in charitable contexts. Any sponsor agreement must be reviewed by counsel before implementation. The eligibility-rules design in the database schema is extensible to accommodate permissible restrictions.
+
+---
+
+## How do you prevent discriminatory sponsor criteria?
+
+Mentee retains the right to decline any sponsor whose eligibility criteria are discriminatory or inconsistent with our values. Sponsor agreements will include language prohibiting impermissible discrimination. This requires legal review.
+
+---
+
+## What happens if someone lies about an expense?
+
+If a student submits a fraudulent receipt or misrepresents an expense, they would be in violation of program terms, subject to account termination, and potentially required to repay the award. Depending on the amount, this could constitute fraud. The deterrent is the audit trail, the review process, and the social cost of being banned from the platform.
+
+We cannot prevent all fraud with code. We can make it difficult, audit it, and have clear consequences.
+
+---
+
+## What happens if an approved opportunity is cancelled?
+
+This is an open policy question. Options include: rescheduling support to a future opportunity, requiring return of unspent funds, or case-by-case review. This must be defined before programs launch.
+
+---
+
+## Do you reimburse students or pay vendors directly?
+
+For the MVP, reimbursement (student pays, submits receipt, gets repaid). Direct vendor payment is operationally simpler for students but requires vendor relationships and may be impractical for small purchases like attire. Direct payment may make sense for specific categories (conference registration) in future programs.
+
+---
+
+## What is your 60-second pitch?
+
+The old way: a student with ambition depends entirely on luck and network to find the right mentor. Even if they find one, the advice they receive — "you need a suit," "you should attend this conference," "you should meet this person" — can require resources they don't have. The guidance exists. The action doesn't happen.
+
+Mentee closes both gaps.
+
+We connect students with real professionals who have already traveled the path — not cold outreach, not a directory, but a structured relationship with shared goals, sessions, and accountability. And for students with demonstrated financial need, we're building an Opportunity Fund to help remove specific, identifiable barriers that prevent them from acting on that guidance.
+
+Mentorship plus targeted opportunity funding is what it takes to turn ambition into outcome. We're building the infrastructure for that — from the match to the mentor conversation to the interview suit to the job offer.
+
+The product is live. The mentor network is real. The Opportunity Fund is in pilot. What we're building is the infrastructure for a more equitable path to professional success.

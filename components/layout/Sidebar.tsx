@@ -18,6 +18,7 @@ import {
   X,
   BarChart2,
   UserPlus,
+  Lightbulb,
 } from 'lucide-react';
 import InviteModal from '@/components/marketing/InviteModal';
 
@@ -42,6 +43,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/discover', label: 'Discover', icon: Search, menteeOnly: true },
       { href: '/mentees', label: 'Mentees', icon: Users, mentorOnly: true },
       { href: '/impact', label: 'My Impact', icon: BarChart2, mentorOnly: true },
+      { href: '/opportunities', label: 'Opportunity Fund', icon: Lightbulb, menteeOnly: true },
     ],
   },
   {

@@ -128,9 +128,40 @@ No architectural changes are required to build a native mobile app on top of the
 
 ---
 
+## Opportunity Fund: Scalability Considerations
+
+The Opportunity Fund adds business complexity more than technical complexity. The technical infrastructure scales the same way as the core platform. What doesn't scale automatically:
+
+### Technical Scaling Challenges Specific to the Fund
+
+**Concurrency control on fund balances.** Multiple simultaneous approvals could theoretically exceed an available fund balance. This requires `SELECT FOR UPDATE` or serializable transaction isolation before real disbursement. Not yet implemented — not needed until real funds exist.
+
+**Document storage.** Receipt uploads require a private Supabase Storage bucket with signed URL access. Storage scales with Supabase plan. Not yet implemented.
+
+**Application volume.** If many students apply simultaneously, the review queue becomes a bottleneck. This is an operations problem (reviewer capacity) more than a technical problem.
+
+### Business Scaling Challenges
+
+**Reviewer capacity.** Every grant application requires human review. This does not scale automatically — it scales with staff or volunteer reviewer capacity. This is the primary non-technical scalability constraint.
+
+**Capital supply.** The Opportunity Fund scales only as fast as capital can be raised. Sponsor relationships compound slowly. A university partnership might fund 20 students; it does not automatically fund 2,000.
+
+**Eligibility verification at scale.** Honor-system self-attestation works for a small cohort with tight community norms. At large scale, verification processes become necessary — and they require institutional partnerships or verification APIs that don't currently exist.
+
+### The Compounding Moat
+
+At scale, the Opportunity Fund creates a compounding advantage that is harder for a new entrant to replicate:
+- Alumni mentors who benefited from funding are more likely to mentor and contribute capital back
+- Outcome data accumulated over years becomes evidence no new entrant can replicate quickly
+- Institutional partnerships deepen with each funded cohort's outcome report
+- Sponsor trust compounds: a sponsor who saw 10 students succeed is more likely to fund 50
+
+---
+
 ## What Mentee Is NOT Doing in the Name of Scalability
 
 - No premature infrastructure migration (Postgres is sufficient for millions of rows; migrating away early would be waste)
 - No custom video infrastructure (would add enormous cost and complexity; a partner integration is sufficient)
 - No proprietary ML matching (rule-based scoring is transparent, maintainable, and adequate at current scale)
 - No microservices (monolithic Next.js app on Vercel is faster to iterate and sufficient for this stage)
+- No fake grant capital to demonstrate the Opportunity Fund (honest empty state is more defensible than manufactured traction)

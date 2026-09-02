@@ -105,9 +105,33 @@ These limitations must be clearly stated in the Terms of Service before scaling.
 
 ---
 
+## Opportunity Fund-Specific Risks
+
+| Risk | Probability | Severity | Current Mitigation | Recommended Before Launch |
+|---|---|---|---|---|
+| Student misrepresents financial need | Medium | High | Self-attestation with clear "self-reported" label; social deterrence | Eligibility review for large awards; conflict policy for reviewers |
+| Fraudulent receipt (photoshopped or duplicate) | Low-Medium | High | Audit trail exists; duplicates can be detected | Receipt validation; cross-reference check; require originals for large amounts |
+| Concurrent approvals exceed fund balance | Low | High | Not yet prevented at DB level | SELECT FOR UPDATE or serializable transactions before disbursement |
+| Mentor influences grant outcome for personal reasons | Low | High | Mentor endorsement separated from approval authority | Conflict-of-interest policy; reviewers not connected to endorsing mentor |
+| Sponsor imposes discriminatory eligibility criteria | Low | Critical | No sponsor exists yet; criteria review will be required | Legal review of all sponsor agreements; right to decline criteria |
+| Tax misclassification of grants | Medium | High | Not yet addressed | Tax attorney review before any disbursement |
+| Financial data leaked to mentor | Low | High | RLS prevents mentor read access to `financial_need_profiles` | Penetration test of RLS policies |
+| Unauthorized admin access to financial data | Low | High | No admin role exists yet (prevents premature admin exposure) | Proper admin role architecture before review UI is built |
+
+### Status of Opportunity Fund Privacy Controls
+
+- `financial_need_profiles` table: readable only by owning mentee (RLS enforced)
+- Mentors have zero access to financial need data
+- Sponsors have zero access to individual student records
+- Fund balance and program data is readable by all authenticated users (needed to show what's available) — no sensitive student data is in this table
+- All state transitions that could affect grant amounts or approval status require service role
+
+---
+
 ## Long-Term Safety Roadmap
 
 1. **Pre-launch of first institutional partner:** Complete Priority 1–5 above; formal Terms of Service.
-2. **At 500 users:** Formal community standards document; designated trust & safety point of contact.
-3. **At 2,000 users:** Semi-automated message flagging for high-risk patterns; counselled privacy policy; GDPR compliance audit.
-4. **At 10,000 users:** Dedicated trust & safety role or contractor; possible third-party safety audit.
+2. **Before first Opportunity Fund cohort:** Legal review of grant structure; admin role architecture; receipt validation; concurrency controls; conflict-of-interest policy.
+3. **At 500 users:** Formal community standards document; designated trust & safety point of contact.
+4. **At 2,000 users:** Semi-automated message flagging for high-risk patterns; counselled privacy policy; GDPR compliance audit.
+5. **At 10,000 users:** Dedicated trust & safety role or contractor; possible third-party safety audit.

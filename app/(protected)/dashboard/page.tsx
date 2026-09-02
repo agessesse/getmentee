@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   Search, ClipboardList, Handshake, Calendar, ArrowRight,
   TrendingUp, MessageSquare, Target, Star, Award, Users, Clock,
-  BarChart2,
+  BarChart2, Lightbulb,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
@@ -599,6 +599,30 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {/* ── Opportunity Fund entry point (mentees only) ─────────────────── */}
+      {isMentee && (
+        <Link
+          href="/opportunities"
+          className="group flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all"
+        >
+          <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Lightbulb className="w-5 h-5 text-amber-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-navy-900">Opportunity Fund</p>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                Pilot
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+              Professional-development funding for students with demonstrated financial need — attire, travel, networking, and more.
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-500 transition-colors flex-shrink-0 mt-3" />
+        </Link>
+      )}
 
       {/* ── CTA for new users ────────────────────────────────────────────── */}
       {activeMentorships === 0 && (

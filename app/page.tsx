@@ -275,7 +275,58 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* H — Final CTA */}
+      {/* I — Beyond Advice / Opportunity Fund */}
+      <section className="py-16 px-6 bg-gray-50/60 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-xs font-semibold text-amber-600 uppercase tracking-[0.18em] mb-4">
+                Beyond advice
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-6 leading-tight">
+                Access doesn&apos;t stop at the introduction.
+              </h2>
+              <p className="text-gray-500 leading-relaxed mb-4 font-light">
+                Great mentorship can identify the next opportunity. For students with demonstrated financial need,
+                Mentee is building an Opportunity Fund designed to help remove practical barriers —
+                professional attire, networking, travel, and career-development expenses that stand
+                between guidance and action.
+              </p>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                The Opportunity Fund is in its pilot phase. We are building partnerships to fund the first cohort.
+              </p>
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 mt-6 text-sm font-medium text-navy-700 hover:text-navy-900 transition-colors"
+              >
+                Learn about the Opportunity Fund
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {[
+                { label: 'Professional Attire', detail: 'Interview suit, tailoring, professional footwear' },
+                { label: 'Networking', detail: 'Coffee chats, industry events, professional meetups' },
+                { label: 'Travel', detail: 'Interviews, career fairs, office visits, conferences' },
+                { label: 'Career Development', detail: 'Certifications, prep resources, professional materials' },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-start gap-4 bg-white rounded-xl border border-gray-100 p-4"
+                >
+                  <div className="w-2 h-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-navy-900">{item.label}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{item.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* J — Final CTA */}
       <section className="py-20 px-6 bg-navy-900 text-white text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs font-semibold text-navy-400 uppercase tracking-[0.18em] mb-8">

@@ -1,34 +1,50 @@
 # Mentee — Pitch Competition Readiness Dashboard
 
 > Internal document. Scores are honest and self-critical.
-> Before scores = state before this audit. After scores = state after this audit pass.
+> Audit Pass 1 = initial product build. Audit Pass 2 = Opportunity Fund extension.
 
 ---
 
 ## Rubric Audit Table
 
-| Criterion | Before /10 | After /10 | What changed | Evidence in product | What still needs validation |
+| Criterion | Pass 1 /10 | Pass 2 /10 | What changed (Pass 2) | Evidence in product | What still needs validation |
 |---|---|---|---|---|---|
-| 1. Target Audience + Problem | 7 | 8 | Hero copy is clear; MentorSection philosophy articulates the access problem; MenteeCarousel shows real users; fabricated "500+ mentors" claim removed from dashboard | Landing page hero, LifecycleSection, FEATURED_MENTORS with mission context, SOURCED_NEAR_PEERS carousel | No external user research validating that the target audience recognises this as their problem |
-| 2. Uniqueness + Competitive Advantage | 6 | 7 | LifecycleSection makes the workflow differentiation visible; MatchPreview shows transparent scoring; full relationship lifecycle (request → sessions → goals → reviews) built | MatchPreview, LifecycleSection 5-step diagram, goals + action items, mentor impact dashboard | No comparative user study showing Mentee produces better outcomes than LinkedIn cold outreach |
-| 3. Go-to-Market Strategy | 4 | 5 | "Invite a mentor" CTA added to landing page; GTM story now visible (real founding network + invite loop); pitch-qa.md documents the relationship-driven GTM | Real mentors in founding cohort, near-peer carousel, invite CTA on landing page | No referral conversion data; no evidence the network compounds beyond the founding cohort |
-| 4. Financial Model | 2 | 6 | pitch-business-model.md created with realistic revenue paths, cost structure, and honest caveats | pitch-business-model.md — institutional partnerships, employer programs, premium features | No contracts, no revenue, no validated willingness-to-pay |
-| 5. Scalability | 5 | 7 | pitch-scalability.md documents technical architecture + business network effects; dashboard false claim removed | Indexed DB, RLS, SSG landing page, mentor capacity controls, impact tracking | No load testing; no empirical CAC data; network effects unproven |
-| 6. Ethics + Social Impact | 3 | 6 | trust-safety-risk-analysis.md documents 15 risks with honest current vs. recommended mitigations; prioritised action list | Supabase RLS, request/approval gating, no cold messaging possible, docs/SECURITY.md | Report/block not built; Terms of Service not written; no age gate |
-| 7. Team Credibility / Why Us | 6 | 7 | Founder story communicated through real mentors (not fabricated); MentorSection philosophy is compelling; all mentors personally known to founder | FEATURED_MENTORS (real people), MentorSection "Before Mentee was a platform, it was a pattern", mission statement | No external validation of founder background by judges; no co-founder or team beyond founder |
-| 8. Presentation Quality | 7 | 8 | False copy removed from dashboard; demo path documented below; clean responsive design throughout; no placeholder copy in core paths | Live Vercel deployment, full relationship lifecycle demo-able end to end | Demo requires a pre-seeded account; live Q&A response to unexpected flows |
-| 9. Q&A Readiness | 2 | 8 | pitch-qa.md created with honest answers to 30+ judge questions, separating facts from hypotheses | pitch-qa.md | Practice delivery; stress-test with a sceptical external reader |
+| 1. Target Audience + Problem | 8 | 9 | Opportunity Fund extends the problem statement from "who gets access to a mentor" to "who gets to act on the advice." Two-gap framing is sharper and more complete. | Landing page "Beyond Advice" section; /opportunities page; dashboard card for mentees | No external user research quantifying how often financial barriers prevent professional-development action |
+| 2. Uniqueness + Competitive Advantage | 7 | 8 | No other mentorship platform is building toward funded opportunity removal. This makes Mentee structurally harder to replicate — it requires both mentor supply and capital partnerships. | Opportunity Fund product foundation; migration 0012; extensible fund/eligibility model | No comparable product to benchmark against; moat is architectural and operational, not yet proven |
+| 3. Go-to-Market Strategy | 5 | 6 | Opportunity Fund creates a second, distinct GTM motion: sponsor/donor acquisition. Universities and employers who want to fund student access now have a product to point capital at. | pitch-business-model.md updated with restricted-capital vs. platform-revenue distinction | No sponsor conversations started; no capital committed |
+| 4. Financial Model | 6 | 7 | Business model doc now distinguishes platform revenue from restricted Opportunity Fund capital. Sponsor/donor pipeline added as a separate funding motion with its own logic. | pitch-business-model.md — sponsor capital model, restricted vs. revenue distinction | Still no contracts; Opportunity Fund capital structure requires legal/accounting clarity |
+| 5. Scalability | 7 | 7 | No change to scalability score — Opportunity Fund adds business complexity more than technical complexity. Financial governance and fraud controls will be the scaling challenge. | opportunity-fund-governance.md documents the operational complexity honestly | N/A for this pass |
+| 6. Ethics + Social Impact | 6 | 8 | Report/block now built. Account deletion built. Opportunity Fund is designed with strict RLS — mentors cannot see financial need data. Privacy architecture documented explicitly. Governance doc written. | user_reports, user_blocks, DELETE /api/account/delete, RLS on financial_need_profiles | Terms of Service still needed; age gate still needed; Opportunity Fund eligibility verification process not yet defined |
+| 7. Team Credibility / Why Us | 7 | 7 | No change — team credibility is unchanged by this pass. | — | Co-founder or advisor with financial/nonprofit experience would strengthen this criterion significantly |
+| 8. Presentation Quality | 8 | 8 | Demo path updated to include Opportunity Fund. /opportunities page is fully demoable with honest pilot state. | Clean pilot state page; category cards; financial need profile form | Live demo with active fund would be stronger than the honest-empty-state demo |
+| 9. Q&A Readiness | 8 | 9 | pitch-qa.md extended with 30+ Opportunity Fund Q&A covering fraud, eligibility, governance, financial structure, and common attack angles. | pitch-qa.md Opportunity Fund section | Practice delivery; external sceptical reader test |
 
 ---
 
 ## Score Summary
 
-| | Before | After |
+| | Pass 1 | Pass 2 |
 |---|---|---|
-| **Total** | **42/90** | **62/90** |
-| **Average** | **4.7** | **6.9** |
+| **Total** | **62/90** | **69/90** |
+| **Average** | **6.9** | **7.7** |
 
-The remaining gap (28 points) cannot be closed with code. It requires traction, contracts, and business execution.
+The remaining gap (21 points) cannot be closed with code. It requires traction, capital, and business execution.
+
+---
+
+## The Two-Gap Story (New Framing for Pass 2)
+
+Mentee now addresses two distinct access problems:
+
+**Gap 1 — The Relationship Gap:** Finding the right person who has traveled the path you want to travel.
+→ Solved by: intelligent matching, founding mentor network, structured relationship tools.
+
+**Gap 2 — The Resource Gap:** Having the means to act on that person's guidance.
+→ Addressed by: Opportunity Fund — targeted professional-development support for students with demonstrated financial need.
+
+This framing makes Mentee harder to dismiss as "LinkedIn for students." The combination of mentorship infrastructure and opportunity funding creates a flywheel:
+
+MENTORSHIP → DIRECTION → OPPORTUNITY → FUNDING → ACTION → OUTCOME → NEXT GENERATION OF MENTORS
 
 ---
 
@@ -42,6 +58,8 @@ The remaining gap (28 points) cannot be closed with code. It requires traction, 
 
 4. **The mission is coherent.** "Access to mentorship should not depend on luck" is a clear, defensible thesis that is easy to understand and difficult to argue against.
 
+5. **The Opportunity Fund vision is architecturally honest.** The product communicates pilot status truthfully. No fake money, no fake sponsors, no fake recipients. The infrastructure exists to support real funding when capital is committed. This is a stronger position than pretending funds exist.
+
 ---
 
 ## What Mentee Is Genuinely Weak On
@@ -50,11 +68,13 @@ The remaining gap (28 points) cannot be closed with code. It requires traction, 
 
 2. **No revenue.** No institutional conversations, no paid users, no contracts. The business model is a framework, not a plan with evidence.
 
-3. **Trust/safety gaps.** No report/block, no Terms of Service, no age verification. Acceptable for a founding cohort of personally vetted people; not acceptable at scale.
+3. **Opportunity Fund has no capital.** The infrastructure exists. The legal/governance structure does not. The product is truthfully in pilot. Judges will ask when it launches.
 
-4. **One-person team.** No co-founder, no documented team. Judges will probe this.
+4. **Trust/safety gaps remain.** Report/block and account deletion are now built. Terms of Service, age gate, and Opportunity Fund eligibility verification are still missing.
 
-5. **GTM is unproven.** The relationship-driven acquisition model is coherent but untested beyond the founding cohort.
+5. **One-person team.** No co-founder, no documented team. Judges will probe this. An advisor with nonprofit/fund experience would strengthen credibility for the Opportunity Fund thesis.
+
+6. **GTM is unproven.** The relationship-driven acquisition model is coherent but untested beyond the founding cohort.
 
 ---
 
@@ -62,19 +82,21 @@ The remaining gap (28 points) cannot be closed with code. It requires traction, 
 
 **Recommended live demo sequence:**
 
-1. **Landing page** (30 sec) — Hero: "Find the mentor who changes everything." Scroll to MentorSection to show real mentors and the "before it was a platform, it was a pattern" origin story. Scroll to LifecycleSection to show the 5-step workflow.
+1. **Landing page** (30 sec) — Hero: "Find the mentor who changes everything." Scroll to MentorSection, LifecycleSection, and pause on the "Beyond Advice / Opportunity Fund" section. This establishes the two-gap thesis without leading with money.
 
-2. **Sign in to a demo account** (10 sec) — Pre-authenticated as a mentee. Land on the dashboard.
+2. **Sign in to a demo account** (10 sec) — Pre-authenticated as a mentee. Land on the dashboard. Point to the Opportunity Fund card.
 
-3. **Dashboard** (20 sec) — Show pending requests, active mentorships, upcoming sessions, and goals stats. Quick CTA to Discover.
+3. **Dashboard** (15 sec) — Show pending requests, active mentorships, goals stats, and the Opportunity Fund entry point.
 
-4. **Discover page** (30 sec) — Show real mentor cards with match scores and explicit match reasons. Demonstrate the filter panel (by industry or expertise). Click into a mentor card to show the full profile.
+4. **Discover page** (25 sec) — Show real mentor cards with match scores and explicit match reasons. Demonstrate filter panel.
 
-5. **Mentorship Request** (20 sec) — Click "Request Mentorship". Show the modal — personal message + goals fields + Voice Input button. Explain that the mentor will explicitly approve or decline.
+5. **Mentorship Request** (15 sec) — Show the request modal — goals + message. Explain the structured commitment.
 
-6. **Inside an active mentorship** (30 sec) — Switch to a demo account that already has an active mentorship. Show: Messages (real-time), Schedule (upcoming sessions with structured session view), Goals (active goals with completion tracking).
+6. **Inside an active mentorship** (25 sec) — Messages (real-time), Goals (tracking an interview-prep goal).
 
-7. **Closing** (10 sec) — "The full lifecycle is built. We're not pitching a mockup — we're pitching a working system. What we're solving is who gets access to this."
+7. **Opportunity Fund** (30 sec) — Navigate to /opportunities. Explain the pilot state honestly: "Here's what the system looks like before capital is committed. The student can express interest in Professional Attire support, link it to their IB interview goal, and tell us what's in the way. When a sponsor funds a cohort, this infrastructure is ready." Show the interest form briefly.
+
+8. **Closing** (10 sec) — "We're not pitching a mockup. We're pitching a system that connects the person, the guidance, the goal, and eventually the resources. What we're solving is who gets access to all of it."
 
 **Total: ~2:30**
 
@@ -85,14 +107,14 @@ The remaining gap (28 points) cannot be closed with code. It requires traction, 
 (See pitch-qa.md for full answers)
 
 1. What is your evidence that mentors will stay active?
-2. How do you prevent users from taking conversations off-platform?
-3. What is your CAC and how did you calculate it?
-4. Who pays, and when?
-5. How do you verify that mentors are who they say they are?
-6. Why can't LinkedIn just add this feature?
-7. How do you protect users from inappropriate mentor behaviour?
+2. Where does the Opportunity Fund money come from?
+3. Who verifies financial need? Can students lie?
+4. Why can't a university or employer just do this themselves?
+5. How do you prevent fraud in the grant process?
+6. How do you verify that mentors are who they say they are?
+7. Why can't LinkedIn just add this feature?
 8. You have a small founding network — how does this scale to people you don't know?
-9. What do you do when a mentor gives bad advice that harms a mentee's career?
+9. Is sponsor money revenue or restricted capital? How does accounting work?
 10. Why are you the right person to build this, and why now?
 
 ---
@@ -100,11 +122,12 @@ The remaining gap (28 points) cannot be closed with code. It requires traction, 
 ## Remaining Gaps by Type
 
 ### CAN FIX WITH CODE (before next pitch)
-- [ ] In-app report/block button on active mentorships
-- [ ] Account deletion in profile settings
+- [x] In-app report/block button on active mentorships — DONE
+- [x] Account deletion in profile settings — DONE
 - [ ] Age declaration checkbox at signup
 - [ ] Terms of Service page (even if minimal)
 - [ ] Dashboard N+1 query fix for session partner names
+- [ ] Opportunity Fund admin review interface (requires admin role architecture first)
 
 ### CAN ONLY FIX WITH TRACTION / VALIDATION
 - [ ] Mentor retention rate data
