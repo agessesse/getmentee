@@ -35,3 +35,21 @@ yarn-error.log*
 
 # IDE
 .cursor/
+.vercel
+
+# Impeccable (ephemeral, per-developer)
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/*.png
+.impeccable/live/
+
+# Claude Code local settings and installed skills (machine-specific)
+.claude/settings.local.json
+.claude/skills/
+.claude/agents/
+
+# Supabase CLI temp files
+supabase/.temp/
+
+# TypeScript build cache
+tsconfig.tsbuildinfo

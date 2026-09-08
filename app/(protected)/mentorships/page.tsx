@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Handshake } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import MentorshipCard from '@/components/mentorships/MentorshipCard';
 import Spinner from '@/components/ui/Spinner';
@@ -94,13 +96,32 @@ export default function MentorshipsPage() {
           <Spinner size="lg" />
         </div>
       ) : mentorships.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-lg font-medium">No mentorships yet</p>
-          <p className="text-sm mt-1">
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 flex flex-col items-center text-center">
+          <div className="w-11 h-11 bg-gray-50 rounded-xl flex items-center justify-center mb-4">
+            <Handshake className="w-5 h-5 text-gray-300" />
+          </div>
+          <p className="text-sm font-medium text-navy-900 mb-1">No mentorships yet</p>
+          <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
             {userRole === 'mentee'
-              ? 'Browse mentors and send a request to get started.'
-              : 'Approve requests to begin mentoring.'}
+              ? 'Once a mentor accepts your request, your mentorship appears here.'
+              : 'Mentorships appear here after you approve a request from the Requests page.'}
           </p>
+          {userRole === 'mentee' && (
+            <Link
+              href="/discover"
+              className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+            >
+              Find a mentor
+            </Link>
+          )}
+          {userRole === 'mentor' && (
+            <Link
+              href="/requests"
+              className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+            >
+              Review requests
+            </Link>
+          )}
         </div>
       ) : (
         <div className="space-y-8">

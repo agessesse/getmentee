@@ -57,13 +57,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-7">
             <Link
               href="/login"
-              className="text-sm text-gray-500 hover:text-navy-900 transition-colors font-medium"
+              className="text-sm text-gray-500 hover:text-navy-900 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded"
             >
               Sign in
             </Link>
             <Link
               href="/signup"
-              className="bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition-colors"
+              className="bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
             >
               Get started
             </Link>
@@ -128,9 +128,9 @@ export default function LandingPage() {
                   priority
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
-                  <p className="text-[9px] font-semibold text-white/60 uppercase tracking-[0.22em]">Mentor</p>
+                  <p className="text-[11px] font-semibold text-white/75 uppercase tracking-[0.22em]">Mentor</p>
                   <p className="text-[11px] font-bold text-white leading-tight">Christopher Floyd, CFA</p>
-                  <p className="text-[9px] text-white/55 mt-0.5 font-light">Head of Institutional Sales</p>
+                  <p className="text-[11px] text-white/75 mt-0.5 font-light">Head of Institutional Sales</p>
                 </div>
               </div>
 
@@ -146,9 +146,9 @@ export default function LandingPage() {
                   priority
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
-                  <p className="text-[9px] font-semibold text-white/60 uppercase tracking-[0.22em]">Mentee</p>
+                  <p className="text-[11px] font-semibold text-white/75 uppercase tracking-[0.22em]">Mentee</p>
                   <p className="text-[11px] font-bold text-white leading-tight">Abel Gessesse</p>
-                  <p className="text-[9px] text-white/55 mt-0.5 font-light">UNC Kenan-Flagler</p>
+                  <p className="text-[11px] text-white/75 mt-0.5 font-light">UNC Kenan-Flagler</p>
                 </div>
               </div>
             </div>

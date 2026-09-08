@@ -126,7 +126,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden text-gray-400 hover:text-navy-900 transition-colors p-1"
+        className="lg:hidden text-gray-400 hover:text-navy-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-lg"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -142,7 +142,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setNotifDropdown((v) => !v);
               setUserDropdown(false);
             }}
-            className="relative p-2 text-gray-400 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50"
+            className="relative p-2 text-gray-400 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
@@ -215,7 +215,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setUserDropdown((v) => !v);
               setNotifDropdown(false);
             }}
-            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
           >
             <Avatar src={user.avatar_url} name={fullName} size="sm" />
             <span className="hidden md:block text-sm font-medium text-navy-900 max-w-[120px] truncate">

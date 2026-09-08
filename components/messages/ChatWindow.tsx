@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Send, MoreVertical, Flag, Ban } from 'lucide-react';
+import { Send, MoreVertical, Flag, Ban, ChevronLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import MessageBubble from './MessageBubble';
 import Spinner from '@/components/ui/Spinner';
@@ -23,9 +23,10 @@ interface ChatWindowProps {
   partnerId: string;
   partnerName: string;
   partnerAvatarUrl: string | null;
+  onBack?: () => void;
 }
 
-export default function ChatWindow({ mentorshipId, currentUserId, partnerId, partnerName, partnerAvatarUrl }: ChatWindowProps) {
+export default function ChatWindow({ mentorshipId, currentUserId, partnerId, partnerName, partnerAvatarUrl, onBack }: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
@@ -156,6 +157,15 @@ export default function ChatWindow({ mentorshipId, currentUserId, partnerId, par
       {/* Chat header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
         <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              onClick={onBack}
+              aria-label="Back to conversations"
+              className="md:hidden -ml-1 p-1.5 text-gray-400 hover:text-navy-900 rounded-lg hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
           <Avatar src={partnerAvatarUrl} name={partnerName} size="sm" />
           <span className="text-sm font-semibold text-navy-900">{partnerName}</span>
         </div>

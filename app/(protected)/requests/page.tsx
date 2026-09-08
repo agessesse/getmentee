@@ -2,10 +2,75 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import { ClipboardList } from 'lucide-react';
 import RequestCard from '@/components/requests/RequestCard';
 import Spinner from '@/components/ui/Spinner';
 
 type Status = 'pending' | 'approved' | 'declined';
+
+// ─── Empty state ──────────────────────────────────────────────────────────────
+
+function EmptyRequestsState({ tab, userRole }: { tab: Status; userRole: 'mentor' | 'mentee' }) {
+  const config = {
+    pending: {
+      mentor: {
+        title: 'No pending requests',
+        body: 'When a mentee reaches out to you, their request will appear here for you to review.',
+        cta: null,
+      },
+      mentee: {
+        title: 'No pending requests',
+        body: 'Find a mentor and send a request to get started. Mentors typically respond within a few days.',
+        cta: { label: 'Browse mentors', href: '/discover' },
+      },
+    },
+    approved: {
+      mentor: {
+        title: 'No approved requests',
+        body: 'Requests you have approved will show here. Approved mentorships move to the Mentorships page.',
+        cta: { label: 'View mentorships', href: '/mentorships' },
+      },
+      mentee: {
+        title: 'No approved requests yet',
+        body: 'Once a mentor accepts your request, it will appear here and your mentorship begins.',
+        cta: { label: 'View mentorships', href: '/mentorships' },
+      },
+    },
+    declined: {
+      mentor: {
+        title: 'No declined requests',
+        body: 'Requests you have declined are recorded here for reference.',
+        cta: null,
+      },
+      mentee: {
+        title: 'No declined requests',
+        body: 'If a mentor is unable to take you on, their response will appear here.',
+        cta: null,
+      },
+    },
+  };
+
+  const { title, body, cta } = config[tab][userRole];
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-12 flex flex-col items-center text-center">
+      <div className="w-11 h-11 bg-gray-50 rounded-xl flex items-center justify-center mb-4">
+        <ClipboardList className="w-5 h-5 text-gray-300" />
+      </div>
+      <p className="text-sm font-medium text-navy-900 mb-1">{title}</p>
+      <p className="text-sm text-gray-400 max-w-xs leading-relaxed">{body}</p>
+      {cta && (
+        <Link
+          href={cta.href}
+          className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+        >
+          {cta.label}
+        </Link>
+      )}
+    </div>
+  );
+}
 
 interface Request {
   id: string;
@@ -283,9 +348,7 @@ export default function RequestsPage() {
           <Spinner size="lg" />
         </div>
       ) : requests.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-lg font-medium">No {tab} requests</p>
-        </div>
+        <EmptyRequestsState tab={tab} userRole={userRole} />
       ) : (
         <div className="space-y-4">
           {requests.map((req) => (

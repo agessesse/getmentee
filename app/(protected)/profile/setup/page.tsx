@@ -63,25 +63,28 @@ type Step = 1 | 2 | 3;
 // -------------------------------------------------------
 function StepIndicator({ current, total, labels }: { current: Step; total: number; labels: string[] }) {
   return (
-    <div className="flex items-center gap-0 mb-8">
+    <div className="flex items-start mb-8" role="list" aria-label="Progress">
       {Array.from({ length: total }, (_, i) => {
         const step = (i + 1) as Step;
         const done = current > step;
         const active = current === step;
         return (
-          <div key={step} className="flex items-center flex-1">
+          <div key={step} className="flex items-center flex-1" role="listitem">
             <div className="flex flex-col items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                done ? 'bg-green-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-400'
-              }`}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all flex-shrink-0 ${
+                  done ? 'bg-green-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-400'
+                }`}
+                aria-label={`Step ${step}: ${labels[i]}${done ? ' (complete)' : active ? ' (current)' : ''}`}
+              >
                 {done ? <Check className="w-4 h-4" /> : step}
               </div>
-              <span className={`text-xs mt-1 font-medium ${active ? 'text-navy-900' : 'text-gray-400'}`}>
+              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-navy-900' : 'text-gray-400'}`}>
                 {labels[i]}
               </span>
             </div>
             {i < total - 1 && (
-              <div className={`h-0.5 flex-1 mx-2 mb-5 transition-colors ${done ? 'bg-green-500' : 'bg-gray-200'}`} />
+              <div className={`h-0.5 flex-1 mx-2 mt-4 transition-colors flex-shrink ${done ? 'bg-green-500' : 'bg-gray-200'}`} />
             )}
           </div>
         );
@@ -339,7 +342,7 @@ export default function ProfileSetupPage() {
         {/* ── STEP 1: Basic Info (both roles) ── */}
         {step === 1 && (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="First name">
                 <TextInput value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jordan" required />
               </Field>
@@ -357,7 +360,7 @@ export default function ProfileSetupPage() {
             <Field label="Location">
               <TextInput value={location} onChange={(e) => setLocation(e.target.value)} placeholder="New York, NY" />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="University">
                 <TextInput value={university} onChange={(e) => setUniversity(e.target.value)} placeholder="UNC Chapel Hill" />
               </Field>
@@ -374,7 +377,7 @@ export default function ProfileSetupPage() {
         {/* ── STEP 2: Experience (mentor) ── */}
         {step === 2 && role === 'mentor' && (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Company">
                 <TextInput value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Goldman Sachs" />
               </Field>
@@ -403,7 +406,7 @@ export default function ProfileSetupPage() {
             <Field label="Major / Field of study">
               <TextInput value={major} onChange={(e) => setMajor(e.target.value)} placeholder="Finance & Statistics" />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Experience level">
                 <SelectInput value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)}>
                   <option value="beginner">Beginner — just getting started</option>
@@ -441,7 +444,7 @@ export default function ProfileSetupPage() {
             <Field label="Goals I help mentees achieve" hint={`Select up to 5 (${goalsMentor.length}/5 selected)`}>
               <TagPicker options={GOAL_OPTIONS_MENTOR} value={goalsMentor} onChange={setGoalsMentor} max={5} />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Hours available per week">
                 <TextInput type="number" value={weeklyHours} onChange={(e) => setWeeklyHours(e.target.value)} placeholder="3" min="1" max="20" />
               </Field>

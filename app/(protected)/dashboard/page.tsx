@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
+import Avatar from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
 import SignInTransition from '@/components/auth/SignInTransition';
 
@@ -137,6 +138,66 @@ function CapacityBar({
           </Link>
         </p>
       )}
+    </div>
+  );
+}
+
+// ─── First-run guide (shown only when account has zero activity) ──────────────
+
+function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
+  const steps = isMentee
+    ? [
+        {
+          href: '/discover',
+          label: 'Find a mentor',
+          detail: 'Browse professionals at top firms who have chosen to invest in someone else\'s future.',
+          primary: true,
+        },
+        {
+          href: '/profile/setup',
+          label: 'Complete your profile',
+          detail: 'Help mentors understand your goals so they can decide whether they\'re a good fit for you.',
+          primary: false,
+        },
+      ]
+    : [
+        {
+          href: '/requests',
+          label: 'Review incoming requests',
+          detail: 'Mentees who want to work with you will send requests here. Approve to begin a mentorship.',
+          primary: true,
+        },
+        {
+          href: '/profile/setup',
+          label: 'Update your profile',
+          detail: 'Make sure your availability, expertise tags, and bio are current so mentees can find you.',
+          primary: false,
+        },
+      ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {steps.map((step) => (
+        <Link
+          key={step.href}
+          href={step.href}
+          className={`group flex flex-col gap-3 rounded-2xl border p-5 transition-all hover:shadow-sm ${
+            step.primary
+              ? 'bg-navy-900 border-navy-900 hover:bg-navy-800'
+              : 'bg-white border-gray-100 hover:border-navy-200'
+          }`}
+        >
+          <p className={`text-base font-semibold leading-snug ${step.primary ? 'text-white' : 'text-navy-900'}`}>
+            {step.label}
+          </p>
+          <p className={`text-sm font-light leading-relaxed flex-1 ${step.primary ? 'text-navy-300' : 'text-gray-500'}`}>
+            {step.detail}
+          </p>
+          <span className={`text-sm font-medium ${step.primary ? 'text-navy-400 group-hover:text-navy-200' : 'text-navy-600 group-hover:text-navy-900'} transition-colors`}>
+            {step.primary ? 'Get started →' : 'Go →'}
+          </span>
+        </Link>
+      ))}
     </div>
   );
 }
@@ -340,6 +401,11 @@ export default function DashboardPage() {
   } = data;
 
   const isMentee = profile.role === 'mentee';
+  const isNewUser =
+    pendingRequests === 0 &&
+    activeMentorships === 0 &&
+    totalSessions === 0 &&
+    activeGoals === 0;
 
   return (
     <>
@@ -444,35 +510,39 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* ── Shared stat grid ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
-          value={pendingRequests}
-          label="Pending Requests"
-          icon={ClipboardList}
-          href="/requests"
-        />
-        <StatCard
-          value={activeMentorships}
-          label="Active Mentorships"
-          icon={Handshake}
-          href={isMentee ? '/mentorships' : '/mentees'}
-          color="green"
-        />
-        <StatCard
-          value={totalSessions}
-          label="Sessions Completed"
-          icon={TrendingUp}
-          href="/schedule"
-          color="amber"
-        />
-        <StatCard
-          value={activeGoals}
-          label="Active Goals"
-          icon={Target}
-          href="/goals"
-        />
-      </div>
+      {/* ── Stat grid or first-run guide ─────────────────────────────────── */}
+      {isNewUser ? (
+        <FirstRunGuide isMentee={isMentee} />
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard
+            value={pendingRequests}
+            label="Pending Requests"
+            icon={ClipboardList}
+            href="/requests"
+          />
+          <StatCard
+            value={activeMentorships}
+            label="Active Mentorships"
+            icon={Handshake}
+            href={isMentee ? '/mentorships' : '/mentees'}
+            color="green"
+          />
+          <StatCard
+            value={totalSessions}
+            label="Sessions Completed"
+            icon={TrendingUp}
+            href="/schedule"
+            color="amber"
+          />
+          <StatCard
+            value={activeGoals}
+            label="Active Goals"
+            icon={Target}
+            href="/goals"
+          />
+        </div>
+      )}
 
       {/* ── Upcoming sessions + recent messages ──────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -586,11 +656,7 @@ export default function DashboardPage() {
                   href={`/messages?mentorshipId=${msg.mentorship_id}`}
                   className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0 hover:opacity-80 transition-opacity"
                 >
-                  <div className="w-8 h-8 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-bold text-navy-700">
-                      {msg.sender_name[0]}
-                    </span>
-                  </div>
+                  <Avatar name={msg.sender_name} size="sm" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium text-navy-900">
@@ -625,7 +691,7 @@ export default function DashboardPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-navy-900">Opportunity Fund</p>
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
                 Pilot
               </span>
             </div>

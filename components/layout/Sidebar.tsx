@@ -136,7 +136,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
             if (visibleItems.length === 0) return null;
             return (
               <div key={section.label}>
-                <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-navy-500">
+                <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-navy-500">
                   {section.label}
                 </p>
                 <div className="space-y-0.5">
@@ -148,7 +148,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
                         href={href}
                         onClick={onClose}
                         className={clsx(
-                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all',
+                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
                           active
                             ? 'bg-white/10 text-white'
                             : 'text-navy-300 hover:bg-white/5 hover:text-white'
@@ -169,7 +169,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
         <div className="px-3 pb-3">
           <button
             onClick={() => setInviteOpen(true)}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-navy-300 hover:bg-white/5 hover:text-white transition-all"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-navy-300 hover:bg-white/5 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
             <UserPlus className="h-4 w-4 flex-shrink-0 text-navy-400" />
             Invite a mentor
