@@ -561,6 +561,17 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     status: 'sourced',
   },
   {
+    slug: 'will-walker',
+    firstName: 'William',
+    lastName: 'Walker III',
+    bio: 'Student building a path in finance and business.',
+    image: '/people/will-walker.jpg',
+    portraitPosition: '50% 15%',
+    interestTags: ['Finance', 'Business', 'Career Development'],
+    linkedInUrl: 'https://www.linkedin.com/in/william-walker-iii/',
+    status: 'sourced',
+  },
+  {
     slug: 'pablo-n',
     firstName: 'Pablo',
     lastName: 'N.',
