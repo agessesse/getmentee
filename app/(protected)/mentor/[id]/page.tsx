@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Star, MapPin, Building2, GraduationCap, Globe, CheckCircle, ArrowLeft, Bookmark, BookmarkCheck, Link as LinkIcon, Award } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import RequestModal from '@/components/mentor/RequestModal';
+import ReportUserModal from '@/components/user/ReportUserModal';
 
 interface MentorDetail {
   id: string;
@@ -103,6 +105,7 @@ function computeMatch(mentor: MentorDetail, mentee: {
 
 export default function MentorProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const analyticsFiredRef = useRef(false);
   const [mentor, setMentor] = useState<MentorDetail | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userId, setUserId] = useState('');
@@ -111,6 +114,7 @@ export default function MentorProfilePage() {
   const [isSaved, setIsSaved] = useState(false);
   const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -124,7 +128,7 @@ export default function MentorProfilePage() {
 
       const [mentorRes, profileRes, requestRes, reviewsRes, savedRes] = await Promise.all([
         supabase
-          .from('profiles')
+          .from('public_profiles')
           .select('id, first_name, last_name, avatar_url, headline, location, university, graduation_year, linkedin_url, mentor_profiles(*)')
           .eq('id', id)
           .single(),
@@ -138,7 +142,7 @@ export default function MentorProfilePage() {
           .maybeSingle(),
         supabase
           .from('reviews')
-          .select('id, rating, feedback, created_at, reviewer:reviewer_id(first_name, last_name, avatar_url)')
+          .select('id, rating, feedback, created_at, reviewer_id')
           .eq('reviewee_id', id)
           .order('created_at', { ascending: false })
           .limit(10),
@@ -154,7 +158,25 @@ export default function MentorProfilePage() {
       setMentor(mentorData);
       setUserRole(profileRes.data?.role as 'mentor' | 'mentee');
       setHasRequest(!!requestRes.data);
-      setReviews(reviewsRes.data as unknown as Review[] ?? []);
+
+      // Fetch reviewer display names from public_profiles (safe view, no email)
+      const rawReviews = reviewsRes.data ?? [];
+      if (rawReviews.length > 0) {
+        const reviewerIds = [...new Set(rawReviews.map((r: { reviewer_id: string }) => r.reviewer_id))];
+        const { data: reviewerProfiles } = await supabase
+          .from('public_profiles')
+          .select('id, first_name, last_name, avatar_url')
+          .in('id', reviewerIds);
+        const rMap = new Map(reviewerProfiles?.map((p) => [p.id, p]) ?? []);
+        setReviews(rawReviews.map((r: { id: string; rating: number; feedback: string | null; created_at: string; reviewer_id: string }) => ({
+          ...r,
+          reviewer: rMap.get(r.reviewer_id) ?? { first_name: 'Anonymous', last_name: '', avatar_url: null },
+        })));
+      } else {
+        setReviews([]);
+      }
+
+      setIsSaved(!!savedRes.data);
       setIsSaved(!!savedRes.data);
 
       // Compute match if mentee
@@ -181,6 +203,11 @@ export default function MentorProfilePage() {
       }
 
       setLoading(false);
+
+      if (!analyticsFiredRef.current) {
+        analyticsFiredRef.current = true;
+        void trackEvent('mentor_profile_viewed', profileRes.data?.role as 'mentor' | 'mentee', { entityId: id });
+      }
     }
     load();
   }, [id]);
@@ -195,6 +222,7 @@ export default function MentorProfilePage() {
     });
     if (error) throw new Error(error.message);
     setHasRequest(true);
+    void trackEvent('mentorship_requested', userRole, { entityId: id });
   };
 
   const handleSaveToggle = async () => {
@@ -324,34 +352,44 @@ export default function MentorProfilePage() {
 
             {/* CTA */}
             {userRole === 'mentee' && (
-              <div className="mt-5 flex items-center gap-3">
-                <button
-                  onClick={() => setModalOpen(true)}
-                  disabled={hasRequest || !mp.is_available}
-                  className={`px-6 py-2.5 rounded-xl font-medium text-sm transition-all ${
-                    hasRequest
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : !mp.is_available
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-navy-900 text-white hover:bg-navy-800'
-                  }`}
-                >
-                  {hasRequest ? '✓ Request Sent' : 'Request Mentorship'}
-                </button>
-                {mentor.linkedin_url && (
-                  <a
-                    href={mentor.linkedin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-300 transition-all"
-                    title="LinkedIn"
+              <div className="mt-5">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    disabled={hasRequest || !mp.is_available}
+                    className={`px-6 py-2.5 rounded-xl font-medium text-sm transition-all ${
+                      hasRequest
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : !mp.is_available
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-navy-900 text-white hover:bg-navy-800'
+                    }`}
                   >
-                    <LinkIcon className="w-4 h-4" />
-                  </a>
+                    {hasRequest ? '✓ Request Sent' : 'Request Mentorship'}
+                  </button>
+                  {mentor.linkedin_url && (
+                    <a
+                      href={mentor.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-300 transition-all"
+                      title="LinkedIn"
+                    >
+                      <LinkIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  <span className="text-sm text-gray-400">
+                    {mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}
+                  </span>
+                </div>
+                {hasRequest && (
+                  <p className="mt-2 text-xs text-gray-400">
+                    Your request is pending.{' '}
+                    <Link href="/requests" className="text-navy-600 hover:text-navy-800 underline underline-offset-2 font-medium">
+                      Track it in Requests →
+                    </Link>
+                  </p>
                 )}
-                <span className="text-sm text-gray-400">
-                  {mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}
-                </span>
               </div>
             )}
           </div>
@@ -502,6 +540,18 @@ export default function MentorProfilePage() {
         </div>
       </div>
 
+      {/* Report link — subtle, sidebar bottom */}
+      {userRole === 'mentee' && (
+        <div className="flex justify-center">
+          <button
+            onClick={() => setReportOpen(true)}
+            className="text-xs text-gray-300 hover:text-gray-500 transition-colors"
+          >
+            Report this profile
+          </button>
+        </div>
+      )}
+
       {modalOpen && (
         <RequestModal
           open={modalOpen}
@@ -510,6 +560,14 @@ export default function MentorProfilePage() {
           onSubmit={handleRequest}
         />
       )}
+
+      <ReportUserModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        reportedId={mentor.id}
+        reportedName={fullName}
+        context="profile"
+      />
     </div>
   );
 }

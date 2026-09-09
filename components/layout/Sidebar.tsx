@@ -13,8 +13,6 @@ import {
   Calendar,
   User,
   Target,
-  Network,
-  Users,
   X,
   BarChart2,
   UserPlus,
@@ -41,7 +39,6 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/discover', label: 'Discover', icon: Search, menteeOnly: true },
-      { href: '/mentees', label: 'Mentees', icon: Users, mentorOnly: true },
       { href: '/impact', label: 'My Impact', icon: BarChart2, mentorOnly: true },
       { href: '/opportunities', label: 'Opportunity Fund', icon: Lightbulb, menteeOnly: true },
     ],
@@ -52,7 +49,6 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/requests', label: 'Requests', icon: ClipboardList },
       { href: '/mentorships', label: 'Mentorships', icon: Handshake },
       { href: '/goals', label: 'Goals', icon: Target },
-      { href: '/network', label: 'My Network', icon: Network },
     ],
   },
   {
@@ -165,16 +161,18 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
           })}
         </nav>
 
-        {/* Invite CTA */}
-        <div className="px-3 pb-3">
-          <button
-            onClick={() => setInviteOpen(true)}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-navy-300 hover:bg-white/5 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-          >
-            <UserPlus className="h-4 w-4 flex-shrink-0 text-navy-400" />
-            Invite a mentor
-          </button>
-        </div>
+        {/* Invite CTA — mentees only */}
+        {role === 'mentee' && (
+          <div className="px-3 pb-3">
+            <button
+              onClick={() => setInviteOpen(true)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-navy-300 hover:bg-white/5 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            >
+              <UserPlus className="h-4 w-4 flex-shrink-0 text-navy-400" />
+              Invite a mentor
+            </button>
+          </div>
+        )}
 
         {/* User footer */}
         <div className="px-3 py-4 border-t border-navy-800">

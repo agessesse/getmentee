@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Send, MoreVertical, Flag, Ban, ChevronLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 import MessageBubble from './MessageBubble';
 import Spinner from '@/components/ui/Spinner';
 import VoiceInputButton from '@/components/voice/VoiceInputButton';
@@ -20,13 +21,14 @@ interface Message {
 interface ChatWindowProps {
   mentorshipId: string;
   currentUserId: string;
+  currentUserRole: 'mentor' | 'mentee';
   partnerId: string;
   partnerName: string;
   partnerAvatarUrl: string | null;
   onBack?: () => void;
 }
 
-export default function ChatWindow({ mentorshipId, currentUserId, partnerId, partnerName, partnerAvatarUrl, onBack }: ChatWindowProps) {
+export default function ChatWindow({ mentorshipId, currentUserId, currentUserRole, partnerId, partnerName, partnerAvatarUrl, onBack }: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
@@ -128,11 +130,14 @@ export default function ChatWindow({ mentorshipId, currentUserId, partnerId, par
     setInput('');
 
     const supabase = createClient();
-    await supabase.from('messages').insert({
+    const { error } = await supabase.from('messages').insert({
       mentorship_id: mentorshipId,
       sender_id: currentUserId,
       content: text,
     });
+    if (!error) {
+      void trackEvent('message_sent', currentUserRole, { entityId: mentorshipId });
+    }
     setSending(false);
   }
 

@@ -79,7 +79,7 @@ export default function TabsSection() {
               {tab.eyebrow}
             </p>
             <h2
-              className="font-bold text-navy-900 leading-tight mb-6"
+              className="font-serif text-navy-900 leading-tight mb-6"
               style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.75rem)' }}
             >
               {tab.heading}

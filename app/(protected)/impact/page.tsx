@@ -187,16 +187,18 @@ export default function ImpactPage() {
       // ── Build timeline ──────────────────────────────────────────────────────
       const events: TimelineEvent[] = [];
 
+      // Batch-fetch all mentee display names in one query
+      const menteeIds = [...new Set((allMentorships ?? []).map((m) => m.mentee_id))];
+      const { data: menteeProfilesBatch } = menteeIds.length > 0
+        ? await supabase.from('public_profiles').select('id, first_name, last_name').in('id', menteeIds)
+        : { data: [] };
+      const menteeNameMap = new Map(
+        (menteeProfilesBatch ?? []).map((p) => [p.id, `${p.first_name} ${p.last_name}`])
+      );
+
       // Mentorships started
       for (const m of allMentorships ?? []) {
-        const menteeRes = await supabase
-          .from('profiles')
-          .select('first_name, last_name')
-          .eq('id', m.mentee_id)
-          .single();
-        const name = menteeRes.data
-          ? `${menteeRes.data.first_name} ${menteeRes.data.last_name}`
-          : 'a mentee';
+        const name = menteeNameMap.get(m.mentee_id) ?? 'a mentee';
         events.push({
           id: `ms-${m.id}`,
           type: 'mentorship_started',

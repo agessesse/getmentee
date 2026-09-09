@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 import RequestModal from '@/components/mentor/RequestModal';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
@@ -201,7 +202,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
           View profile
         </Link>
         <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-gray-50 text-xs font-medium text-gray-400 cursor-default">
-          Invitation pending
+          Not yet on Mentee
         </div>
       </div>
     </div>
@@ -391,6 +392,7 @@ function LiveMentorCard({
 
 export default function DiscoverPage() {
   const router = useRouter();
+  const analyticsFiredRef = useRef(false);
   const [liveMentors, setLiveMentors] = useState<LiveMentorData[]>([]);
   const [existingRequests, setExistingRequests] = useState<Set<string>>(new Set());
   const [savedMentors, setSavedMentors] = useState<Set<string>>(new Set());
@@ -403,6 +405,7 @@ export default function DiscoverPage() {
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [sort, setSort] = useState<'match' | 'rating' | 'experience'>('match');
   const [availableOnly, setAvailableOnly] = useState(false);
+  const [savedOnly, setSavedOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const [modalMentor, setModalMentor] = useState<LiveMentorData | null>(null);
@@ -438,8 +441,13 @@ export default function DiscoverPage() {
       return;
     }
 
+    if (!analyticsFiredRef.current) {
+      analyticsFiredRef.current = true;
+      void trackEvent('discover_page_viewed', 'mentee');
+    }
+
     const { data } = await supabase
-      .from('profiles')
+      .from('public_profiles')
       .select(`
         id, first_name, last_name, avatar_url, headline, location, university,
         mentor_profiles (
@@ -536,6 +544,7 @@ export default function DiscoverPage() {
   // ── Filter + sort live mentors ──────────────────────────────────────────────
   const filteredLiveMentors = liveMentors
     .filter((m) => {
+      if (savedOnly && !savedMentors.has(m.id)) return false;
       if (availableOnly && !m.mentor_profiles?.is_available) return false;
       if (selectedIndustry && m.mentor_profiles?.industry !== selectedIndustry) return false;
       if (selectedExpertise.length > 0 &&
@@ -589,11 +598,12 @@ export default function DiscoverPage() {
     setSelectedIndustry('');
     setSelectedExpertise([]);
     setAvailableOnly(false);
+    setSavedOnly(false);
     setSort('match');
   };
 
   const activeFilterCount =
-    (selectedIndustry ? 1 : 0) + selectedExpertise.length + (availableOnly ? 1 : 0);
+    (selectedIndustry ? 1 : 0) + selectedExpertise.length + (availableOnly ? 1 : 0) + (savedOnly ? 1 : 0);
 
   const totalMentorCount = filteredLiveMentors.length + filteredSourcedMentors.length;
 
@@ -625,6 +635,20 @@ export default function DiscoverPage() {
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
           />
         </div>
+
+        {savedMentors.size > 0 && (
+          <button
+            onClick={() => setSavedOnly((v) => !v)}
+            className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+              savedOnly
+                ? 'border-navy-600 bg-navy-50 text-navy-700'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+            }`}
+          >
+            <BookmarkCheck className="w-4 h-4" />
+            Saved
+          </button>
+        )}
 
         <button
           onClick={() => setShowFilters((v) => !v)}

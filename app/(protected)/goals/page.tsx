@@ -33,6 +33,7 @@ export default function GoalsPage() {
   const [form, setForm] = useState<NewGoalForm>({ mentorshipId: '', title: '', description: '', targetDate: '' });
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState('');
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -55,7 +56,7 @@ export default function GoalsPage() {
 
       const partnerIds = (msList ?? []).map((m) => m[partnerField]);
       const { data: partnerProfiles } = await supabase
-        .from('profiles')
+        .from('public_profiles')
         .select('id, first_name, last_name')
         .in('id', partnerIds);
 
@@ -95,9 +96,10 @@ export default function GoalsPage() {
     e.preventDefault();
     if (!form.mentorshipId || !form.title) return;
     setSaving(true);
+    setActionError(null);
 
     const supabase = createClient();
-    const { data: newGoal } = await supabase
+    const { data: newGoal, error } = await supabase
       .from('mentorship_goals')
       .insert({
         mentorship_id: form.mentorshipId,
@@ -109,34 +111,40 @@ export default function GoalsPage() {
       .select('id, mentorship_id, title, description, status, target_date, completed_at, created_at')
       .single();
 
-    if (newGoal) {
+    if (error) {
+      setActionError('Could not create goal. Please try again.');
+    } else if (newGoal) {
       const msName = mentorships.find((m) => m.id === form.mentorshipId)?.partnerName ?? 'Unknown';
       setGoals((prev) => [{
         ...newGoal,
         status: newGoal.status as 'active' | 'completed' | 'cancelled',
         partnerName: msName,
       }, ...prev]);
+      setForm((f) => ({ ...f, title: '', description: '', targetDate: '' }));
+      setShowForm(false);
     }
-
-    setForm((f) => ({ ...f, title: '', description: '', targetDate: '' }));
-    setShowForm(false);
     setSaving(false);
   };
 
   const markComplete = async (goalId: string) => {
+    setActionError(null);
     const supabase = createClient();
-    await supabase
+    const { error } = await supabase
       .from('mentorship_goals')
       .update({ status: 'completed', completed_at: new Date().toISOString() })
       .eq('id', goalId);
 
-    setGoals((prev) =>
-      prev.map((g) =>
-        g.id === goalId
-          ? { ...g, status: 'completed', completed_at: new Date().toISOString() }
-          : g
-      )
-    );
+    if (error) {
+      setActionError('Could not update goal. Please try again.');
+    } else {
+      setGoals((prev) =>
+        prev.map((g) =>
+          g.id === goalId
+            ? { ...g, status: 'completed', completed_at: new Date().toISOString() }
+            : g
+        )
+      );
+    }
   };
 
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
@@ -146,6 +154,12 @@ export default function GoalsPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
+      {actionError && (
+        <div className="flex items-center justify-between gap-3 bg-red-50 border border-red-200 rounded-2xl px-5 py-3.5">
+          <p className="text-sm font-medium text-red-700">{actionError}</p>
+          <button onClick={() => setActionError(null)} className="text-red-400 hover:text-red-600 text-xs flex-shrink-0">Dismiss</button>
+        </div>
+      )}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-navy-900">Goals</h1>

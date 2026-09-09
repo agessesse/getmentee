@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { ClipboardList } from 'lucide-react';
+import { ClipboardList, CheckCircle } from 'lucide-react';
 import RequestCard from '@/components/requests/RequestCard';
 import Spinner from '@/components/ui/Spinner';
 
@@ -118,6 +118,8 @@ export default function RequestsPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [capacity, setCapacity] = useState<CapacityInfo | null>(null);
+  const [recentlyApproved, setRecentlyApproved] = useState<{ name: string } | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -179,7 +181,7 @@ export default function RequestsPage() {
 
     const partnerIds = data.map((r) => r[partnerField as 'mentor_id' | 'mentee_id']);
     const { data: partners } = await supabase
-      .from('profiles')
+      .from('public_profiles')
       .select('id, first_name, last_name, avatar_url, headline, university')
       .in('id', partnerIds);
 
@@ -245,27 +247,57 @@ export default function RequestsPage() {
     mentorId?: string
   ) {
     setActionLoadingId(requestId);
+    setActionError(null);
     const supabase = createClient();
 
-    const { error } = await supabase
+    const { error: updateError } = await supabase
       .from('mentorship_requests')
       .update({ status: newStatus })
       .eq('id', requestId);
 
-    if (!error && newStatus === 'approved' && menteeId && mentorId) {
-      await supabase.from('mentorships').insert({
+    if (updateError) {
+      setActionError('Something went wrong. Please try again.');
+      setActionLoadingId(null);
+      return;
+    }
+
+    if (newStatus === 'approved' && menteeId && mentorId) {
+      const { error: msError } = await supabase.from('mentorships').insert({
         request_id: requestId,
         mentee_id: menteeId,
         mentor_id: mentorId,
       });
-      // Update capacity count
+      if (msError) {
+        setActionError('Request approved but mentorship could not be created. Please contact support.');
+        setActionLoadingId(null);
+        return;
+      }
       if (capacity) {
         setCapacity((prev) =>
           prev ? { ...prev, activeMentees: prev.activeMentees + 1 } : prev
         );
       }
+      // Show confirmation banner
+      const approved = requests.find((r) => r.id === requestId);
+      if (approved) {
+        setRecentlyApproved({
+          name: `${approved.partner.first_name} ${approved.partner.last_name}`,
+        });
+        setTimeout(() => setRecentlyApproved(null), 6000);
+      }
     }
 
+    setRequests((prev) => prev.filter((r) => r.id !== requestId));
+    setActionLoadingId(null);
+  }
+
+  async function withdrawRequest(requestId: string) {
+    setActionLoadingId(requestId);
+    const supabase = createClient();
+    await supabase
+      .from('mentorship_requests')
+      .delete()
+      .eq('id', requestId);
     setRequests((prev) => prev.filter((r) => r.id !== requestId));
     setActionLoadingId(null);
   }
@@ -289,6 +321,36 @@ export default function RequestsPage() {
             : 'Track the status of your mentorship requests.'}
         </p>
       </div>
+
+      {/* Action error banner */}
+      {actionError && (
+        <div className="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl px-5 py-4">
+          <p className="text-sm font-medium text-red-700">{actionError}</p>
+          <button onClick={() => setActionError(null)} className="ml-auto text-red-400 hover:text-red-600 text-xs">Dismiss</button>
+        </div>
+      )}
+
+      {/* Post-approval confirmation banner */}
+      {recentlyApproved && (
+        <div className="mb-6 flex items-start gap-3 bg-green-50 border border-green-200 rounded-2xl px-5 py-4">
+          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-green-800">
+              You&apos;re now mentoring {recentlyApproved.name}
+            </p>
+            <p className="text-xs text-green-600 mt-0.5">
+              The mentorship has started.{' '}
+              <Link href="/mentorships" className="underline font-medium hover:text-green-800">
+                View in Mentorships
+              </Link>{' '}
+              or{' '}
+              <Link href="/messages" className="underline font-medium hover:text-green-800">
+                send them a message
+              </Link>.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Capacity bar — mentor only */}
       {capacity && (
@@ -377,7 +439,7 @@ export default function RequestsPage() {
                 )
               }
               onDecline={() => updateRequestStatus(req.id, 'declined')}
-              onCancel={() => updateRequestStatus(req.id, 'declined')}
+              onCancel={() => withdrawRequest(req.id)}
             />
           ))}
         </div>

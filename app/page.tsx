@@ -83,7 +83,7 @@ export default function LandingPage() {
               </p>
 
               <h1
-                className="font-bold text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
+                className="font-serif text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
                 style={{ fontSize: 'clamp(2.9rem, 8.5vw, 6.5rem)' }}
               >
                 The right mentor<br />
@@ -163,6 +163,23 @@ export default function LandingPage() {
       {/* ── Mentor grid ──────────────────────────────────────────────────────── */}
       <MentorGrid />
 
+      {/* ── CTA after mentor grid ──────────────────────────────────────────── */}
+      <section className="py-14 px-6 lg:px-10 border-t border-gray-100 bg-white">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div>
+            <p className="text-lg font-bold text-navy-900">See a mentor you want to connect with?</p>
+            <p className="text-sm text-gray-500 mt-1 font-light">Create a free account to send a request.</p>
+          </div>
+          <Link
+            href="/signup"
+            className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-7 py-3.5 text-sm font-medium hover:bg-navy-800 transition-colors rounded-xl flex-shrink-0"
+          >
+            Get started
+            <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+
       {/* ── Bridge: experience flows forward ────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         <div className="border-t border-gray-100 pt-8 pb-2">
@@ -186,7 +203,7 @@ export default function LandingPage() {
               <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.2em] mb-6">
                 Intelligent matching
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+              <h2 className="text-3xl md:text-4xl font-serif text-white mb-6 leading-tight">
                 More than a search bar.
               </h2>
               <p className="text-navy-300 font-light leading-relaxed mb-10 text-[15px]">
@@ -216,26 +233,35 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works (numbered editorial) ──────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-10 bg-navy-900 border-t border-navy-800">
+      <section className="py-20 px-6 lg:px-10 bg-cream-50 border-t border-gray-100">
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">How it works</h2>
-            <p className="text-navy-500 font-light">From signup to your first session in under a week.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-2">How it works</h2>
+            <p className="text-gray-500 font-light">From signup to your first session in under a week.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {HOW_IT_WORKS.map((step) => (
               <div key={step.step}>
                 <div
-                  className="font-bold text-navy-800 leading-none mb-5 select-none"
+                  className="font-bold text-gray-100 leading-none mb-5 select-none"
                   style={{ fontSize: 'clamp(4rem, 8vw, 5.5rem)' }}
                   aria-hidden="true"
                 >
                   {step.step}
                 </div>
-                <h3 className="text-base font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-navy-400 text-sm leading-relaxed font-light">{step.description}</p>
+                <h3 className="text-base font-semibold text-navy-900 mb-2">{step.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed font-light">{step.description}</p>
               </div>
             ))}
+          </div>
+          <div className="mt-14 flex justify-center">
+            <Link
+              href="/signup"
+              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl"
+            >
+              Get started — it&apos;s free
+              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </section>
@@ -252,7 +278,7 @@ export default function LandingPage() {
                 Beyond advice
               </p>
               <h2
-                className="font-bold text-navy-900 leading-tight mb-6"
+                className="font-serif text-navy-900 leading-tight mb-6"
                 style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)' }}
               >
                 Access doesn&apos;t stop<br />at the introduction.
@@ -302,7 +328,7 @@ export default function LandingPage() {
             Get started
           </p>
           <h2
-            className="font-bold text-white leading-tight mb-6 max-w-2xl"
+            className="font-serif text-white leading-tight mb-6 max-w-2xl"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
           >
             Ready to find<br />your mentor?

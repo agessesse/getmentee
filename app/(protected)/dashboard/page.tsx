@@ -267,7 +267,7 @@ export default function DashboardPage() {
           const partnerId =
             s.mentor_id === uid ? s.mentee_id : s.mentor_id;
           const { data: partner } = await supabase
-            .from('profiles')
+            .from('public_profiles')
             .select('first_name, last_name')
             .eq('id', partnerId)
             .single();
@@ -304,7 +304,7 @@ export default function DashboardPage() {
         if (msgs && msgs.length > 0) {
           const senderIds = [...new Set(msgs.map((m) => m.sender_id))];
           const { data: senders } = await supabase
-            .from('profiles')
+            .from('public_profiles')
             .select('id, first_name, last_name')
             .in('id', senderIds);
           const senderMap = new Map(
@@ -407,6 +407,42 @@ export default function DashboardPage() {
     totalSessions === 0 &&
     activeGoals === 0;
 
+  // Derive "what matters today" — first match wins
+  const todayStr = new Date().toDateString();
+  const sessionToday = upcomingSessions.find(
+    (s) => new Date(s.scheduled_at).toDateString() === todayStr
+  );
+  const priorityCard = (() => {
+    if (sessionToday) {
+      return {
+        label: `Session today with ${sessionToday.partner_name}`,
+        sub: new Date(sessionToday.scheduled_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        href: `/sessions/${sessionToday.id}`,
+        icon: Calendar,
+        color: 'blue',
+      };
+    }
+    if (!isMentee && pendingRequests > 0) {
+      return {
+        label: `${pendingRequests} mentee${pendingRequests > 1 ? 's' : ''} waiting for your response`,
+        sub: 'Review and approve or decline',
+        href: '/requests',
+        icon: ClipboardList,
+        color: 'amber',
+      };
+    }
+    if (isMentee && activeMentorships === 0 && !isNewUser) {
+      return {
+        label: 'No active mentorship yet',
+        sub: 'Browse mentors and send a request to get started',
+        href: '/discover',
+        icon: Search,
+        color: 'navy',
+      };
+    }
+    return null;
+  })();
+
   return (
     <>
     {showTransition && (
@@ -454,6 +490,29 @@ export default function DashboardPage() {
           </Link>
         )}
       </div>
+
+      {/* ── Today's priority card ────────────────────────────────────────── */}
+      {priorityCard && (() => {
+        const Icon = priorityCard.icon;
+        const bgMap: Record<string, string> = { blue: 'bg-blue-50 border-blue-100', amber: 'bg-amber-50 border-amber-100', navy: 'bg-navy-50 border-navy-100' };
+        const iconMap: Record<string, string> = { blue: 'text-blue-600 bg-blue-100', amber: 'text-amber-600 bg-amber-100', navy: 'text-navy-600 bg-navy-100' };
+        const textMap: Record<string, string> = { blue: 'text-blue-800', amber: 'text-amber-800', navy: 'text-navy-800' };
+        return (
+          <Link
+            href={priorityCard.href}
+            className={`group flex items-center gap-4 rounded-2xl border px-5 py-4 hover:shadow-sm transition-all ${bgMap[priorityCard.color]}`}
+          >
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${iconMap[priorityCard.color]}`}>
+              <Icon className="w-4.5 h-4.5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-sm font-semibold ${textMap[priorityCard.color]}`}>{priorityCard.label}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{priorityCard.sub}</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+          </Link>
+        );
+      })()}
 
       {/* ── Mentor impact strip ──────────────────────────────────────────── */}
       {!isMentee && mentorExtra && (
@@ -525,7 +584,7 @@ export default function DashboardPage() {
             value={activeMentorships}
             label="Active Mentorships"
             icon={Handshake}
-            href={isMentee ? '/mentorships' : '/mentees'}
+            href="/mentorships"
             color="green"
           />
           <StatCard

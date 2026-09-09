@@ -49,7 +49,7 @@ export default function IntroSequence() {
 
   useEffect(() => {
     // Skip if already seen this session
-    if (sessionStorage.getItem(SESSION_KEY)) {
+    if (localStorage.getItem(SESSION_KEY)) {
       setPhase('done');
       return;
     }
@@ -62,7 +62,7 @@ export default function IntroSequence() {
       const t1 = setTimeout(() => setPhase('hold'), 700);
       const t2 = setTimeout(() => setPhase('wipe'), 1400);
       const t3 = setTimeout(() => {
-        sessionStorage.setItem(SESSION_KEY, '1');
+        localStorage.setItem(SESSION_KEY, '1');
         setPhase('done');
       }, 1950);
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
@@ -74,7 +74,7 @@ export default function IntroSequence() {
     const t3 = setTimeout(() => setPhase('hold'),   1700);  // fully resolved
     const t4 = setTimeout(() => setPhase('wipe'),   2350);  // curtain rises
     const t5 = setTimeout(() => {
-      sessionStorage.setItem(SESSION_KEY, '1');
+      localStorage.setItem(SESSION_KEY, '1');
       setPhase('done');
     }, 3050);
 

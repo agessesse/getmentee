@@ -10,6 +10,7 @@ import {
 import VoiceInputButton from '@/components/voice/VoiceInputButton';
 import SessionRecorder from '@/components/voice/SessionRecorder';
 import { createClient } from '@/lib/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -175,14 +176,22 @@ export default function SessionDetailPage() {
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
   const [newActionTitle, setNewActionTitle] = useState('');
   const [newActionDueDate, setNewActionDueDate] = useState('');
+  const [newActionAssignedTo, setNewActionAssignedTo] = useState<'self' | 'partner'>('self');
+  const [partnerId, setPartnerId] = useState('');
+  const [partnerFirstName, setPartnerFirstName] = useState('');
   const [addingAction, setAddingAction] = useState(false);
   const [showAddAction, setShowAddAction] = useState(false);
 
-  // Mark complete
+  // Mark complete / cancel
   const [markingComplete, setMarkingComplete] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // Pre-meeting brief (mentor only, scheduled sessions)
   const [preBrief, setPreBrief] = useState<PreBrief | null>(null);
+
+  // Error banner for failed mutations
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const loadActionItems = useCallback(
     async (mentorshipId: string) => {
@@ -197,7 +206,7 @@ export default function SessionDetailPage() {
 
       const assigneeIds = [...new Set(data.map((a) => a.assigned_to))];
       const { data: profiles } = await supabase
-        .from('profiles')
+        .from('public_profiles')
         .select('id, first_name, last_name')
         .in('id', assigneeIds);
 
@@ -264,13 +273,7 @@ export default function SessionDetailPage() {
       const [sessionRes, profileRes, reviewRes] = await Promise.all([
         supabase
           .from('sessions')
-          .select(`
-            id, mentorship_id, mentor_id, mentee_id,
-            scheduled_at, duration_minutes, session_type,
-            notes, mentor_recap, video_link, status,
-            mentor:mentor_id(first_name, last_name, avatar_url),
-            mentee:mentee_id(first_name, last_name, avatar_url)
-          `)
+          .select('id, mentorship_id, mentor_id, mentee_id, scheduled_at, duration_minutes, session_type, notes, mentor_recap, video_link, status')
           .eq('id', id)
           .single(),
         supabase.from('profiles').select('role').eq('id', uid).single(),
@@ -282,7 +285,21 @@ export default function SessionDetailPage() {
           .maybeSingle(),
       ]);
 
-      const sessionData = sessionRes.data as unknown as SessionDetail;
+      // Fetch participant display data from the safe public view
+      let sessionData: SessionDetail | null = null;
+      if (sessionRes.data) {
+        const { mentor_id, mentee_id } = sessionRes.data;
+        const { data: participants } = await supabase
+          .from('public_profiles')
+          .select('id, first_name, last_name, avatar_url')
+          .in('id', [mentor_id, mentee_id]);
+        const pMap = new Map(participants?.map((p) => [p.id, p]) ?? []);
+        sessionData = {
+          ...sessionRes.data,
+          mentor: pMap.get(mentor_id) ?? { first_name: 'Mentor', last_name: '', avatar_url: null },
+          mentee: pMap.get(mentee_id) ?? { first_name: 'Mentee', last_name: '', avatar_url: null },
+        } as SessionDetail;
+      }
       setSession(sessionData);
       if (sessionData?.notes) setNotes(sessionData.notes);
       if (sessionData?.mentor_recap) setRecap(sessionData.mentor_recap);
@@ -290,6 +307,16 @@ export default function SessionDetailPage() {
       const role = profileRes.data?.role as 'mentor' | 'mentee';
       setUserRole(role);
       setHasReview(!!reviewRes.data);
+
+      // Derive partner for action item assignment
+      if (sessionData) {
+        const pid = sessionData.mentor_id === uid ? sessionData.mentee_id : sessionData.mentor_id;
+        const pData = sessionData.mentor_id === uid
+          ? (sessionData.mentee as unknown as { first_name: string; last_name: string })
+          : (sessionData.mentor as unknown as { first_name: string; last_name: string });
+        setPartnerId(pid);
+        setPartnerFirstName(pData?.first_name ?? 'Partner');
+      }
 
       if (sessionData?.mentorship_id) {
         await loadActionItems(sessionData.mentorship_id);
@@ -308,86 +335,122 @@ export default function SessionDetailPage() {
   const saveNotes = async () => {
     if (!session) return;
     setNotesLoading(true);
+    setActionError(null);
     const supabase = createClient();
-    await supabase.from('sessions').update({ notes }).eq('id', id);
-    setNotesSaved(true);
-    setTimeout(() => setNotesSaved(false), 2000);
+    const { error } = await supabase.from('sessions').update({ notes }).eq('id', id);
+    if (error) { setActionError('Failed to save notes. Please try again.'); }
+    else { setNotesSaved(true); setTimeout(() => setNotesSaved(false), 2000); }
     setNotesLoading(false);
   };
 
   const saveRecap = async () => {
     if (!session) return;
     setRecapLoading(true);
+    setActionError(null);
     const supabase = createClient();
-    await supabase.from('sessions').update({ mentor_recap: recap }).eq('id', id);
-    setRecapSaved(true);
-    setTimeout(() => setRecapSaved(false), 2000);
+    const { error } = await supabase.from('sessions').update({ mentor_recap: recap }).eq('id', id);
+    if (error) { setActionError('Failed to save recap. Please try again.'); }
+    else { setRecapSaved(true); setTimeout(() => setRecapSaved(false), 2000); }
     setRecapLoading(false);
   };
 
   const addActionItem = async () => {
     if (!newActionTitle.trim() || !session) return;
     setAddingAction(true);
+    setActionError(null);
     const supabase = createClient();
-    const { data } = await supabase
+    const assignedTo = newActionAssignedTo === 'partner' && partnerId ? partnerId : userId;
+    const { data, error } = await supabase
       .from('action_items')
       .insert({
         mentorship_id: session.mentorship_id,
         session_id: id,
         created_by: userId,
-        assigned_to: userId,
+        assigned_to: assignedTo,
         title: newActionTitle.trim(),
         due_date: newActionDueDate || null,
       })
       .select('id, title, assigned_to, is_completed, due_date')
       .single();
 
-    if (data) {
-      setActionItems((prev) => [...prev, { ...data, assigneeName: 'Me' }]);
+    if (error) {
+      setActionError('Failed to add action item. Please try again.');
+    } else if (data) {
+      const assigneeName = assignedTo === userId ? 'Me' : partnerFirstName;
+      setActionItems((prev) => [...prev, { ...data, assigneeName }]);
+      setNewActionTitle('');
+      setNewActionDueDate('');
+      setNewActionAssignedTo('self');
+      setShowAddAction(false);
+      void trackEvent('action_item_created', userRole, { entityId: data.id });
     }
-    setNewActionTitle('');
-    setNewActionDueDate('');
-    setShowAddAction(false);
     setAddingAction(false);
   };
 
   const toggleActionItem = async (itemId: string, current: boolean) => {
     const supabase = createClient();
-    await supabase
+    const { error } = await supabase
       .from('action_items')
       .update({
         is_completed: !current,
         completed_at: !current ? new Date().toISOString() : null,
       })
       .eq('id', itemId);
-    setActionItems((prev) =>
-      prev.map((a) => (a.id === itemId ? { ...a, is_completed: !current } : a))
-    );
+    if (!error) {
+      setActionItems((prev) =>
+        prev.map((a) => (a.id === itemId ? { ...a, is_completed: !current } : a))
+      );
+      if (!current) {
+        void trackEvent('action_item_completed', userRole, { entityId: itemId });
+      }
+    }
   };
 
   const markSessionComplete = async () => {
     if (!session) return;
     setMarkingComplete(true);
+    setActionError(null);
     const supabase = createClient();
-    await supabase.from('sessions').update({ status: 'completed' }).eq('id', id);
-    setSession((s) => (s ? { ...s, status: 'completed' } : s));
+    const { error } = await supabase.from('sessions').update({ status: 'completed' }).eq('id', id);
+    if (error) { setActionError('Could not mark session complete. Please try again.'); }
+    else {
+      setSession((s) => (s ? { ...s, status: 'completed' } : s));
+      void trackEvent('session_completed', userRole, { entityId: id as string });
+    }
     setMarkingComplete(false);
+  };
+
+  const cancelSession = async () => {
+    if (!session) return;
+    setCancelling(true);
+    setActionError(null);
+    const supabase = createClient();
+    const { error } = await supabase.from('sessions').update({ status: 'cancelled' }).eq('id', id);
+    if (error) { setActionError('Could not cancel session. Please try again.'); }
+    else { setSession((s) => (s ? { ...s, status: 'cancelled' } : s)); }
+    setShowCancelConfirm(false);
+    setCancelling(false);
   };
 
   const submitReview = async () => {
     if (!rating || !session) return;
     setReviewLoading(true);
+    setActionError(null);
     const supabase = createClient();
     const revieweeId =
       session.mentor_id === userId ? session.mentee_id : session.mentor_id;
-    await supabase.from('reviews').insert({
+    const { error } = await supabase.from('reviews').insert({
       session_id: id,
       reviewer_id: userId,
       reviewee_id: revieweeId,
       rating,
       feedback: feedback || null,
     });
-    setReviewSubmitted(true);
+    if (error) { setActionError('Could not submit review. Please try again.'); }
+    else {
+      setReviewSubmitted(true);
+      void trackEvent('review_submitted', userRole, { entityId: id as string, metadata: { rating } });
+    }
     setReviewLoading(false);
   };
 
@@ -423,6 +486,14 @@ export default function SessionDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      {/* Action error banner */}
+      {actionError && (
+        <div className="flex items-center justify-between gap-3 bg-red-50 border border-red-200 rounded-2xl px-5 py-3.5">
+          <p className="text-sm font-medium text-red-700">{actionError}</p>
+          <button onClick={() => setActionError(null)} className="text-red-400 hover:text-red-600 text-xs flex-shrink-0">Dismiss</button>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <Link
@@ -499,11 +570,13 @@ export default function SessionDetailPage() {
                   Session Recap
                 </h2>
                 <div className="flex items-center gap-3">
-                  <VoiceInputButton
-                    context="note"
-                    onTranscript={(t) => setRecap((p) => p ? `${p} ${t}` : t)}
-                    disabled={recapLoading}
-                  />
+                  {process.env.NEXT_PUBLIC_VOICE_ENABLED === 'true' && (
+                    <VoiceInputButton
+                      context="note"
+                      onTranscript={(t) => setRecap((p) => p ? `${p} ${t}` : t)}
+                      disabled={recapLoading}
+                    />
+                  )}
                   <button
                     onClick={saveRecap}
                     disabled={recapLoading}
@@ -532,7 +605,7 @@ export default function SessionDetailPage() {
           )}
 
           {/* Session Notes (voice recording + AI summary) */}
-          {process.env.NEXT_PUBLIC_VOICE_ENABLED !== 'false' && (
+          {process.env.NEXT_PUBLIC_VOICE_ENABLED === 'true' && (
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -576,6 +649,25 @@ export default function SessionDetailPage() {
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
                   onKeyDown={(e) => e.key === 'Enter' && addActionItem()}
                 />
+                {/* Assign to */}
+                {partnerId && (
+                  <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
+                    <button
+                      type="button"
+                      onClick={() => setNewActionAssignedTo('self')}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'self' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      Me
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewActionAssignedTo('partner')}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'partner' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      {partnerFirstName}
+                    </button>
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <input
                     type="date"
@@ -689,6 +781,35 @@ export default function SessionDetailPage() {
                 {markingComplete ? 'Marking...' : 'Mark Complete'}
               </button>
             )}
+
+            {isScheduled && !showCancelConfirm && (
+              <button
+                onClick={() => setShowCancelConfirm(true)}
+                className="mt-2 w-full text-xs text-gray-400 hover:text-red-500 transition-colors py-1.5"
+              >
+                Cancel session
+              </button>
+            )}
+            {isScheduled && showCancelConfirm && (
+              <div className="mt-3 bg-red-50 rounded-xl p-3 space-y-2">
+                <p className="text-xs text-red-700 font-medium">Cancel this session?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={cancelSession}
+                    disabled={cancelling}
+                    className="flex-1 py-1.5 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 disabled:opacity-50 transition-colors"
+                  >
+                    {cancelling ? 'Cancelling…' : 'Yes, cancel'}
+                  </button>
+                  <button
+                    onClick={() => setShowCancelConfirm(false)}
+                    className="flex-1 py-1.5 border border-gray-200 text-gray-500 text-xs rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Keep
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Participants */}
@@ -763,9 +884,25 @@ export default function SessionDetailPage() {
           {reviewSubmitted && (
             <div className="bg-green-50 rounded-2xl p-4 text-center">
               <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-green-800">
+              <p className="text-sm font-medium text-green-800 mb-3">
                 Review submitted!
               </p>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                {session?.mentorship_id && (
+                  <Link
+                    href={`/schedule?mentorshipId=${session.mentorship_id}`}
+                    className="text-xs font-medium text-navy-700 hover:text-navy-900 underline underline-offset-2"
+                  >
+                    Schedule next session →
+                  </Link>
+                )}
+                <Link
+                  href="/mentorships"
+                  className="text-xs font-medium text-gray-500 hover:text-gray-700 underline underline-offset-2"
+                >
+                  Back to mentorships
+                </Link>
+              </div>
             </div>
           )}
         </div>

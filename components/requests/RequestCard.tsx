@@ -152,7 +152,7 @@ export default function RequestCard({
             Cancel Request
           </Button>
         )}
-        <Link href={`/mentor/${partnerId}`}>
+        <Link href={userRole === 'mentor' ? `/mentee/${partnerId}` : `/mentor/${partnerId}`}>
           <Button size="sm" variant="ghost">
             View Profile
           </Button>

@@ -285,7 +285,7 @@ export default function OpportunitiesPage() {
       if (ms && ms.length > 0) {
         const partnerIds = ms.map((m) => m.mentor_id);
         const { data: partnerProfiles } = await supabase
-          .from('profiles')
+          .from('public_profiles')
           .select('id, first_name, last_name')
           .in('id', partnerIds);
         const partnerMap = new Map(partnerProfiles?.map((p) => [p.id, `${p.first_name} ${p.last_name}`]) ?? []);

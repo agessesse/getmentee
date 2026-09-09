@@ -27,6 +27,7 @@ export default function MessagesPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeMentorshipId, setActiveMentorshipId] = useState<string | null>(initialId);
   const [currentUserId, setCurrentUserId] = useState('');
+  const [currentUserRole, setCurrentUserRole] = useState<'mentor' | 'mentee'>('mentee');
   const [loading, setLoading] = useState(true);
   // Mobile view: 'list' shows conversation list, 'chat' shows the active conversation
   const [mobileView, setMobileView] = useState<'list' | 'chat'>(initialId ? 'chat' : 'list');
@@ -39,6 +40,9 @@ export default function MessagesPage() {
 
       const uid = session.user.id;
       setCurrentUserId(uid);
+
+      const { data: ownProfile } = await supabase.from('profiles').select('role').eq('id', uid).single();
+      if (ownProfile?.role) setCurrentUserRole(ownProfile.role as 'mentor' | 'mentee');
 
       const { data: mentorships } = await supabase
         .from('mentorships')
@@ -53,7 +57,7 @@ export default function MessagesPage() {
       );
 
       const { data: partners } = await supabase
-        .from('profiles')
+        .from('public_profiles')
         .select('id, first_name, last_name, avatar_url')
         .in('id', partnerIds);
 
@@ -181,6 +185,7 @@ export default function MessagesPage() {
               key={activeMentorshipId}
               mentorshipId={activeMentorshipId}
               currentUserId={currentUserId}
+              currentUserRole={currentUserRole}
               partnerId={activeConversation.partnerId}
               partnerName={`${activeConversation.partnerFirstName} ${activeConversation.partnerLastName}`}
               partnerAvatarUrl={activeConversation.partnerAvatarUrl}
@@ -214,6 +219,7 @@ export default function MessagesPage() {
               key={activeMentorshipId}
               mentorshipId={activeMentorshipId}
               currentUserId={currentUserId}
+              currentUserRole={currentUserRole}
               partnerId={activeConversation.partnerId}
               partnerName={`${activeConversation.partnerFirstName} ${activeConversation.partnerLastName}`}
               partnerAvatarUrl={activeConversation.partnerAvatarUrl}

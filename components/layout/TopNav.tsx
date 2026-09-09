@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bell, Menu, ChevronDown, Check, ClipboardList, MessageSquare, Calendar, Target, TrendingUp } from 'lucide-react';
+import { Bell, Menu, ChevronDown, Check, ClipboardList, ClipboardCheck, MessageSquare, Calendar, CalendarX, Target, TrendingUp } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
@@ -31,29 +31,33 @@ interface Notification {
 }
 
 const NOTIF_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  request_received: ClipboardList,
-  request_accepted: ClipboardList,
-  request_declined: ClipboardList,
-  new_message: MessageSquare,
-  session_scheduled: Calendar,
-  session_reminder: Calendar,
-  goal_completed: Target,
-  action_item_due: Target,
-  review_received: TrendingUp,
+  request_received:       ClipboardList,
+  request_accepted:       ClipboardList,
+  request_declined:       ClipboardList,
+  new_message:            MessageSquare,
+  session_scheduled:      Calendar,
+  session_reminder:       Calendar,
+  session_cancelled:      CalendarX,
+  goal_completed:         Target,
+  action_item_due:        Target,
+  action_item_assigned:   ClipboardCheck,
+  review_received:        TrendingUp,
 };
 
 function getNotifHref(type: string, data?: Record<string, string>): string {
   switch (type) {
-    case 'request_received': return '/requests';
-    case 'request_accepted': return '/mentorships';
-    case 'request_declined': return '/requests';
-    case 'new_message': return data?.mentorship_id ? `/messages?mentorshipId=${data.mentorship_id}` : '/messages';
-    case 'session_scheduled': return '/schedule';
-    case 'session_reminder': return '/schedule';
-    case 'goal_completed': return '/goals';
-    case 'action_item_due': return '/goals';
-    case 'review_received': return '/impact';
-    default: return '/dashboard';
+    case 'request_received':     return '/requests';
+    case 'request_accepted':     return '/mentorships';
+    case 'request_declined':     return '/requests';
+    case 'new_message':          return data?.mentorship_id ? `/messages?mentorshipId=${data.mentorship_id}` : '/messages';
+    case 'session_scheduled':    return '/schedule';
+    case 'session_reminder':     return '/schedule';
+    case 'session_cancelled':    return '/schedule';
+    case 'goal_completed':       return '/goals';
+    case 'action_item_due':      return '/goals';
+    case 'action_item_assigned': return '/goals';
+    case 'review_received':      return '/impact';
+    default:                     return '/dashboard';
   }
 }
 
@@ -72,6 +76,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
       .from('notifications')
       .select('id, type, title, body, is_read, created_at, data')
       .eq('user_id', user.id)
+      .order('is_read', { ascending: true })
       .order('created_at', { ascending: false })
       .limit(20);
     if (data) setNotifications(data);
@@ -80,6 +85,26 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`notifications:${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          const n = payload.new as Notification;
+          setNotifications((prev) => {
+            if (prev.some((existing) => existing.id === n.id)) return prev;
+            return [n, ...prev].slice(0, 20);
+          });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user.id]);
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -102,7 +127,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
 
   const markOneRead = async (id: string) => {
     const supabase = createClient();
-    await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    await supabase.from('notifications').update({ is_read: true }).eq('id', id).eq('user_id', user.id);
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
   };
 
@@ -147,7 +172,9 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
             )}
           </button>
 

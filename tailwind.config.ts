@@ -4,6 +4,10 @@ const config: Config = {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-instrument-serif)', 'Georgia', 'serif'],
+      },
       colors: {
         navy: {
           900: '#1a1f3a',

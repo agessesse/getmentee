@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { trackEvent } from '@/lib/analytics';
 import Spinner from '@/components/ui/Spinner';
 import { Check, Trash2 } from 'lucide-react';
 
@@ -249,8 +250,7 @@ export default function ProfileSetupPage() {
     const supabase = createClient();
 
     try {
-      // Update profiles table
-      await supabase.from('profiles').update({
+      const { error: profileErr } = await supabase.from('profiles').update({
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         headline: headline.trim() || null,
@@ -258,8 +258,8 @@ export default function ProfileSetupPage() {
         university: university.trim() || null,
         graduation_year: graduationYear ? parseInt(graduationYear) : null,
         linkedin_url: linkedinUrl.trim() || null,
-        profile_complete: true,
       }).eq('id', userId);
+      if (profileErr) throw new Error(profileErr.message);
 
       if (role === 'mentor') {
         const { error: mpErr } = await supabase.from('mentor_profiles').upsert({
@@ -293,6 +293,7 @@ export default function ProfileSetupPage() {
         if (mpErr) throw new Error(mpErr.message);
       }
 
+      void trackEvent('profile_setup_completed', role);
       router.push('/dashboard');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong');

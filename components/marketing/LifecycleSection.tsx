@@ -37,7 +37,7 @@ export default function LifecycleSection() {
           </p>
           <h2
             id="flywheel-heading"
-            className="font-bold text-navy-900 leading-tight"
+            className="font-serif text-navy-900 leading-tight"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)' }}
           >
             Mentorship<br />compounds.

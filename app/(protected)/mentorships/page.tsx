@@ -20,6 +20,8 @@ interface Mentorship {
     last_name: string;
     avatar_url: string | null;
   };
+  nextSessionAt: string | null;
+  activeGoalCount: number;
 }
 
 export default function MentorshipsPage() {
@@ -52,13 +54,44 @@ export default function MentorshipsPage() {
 
       if (!data) { setLoading(false); return; }
 
+      const mentorshipIds = data.map((m) => m.id);
       const partnerIds = data.map((m) => m.mentor_id === uid ? m.mentee_id : m.mentor_id);
-      const { data: partners } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, avatar_url')
-        .in('id', partnerIds);
 
-      const partnerMap = new Map(partners?.map((p) => [p.id, p]) ?? []);
+      // Fetch partners, next sessions, and goal counts in parallel
+      const [partnersRes, sessionsRes, goalsRes] = await Promise.all([
+        supabase
+          .from('public_profiles')
+          .select('id, first_name, last_name, avatar_url')
+          .in('id', partnerIds),
+        supabase
+          .from('sessions')
+          .select('mentorship_id, scheduled_at')
+          .in('mentorship_id', mentorshipIds)
+          .eq('status', 'scheduled')
+          .gte('scheduled_at', new Date().toISOString())
+          .order('scheduled_at', { ascending: true }),
+        supabase
+          .from('mentorship_goals')
+          .select('mentorship_id')
+          .in('mentorship_id', mentorshipIds)
+          .eq('status', 'active'),
+      ]);
+
+      const partnerMap = new Map(partnersRes.data?.map((p) => [p.id, p]) ?? []);
+
+      // First upcoming session per mentorship
+      const nextSessionMap = new Map<string, string>();
+      for (const s of sessionsRes.data ?? []) {
+        if (!nextSessionMap.has(s.mentorship_id)) {
+          nextSessionMap.set(s.mentorship_id, s.scheduled_at);
+        }
+      }
+
+      // Active goal counts per mentorship
+      const goalCountMap = new Map<string, number>();
+      for (const g of goalsRes.data ?? []) {
+        goalCountMap.set(g.mentorship_id, (goalCountMap.get(g.mentorship_id) ?? 0) + 1);
+      }
 
       setMentorships(
         data.map((m) => {
@@ -67,6 +100,8 @@ export default function MentorshipsPage() {
             ...m,
             status: m.status as 'active' | 'completed' | 'cancelled',
             partner: partnerMap.get(partnerId) ?? { id: partnerId, first_name: 'Unknown', last_name: '', avatar_url: null },
+            nextSessionAt: nextSessionMap.get(m.id) ?? null,
+            activeGoalCount: goalCountMap.get(m.id) ?? 0,
           };
         })
       );
@@ -84,7 +119,7 @@ export default function MentorshipsPage() {
         <h1 className="text-2xl font-bold text-navy-900">
           {userRole === 'mentor' ? 'My Mentees' : 'My Mentorships'}
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-gray-500 mt-1 text-sm">
           {userRole === 'mentor'
             ? 'Track and connect with your active mentees.'
             : 'Your active and past mentorship relationships.'}
@@ -137,10 +172,14 @@ export default function MentorshipsPage() {
                     partnerFirstName={m.partner.first_name}
                     partnerLastName={m.partner.last_name}
                     partnerAvatarUrl={m.partner.avatar_url}
+                    partnerId={m.partner.id}
+                    userRole={userRole}
                     sessionsCount={m.sessions_count}
                     startedAt={m.started_at}
                     status={m.status}
                     mentorshipId={m.id}
+                    nextSessionAt={m.nextSessionAt}
+                    activeGoalCount={m.activeGoalCount}
                   />
                 ))}
               </div>
@@ -157,10 +196,14 @@ export default function MentorshipsPage() {
                     partnerFirstName={m.partner.first_name}
                     partnerLastName={m.partner.last_name}
                     partnerAvatarUrl={m.partner.avatar_url}
+                    partnerId={m.partner.id}
+                    userRole={userRole}
                     sessionsCount={m.sessions_count}
                     startedAt={m.started_at}
                     status={m.status}
                     mentorshipId={m.id}
+                    nextSessionAt={m.nextSessionAt}
+                    activeGoalCount={m.activeGoalCount}
                   />
                 ))}
               </div>
