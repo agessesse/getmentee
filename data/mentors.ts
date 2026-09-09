@@ -63,7 +63,7 @@ export interface Mentor {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Featured mentors — exactly six people who directly inspired Mentee.
+// Featured mentors — the professionals who directly inspired Mentee.
 // imagePosition values are set per-image based on actual photo inspection.
 // ─────────────────────────────────────────────────────────────────────────────
 export const FEATURED_MENTORS: Mentor[] = [
@@ -99,6 +99,57 @@ export const FEATURED_MENTORS: Mentor[] = [
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
       'Good mentorship goes beyond advice. It means being willing to advocate for someone when an opportunity can change their trajectory.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Tiffany Lakey',
+    initials: 'TL',
+    title: 'Chief of Staff, Corporate & Investment Bank',
+    company: 'Wells Fargo',
+    headshot: '/people/tiffany-lakey.jpg',
+    accentColor: '#1a1f3a',
+    imagePosition: '50% 15%',
+    thumbnailPosition: '50% 20%',
+    linkedInUrl: 'https://www.linkedin.com/in/tiffany-lakey-2b6747b/',
+    shortBio:
+      'Senior Wells Fargo executive with more than two decades in institutional banking. Tiffany serves as Chief of Staff in the Corporate & Investment Bank, having previously served as Managing Director and Head of Strategy & Innovation and COO of Strategy & Client Engagement. She began her career at Wachovia Securities in leveraged finance, covering TMT and healthcare.',
+    whyIMentor:
+      'Corporate banking is a relationship business at every level. The ability to connect authentically — not just transact — is the skill that matters most and takes the longest to develop.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Frank L. Van Buren',
+    initials: 'FV',
+    title: 'Founder & Principal',
+    company: 'Van Buren Advisory LLC',
+    headshot: '/people/frank-van-buren.jpg',
+    accentColor: '#2d3668',
+    imagePosition: '50% 10%',
+    thumbnailPosition: '50% 5%',
+    linkedInUrl: 'https://www.linkedin.com/in/frank-l-van-buren-4664516/',
+    shortBio:
+      'UNC Kenan-Flagler MBA and Consortium for Graduate Study in Management participant. Frank founded Van Buren Advisory LLC to develop emerging financial talent, leading professional development programs for analysts at institutions including Wells Fargo, BlackRock, CIBC Capital Markets and RBC Capital Markets. He holds FINRA Series 24, 7 and 63 licenses and serves on the Veterans Bridge Home board.',
+    whyIMentor:
+      'The gap between technical competence and executive presence is where most early careers stall. Structured mentorship is the fastest way to close it.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Will Alston',
+    initials: 'WA',
+    title: 'Head of Corporate Banking',
+    company: 'Wells Fargo',
+    headshot: '/people/will-alston.jpg',
+    accentColor: '#3d4a8f',
+    imagePosition: '50% 10%',
+    thumbnailPosition: '50% 15%',
+    linkedInUrl: 'https://www.linkedin.com/in/will-alston-766a161/',
+    shortBio:
+      'Wells Fargo executive serving as Head of Corporate Banking in Charlotte, with more than fifteen years of institutional banking experience building and managing client relationships across sectors.',
+    whyIMentor:
+      'The conversations that shape a career rarely happen on a formal agenda. Mentorship creates space for those conversations to happen on purpose.',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },
