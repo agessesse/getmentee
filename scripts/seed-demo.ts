@@ -1114,7 +1114,6 @@ async function main() {
         linkedin_url: mentor.linkedin_url,
         university: mentor.university,
         graduation_year: mentor.graduation_year,
-        profile_complete: true,
       })
       .eq('id', uid);
 
@@ -1160,7 +1159,6 @@ async function main() {
         linkedin_url: mentee.linkedin_url,
         university: mentee.university,
         graduation_year: mentee.graduation_year,
-        profile_complete: true,
       })
       .eq('id', uid);
 

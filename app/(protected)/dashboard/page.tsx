@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useProfile } from '@/lib/profile-context';
 import {
   Search, ClipboardList, Handshake, Calendar, ArrowRight,
   TrendingUp, MessageSquare, Target, Star, Award, Users, Clock,
   BarChart2, Lightbulb,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import Spinner from '@/components/ui/Spinner';
 import Avatar from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
 import SignInTransition from '@/components/auth/SignInTransition';
@@ -205,6 +205,11 @@ function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
+  // Profile from context is available immediately (populated by layout before
+  // this page mounts) — use it for the greeting so it renders without waiting
+  // for the stats fetch to complete.
+  const contextProfile = useProfile();
+
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showTransition, setShowTransition] = useState(false);
@@ -379,11 +384,59 @@ export default function DashboardPage() {
     load();
   }, []);
 
+  // Derive display values: prefer loaded data, fall back to context for
+  // the greeting header so it renders on the first paint with no delay.
+  const firstName = data?.profile.first_name ?? contextProfile?.first_name ?? '';
+  const isMentee = data
+    ? data.profile.role === 'mentee'
+    : contextProfile?.role === 'mentee';
+
+  // While stats are loading, show the header immediately and skeleton cards.
   if (loading) {
     return (
-      <div className="flex justify-center py-24">
-        <Spinner size="lg" />
-      </div>
+      <>
+        {showTransition && (
+          <SignInTransition onComplete={() => setShowTransition(false)} />
+        )}
+        <div className="max-w-5xl mx-auto space-y-8">
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-navy-900">
+                {greeting(firstName)}
+              </h1>
+              <p className="text-gray-500 mt-1 text-sm">
+                {isMentee
+                  ? 'Your mentorship dashboard — goals, sessions, and connections.'
+                  : 'Your mentoring overview — requests, mentees, and impact.'}
+              </p>
+            </div>
+          </div>
+          {/* Skeleton stat cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 animate-pulse">
+                <div className="w-9 h-9 bg-gray-100 rounded-xl mb-4" />
+                <div className="h-8 w-12 bg-gray-100 rounded mb-2" />
+                <div className="h-3 w-24 bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
+              <div className="h-4 w-32 bg-gray-100 rounded mb-5" />
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-gray-50 rounded-xl" />)}
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
+              <div className="h-4 w-32 bg-gray-100 rounded mb-5" />
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-gray-50 rounded-xl" />)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -399,8 +452,6 @@ export default function DashboardPage() {
     activeGoals,
     mentorExtra,
   } = data;
-
-  const isMentee = profile.role === 'mentee';
   const isNewUser =
     pendingRequests === 0 &&
     activeMentorships === 0 &&

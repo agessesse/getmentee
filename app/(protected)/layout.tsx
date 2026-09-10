@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import Sidebar from '@/components/layout/Sidebar';
 import TopNav from '@/components/layout/TopNav';
 import Spinner from '@/components/ui/Spinner';
+import { ProfileProvider } from '@/lib/profile-context';
 
 interface Profile {
   id: string;
@@ -78,23 +79,25 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   if (!profile) return null;
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Sidebar
-        role={profile.role}
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        firstName={profile.first_name}
-        lastName={profile.last_name}
-      />
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <TopNav
-          user={profile}
-          onMenuClick={() => setSidebarOpen(true)}
+    <ProfileProvider profile={profile}>
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        <Sidebar
+          role={profile.role}
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          firstName={profile.first_name}
+          lastName={profile.last_name}
         />
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
-          {children}
-        </main>
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <TopNav
+            user={profile}
+            onMenuClick={() => setSidebarOpen(true)}
+          />
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProfileProvider>
   );
 }
