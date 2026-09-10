@@ -172,23 +172,6 @@ export default function LandingPage() {
       {/* ── Mentor grid — featured showcase ──────────────────────────────────── */}
       <MentorGrid />
 
-      {/* ── CTA after mentor grid ──────────────────────────────────────────── */}
-      <section className="py-14 px-6 lg:px-10 border-t border-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="text-lg font-bold text-navy-900">See a mentor you want to connect with?</p>
-            <p className="text-sm text-gray-500 mt-1 font-light">Create a free account and send a request.</p>
-          </div>
-          <Link
-            href="/signup"
-            className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-7 py-3.5 text-sm font-medium hover:bg-navy-800 transition-colors rounded-xl flex-shrink-0"
-          >
-            Get started
-            <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
-
       {/* ── Mentor carousel ───────────────────────────────────────────────────── */}
       <MentorCarousel />
 

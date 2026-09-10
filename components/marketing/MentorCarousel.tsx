@@ -29,7 +29,7 @@ function MentorCard({
   const showCompany = mentor.company !== '—';
 
   return (
-    <div className="flex-none w-[190px] sm:w-[210px] px-3">
+    <div className="flex-none w-[190px] sm:w-[210px] px-3 motion-safe:hover:scale-[1.04] motion-safe:hover:-translate-y-1.5 transition-transform duration-300">
       <button
         onClick={onPreview}
         className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
@@ -93,6 +93,7 @@ function MentorCard({
 
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
     <>
@@ -114,11 +115,20 @@ export default function MentorCarousel() {
           </p>
         </div>
 
-        {/* Infinite marquee — pauses on hover */}
-        <div className="relative overflow-hidden group">
+        {/* Infinite marquee — pauses on hover, cards rise and scale */}
+        <div
+          className="relative py-4"
+          style={{ overflowX: 'clip' }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <div
-            className="flex animate-carousel-left group-hover:[animation-play-state:paused]"
-            style={{ width: 'max-content', animationDuration: '48s' }}
+            className="flex animate-carousel-left"
+            style={{
+              width: 'max-content',
+              animationDuration: '48s',
+              animationPlayState: isPaused ? 'paused' : 'running',
+            }}
             aria-hidden="true"
           >
             {DOUBLED.map((mentor, i) => (

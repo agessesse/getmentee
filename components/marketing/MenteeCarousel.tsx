@@ -32,7 +32,7 @@ function MenteeCard({
       : person.school;
 
   return (
-    <div className="flex-none w-[200px] sm:w-[220px] px-3">
+    <div className="flex-none w-[200px] sm:w-[220px] px-3 motion-safe:hover:scale-[1.04] motion-safe:hover:-translate-y-1.5 transition-transform duration-300">
       {/* Profile preview button — wraps portrait + identity */}
       <button
         onClick={onPreview}
@@ -119,6 +119,7 @@ function MenteeCard({
 
 export default function MenteeCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
     <>
@@ -140,11 +141,20 @@ export default function MenteeCarousel() {
           </p>
         </div>
 
-        {/* Infinite marquee — pauses on hover */}
-        <div className="relative overflow-hidden group">
+        {/* Infinite marquee — pauses on hover, cards rise and scale */}
+        <div
+          className="relative py-4"
+          style={{ overflowX: 'clip' }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <div
-            className="flex animate-carousel-left group-hover:[animation-play-state:paused]"
-            style={{ width: 'max-content', animationDuration: '60s' }}
+            className="flex animate-carousel-left"
+            style={{
+              width: 'max-content',
+              animationDuration: '60s',
+              animationPlayState: isPaused ? 'paused' : 'running',
+            }}
           >
             {DOUBLED.map((person, i) => (
               <MenteeCard

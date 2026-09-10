@@ -25,6 +25,8 @@ export const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   'MyEyeDr.': 'myeyedr.com',
   'Beds for Kids': 'bedsforkids.org',
   'Keane Capital Management': 'keane.com',
+  'Engineered Land Solutions': 'engineeredlandsolutions.com',
+  'Wall Street Oasis': 'wallstreetoasis.com',
   'Envoy Capital Advisors': 'envoycapitaladvisors.com',
   'PlugVerse': 'plugverse.com',
   'Columbia Youth Adventurers': 'columbia.edu',
