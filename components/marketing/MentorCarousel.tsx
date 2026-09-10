@@ -117,15 +117,9 @@ export default function MentorCarousel() {
         {/* Infinite marquee — pauses on hover */}
         <div className="relative overflow-hidden group">
           <div
-<<<<<<< HEAD
-            ref={trackRef}
-            className="flex gap-5 overflow-x-auto px-6 pb-4"
-            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
-=======
             className="flex animate-carousel-left group-hover:[animation-play-state:paused]"
             style={{ width: 'max-content', animationDuration: '48s' }}
             aria-hidden="true"
->>>>>>> fed9937 (feat: Phase 1A/1B — auth guards, infinite marquee carousels, landing page overhaul)
           >
             {DOUBLED.map((mentor, i) => (
               <MentorCard
