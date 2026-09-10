@@ -80,6 +80,12 @@ export interface SourcedNearPeer {
   experience?: ExperienceItem[];
   linkedInUrl?: string;
   status: ProfileStatus;
+  /**
+   * Editorial impact copy shown in the profile preview modal.
+   * DEMO COPY — NOT a verified quote from this person.
+   * Always render with a "demo_impact_story" label in the UI.
+   */
+  demo_impact_story?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -320,6 +326,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     experience: [{ organization: 'JPMorganChase' }],
     linkedInUrl: 'https://www.linkedin.com/in/bethlehem-agegne/',
     status: 'sourced',
+    demo_impact_story: 'Having someone who could connect my global-development interests to real career paths — not just tell me to "network more" — changed how I thought about what I could build from Chapel Hill. I learned to see my background as an asset, not a gap to overcome.',
   },
   {
     slug: 'abel-gessesse',
@@ -358,6 +365,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/abelgessesse/',
     status: 'sourced',
+    demo_impact_story: 'The conversations I had with mentors in fixed income gave me a framework for evaluating opportunities that I would not have developed on my own. Knowing someone had navigated the same terrain — and was willing to be honest about it — compressed years of trial and error into a few focused meetings.',
   },
   {
     slug: 'cooper-delo',
@@ -396,6 +404,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/cooperdelo/',
     status: 'sourced',
+    demo_impact_story: 'Most startup advice is generic. Having access to someone who had actually built a company — and could give me honest feedback instead of just encouragement — is the difference between spinning wheels and making actual progress on something real.',
   },
   {
     slug: 'teagan-fitzgerald',
@@ -431,6 +440,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/teaganfitzgerald/',
     status: 'sourced',
+    demo_impact_story: 'Getting into Goldman was the hard part — or so I thought. Knowing how to show up, what to prioritize, and how to navigate the culture once I got there was harder. Mentorship gave me that second layer of preparation before I ever walked in the door.',
   },
   {
     slug: 'jaden-small',
@@ -470,6 +480,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/jadensmall/',
     status: 'sourced',
+    demo_impact_story: 'Moving from public policy into markets is a real pivot. Mentors helped me translate my background into a language that trading and sales teams understood — and gave me the conviction to make the transition confidently instead of apologetically.',
   },
   {
     slug: 'troy-keen-jr',
@@ -488,6 +499,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/troy-keen-jr-829717337/',
     status: 'sourced',
+    demo_impact_story: 'Being a Division I athlete makes the finance recruiting timeline genuinely complicated. Mentors who had navigated that same transition helped me understand how to position my experience without underselling what four years of high-performance competition actually teaches you.',
   },
   {
     slug: 'cooper-lipton',
@@ -500,6 +512,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     interestTags: ['Finance', 'Markets', 'Duke'],
     linkedInUrl: 'https://www.linkedin.com/in/cooper-lipton-199544285/',
     status: 'sourced',
+    demo_impact_story: 'Understanding capital markets from the outside is one thing. Knowing what questions to actually ask during recruiting — and who to ask — is something you only get from people who are already in the room and willing to be honest with you.',
   },
   {
     slug: 'erick-angwenyi',
@@ -523,6 +536,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/erick-angwenyi/',
     status: 'sourced',
+    demo_impact_story: 'As a first-generation professional in finance, I had the ambition but not the context. Mentors who had come up through similar paths showed me what the journey actually looked like from the inside — and made the whole thing feel navigable.',
   },
   {
     slug: 'eliphaz-getachew',
@@ -541,6 +555,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/eliphaz-getachew/',
     status: 'sourced',
+    demo_impact_story: 'Having mentors who remembered what the early steps felt like — and were willing to talk through decisions honestly — made the difference between guessing and knowing. That kind of perspective is genuinely irreplaceable when you are just starting out.',
   },
   {
     slug: 'hugo-canseco',
@@ -559,6 +574,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/hugo-canseco/',
     status: 'sourced',
+    demo_impact_story: 'Landing the internship offer was just the beginning. What I actually needed was guidance on how to make the most of it once I got there — how to learn fast, ask smart questions, and be memorable for the right reasons. Mentorship gave me that preparation.',
   },
   {
     slug: 'will-walker',
@@ -594,6 +610,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     linkedInUrl: 'https://www.linkedin.com/in/william-walker-iii/',
     status: 'sourced',
+    demo_impact_story: 'Student government and finance recruiting do not always look like they connect. Mentors helped me understand how to articulate leadership experience in a way that actually resonated with what institutions are looking for — not just in a cover letter, but in a room.',
   },
   {
     slug: 'pablo-n',
@@ -607,6 +624,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     interestTags: ['Finance', 'Career Development', 'Leadership'],
     linkedInUrl: 'https://www.linkedin.com/in/pabloon/',
     status: 'sourced',
+    demo_impact_story: 'Starting from a school that is not a target means working twice as hard for half the visibility. Mentors who had done that same journey gave me a roadmap instead of just inspiration — and that made all the difference.',
   },
 ];
 

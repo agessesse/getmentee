@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
+import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 
 // ─── LinkedIn icon — inline SVG, no extra dependency ─────────────────────────
 function LinkedInIcon({ className }: { className?: string }) {
@@ -14,11 +15,15 @@ function LinkedInIcon({ className }: { className?: string }) {
   );
 }
 
-// ─── Card ─────────────────────────────────────────────────────────────────────
-// /people/[slug] is behind auth — mentor cards are not internally navigable.
-// LinkedIn is the only external action on each card.
-
-function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
+function MentorCard({
+  mentor,
+  index,
+  onPreview,
+}: {
+  mentor: Mentor;
+  index: number;
+  onPreview: () => void;
+}) {
   const hasVerifiedQuote = mentor.whyLabel === 'In their words';
   const [imgError, setImgError] = useState(false);
   const showTitle = mentor.title !== '—';
@@ -26,90 +31,92 @@ function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
 
   return (
     <article
-      className="snap-start flex-none w-[320px] sm:w-[356px] bg-white border border-gray-100 rounded-xl p-6 flex flex-col hover:border-navy-200 hover:shadow-md transition-all duration-300"
+      className="snap-start flex-none w-[320px] sm:w-[356px] bg-white border border-gray-100 rounded-xl overflow-hidden hover:border-navy-200 hover:shadow-md transition-all duration-300"
       aria-label={mentor.name}
     >
-      {/* ── Portrait + identity ── */}
-      <div className="flex items-start gap-4 mb-5">
+      {/* ── Clickable section — portrait + identity + bio + why ── */}
+      <button
+        onClick={onPreview}
+        className="block w-full text-left p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy-500"
+        aria-label={`View ${mentor.name}'s profile`}
+      >
+        {/* Portrait + identity */}
+        <div className="flex items-start gap-4 mb-5">
+          <div className="relative w-24 h-24 flex-none rounded-xl overflow-hidden bg-gray-100">
+            {!imgError ? (
+              <Image
+                src={mentor.headshot}
+                alt={`Portrait of ${mentor.name}`}
+                fill
+                className="object-cover"
+                style={{ objectPosition: mentor.thumbnailPosition ?? '50% 15%' }}
+                sizes="96px"
+                priority={index < 2}
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ backgroundColor: mentor.accentColor }}
+              >
+                <span className="text-2xl font-bold text-white select-none">{mentor.initials}</span>
+              </div>
+            )}
+          </div>
 
-        {/* Thumbnail — 96×96, per-mentor object-position */}
-        <div className="relative w-24 h-24 flex-none rounded-xl overflow-hidden bg-gray-100">
-          {!imgError ? (
-            <Image
-              src={mentor.headshot}
-              alt={`Portrait of ${mentor.name}`}
-              fill
-              className="object-cover"
-              style={{ objectPosition: mentor.thumbnailPosition ?? '50% 15%' }}
-              sizes="96px"
-              priority={index < 2}
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div
-              className="w-full h-full flex items-center justify-center"
-              style={{ backgroundColor: mentor.accentColor }}
-            >
-              <span className="text-2xl font-bold text-white select-none">{mentor.initials}</span>
-            </div>
-          )}
+          <div className="flex-1 min-w-0 pt-0.5">
+            <h3 className="font-bold text-navy-900 text-[15px] leading-tight mb-1">
+              {mentor.name}
+            </h3>
+            {showTitle && (
+              <p className="text-[12px] text-gray-500 leading-snug">{mentor.title}</p>
+            )}
+            {showCompany && (
+              <p className="text-[12px] font-semibold text-navy-700 leading-snug mt-0.5">{mentor.company}</p>
+            )}
+          </div>
         </div>
 
-        {/* Identity */}
-        <div className="flex-1 min-w-0 pt-0.5">
-          <h3 className="font-bold text-navy-900 text-[15px] leading-tight mb-1">
-            {mentor.name}
-          </h3>
-          {showTitle && (
-            <p className="text-[12px] text-gray-500 leading-snug">{mentor.title}</p>
-          )}
-          {showCompany && (
-            <p className="text-[12px] font-semibold text-navy-700 leading-snug mt-0.5">{mentor.company}</p>
-          )}
-
-          {/* LinkedIn — always below identity, visible without hover */}
-          {mentor.linkedInUrl ? (
-            <a
-              href={mentor.linkedInUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View ${mentor.name} on LinkedIn`}
-              className="inline-flex items-center gap-1.5 mt-2.5 text-gray-400 hover:text-[#0A66C2] transition-colors group/li"
-            >
-              <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
-              <span className="text-[11px] font-medium">LinkedIn</span>
-            </a>
-          ) : (
-            /* No LinkedIn URL — reserve visual space so cards align */
-            <div className="mt-2.5 h-5" aria-hidden="true" />
-          )}
-        </div>
-      </div>
-
-      {/* ── Bio ── */}
-      <div className="border-t border-gray-100 pt-4 mb-4">
-        <p className="text-[13px] text-gray-600 font-light leading-relaxed">
-          {mentor.shortBio}
-        </p>
-      </div>
-
-      {/* ── Why I mentor ── */}
-      <div className="mt-auto pt-4 border-t border-gray-100">
-        <div className="flex flex-wrap items-center gap-2 mb-2.5">
-          <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
-            Why I mentor
+        {/* Bio */}
+        <div className="border-t border-gray-100 pt-4 mb-4">
+          <p className="text-[13px] text-gray-600 font-light leading-relaxed">
+            {mentor.shortBio}
           </p>
-          {!hasVerifiedQuote && (
-            <span className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.08em] border border-gray-200 rounded-full px-1.5 py-0.5">
-              Founder perspective
-            </span>
-          )}
         </div>
-        <p className={`text-[13px] font-light leading-relaxed ${hasVerifiedQuote ? 'text-navy-900 italic' : 'text-gray-700'}`}>
-          {hasVerifiedQuote ? `"${mentor.whyIMentor}"` : mentor.whyIMentor}
-        </p>
-      </div>
 
+        {/* Why I mentor */}
+        <div className="pt-4 border-t border-gray-100">
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
+            <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
+              Why I mentor
+            </p>
+            {!hasVerifiedQuote && (
+              <span className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.08em] border border-gray-200 rounded-full px-1.5 py-0.5">
+                Founder perspective
+              </span>
+            )}
+          </div>
+          <p className={`text-[13px] font-light leading-relaxed ${hasVerifiedQuote ? 'text-navy-900 italic' : 'text-gray-700'}`}>
+            {hasVerifiedQuote ? `"${mentor.whyIMentor}"` : mentor.whyIMentor}
+          </p>
+        </div>
+      </button>
+
+      {/* LinkedIn — outside button to avoid nested interactive elements */}
+      {mentor.linkedInUrl && (
+        <div className="px-6 pb-5">
+          <a
+            href={mentor.linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`View ${mentor.name} on LinkedIn`}
+            className="inline-flex items-center gap-1.5 text-gray-400 hover:text-[#0A66C2] transition-colors group/li"
+          >
+            <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
+            <span className="text-[11px] font-medium">LinkedIn</span>
+          </a>
+        </div>
+      )}
     </article>
   );
 }
@@ -120,6 +127,7 @@ export default function MentorCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [preview, setPreview] = useState<PreviewTarget | null>(null);
 
   const updateScrollState = useCallback(() => {
     const el = trackRef.current;
@@ -145,13 +153,11 @@ export default function MentorCarousel() {
   }
 
   return (
-    <section className="py-14 border-t border-gray-100" aria-labelledby="mentors-heading">
+    <>
+      <section className="py-14 border-t border-gray-100" aria-labelledby="mentors-heading">
 
-      {/* ── Section header ── */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-
-          {/* Editorial intro */}
+        {/* ── Section header (no arrows here — moved inside track) ── */}
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
           <div className="max-w-2xl">
             <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
               Mentors
@@ -169,83 +175,86 @@ export default function MentorCarousel() {
               who have chosen to invest their experience in someone else&apos;s future.
             </p>
           </div>
+        </div>
 
-          {/* Arrow controls — aligned to bottom of heading block on desktop */}
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0 pb-1">
-            <button
-              onClick={() => scroll('left')}
-              disabled={!canScrollLeft}
-              aria-label="Previous mentors"
-              className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-navy-900 hover:border-navy-200 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              disabled={!canScrollRight}
-              aria-label="Next mentors"
-              className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-navy-900 hover:border-navy-200 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+        {/* ── Scrollable track with arrows overlaid inside ── */}
+        <div className="relative">
+          {/* Edge fades */}
+          {canScrollLeft && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-cream-50 to-transparent"
+            />
+          )}
+          {canScrollRight && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-cream-50 to-transparent"
+            />
+          )}
+
+          {/* Left arrow — overlaid inside track */}
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            aria-label="Previous mentors"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {/* Right arrow — overlaid inside track */}
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            aria-label="Next mentors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div
+            ref={trackRef}
+            className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4"
+            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+          >
+            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
+            {FEATURED_MENTORS.map((mentor, i) => (
+              <MentorCard
+                key={mentor.name}
+                mentor={mentor}
+                index={i}
+                onPreview={() => setPreview({ kind: 'mentor', data: mentor })}
+              />
+            ))}
+            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
           </div>
         </div>
-      </div>
 
-      {/* ── Scrollable track ── */}
-      <div className="relative">
-        {/* Edge fades */}
-        {canScrollLeft && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-cream-50 to-transparent"
-          />
-        )}
-        {canScrollRight && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-cream-50 to-transparent"
-          />
-        )}
-
-        <div
-          ref={trackRef}
-          className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4"
-          style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
-        >
-          {/* Leading spacer aligns first card with page content */}
-          <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
-
-          {FEATURED_MENTORS.map((mentor, i) => (
-            <MentorCard key={mentor.name} mentor={mentor} index={i} />
-          ))}
-
-          {/* Trailing spacer */}
-          <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
+        {/* ── Mobile nav ── */}
+        <div className="flex sm:hidden justify-center gap-3 mt-4 px-6">
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            aria-label="Previous"
+            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
+          >
+            <ChevronLeft className="w-4 h-4" /> Prev
+          </button>
+          <span className="text-gray-200 select-none">|</span>
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            aria-label="Next"
+            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
+          >
+            Next <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
-      </div>
 
-      {/* ── Mobile nav ── */}
-      <div className="flex sm:hidden justify-center gap-3 mt-4 px-6">
-        <button
-          onClick={() => scroll('left')}
-          disabled={!canScrollLeft}
-          aria-label="Previous"
-          className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-        >
-          <ChevronLeft className="w-4 h-4" /> Prev
-        </button>
-        <span className="text-gray-200 select-none">|</span>
-        <button
-          onClick={() => scroll('right')}
-          disabled={!canScrollRight}
-          aria-label="Next"
-          className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-        >
-          Next <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
+      </section>
 
-    </section>
+      <ProfilePreviewModal target={preview} onClose={() => setPreview(null)} />
+    </>
   );
 }

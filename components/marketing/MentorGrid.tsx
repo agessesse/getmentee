@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import { companyFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
+import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -14,7 +15,15 @@ function LinkedInIcon({ className }: { className?: string }) {
   );
 }
 
-function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
+function MentorCard({
+  mentor,
+  index,
+  onPreview,
+}: {
+  mentor: Mentor;
+  index: number;
+  onPreview: () => void;
+}) {
   const [imgError, setImgError] = useState(false);
   const showTitle = mentor.title !== '—';
   const showCompany = mentor.company !== '—';
@@ -26,105 +35,128 @@ function MentorCard({ mentor, index }: { mentor: Mentor; index: number }) {
 
   return (
     <article className="group" aria-label={mentor.name}>
-      {/* Portrait — grayscale by default, full colour on hover */}
-      <div className="relative w-full aspect-[3/4] overflow-hidden rounded-xl bg-gray-100 mb-4">
-        {!imgError ? (
-          <Image
-            src={mentor.headshot}
-            alt={`Portrait of ${mentor.name}`}
-            fill
-            className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.03] transition-all duration-700 ease-out"
-            style={{ objectPosition: mentor.imagePosition ?? '50% 20%' }}
-            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 300px"
-            priority={index < 3}
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ backgroundColor: mentor.accentColor }}
-          >
-            <span className="text-4xl font-bold text-white select-none">{mentor.initials}</span>
-          </div>
-        )}
-      </div>
+      {/* Single button wraps portrait + placard — opens profile modal */}
+      <button
+        onClick={onPreview}
+        className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
+        aria-label={`View ${mentor.name}'s profile`}
+      >
+        {/* Portrait */}
+        <div className="relative w-full aspect-[3/4] overflow-hidden rounded-xl bg-gray-100 mb-4">
+          {!imgError ? (
+            <Image
+              src={mentor.headshot}
+              alt={`Portrait of ${mentor.name}`}
+              fill
+              className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.03] transition-all duration-700 ease-out"
+              style={{ objectPosition: mentor.imagePosition ?? '50% 20%' }}
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 300px"
+              priority={index < 3}
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div
+              className="w-full h-full flex items-center justify-center"
+              style={{ backgroundColor: mentor.accentColor }}
+            >
+              <span className="text-4xl font-bold text-white select-none">{mentor.initials}</span>
+            </div>
+          )}
+          {/* Hover hint */}
+          <div className="absolute inset-0 bg-navy-900/0 group-hover:bg-navy-900/8 transition-colors duration-300 pointer-events-none" />
+        </div>
 
-      {/* Placard */}
-      <div className="px-0.5">
-        <p className="font-bold text-navy-900 text-[15px] leading-tight">{mentor.name}</p>
-        {showTitle && (
-          <p className="text-[12px] text-gray-500 mt-0.5 leading-snug">{mentor.title}</p>
-        )}
-        {showCompany && (
-          <p className="text-[12px] font-semibold text-navy-700 leading-snug mt-0.5">{mentor.company}</p>
-        )}
+        {/* Placard */}
+        <div className="px-0.5">
+          <p className="font-bold text-navy-900 text-[15px] leading-tight group-hover:text-navy-700 transition-colors">
+            {mentor.name}
+          </p>
+          {showTitle && (
+            <p className="text-[12px] text-gray-500 mt-0.5 leading-snug">{mentor.title}</p>
+          )}
+          {showCompany && (
+            <p className="text-[12px] font-semibold text-navy-700 leading-snug mt-0.5">{mentor.company}</p>
+          )}
+        </div>
+      </button>
 
-        {/* Logo chips — current (full) + prior (dim) */}
-        {(currentLogoUrl || priorLogos.length > 0) && (
-          <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-            {currentLogoUrl && (
-              <LogoChip name={mentor.company} url={currentLogoUrl} size={16} />
-            )}
-            {priorLogos.length > 0 && currentLogoUrl && (
-              <span className="w-px h-3 bg-gray-200 flex-none" aria-hidden="true" />
-            )}
-            {priorLogos.map((co) => (
-              <LogoChip key={co.name} name={co.name} url={co.url} dim size={16} />
-            ))}
-          </div>
-        )}
+      {/* Logo chips — outside button */}
+      {(currentLogoUrl || priorLogos.length > 0) && (
+        <div className="flex items-center gap-2 mt-2.5 px-0.5 flex-wrap">
+          {currentLogoUrl && (
+            <LogoChip name={mentor.company} url={currentLogoUrl} size={16} />
+          )}
+          {priorLogos.length > 0 && currentLogoUrl && (
+            <span className="w-px h-3 bg-gray-200 flex-none" aria-hidden="true" />
+          )}
+          {priorLogos.map((co) => (
+            <LogoChip key={co.name} name={co.name} url={co.url} dim size={16} />
+          ))}
+        </div>
+      )}
 
-        {mentor.linkedInUrl ? (
-          <a
-            href={mentor.linkedInUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`View ${mentor.name} on LinkedIn`}
-            className="inline-flex items-center gap-1.5 mt-2.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
-          >
-            <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
-            <span className="text-[11px] font-medium">LinkedIn</span>
-          </a>
-        ) : (
-          <div className="mt-2.5 h-5" aria-hidden="true" />
-        )}
-      </div>
+      {/* LinkedIn — outside button */}
+      {mentor.linkedInUrl ? (
+        <a
+          href={mentor.linkedInUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`View ${mentor.name} on LinkedIn`}
+          className="inline-flex items-center gap-1.5 mt-2.5 px-0.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
+        >
+          <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
+          <span className="text-[11px] font-medium">LinkedIn</span>
+        </a>
+      ) : (
+        <div className="mt-2.5 h-5" aria-hidden="true" />
+      )}
     </article>
   );
 }
 
 export default function MentorGrid() {
+  const [preview, setPreview] = useState<PreviewTarget | null>(null);
+
   return (
-    <section className="py-20 px-6 lg:px-10 border-t border-gray-100" aria-labelledby="mentors-heading">
-      <div className="max-w-6xl mx-auto">
+    <>
+      <section className="py-20 px-6 lg:px-10 border-t border-gray-100" aria-labelledby="mentors-heading">
+        <div className="max-w-6xl mx-auto">
 
-        {/* Header */}
-        <div className="mb-14">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-            Mentors
-          </p>
-          <h2
-            id="mentors-heading"
-            className="font-bold text-navy-900 leading-tight mb-4"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)' }}
-          >
-            Experience becomes more valuable<br className="hidden sm:block" />
-            when it&apos;s passed forward.
-          </h2>
-          <p className="text-gray-500 font-light leading-relaxed text-[15px] max-w-lg">
-            These aren&apos;t random profiles in a marketplace. They are people
-            who have chosen to invest their experience in someone else&apos;s future.
-          </p>
+          {/* Header */}
+          <div className="mb-14">
+            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
+              Mentors
+            </p>
+            <h2
+              id="mentors-heading"
+              className="font-bold text-navy-900 leading-tight mb-4"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)' }}
+            >
+              Experience becomes more valuable<br className="hidden sm:block" />
+              when it&apos;s passed forward.
+            </h2>
+            <p className="text-gray-500 font-light leading-relaxed text-[15px] max-w-lg">
+              These aren&apos;t random profiles in a marketplace. They are people
+              who have chosen to invest their experience in someone else&apos;s future.
+            </p>
+          </div>
+
+          {/* 3-column portrait grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-10">
+            {FEATURED_MENTORS.map((mentor, i) => (
+              <MentorCard
+                key={mentor.name}
+                mentor={mentor}
+                index={i}
+                onPreview={() => setPreview({ kind: 'mentor', data: mentor })}
+              />
+            ))}
+          </div>
+
         </div>
+      </section>
 
-        {/* 3-column portrait grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-10">
-          {FEATURED_MENTORS.map((mentor, i) => (
-            <MentorCard key={mentor.name} mentor={mentor} index={i} />
-          ))}
-        </div>
-
-      </div>
-    </section>
+      <ProfilePreviewModal target={preview} onClose={() => setPreview(null)} />
+    </>
   );
 }

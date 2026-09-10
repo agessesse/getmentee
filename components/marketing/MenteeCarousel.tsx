@@ -2,11 +2,11 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
+import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 
 // ─── LinkedIn icon — inline SVG, no extra dependency ─────────────────────────
 function LinkedInIcon({ className }: { className?: string }) {
@@ -18,12 +18,16 @@ function LinkedInIcon({ className }: { className?: string }) {
 }
 
 // ─── Card ─────────────────────────────────────────────────────────────────────
-// Interaction model:
-//   • Click portrait / name / info → Link to /people/[slug] (internal profile)
-//   • Click LinkedIn icon          → opens LinkedIn in new tab (separate <a>
-//                                    outside the Link, so no nesting, no hacks)
+// Clicking portrait / name / info opens the profile preview modal.
+// LinkedIn icon opens LinkedIn in new tab (separate <a> outside button).
 
-function MenteeCard({ person }: { person: SourcedNearPeer }) {
+function MenteeCard({
+  person,
+  onPreview,
+}: {
+  person: SourcedNearPeer;
+  onPreview: () => void;
+}) {
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
   const fullName = `${person.firstName} ${person.lastName}`;
   const shortSchool =
@@ -33,10 +37,10 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
 
   return (
     <div className="snap-start flex-none w-[200px] sm:w-[232px]">
-      {/* ── Internal profile link — wraps portrait + identity ── */}
-      <Link
-        href={`/people/${person.slug}`}
-        className="block group"
+      {/* ── Profile preview button — wraps portrait + identity ── */}
+      <button
+        onClick={onPreview}
+        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
         aria-label={`View ${fullName}'s profile`}
       >
         {/* Portrait */}
@@ -59,7 +63,9 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
 
         {/* Identity */}
         <div className="px-0.5">
-          <p className="font-semibold text-navy-900 text-sm leading-tight">{fullName}</p>
+          <p className="font-semibold text-navy-900 text-sm leading-tight group-hover:text-navy-700 transition-colors">
+            {fullName}
+          </p>
           {shortSchool && (
             <p className="text-[11px] text-gray-400 mt-0.5 leading-tight font-light line-clamp-1">
               {shortSchool}
@@ -76,9 +82,9 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
             </p>
           )}
         </div>
-      </Link>
+      </button>
 
-      {/* ── Logo chips — school + employer(s) ── */}
+      {/* ── Logo chips — school + employer(s) — outside button ── */}
       {(() => {
         const schoolUrl = person.school ? schoolFaviconUrl(person.school) : null;
         const employerUrls = (person.experience ?? [])
@@ -98,7 +104,7 @@ function MenteeCard({ person }: { person: SourcedNearPeer }) {
         );
       })()}
 
-      {/* ── LinkedIn — OUTSIDE the Link to avoid nested <a> ── */}
+      {/* ── LinkedIn — outside button ── */}
       {person.linkedInUrl && (
         <a
           href={person.linkedInUrl}
@@ -121,6 +127,7 @@ export default function MenteeCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [preview, setPreview] = useState<PreviewTarget | null>(null);
 
   const updateScrollState = useCallback(() => {
     const el = trackRef.current;
@@ -146,11 +153,11 @@ export default function MenteeCarousel() {
   }
 
   return (
-    <section className="py-14" aria-labelledby="mentees-heading">
+    <>
+      <section className="py-14" aria-labelledby="mentees-heading">
 
-      {/* Header */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10 flex items-end justify-between">
-        <div>
+        {/* Header — arrows moved inside track */}
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
             Current mentees
           </p>
@@ -166,76 +173,83 @@ export default function MenteeCarousel() {
           </p>
         </div>
 
-        {/* Nav arrows */}
-        <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+        {/* Scrollable track with arrows overlaid inside */}
+        <div className="relative">
+          {/* Edge fades */}
+          {canScrollLeft && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-cream-50 to-transparent"
+            />
+          )}
+          {canScrollRight && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-cream-50 to-transparent"
+            />
+          )}
+
+          {/* Left arrow — overlaid inside track */}
           <button
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
             aria-label="Previous mentees"
-            className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-navy-900 hover:border-navy-200 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+            className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
+
+          {/* Right arrow — overlaid inside track */}
           <button
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
             aria-label="Next mentees"
-            className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-navy-900 hover:border-navy-200 transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+            className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div
+            ref={trackRef}
+            className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4"
+            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+          >
+            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
+            {SOURCED_NEAR_PEERS.map((person) => (
+              <MenteeCard
+                key={person.slug}
+                person={person}
+                onPreview={() => setPreview({ kind: 'mentee', data: person })}
+              />
+            ))}
+            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
+          </div>
+        </div>
+
+        {/* Mobile nav */}
+        <div className="flex sm:hidden justify-center gap-3 mt-6 px-6">
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            aria-label="Previous"
+            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
+          >
+            <ChevronLeft className="w-4 h-4" /> Prev
+          </button>
+          <span className="text-gray-200 select-none">|</span>
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            aria-label="Next"
+            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
+          >
+            Next <ChevronRight className="w-4 h-4" />
           </button>
         </div>
-      </div>
 
-      {/* Scrollable track */}
-      <div className="relative">
-        {canScrollLeft && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-cream-50 to-transparent"
-          />
-        )}
-        {canScrollRight && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-cream-50 to-transparent"
-          />
-        )}
+      </section>
 
-        <div
-          ref={trackRef}
-          className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4"
-          style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
-        >
-          <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
-          {SOURCED_NEAR_PEERS.map((person) => (
-            <MenteeCard key={person.slug} person={person} />
-          ))}
-          <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
-        </div>
-      </div>
-
-      {/* Mobile nav */}
-      <div className="flex sm:hidden justify-center gap-3 mt-6 px-6">
-        <button
-          onClick={() => scroll('left')}
-          disabled={!canScrollLeft}
-          aria-label="Previous"
-          className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-        >
-          <ChevronLeft className="w-4 h-4" /> Prev
-        </button>
-        <span className="text-gray-200 select-none">|</span>
-        <button
-          onClick={() => scroll('right')}
-          disabled={!canScrollRight}
-          aria-label="Next"
-          className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-        >
-          Next <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-
-    </section>
+      <ProfilePreviewModal target={preview} onClose={() => setPreview(null)} />
+    </>
   );
 }
