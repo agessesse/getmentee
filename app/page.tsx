@@ -5,45 +5,42 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import IntroSequence from '@/components/marketing/IntroSequence';
-import MentorGrid from '@/components/marketing/MentorGrid';
 import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
-import LifecycleSection from '@/components/marketing/LifecycleSection';
 import InviteModal from '@/components/marketing/InviteModal';
 import FirmMarquee from '@/components/marketing/FirmMarquee';
-import TabsSection from '@/components/marketing/TabsSection';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const HOW_IT_WORKS = [
+const JOURNEY_STEPS = [
   {
-    step: '01',
+    n: '01',
     title: 'Build your profile',
-    description: 'Share your background, goals, and where you want to go. Takes a few minutes.',
+    body: 'Share your background, goals, and where you want to go. Your profile shapes every conversation that follows.',
   },
   {
-    step: '02',
-    title: 'Discover mentors',
-    description: 'Browse mentors matched to your goals, industry, and career stage.',
+    n: '02',
+    title: 'Find the right person',
+    body: 'Browse mentors matched to your goals, industry, and career stage. See exactly why each one is relevant.',
   },
   {
-    step: '03',
-    title: 'Send a request',
-    description: "Reach out with a note about what you're working toward and why you want to connect.",
+    n: '03',
+    title: 'Make the connection',
+    body: "Send a note about what you're working toward. Your first message isn't cold — it's informed.",
   },
   {
-    step: '04',
+    n: '04',
     title: 'Build something real',
-    description: 'Meet 1:1, work through goals, track action items, and build a relationship that lasts.',
+    body: 'Set goals, meet regularly, track action items. Goals become progress. Progress becomes momentum.',
   },
 ];
 
 const OUTCOMES = [
-  { label: 'Clarity', description: 'A clearer picture of what you want and a realistic path to get there.' },
-  { label: 'Capability', description: 'Skills, frameworks, and knowledge you can use the next day.' },
-  { label: 'Confidence', description: 'The kind that comes from being told by someone who has done it that you can.' },
-  { label: 'Access', description: 'Introductions, referrals, and context that would take years to find on your own.' },
-  { label: 'Accountability', description: 'Someone invested in your progress who will notice if you stop showing up.' },
+  { label: 'Clarity', description: 'A sharper picture of what you want and a realistic path to get there.' },
+  { label: 'Capability', description: 'Skills and frameworks you can apply the next day.' },
+  { label: 'Confidence', description: 'The kind that comes from someone who has done it telling you that you can.' },
+  { label: 'Access', description: 'Introductions and context that would take years to find on your own.' },
+  { label: 'Accountability', description: 'Someone invested in your progress who notices when you stop showing up.' },
   { label: 'Continuity', description: 'A relationship that outlasts the first conversation and compounds over time.' },
 ];
 
@@ -51,6 +48,7 @@ const OUTCOMES = [
 
 export default function LandingPage() {
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
     <div className="min-h-screen bg-cream-50">
@@ -80,17 +78,13 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
+      {/* ── 1. Hero ──────────────────────────────────────────────────────────── */}
       <section className="pt-36 pb-24 px-6 lg:px-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,360px] gap-12 lg:gap-20 items-center">
 
             {/* Text */}
             <div>
-              <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-8">
-                Mentorship changes trajectories
-              </p>
-
               <h1
                 className="font-serif text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
                 style={{ fontSize: 'clamp(2.9rem, 8.5vw, 6.5rem)' }}
@@ -101,8 +95,8 @@ export default function LandingPage() {
               </h1>
 
               <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-12">
-                Mentee connects you with people who have already walked the path
-                you&apos;re on — and chose to come back for those still on it.
+                Mentee connects you with people who have walked the path you&apos;re on
+                — and chose to come back.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-5">
@@ -125,7 +119,6 @@ export default function LandingPage() {
 
             {/* Portrait stack */}
             <div className="hidden lg:block relative h-[420px]" aria-hidden="true">
-              {/* Mentor card — behind, rotated right */}
               <div className="absolute top-4 right-4 w-[200px] h-[285px] rounded-2xl overflow-hidden shadow-2xl rotate-[2.5deg] border-[3px] border-white">
                 <Image
                   src="/people/christopher-floyd.jpg"
@@ -143,7 +136,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Mentee card — front, rotated left */}
               <div className="absolute bottom-4 left-4 w-[172px] h-[245px] rounded-2xl overflow-hidden shadow-2xl rotate-[-2.5deg] border-[3px] border-white">
                 <Image
                   src="/people/abel-gessesse.jpg"
@@ -166,60 +158,99 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Firm marquee ─────────────────────────────────────────────────────── */}
-      <FirmMarquee />
-
-      {/* ── Mentor grid — featured showcase ──────────────────────────────────── */}
-      <MentorGrid />
-
-      {/* ── Mentor carousel ───────────────────────────────────────────────────── */}
+      {/* ── 2. Community — paired mentor + mentee carousels ─────────────────── */}
       <MentorCarousel />
-
-      {/* ── Mentee carousel ─────────────────────────────────────────────────── */}
       <MenteeCarousel />
 
-      {/* ── How it works ───────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-10 bg-cream-50 border-t border-gray-100">
+      {/* ── 3. How it works — interactive step selector ──────────────────────── */}
+      <section className="py-20 px-6 lg:px-10 bg-white border-t border-gray-100" aria-labelledby="hiw-heading">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-14">
+
+          <div className="mb-16">
             <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
               Getting started
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-3">How it works</h2>
-            <p className="text-gray-500 font-light text-[15px]">Four steps from sign-up to a relationship that compounds.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            {HOW_IT_WORKS.map((step) => (
-              <div key={step.step}>
-                <div
-                  className="font-bold text-gray-100 leading-none mb-5 select-none"
-                  style={{ fontSize: 'clamp(4rem, 8vw, 5.5rem)' }}
-                  aria-hidden="true"
-                >
-                  {step.step}
-                </div>
-                <h3 className="text-base font-semibold text-navy-900 mb-2">{step.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed font-light">{step.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-14 flex justify-center">
-            <Link
-              href="/signup"
-              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl"
+            <h2
+              id="hiw-heading"
+              className="font-bold text-navy-900 leading-tight"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)' }}
             >
-              Get started — it&apos;s free
-              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-            </Link>
+              How it works
+            </h2>
+            <p className="text-gray-400 text-sm font-light mt-2 leading-relaxed">
+              From your first profile to a relationship that compounds.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+            {/* Step selectors */}
+            <div>
+              {JOURNEY_STEPS.map((step, i) => (
+                <button
+                  key={step.n}
+                  onClick={() => setActiveStep(i)}
+                  className="w-full text-left flex items-baseline gap-6 py-5 border-t border-gray-100 group transition-colors focus-visible:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-navy-500"
+                >
+                  <span
+                    className={`text-[11px] font-bold tabular-nums flex-none transition-colors ${
+                      activeStep === i ? 'text-navy-500' : 'text-gray-200 group-hover:text-gray-300'
+                    }`}
+                  >
+                    {step.n}
+                  </span>
+                  <span
+                    className={`font-semibold text-[15px] leading-tight transition-colors ${
+                      activeStep === i
+                        ? 'text-navy-900'
+                        : 'text-gray-400 group-hover:text-gray-700'
+                    }`}
+                  >
+                    {step.title}
+                  </span>
+                  {activeStep === i && (
+                    <ArrowRight
+                      className="w-3.5 h-3.5 flex-none text-navy-400 ml-auto self-center"
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              ))}
+              <div className="border-t border-gray-100" />
+            </div>
+
+            {/* Active step detail */}
+            <div className="lg:sticky lg:top-24">
+              <p
+                className="font-bold text-gray-100 leading-none mb-8 select-none"
+                style={{ fontSize: 'clamp(5rem, 10vw, 7rem)' }}
+                aria-hidden="true"
+              >
+                {JOURNEY_STEPS[activeStep].n}
+              </p>
+              <h3 className="text-2xl font-bold text-navy-900 mb-4 leading-tight">
+                {JOURNEY_STEPS[activeStep].title}
+              </h3>
+              <p className="text-gray-500 font-light leading-relaxed text-[16px] max-w-sm">
+                {JOURNEY_STEPS[activeStep].body}
+              </p>
+              <div className="mt-10">
+                <Link
+                  href="/signup"
+                  className="group inline-flex items-center gap-2 text-sm font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5"
+                >
+                  Get started — it&apos;s free
+                  <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── Mentorship flywheel ─────────────────────────────────────────────── */}
-      <LifecycleSection />
-
-      {/* ── The reward of mentorship (dark) ─────────────────────────────────── */}
-      <section className="py-24 px-6 lg:px-10 bg-navy-900">
+      {/* ── 4. The reward of mentorship (dark) ──────────────────────────────── */}
+      <section className="py-24 px-6 lg:px-10 bg-navy-900" aria-labelledby="reward-heading">
         <div className="max-w-6xl mx-auto">
 
           <div className="mb-16 max-w-2xl">
@@ -227,14 +258,15 @@ export default function LandingPage() {
               What it produces
             </p>
             <h2
+              id="reward-heading"
               className="font-serif text-white leading-tight mb-6"
               style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
             >
               The reward of<br />mentorship.
             </h2>
             <p className="text-navy-300 font-light leading-relaxed text-[15px] max-w-lg">
-              Good mentorship doesn&apos;t produce a single outcome. It changes how
-              you think, what you see as possible, and who you can become.
+              Good mentorship doesn&apos;t produce a single outcome. It changes how you think,
+              what you see as possible, and who you become.
             </p>
           </div>
 
@@ -249,17 +281,18 @@ export default function LandingPage() {
 
           <div className="mt-14 pt-10 border-t border-navy-800">
             <p className="text-navy-500 font-light text-[15px] max-w-xl leading-relaxed">
-              None of these are guaranteed. All of them are possible when the right
-              two people find each other at the right time. That&apos;s what Mentee is for.
+              None of these are guaranteed. All are possible when the right two people
+              find each other. That&apos;s what Mentee is for.
             </p>
           </div>
+
         </div>
       </section>
 
-      {/* ── Tabs section (For mentees / For mentors / The platform) ─────────── */}
-      <TabsSection />
+      {/* ── 5. Where our mentors have worked — curated logo marquee ─────────── */}
+      <FirmMarquee />
 
-      {/* ── Opportunity Fund ────────────────────────────────────────────────── */}
+      {/* ── 6. Opportunity Fund ─────────────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-10 border-t border-gray-100 bg-gray-50/40">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -310,7 +343,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Final CTA ───────────────────────────────────────────────────────── */}
+      {/* ── 7. Final CTA ────────────────────────────────────────────────────── */}
       <section className="py-24 px-6 lg:px-10 bg-navy-900 text-white">
         <div className="max-w-6xl mx-auto">
           <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-8">

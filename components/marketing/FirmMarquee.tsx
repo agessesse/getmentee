@@ -3,18 +3,15 @@
 import { useState } from 'react';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 
+// Only institutions with direct mentor affiliations that carry recognizable credibility.
+// Christopher Floyd: Wells Fargo (prior MD), Morgan Stanley (prior), SMBC (prior), Fifth Third Securities (prior)
+// Travis Melvin: UNC Kenan-Flagler (current)
 const FIRMS = [
   'Wells Fargo',
   'Morgan Stanley',
   'SMBC',
   'Fifth Third Securities',
-  'Bondway.ai',
-  'Keane Capital Management',
-  'MyEyeDr.',
-  'Engineered Land Solutions',
   'UNC Kenan-Flagler',
-  'Wall Street Oasis',
-  'Beds for Kids',
 ];
 
 function firmLogoUrl(name: string): string | null {
@@ -43,7 +40,7 @@ function FirmLogo({ name }: { name: string }) {
       title={name}
       width={24}
       height={24}
-      className="h-6 w-6 object-contain grayscale opacity-50 flex-none"
+      className="h-6 w-6 object-contain grayscale opacity-50 hover:opacity-80 hover:grayscale-0 transition-all duration-300 flex-none"
       onError={() => setFailed(true)}
     />
   );
@@ -51,7 +48,7 @@ function FirmLogo({ name }: { name: string }) {
 
 export default function FirmMarquee() {
   return (
-    <div className="py-7 border-y border-gray-100 bg-white">
+    <div className="py-8 border-y border-gray-100 bg-white">
       <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-[0.32em] text-center mb-5 select-none">
         Where Our Mentors Have Worked
       </p>
@@ -61,12 +58,9 @@ export default function FirmMarquee() {
           style={{ width: 'max-content' }}
         >
           {doubled.map((firm, i) => (
-            <span
-              key={i}
-              className="flex-none flex items-center px-8"
-            >
+            <span key={i} className="flex-none flex items-center px-10">
               <FirmLogo name={firm} />
-              <span className="ml-8 text-gray-200 select-none" aria-hidden="true">·</span>
+              <span className="ml-10 text-gray-200 select-none" aria-hidden="true">·</span>
             </span>
           ))}
         </div>
