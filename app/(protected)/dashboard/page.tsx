@@ -287,27 +287,41 @@ export default function DashboardPage() {
         })
       );
 
-      // ── Recent messages ───────────────────────────────────────────────────
+      // ── Recent messages — one per mentorship thread ───────────────────────
       const { data: activeMentorshipIds } = await supabase
         .from('mentorships')
         .select('id')
         .or(`mentee_id.eq.${uid},mentor_id.eq.${uid}`)
-        .eq('status', 'active');
+        .eq('status', 'active')
+        .limit(3);
 
       const msIds = (activeMentorshipIds ?? []).map((m) => m.id);
       let recentMessages: DashboardData['recentMessages'] = [];
 
       if (msIds.length > 0) {
-        const { data: msgs } = await supabase
-          .from('messages')
-          .select('mentorship_id, content, sender_id, created_at')
-          .in('mentorship_id', msIds)
-          .neq('sender_id', uid)
-          .order('created_at', { ascending: false })
-          .limit(3);
+        // Fetch the most recent message from each mentorship in parallel.
+        // This gives one item per conversation thread so different contacts
+        // each appear as a distinct row rather than one person filling all 3 slots.
+        const perThread = await Promise.all(
+          msIds.map((id) =>
+            supabase
+              .from('messages')
+              .select('mentorship_id, content, sender_id, created_at')
+              .eq('mentorship_id', id)
+              .neq('sender_id', uid)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle()
+              .then(({ data }) => data)
+          )
+        );
 
-        if (msgs && msgs.length > 0) {
-          const senderIds = [...new Set(msgs.map((m) => m.sender_id))];
+        const validMsgs = perThread.filter(
+          (m): m is NonNullable<typeof m> => m !== null
+        );
+
+        if (validMsgs.length > 0) {
+          const senderIds = [...new Set(validMsgs.map((m) => m.sender_id))];
           const { data: senders } = await supabase
             .from('public_profiles')
             .select('id, first_name, last_name')
@@ -315,7 +329,7 @@ export default function DashboardPage() {
           const senderMap = new Map(
             senders?.map((s) => [s.id, `${s.first_name} ${s.last_name}`]) ?? []
           );
-          recentMessages = msgs.map((m) => ({
+          recentMessages = validMsgs.map((m) => ({
             mentorship_id: m.mentorship_id,
             content: m.content,
             sender_name: senderMap.get(m.sender_id) ?? 'Unknown',

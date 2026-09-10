@@ -1017,9 +1017,7 @@ async function main() {
   const menteeEmailCount = MENTEES.filter((m) => existingEmails.has(m.email)).length;
 
   if (mentorEmailCount > 5 && menteeEmailCount > 3) {
-    console.log('⚠️  Demo data already exists. Delete demo users to reseed.');
-    console.log(`   Found ${mentorEmailCount}/${MENTORS.length} mentor accounts and ${menteeEmailCount}/${MENTEES.length} mentee accounts.`);
-    return;
+    console.log(`ℹ️  Found existing demo data (${mentorEmailCount}/${MENTORS.length} mentor, ${menteeEmailCount}/${MENTEES.length} mentee accounts). Syncing any missing records...`);
   }
 
   // Create mentor users
@@ -1224,6 +1222,19 @@ async function main() {
         ['mentor', 'IB is still the primary path for PE. Your focus should be getting the best possible IB platform — BB or EB. We\'ll talk through which banks have the best PE placement from their analyst classes.'],
       ],
       goals: ['Understand PE recruiting path from UNC', 'Learn growth equity deal sourcing'],
+    },
+    {
+      menteeEmail: 'mentee@demo.mentee.app',
+      mentorEmail: 'marcus.johnson@demo.mentee.app',
+      daysAgoStart: 15,
+      sessionCount: 1,
+      messages: [
+        ['mentee', 'Hey Marcus — noticed you went to UNC Kenan-Flagler too. I\'m targeting leveraged finance as a possible IB rotation and would love to hear about your path from Carolina to JPM.'],
+        ['mentor', 'Jordan! Great to connect with a fellow Tar Heel. LevFin at Carolina is very achievable — I came from the same program. Let me share what JPM specifically looks for from Kenan-Flagler candidates.'],
+        ['mentee', 'That would be incredibly helpful. I\'m also trying to understand the difference between LevFin at a BB vs. a credit fund. Is the technical skillset meaningfully different on day one?'],
+        ['mentor', 'Great question — similar technical base but very different exit opportunities and day-to-day culture. Let\'s walk through it on our first call. In the meantime, start reading high-yield bond indentures. Interviewers will ask you to walk through covenants.'],
+      ],
+      goals: ['Understand leveraged finance recruiting from UNC', 'Learn LevFin vs. credit fund differences', 'Build high-yield technical foundation'],
     },
     {
       menteeEmail: 'jacob.harris@demo.mentee.app',
