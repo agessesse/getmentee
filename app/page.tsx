@@ -6,36 +6,45 @@ import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import MentorGrid from '@/components/marketing/MentorGrid';
+import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
-import MatchPreview from '@/components/marketing/MatchPreview';
 import LifecycleSection from '@/components/marketing/LifecycleSection';
 import InviteModal from '@/components/marketing/InviteModal';
 import FirmMarquee from '@/components/marketing/FirmMarquee';
 import TabsSection from '@/components/marketing/TabsSection';
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const HOW_IT_WORKS = [
   {
     step: '01',
-    title: 'Create your profile',
-    description: 'Tell us about your background, goals, and where you want to be. Takes under 5 minutes.',
+    title: 'Build your profile',
+    description: 'Share your background, goals, and where you want to go. Takes a few minutes.',
   },
   {
     step: '02',
-    title: 'Get matched',
-    description: 'Mentee surfaces mentors based on your specific goals, industry, and career stage.',
+    title: 'Discover mentors',
+    description: 'Browse mentors matched to your goals, industry, and career stage.',
   },
   {
     step: '03',
     title: 'Send a request',
-    description: 'Reach out with a personalized note about why you want to connect.',
+    description: "Reach out with a note about what you're working toward and why you want to connect.",
   },
   {
     step: '04',
-    title: 'Start growing',
+    title: 'Build something real',
     description: 'Meet 1:1, work through goals, track action items, and build a relationship that lasts.',
   },
+];
+
+const OUTCOMES = [
+  { label: 'Clarity', description: 'A clearer picture of what you want and a realistic path to get there.' },
+  { label: 'Capability', description: 'Skills, frameworks, and knowledge you can use the next day.' },
+  { label: 'Confidence', description: 'The kind that comes from being told by someone who has done it that you can.' },
+  { label: 'Access', description: 'Introductions, referrals, and context that would take years to find on your own.' },
+  { label: 'Accountability', description: 'Someone invested in your progress who will notice if you stop showing up.' },
+  { label: 'Continuity', description: 'A relationship that outlasts the first conversation and compounds over time.' },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -92,8 +101,8 @@ export default function LandingPage() {
               </h1>
 
               <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-12">
-                Mentee connects ambitious students and early-career professionals
-                with people who have already traveled the path ahead.
+                Mentee connects you with people who have already walked the path
+                you&apos;re on — and chose to come back for those still on it.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-5">
@@ -114,7 +123,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Portrait stack — mentor behind, mentee in front */}
+            {/* Portrait stack */}
             <div className="hidden lg:block relative h-[420px]" aria-hidden="true">
               {/* Mentor card — behind, rotated right */}
               <div className="absolute top-4 right-4 w-[200px] h-[285px] rounded-2xl overflow-hidden shadow-2xl rotate-[2.5deg] border-[3px] border-white">
@@ -160,7 +169,7 @@ export default function LandingPage() {
       {/* ── Firm marquee ─────────────────────────────────────────────────────── */}
       <FirmMarquee />
 
-      {/* ── Mentor grid ──────────────────────────────────────────────────────── */}
+      {/* ── Mentor grid — featured showcase ──────────────────────────────────── */}
       <MentorGrid />
 
       {/* ── CTA after mentor grid ──────────────────────────────────────────── */}
@@ -168,7 +177,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-lg font-bold text-navy-900">See a mentor you want to connect with?</p>
-            <p className="text-sm text-gray-500 mt-1 font-light">Create a free account to send a request.</p>
+            <p className="text-sm text-gray-500 mt-1 font-light">Create a free account and send a request.</p>
           </div>
           <Link
             href="/signup"
@@ -180,64 +189,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Bridge: experience flows forward ────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto px-6 lg:px-10">
-        <div className="border-t border-gray-100 pt-8 pb-2">
-          <p className="text-[13px] text-gray-400 font-light italic">
-            And the people whose trajectories they&apos;re shaping.
-          </p>
-        </div>
-      </div>
+      {/* ── Mentor carousel ───────────────────────────────────────────────────── */}
+      <MentorCarousel />
 
       {/* ── Mentee carousel ─────────────────────────────────────────────────── */}
       <MenteeCarousel />
 
-      {/* ── Mentorship flywheel ─────────────────────────────────────────────── */}
-      <LifecycleSection />
-
-      {/* ── Intelligent matching (dark) ──────────────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-10 bg-navy-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.2em] mb-6">
-                Intelligent matching
-              </p>
-              <h2 className="text-3xl md:text-4xl font-serif text-white mb-6 leading-tight">
-                More than a search bar.
-              </h2>
-              <p className="text-navy-300 font-light leading-relaxed mb-10 text-[15px]">
-                Mentee doesn&apos;t just list mentors. It surfaces exactly why a
-                person could be relevant to your goals — so your first message
-                isn&apos;t cold, it&apos;s informed.
-              </p>
-              <ul className="space-y-4">
-                {[
-                  'Match on industry, school, goals, and career stage',
-                  'See a clear explanation of why each mentor fits',
-                  'Filter by availability, format, and focus area',
-                  'Save mentors you want to revisit',
-                ].map((point) => (
-                  <li key={point} className="flex items-start gap-4">
-                    <span className="text-navy-600 flex-shrink-0 mt-1 select-none font-light text-lg leading-none">—</span>
-                    <span className="text-sm text-navy-300 font-light">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex justify-center lg:justify-end">
-              <MatchPreview />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How it works (numbered editorial) ──────────────────────────────── */}
+      {/* ── How it works ───────────────────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-10 bg-cream-50 border-t border-gray-100">
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-2">How it works</h2>
-            <p className="text-gray-500 font-light">From signup to your first session in under a week.</p>
+            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
+              Getting started
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-3">How it works</h2>
+            <p className="text-gray-500 font-light text-[15px]">Four steps from sign-up to a relationship that compounds.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {HOW_IT_WORKS.map((step) => (
@@ -266,10 +232,51 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Mentorship flywheel ─────────────────────────────────────────────── */}
+      <LifecycleSection />
+
+      {/* ── The reward of mentorship (dark) ─────────────────────────────────── */}
+      <section className="py-24 px-6 lg:px-10 bg-navy-900">
+        <div className="max-w-6xl mx-auto">
+
+          <div className="mb-16 max-w-2xl">
+            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-6">
+              What it produces
+            </p>
+            <h2
+              className="font-serif text-white leading-tight mb-6"
+              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+            >
+              The reward of<br />mentorship.
+            </h2>
+            <p className="text-navy-300 font-light leading-relaxed text-[15px] max-w-lg">
+              Good mentorship doesn&apos;t produce a single outcome. It changes how
+              you think, what you see as possible, and who you can become.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-navy-800">
+            {OUTCOMES.map((outcome) => (
+              <div key={outcome.label} className="bg-navy-900 p-8 hover:bg-navy-800/60 transition-colors">
+                <p className="text-white font-semibold text-base mb-2">{outcome.label}</p>
+                <p className="text-navy-400 font-light text-[14px] leading-relaxed">{outcome.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-14 pt-10 border-t border-navy-800">
+            <p className="text-navy-500 font-light text-[15px] max-w-xl leading-relaxed">
+              None of these are guaranteed. All of them are possible when the right
+              two people find each other at the right time. That&apos;s what Mentee is for.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ── Tabs section (For mentees / For mentors / The platform) ─────────── */}
       <TabsSection />
 
-      {/* ── Opportunity Fund (editorial) ────────────────────────────────────── */}
+      {/* ── Opportunity Fund ────────────────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-10 border-t border-gray-100 bg-gray-50/40">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -284,10 +291,9 @@ export default function LandingPage() {
                 Access doesn&apos;t stop<br />at the introduction.
               </h2>
               <p className="text-gray-500 leading-relaxed mb-4 font-light text-[15px]">
-                Great mentorship can identify the next opportunity. For students with
-                demonstrated financial need, Mentee is building an Opportunity Fund
-                designed to remove practical barriers — professional attire, networking,
-                travel, and career-development expenses that stand between guidance and action.
+                Great mentorship can open a door. For students with demonstrated
+                financial need, Mentee is building an Opportunity Fund to remove
+                the practical barriers that stand between guidance and action.
               </p>
               <p className="text-gray-400 text-sm leading-relaxed mb-8">
                 The Opportunity Fund is in its pilot phase. We are building partnerships to fund the first cohort.
@@ -334,8 +340,8 @@ export default function LandingPage() {
             Ready to find<br />your mentor?
           </h2>
           <p className="text-navy-400 font-light mb-10 max-w-md text-[15px] leading-relaxed">
-            Join students and professionals building relationships with mentors
-            who have already traveled their path.
+            Create an account and take the first step. The right introduction
+            starts with showing up.
           </p>
           <div className="flex flex-col sm:flex-row items-start gap-5">
             <Link
@@ -365,7 +371,7 @@ export default function LandingPage() {
           <div className="mb-10">
             <span className="text-2xl font-bold text-white tracking-tight">Mentee</span>
             <p className="text-navy-500 font-light mt-2 max-w-xs text-sm leading-relaxed">
-              Helping ambitious people find the mentors who can change their trajectory.
+              Helping ambitious people find the mentors who change what&apos;s possible.
             </p>
           </div>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-8 border-t border-navy-800">

@@ -1,14 +1,14 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 
-// ─── LinkedIn icon — inline SVG, no extra dependency ─────────────────────────
+const DOUBLED = [...SOURCED_NEAR_PEERS, ...SOURCED_NEAR_PEERS];
+
 function LinkedInIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -16,10 +16,6 @@ function LinkedInIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-
-// ─── Card ─────────────────────────────────────────────────────────────────────
-// Clicking portrait / name / info opens the profile preview modal.
-// LinkedIn icon opens LinkedIn in new tab (separate <a> outside button).
 
 function MenteeCard({
   person,
@@ -36,8 +32,8 @@ function MenteeCard({
       : person.school;
 
   return (
-    <div className="snap-start flex-none w-[200px] sm:w-[232px]">
-      {/* ── Profile preview button — wraps portrait + identity ── */}
+    <div className="flex-none w-[200px] sm:w-[220px] px-3">
+      {/* Profile preview button — wraps portrait + identity */}
       <button
         onClick={onPreview}
         className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
@@ -52,7 +48,7 @@ function MenteeCard({
               fill
               className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-out"
               style={{ objectPosition: person.portraitPosition ?? '50% 20%' }}
-              sizes="(max-width: 640px) 200px, 232px"
+              sizes="(max-width: 640px) 200px, 220px"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-navy-100">
@@ -84,7 +80,7 @@ function MenteeCard({
         </div>
       </button>
 
-      {/* ── Logo chips — school + employer(s) — outside button ── */}
+      {/* Logo chips — school + employer(s) — outside button */}
       {(() => {
         const schoolUrl = person.school ? schoolFaviconUrl(person.school) : null;
         const employerUrls = (person.experience ?? [])
@@ -104,7 +100,7 @@ function MenteeCard({
         );
       })()}
 
-      {/* ── LinkedIn — outside button ── */}
+      {/* LinkedIn — outside button */}
       {person.linkedInUrl && (
         <a
           href={person.linkedInUrl}
@@ -121,42 +117,13 @@ function MenteeCard({
   );
 }
 
-// ─── Carousel ─────────────────────────────────────────────────────────────────
-
 export default function MenteeCarousel() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
-
-  const updateScrollState = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 8);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
-  }, []);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    updateScrollState();
-    el.addEventListener('scroll', updateScrollState, { passive: true });
-    return () => el.removeEventListener('scroll', updateScrollState);
-  }, [updateScrollState]);
-
-  function scroll(direction: 'left' | 'right') {
-    const el = trackRef.current;
-    if (!el) return;
-    const firstCard = el.querySelector<HTMLElement>('[class*="snap-start"]');
-    const cardWidth = firstCard ? firstCard.clientWidth : 232;
-    el.scrollBy({ left: direction === 'right' ? cardWidth + 20 : -(cardWidth + 20), behavior: 'smooth' });
-  }
 
   return (
     <>
-      <section className="py-14" aria-labelledby="mentees-heading">
+      <section className="py-14 border-t border-gray-100" aria-labelledby="mentees-heading">
 
-        {/* Header — arrows moved inside track */}
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
             Current mentees
@@ -173,78 +140,26 @@ export default function MenteeCarousel() {
           </p>
         </div>
 
-        {/* Scrollable track with arrows overlaid inside */}
-        <div className="relative">
-          {/* Edge fades */}
-          {canScrollLeft && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-cream-50 to-transparent"
-            />
-          )}
-          {canScrollRight && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-cream-50 to-transparent"
-            />
-          )}
-
-          {/* Left arrow — overlaid inside track */}
-          <button
-            onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
-            aria-label="Previous mentees"
-            className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
-          {/* Right arrow — overlaid inside track */}
-          <button
-            onClick={() => scroll('right')}
-            disabled={!canScrollRight}
-            aria-label="Next mentees"
-            className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-md items-center justify-center text-navy-700 hover:bg-navy-50 transition-colors disabled:opacity-0 disabled:pointer-events-none"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-
+        {/* Infinite marquee — pauses on hover */}
+        <div className="relative overflow-hidden group">
           <div
+<<<<<<< HEAD
             ref={trackRef}
             className="flex gap-5 overflow-x-auto px-6 pb-4"
             style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+=======
+            className="flex animate-carousel-left group-hover:[animation-play-state:paused]"
+            style={{ width: 'max-content', animationDuration: '60s' }}
+>>>>>>> fed9937 (feat: Phase 1A/1B — auth guards, infinite marquee carousels, landing page overhaul)
           >
-            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
-            {SOURCED_NEAR_PEERS.map((person) => (
+            {DOUBLED.map((person, i) => (
               <MenteeCard
-                key={person.slug}
+                key={`${person.slug}-${i}`}
                 person={person}
                 onPreview={() => setPreview({ kind: 'mentee', data: person })}
               />
             ))}
-            <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />
           </div>
-        </div>
-
-        {/* Mobile nav */}
-        <div className="flex sm:hidden justify-center gap-3 mt-6 px-6">
-          <button
-            onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
-            aria-label="Previous"
-            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-          >
-            <ChevronLeft className="w-4 h-4" /> Prev
-          </button>
-          <span className="text-gray-200 select-none">|</span>
-          <button
-            onClick={() => scroll('right')}
-            disabled={!canScrollRight}
-            aria-label="Next"
-            className="flex items-center gap-1 text-xs text-gray-400 disabled:opacity-25"
-          >
-            Next <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
 
       </section>
