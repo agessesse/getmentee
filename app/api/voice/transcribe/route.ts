@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireUser } from '@/lib/api-auth';
+import { checkRateLimit, rateLimitResponse } from '@/lib/rate-limit';
 
 // POST /api/voice/transcribe
 // Accepts an audio blob (multipart/form-data, field: "audio"), returns { transcript: string }.
 // Requires OPENAI_API_KEY. Returns 503 if the key is absent so the UI can degrade gracefully.
 export async function POST(req: NextRequest) {
+  // Billed OpenAI call: require a session, then cap per-user volume.
+  const auth = await requireUser();
+  if (!auth.ok) return auth.response;
+
+  const limit = checkRateLimit(`transcribe:${auth.user.id}`, 20, 60_000);
+  if (!limit.allowed) return rateLimitResponse(limit.retryAfter);
+
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'Voice transcription is currently unavailable.' },

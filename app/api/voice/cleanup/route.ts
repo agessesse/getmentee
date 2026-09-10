@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireUser } from '@/lib/api-auth';
+import { checkRateLimit, rateLimitResponse } from '@/lib/rate-limit';
 
 // POST /api/voice/cleanup
 // Accepts { text: string, context?: 'message' | 'note' | 'goal' | 'search' }.
@@ -6,6 +8,13 @@ import { NextRequest, NextResponse } from 'next/server';
 // Applies light cleanup: punctuation, filler-word removal, capitalization.
 // Requires OPENAI_API_KEY — returns 503 if absent so the UI degrades to raw transcript.
 export async function POST(req: NextRequest) {
+  // Billed OpenAI call: require a session, then cap per-user volume.
+  const auth = await requireUser();
+  if (!auth.ok) return auth.response;
+
+  const limit = checkRateLimit(`cleanup:${auth.user.id}`, 60, 60_000);
+  if (!limit.allowed) return rateLimitResponse(limit.retryAfter);
+
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json({ error: 'unavailable' }, { status: 503 });
   }

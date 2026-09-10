@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireUser } from '@/lib/api-auth';
+import { checkRateLimit, rateLimitResponse } from '@/lib/rate-limit';
 
 export interface SessionSummaryResult {
   summary: string;
@@ -13,6 +15,13 @@ export interface SessionSummaryResult {
 // Returns a structured SessionSummaryResult.
 // Requires OPENAI_API_KEY — returns 503 if absent.
 export async function POST(req: NextRequest) {
+  // Billed OpenAI call: require a session, then cap per-user volume.
+  const auth = await requireUser();
+  if (!auth.ok) return auth.response;
+
+  const limit = checkRateLimit(`summarize:${auth.user.id}`, 10, 60_000);
+  if (!limit.allowed) return rateLimitResponse(limit.retryAfter);
+
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'Session intelligence is currently unavailable.' },
@@ -33,6 +42,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: 'Transcript is too short to summarize.' },
       { status: 400 }
+    );
+  }
+
+  // A session transcript is long, but not unbounded. Without a ceiling a single
+  // request can carry megabytes of input tokens.
+  const MAX_TRANSCRIPT_CHARS = 100_000;
+  if (transcript.length > MAX_TRANSCRIPT_CHARS) {
+    return NextResponse.json(
+      { error: 'Transcript exceeds the maximum supported length.' },
+      { status: 413 }
     );
   }
 
