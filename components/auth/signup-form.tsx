@@ -134,6 +134,7 @@ export function SignupForm() {
             </label>
             <input
               id="firstName"
+              autoComplete="given-name"
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -149,6 +150,7 @@ export function SignupForm() {
             </label>
             <input
               id="lastName"
+              autoComplete="family-name"
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -166,6 +168,7 @@ export function SignupForm() {
           </label>
           <input
             id="email"
+            autoComplete="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -182,6 +185,7 @@ export function SignupForm() {
           </label>
           <input
             id="password"
+            autoComplete="new-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

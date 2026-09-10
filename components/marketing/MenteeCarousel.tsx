@@ -211,7 +211,7 @@ export default function MenteeCarousel() {
 
           <div
             ref={trackRef}
-            className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-4"
+            className="flex gap-5 overflow-x-auto px-6 pb-4"
             style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
           >
             <div className="flex-none w-[calc(max(0px,(100vw-80rem)/2))]" aria-hidden="true" />

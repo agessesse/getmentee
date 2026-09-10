@@ -16,7 +16,15 @@ const instrumentSerif = Instrument_Serif({
   display: 'swap',
 });
 
+// Absolute-URL base for canonicals and OG/Twitter images. Without it Next
+// emits relative image URLs no social scraper can resolve, so the
+// summary_large_image card below rendered empty. Set NEXT_PUBLIC_APP_URL in
+// the deployment environment.
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  alternates: { canonical: '/' },
   title: 'Mentee — Find the Mentor Who Changes Everything',
   description:
     'Mentee connects ambitious students and early-career professionals with experienced mentors at leading firms. Match, connect, meet, and grow.',

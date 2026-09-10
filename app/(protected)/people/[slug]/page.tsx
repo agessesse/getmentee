@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -370,6 +371,50 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
+// Every /people/<slug> page served the root layout's metadata verbatim, so all
+// prerendered URLs shared one title and one description — a duplicate-title
+// cluster in which none could rank for the person's own name.
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const result = getPersonBySlug(params.slug);
+  if (!result) return { title: 'Profile not found' };
+
+  const p = result.data;
+  const name = `${p.firstName} ${p.lastName}`;
+  const credential = 'credential' in p && p.credential ? `, ${p.credential}` : '';
+
+  const role =
+    result.type === 'mentor'
+      ? ('headline' in p && p.headline) ||
+        [p.title, p.organization].filter(Boolean).join(' at ') ||
+        'Mentor'
+      : [p.school, 'expectedGraduation' in p && p.expectedGraduation]
+          .filter(Boolean)
+          .join(' · ') || 'Mentee';
+
+  const title = `${name}${credential} — ${role}`;
+  const description = p.bio.length > 155 ? `${p.bio.slice(0, 152)}…` : p.bio;
+  const canonical = `/people/${p.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      type: 'profile',
+      url: canonical,
+      ...(p.image ? { images: [{ url: p.image }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      ...(p.image ? { images: [p.image] } : {}),
+    },
+  };
+}
 
 export default function PersonPage({ params }: { params: { slug: string } }) {
   const result = getPersonBySlug(params.slug);
