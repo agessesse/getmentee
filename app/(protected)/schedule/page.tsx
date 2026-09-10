@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Plus, ChevronDown, Clock, Plus as PlusIcon, Trash2 } from 'lucide-react';
+import { Plus, Clock, Plus as PlusIcon, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import SessionCard from '@/components/schedule/SessionCard';
 import BookingModal from '@/components/schedule/BookingModal';
@@ -225,7 +225,7 @@ export default function SchedulePage() {
 
   const [sessions, setSessions] = useState<Session[]>([]);
   const [mentorships, setMentorships] = useState<Mentorship[]>([]);
-  const [selectedMentorshipId, setSelectedMentorshipId] = useState<string | null>(preselectedMentorshipId);
+  const [selectedMentorshipId] = useState<string | null>(preselectedMentorshipId);
   const [userRole, setUserRole] = useState<'mentor' | 'mentee'>('mentee');
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(true);
@@ -315,7 +315,6 @@ export default function SchedulePage() {
           };
         });
         setMentorships(enrichedMentorships);
-        setSelectedMentorshipId((prev) => prev ?? enrichedMentorships[0]?.id ?? null);
       }
 
       await loadSessions('upcoming', uid);
@@ -332,8 +331,7 @@ export default function SchedulePage() {
     setLoading(false);
   };
 
-  const selectedMentorship = mentorships.find((m) => m.id === selectedMentorshipId);
-  const canBook = userRole === 'mentee' && mentorships.length > 0 && selectedMentorship != null;
+  const canBook = userRole === 'mentee' && mentorships.length > 0;
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'upcoming', label: 'Upcoming' },
@@ -353,30 +351,11 @@ export default function SchedulePage() {
           </p>
         </div>
 
-        {/* Book session controls — mentees only */}
+        {/* Book session button — mentor selection happens inside the modal */}
         {userRole === 'mentee' && mentorships.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            {mentorships.length > 1 && (
-              <div className="relative">
-                <select
-                  value={selectedMentorshipId ?? ''}
-                  onChange={(e) => setSelectedMentorshipId(e.target.value)}
-                  aria-label="Select mentorship"
-                  className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-lg text-navy-900 bg-white focus:outline-none focus:ring-2 focus:ring-navy-500 cursor-pointer"
-                >
-                  {mentorships.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      With {m.partnerName}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-              </div>
-            )}
-            <Button onClick={() => setBookingOpen(true)} disabled={!selectedMentorship}>
-              <Plus className="h-4 w-4" /> Book Session
-            </Button>
-          </div>
+          <Button onClick={() => setBookingOpen(true)}>
+            <Plus className="h-4 w-4" /> Book Session
+          </Button>
         )}
       </div>
 
@@ -414,7 +393,7 @@ export default function SchedulePage() {
                 <>
                   <p className="text-sm text-gray-400 mb-4">
                     {mentorships.length === 1
-                      ? `Ready to meet with ${selectedMentorship?.partnerName}? Book your first session.`
+                      ? `Ready to meet with ${mentorships[0].partnerName}? Book your first session.`
                       : 'Schedule time with one of your mentors.'}
                   </p>
                   <Button onClick={() => setBookingOpen(true)}>
@@ -453,13 +432,12 @@ export default function SchedulePage() {
         </>
       )}
 
-      {bookingOpen && selectedMentorship && (
+      {bookingOpen && (
         <BookingModal
           open={bookingOpen}
           onClose={() => setBookingOpen(false)}
-          mentorshipId={selectedMentorship.id}
-          mentorId={selectedMentorship.mentor_id}
-          menteeId={selectedMentorship.mentee_id}
+          mentorships={mentorships}
+          preselectedMentorshipId={selectedMentorshipId ?? undefined}
           userRole={userRole}
           onBooked={() => {
             setBookingOpen(false);

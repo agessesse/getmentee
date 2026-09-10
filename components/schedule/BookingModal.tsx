@@ -19,12 +19,20 @@ interface AvailabilitySlot {
   end_time: string;
 }
 
+interface Mentorship {
+  id: string;
+  mentor_id: string;
+  mentee_id: string;
+  partnerName: string;
+}
+
 interface BookingModalProps {
   open: boolean;
   onClose: () => void;
-  mentorshipId: string;
-  mentorId: string;
-  menteeId: string;
+  /** All active mentorships for this user — selection happens inside the modal. */
+  mentorships: Mentorship[];
+  /** Pre-select a specific mentorship (e.g. when navigating from /mentorships). */
+  preselectedMentorshipId?: string;
   userRole: 'mentor' | 'mentee';
   preselectedDate?: string;
   onBooked: () => void;
@@ -44,13 +52,14 @@ function fmt12(hhmm: string) {
 export default function BookingModal({
   open,
   onClose,
-  mentorshipId,
-  mentorId,
-  menteeId,
+  mentorships,
+  preselectedMentorshipId,
   userRole,
   preselectedDate,
   onBooked,
 }: BookingModalProps) {
+  const defaultId = preselectedMentorshipId ?? (mentorships.length === 1 ? mentorships[0].id : '');
+  const [selectedMsId, setSelectedMsId] = useState(defaultId);
   const [form, setForm] = useState({
     date: preselectedDate ?? '',
     time: '',
@@ -63,8 +72,23 @@ export default function BookingModal({
   const [error, setError] = useState('');
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
 
+  const selectedMs = mentorships.find((m) => m.id === selectedMsId);
+  const mentorId = selectedMs?.mentor_id ?? '';
+  const menteeId = selectedMs?.mentee_id ?? '';
+  const mentorshipId = selectedMs?.id ?? '';
+
+  // Reset selection when modal opens
   useEffect(() => {
-    if (!open || !mentorId) return;
+    if (open) {
+      setSelectedMsId(preselectedMentorshipId ?? (mentorships.length === 1 ? mentorships[0].id : ''));
+      setForm({ date: preselectedDate ?? '', time: '', duration: '60', sessionType: 'video', notes: '', videoLink: '' });
+      setError('');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !mentorId) { setSlots([]); return; }
     const supabase = createClient();
     supabase
       .from('availability_slots')
@@ -88,6 +112,10 @@ export default function BookingModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!selectedMsId) {
+      setError('Please select a mentor.');
+      return;
+    }
     if (!form.date || !form.time) {
       setError('Please select a date and time.');
       return;
@@ -129,6 +157,19 @@ export default function BookingModal({
   return (
     <Modal open={open} onClose={onClose} title="Schedule a Session">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Mentor selection — shown when there are multiple active mentorships */}
+        {mentorships.length > 1 && (
+          <Select
+            label="With which mentor?"
+            value={selectedMsId}
+            onChange={(e) => setSelectedMsId(e.target.value)}
+            options={[
+              { value: '', label: 'Select a mentor…' },
+              ...mentorships.map((m) => ({ value: m.id, label: m.partnerName })),
+            ]}
+          />
+        )}
+
         {/* Availability hint */}
         {slots.length > 0 && (
           <div className="bg-navy-50 rounded-xl px-4 py-3">
