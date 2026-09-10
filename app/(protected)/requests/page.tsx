@@ -243,35 +243,36 @@ export default function RequestsPage() {
   async function updateRequestStatus(
     requestId: string,
     newStatus: Status,
-    menteeId?: string,
-    mentorId?: string
+    // menteeId/mentorId are no longer sent for approvals. The database reads
+    // the mentee from the request itself (0018), so it cannot be chosen by the
+    // caller — that was the forged-mentorship path.
+    _menteeId?: string,
+    _mentorId?: string
   ) {
     setActionLoadingId(requestId);
     setActionError(null);
     const supabase = createClient();
 
-    const { error: updateError } = await supabase
-      .from('mentorship_requests')
-      .update({ status: newStatus })
-      .eq('id', requestId);
+    if (newStatus === 'approved') {
+      // One transaction: the status flip and the mentorship insert commit or
+      // fail together. Previously these were two separate writes, so a failed
+      // insert left the request approved with no mentorship and no way to
+      // retry, because it was no longer pending.
+      const { error: rpcError } = await supabase.rpc(
+        'approve_mentorship_request',
+        { p_request_id: requestId }
+      );
 
-    if (updateError) {
-      setActionError('Something went wrong. Please try again.');
-      setActionLoadingId(null);
-      return;
-    }
-
-    if (newStatus === 'approved' && menteeId && mentorId) {
-      const { error: msError } = await supabase.from('mentorships').insert({
-        request_id: requestId,
-        mentee_id: menteeId,
-        mentor_id: mentorId,
-      });
-      if (msError) {
-        setActionError('Request approved but mentorship could not be created. Please contact support.');
+      if (rpcError) {
+        setActionError(
+          rpcError.message.includes('capacity')
+            ? 'You have reached your mentee capacity.'
+            : 'Something went wrong. Please try again.'
+        );
         setActionLoadingId(null);
         return;
       }
+
       if (capacity) {
         setCapacity((prev) =>
           prev ? { ...prev, activeMentees: prev.activeMentees + 1 } : prev
@@ -284,6 +285,19 @@ export default function RequestsPage() {
           name: `${approved.partner.first_name} ${approved.partner.last_name}`,
         });
         setTimeout(() => setRecentlyApproved(null), 6000);
+      }
+    } else {
+      // Declining creates no mentorship, so it stays a plain status update.
+      // 0018 restricts this table's UPDATE grant to the status column.
+      const { error: updateError } = await supabase
+        .from('mentorship_requests')
+        .update({ status: newStatus })
+        .eq('id', requestId);
+
+      if (updateError) {
+        setActionError('Something went wrong. Please try again.');
+        setActionLoadingId(null);
+        return;
       }
     }
 

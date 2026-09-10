@@ -34,9 +34,14 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         return;
       }
 
+      // `email` is deliberately NOT selected here. Migration 0018 revokes
+      // column-level SELECT on profiles.email so it cannot be read through the
+      // API at all — without that, the permissive profiles policy from 0016
+      // let any authenticated account read every user's email address.
+      // The address is on the session already, which is the correct source.
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('id, first_name, last_name, email, role, avatar_url')
+        .select('id, first_name, last_name, role, avatar_url')
         .eq('id', session.user.id)
         .single();
 
@@ -45,7 +50,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         return;
       }
 
-      setProfile(profileData as Profile);
+      setProfile({
+        ...(profileData as Omit<Profile, 'email'>),
+        email: session.user.email ?? '',
+      });
 
       // Redirect to profile setup if not yet complete (skip if already there)
       if (pathname !== '/profile/setup') {

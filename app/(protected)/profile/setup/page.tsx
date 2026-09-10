@@ -307,7 +307,11 @@ export default function ProfileSetupPage() {
     );
     if (confirmed !== 'DELETE') return;
 
-    const res = await fetch('/api/account/delete', { method: 'DELETE' });
+    const res = await fetch('/api/account/delete', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm: confirmed }),
+    });
     if (!res.ok) {
       alert('Failed to delete account. Please contact support.');
       return;
