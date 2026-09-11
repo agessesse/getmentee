@@ -68,6 +68,18 @@ function MentorCard({
           {showCompany && (
             <p className="text-[11px] text-navy-500 font-medium mt-0.5">{mentor.company}</p>
           )}
+          {mentor.helpsWith && mentor.helpsWith.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {mentor.helpsWith.slice(0, 2).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[9px] font-medium text-navy-600 bg-navy-50 rounded-full px-2 py-0.5 leading-tight"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </button>
       {mentor.linkedInUrl && (

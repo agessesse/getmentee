@@ -56,6 +56,11 @@ export interface Mentor {
   /** LinkedIn profile URL — omit if not available or unverified */
   linkedInUrl?: string;
   /**
+   * 2-3 concise areas this mentor can genuinely help with.
+   * Derived only from verifiable career information already in this file.
+   */
+  helpsWith?: string[];
+  /**
    * Prior employers shown as logo chips on the card.
    * Use the exact string key from COMPANY_LOGO_DOMAINS in lib/logos.ts.
    */
@@ -78,6 +83,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     thumbnailPosition: '50% 10%',
     linkedInUrl: 'https://www.linkedin.com/in/christopher-floyd/',
     priorCompanies: ['Wells Fargo', 'Morgan Stanley', 'SMBC', 'Fifth Third Securities'],
+    helpsWith: ['Fixed Income', 'Capital Markets', 'Career Development'],
     shortBio:
       "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
@@ -95,6 +101,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 38%',
     thumbnailPosition: '50% 15%',
     linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
+    helpsWith: ['Career Decisions', 'Professional Guidance', 'Advocacy'],
     shortBio:
       "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
@@ -112,6 +119,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 15%',
     thumbnailPosition: '50% 20%',
     linkedInUrl: 'https://www.linkedin.com/in/tiffany-lakey-2b6747b/',
+    helpsWith: ['Institutional Banking', 'Corporate Strategy', 'Leadership'],
     shortBio:
       'Senior Wells Fargo executive with more than two decades in institutional banking. Tiffany serves as Chief of Staff in the Corporate & Investment Bank, having previously served as Managing Director and Head of Strategy & Innovation and COO of Strategy & Client Engagement. She began her career at Wachovia Securities in leveraged finance, covering TMT and healthcare.',
     whyIMentor:
@@ -129,6 +137,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 10%',
     thumbnailPosition: '50% 5%',
     linkedInUrl: 'https://www.linkedin.com/in/frank-l-van-buren-4664516/',
+    helpsWith: ['Breaking into Finance', 'Analyst Development', 'Professional Presence'],
     shortBio:
       'UNC Kenan-Flagler MBA and Consortium for Graduate Study in Management participant. Frank founded Van Buren Advisory LLC to develop emerging financial talent, leading professional development programs for analysts at institutions including Wells Fargo, BlackRock, CIBC Capital Markets and RBC Capital Markets. He holds FINRA Series 24, 7 and 63 licenses and serves on the Veterans Bridge Home board.',
     whyIMentor:
@@ -146,6 +155,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 10%',
     thumbnailPosition: '50% 15%',
     linkedInUrl: 'https://www.linkedin.com/in/will-alston-766a161/',
+    helpsWith: ['Corporate Banking', 'Relationship Building', 'Career Navigation'],
     shortBio:
       'Wells Fargo executive serving as Head of Corporate Banking in Charlotte, with more than fifteen years of institutional banking experience building and managing client relationships across sectors.',
     whyIMentor:
@@ -163,6 +173,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 10%',
     thumbnailPosition: '50% 18%',
     linkedInUrl: 'https://www.linkedin.com/in/travis-melvin/',
+    helpsWith: ['Finance Access', 'UNC / Kenan-Flagler', 'Real Estate'],
     shortBio:
       'Finance, real-estate and public-policy professional affiliated with UNC Kenan-Flagler. Travis founded the J.R.R. Scholarship Foundation, mentors through Wall Street Oasis, and guest-lectures at universities across the country.',
     whyIMentor:
@@ -180,6 +191,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 0%',
     thumbnailPosition: '50% 8%',
     linkedInUrl: 'https://www.linkedin.com/in/david-sheffer-4a46045a/',
+    helpsWith: ['Investment Banking', 'Private Equity', 'Growth Strategy'],
     shortBio:
       'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
     whyIMentor:
@@ -197,6 +209,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 0%',
     thumbnailPosition: '50% 22%',
     linkedInUrl: 'https://www.linkedin.com/in/drewnations/',
+    helpsWith: ['Entrepreneurship', 'Building a Company', 'Real Estate'],
     shortBio:
       'Founder and CEO of Engineered Land Solutions and UNC Kenan-Flagler alumnus. Drew built his company at the intersection of commercial real estate, land development and finance.',
     whyIMentor:
@@ -214,6 +227,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     imagePosition: '50% 0%',
     thumbnailPosition: '50% 18%',
     linkedInUrl: 'https://www.linkedin.com/in/zach-smith-201a3990/',
+    helpsWith: ['Nonprofit Leadership', 'Mission-Driven Careers', 'Social Impact'],
     shortBio:
       'Executive Director of Beds for Kids and UNC alumnus. Zach grew from delivery driver to leading the organization over roughly nine years, building operational and leadership experience in the nonprofit sector.',
     whyIMentor:
