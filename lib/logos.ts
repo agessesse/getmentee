@@ -9,6 +9,7 @@ export const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   'Morgan Stanley': 'morganstanley.com',
   'Goldman Sachs': 'goldmansachs.com',
   'J.P. Morgan': 'jpmorgan.com',
+  'JPMorganChase': 'jpmorgan.com',
   'Bank of America': 'bankofamerica.com',
   'Citi': 'citi.com',
   'Deutsche Bank': 'db.com',

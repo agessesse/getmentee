@@ -9,6 +9,7 @@ import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import InviteModal from '@/components/marketing/InviteModal';
 import FirmMarquee from '@/components/marketing/FirmMarquee';
+import InternshipMarquee from '@/components/marketing/InternshipMarquee';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -158,11 +159,15 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 2. Community — paired mentor + mentee carousels ─────────────────── */}
+      {/* ── 2. Community — mentor carousel + employer logos ─────────────────── */}
       <MentorCarousel />
-      <MenteeCarousel />
+      <FirmMarquee />
 
-      {/* ── 3. How it works — interactive step selector ──────────────────────── */}
+      {/* ── 3. Mentee carousel + internship logos ────────────────────────────── */}
+      <MenteeCarousel />
+      <InternshipMarquee />
+
+      {/* ── 4. How it works — interactive step selector ──────────────────────── */}
       <section className="py-20 px-6 lg:px-10 bg-white border-t border-gray-100" aria-labelledby="hiw-heading">
         <div className="max-w-6xl mx-auto">
 
@@ -249,7 +254,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 4. The reward of mentorship (dark) ──────────────────────────────── */}
+      {/* ── 5. The reward of mentorship (dark) ──────────────────────────────── */}
       <section className="py-24 px-6 lg:px-10 bg-navy-900" aria-labelledby="reward-heading">
         <div className="max-w-6xl mx-auto">
 
@@ -289,10 +294,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 5. Where our mentors have worked — curated logo marquee ─────────── */}
-      <FirmMarquee />
-
-      {/* ── 6. Opportunity Fund ─────────────────────────────────────────────── */}
+      {/* ── 5. Opportunity Fund ─────────────────────────────────────────────── */}
       <section className="py-20 px-6 lg:px-10 border-t border-gray-100 bg-gray-50/40">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -344,36 +346,43 @@ export default function LandingPage() {
       </section>
 
       {/* ── 7. Final CTA ────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 lg:px-10 bg-navy-900 text-white">
+      <section className="py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100">
         <div className="max-w-6xl mx-auto">
-          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-8">
+          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-8">
             Get started
           </p>
           <h2
-            className="font-serif text-white leading-tight mb-6 max-w-2xl"
+            className="font-serif text-navy-900 leading-tight mb-6 max-w-2xl"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
           >
             Ready to find<br />your mentor?
           </h2>
-          <p className="text-navy-400 font-light mb-10 max-w-md text-[15px] leading-relaxed">
+          <p className="text-gray-500 font-light mb-10 max-w-md text-[15px] leading-relaxed">
             Create an account and take the first step. The right introduction
             starts with showing up.
           </p>
           <div className="flex flex-col sm:flex-row items-start gap-5">
             <Link
               href="/signup"
-              className="group inline-flex items-center gap-2.5 bg-white text-navy-900 px-8 py-4 text-[15px] font-semibold hover:bg-gray-100 transition-colors rounded-xl"
+              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-semibold hover:bg-navy-800 transition-colors rounded-xl"
             >
               Get started — it&apos;s free
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </Link>
+            <Link
+              href="/signup"
+              className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400"
+            >
+              Become a mentor
+              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+            </Link>
           </div>
-          <p className="text-navy-700 text-sm mt-6">No credit card required.</p>
-          <p className="text-navy-700 text-sm mt-3">
+          <p className="text-gray-400 text-sm mt-6">No credit card required.</p>
+          <p className="text-gray-400 text-sm mt-3">
             Know someone who would make a great mentor?{' '}
             <button
               onClick={() => setInviteOpen(true)}
-              className="text-navy-400 underline underline-offset-2 hover:text-white transition-colors"
+              className="text-navy-600 underline underline-offset-2 hover:text-navy-900 transition-colors"
             >
               Invite them
             </button>

@@ -1,28 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
+import { companyFaviconUrl } from '@/lib/logos';
 
-// Institutions with direct mentor affiliations that carry recognizable credibility.
-// Christopher Floyd: Wells Fargo (prior MD), Morgan Stanley (prior), SMBC (prior), Fifth Third Securities (prior)
-// Travis Melvin: UNC Kenan-Flagler (current)
+// Firms backed by actual mentee experience data in SOURCED_NEAR_PEERS.
+// Goldman Sachs: Teagan Fitzgerald
+// J.P. Morgan: Jaden Small (Fixed Income Treasury + Securitized Products), Erick Angwenyi (Global Markets), Bethlehem Agegne (JPMorganChase)
+// Wells Fargo: Abel Gessesse (Fixed Income Strategy), Hugo Canseco (CIB Markets)
+// Bank of America: Eliphaz Getachew
 const FIRMS = [
+  'Goldman Sachs',
+  'J.P. Morgan',
   'Wells Fargo',
-  'Morgan Stanley',
-  'SMBC',
-  'Fifth Third Securities',
-  'UNC Kenan-Flagler',
+  'Bank of America',
 ];
-
-function firmLogoUrl(name: string): string | null {
-  return companyFaviconUrl(name) ?? schoolFaviconUrl(name);
-}
 
 const doubled = [...FIRMS, ...FIRMS];
 
 function FirmLogo({ name }: { name: string }) {
   const [failed, setFailed] = useState(false);
-  const url = firmLogoUrl(name);
+  const url = companyFaviconUrl(name);
 
   if (!url || failed) {
     return (
@@ -46,16 +43,16 @@ function FirmLogo({ name }: { name: string }) {
   );
 }
 
-export default function FirmMarquee() {
+export default function InternshipMarquee() {
   return (
     <div className="py-8 border-b border-gray-100 bg-white">
       <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-[0.32em] text-center mb-5 select-none">
-        Where Our Mentors Have Worked
+        Where Our Mentees Have Interned
       </p>
       <div className="overflow-hidden">
         <div
           className="flex items-center animate-carousel-left"
-          style={{ width: 'max-content' }}
+          style={{ width: 'max-content', animationDuration: '32s' }}
         >
           {doubled.map((firm, i) => (
             <span key={i} className="flex-none flex items-center px-10">

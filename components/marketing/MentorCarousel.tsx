@@ -35,7 +35,6 @@ function MentorCard({
         className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
         aria-label={`View ${mentor.name}'s profile`}
       >
-        {/* Portrait */}
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-xl mb-3">
           {!imgError ? (
             <Image
@@ -57,8 +56,6 @@ function MentorCard({
             </div>
           )}
         </div>
-
-        {/* Identity */}
         <div className="px-0.5">
           <p className="font-semibold text-navy-900 text-sm leading-tight group-hover:text-navy-700 transition-colors">
             {mentor.name}
@@ -74,7 +71,6 @@ function MentorCard({
         </div>
       </button>
 
-      {/* LinkedIn — outside button */}
       {mentor.linkedInUrl && (
         <a
           href={mentor.linkedInUrl}
@@ -93,12 +89,23 @@ function MentorCard({
 
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const [scrollDir, setScrollDir] = useState<'left' | 'right' | 'paused'>('left');
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const { left, width } = e.currentTarget.getBoundingClientRect();
+    const ratio = (e.clientX - left) / width;
+    if (ratio < 0.25) setScrollDir('left');
+    else if (ratio > 0.75) setScrollDir('right');
+    else setScrollDir('paused');
+  }
+
+  // Keep carousel frozen while modal is open so the user returns to the same position.
+  const modalOpen = preview !== null;
+  const playing = !modalOpen && scrollDir !== 'paused';
 
   return (
     <>
       <section className="py-14 border-t border-gray-100" aria-labelledby="mentor-carousel-heading">
-
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
             Our mentors
@@ -115,19 +122,19 @@ export default function MentorCarousel() {
           </p>
         </div>
 
-        {/* Infinite marquee — pauses on hover, cards rise and scale */}
         <div
           className="relative py-4"
           style={{ overflowX: 'clip' }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setScrollDir('left')}
         >
           <div
             className="flex animate-carousel-left"
             style={{
               width: 'max-content',
               animationDuration: '48s',
-              animationPlayState: isPaused ? 'paused' : 'running',
+              animationPlayState: playing ? 'running' : 'paused',
+              animationDirection: scrollDir === 'right' ? 'reverse' : 'normal',
             }}
             aria-hidden="true"
           >
@@ -141,7 +148,6 @@ export default function MentorCarousel() {
             ))}
           </div>
         </div>
-
       </section>
 
       <ProfilePreviewModal target={preview} onClose={() => setPreview(null)} />

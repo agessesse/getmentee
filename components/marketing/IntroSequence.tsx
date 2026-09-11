@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 // Bump this key when the animation changes substantially — returning users
 // will see it fresh once then be skipped for the rest of the session.
-const SESSION_KEY = 'mentee_intro_v3';
+const SESSION_KEY = 'mentee_intro_v4';
 
 // ─── Streak configuration ─────────────────────────────────────────────────────
 // Each streak is a thin luminous line that races from an edge toward center,
