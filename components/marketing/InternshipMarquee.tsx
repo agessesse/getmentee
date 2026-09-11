@@ -15,7 +15,7 @@ const FIRMS = [
   'Bank of America',
 ];
 
-const doubled = [...FIRMS, ...FIRMS];
+const doubled = [...FIRMS, ...FIRMS, ...FIRMS, ...FIRMS];
 
 function FirmLogo({ name }: { name: string }) {
   const [failed, setFailed] = useState(false);

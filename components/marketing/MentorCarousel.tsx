@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
@@ -70,7 +70,6 @@ function MentorCard({
           )}
         </div>
       </button>
-
       {mentor.linkedInUrl && (
         <a
           href={mentor.linkedInUrl}
@@ -89,19 +88,62 @@ function MentorCard({
 
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
-  const [scrollDir, setScrollDir] = useState<'left' | 'right' | 'paused'>('left');
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+  // All mutable animation state lives in a ref so RAF reads/writes are instant.
+  const anim = useRef({ pos: 0, dir: -1 as -1 | 1, paused: false, halfWidth: 0, lastTs: 0 });
+  const rafId = useRef(0);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const track: HTMLDivElement = trackRef.current!;
+    if (!track) return;
+
+    anim.current.halfWidth = track.scrollWidth / 2;
+    const DURATION = 48_000; // ms per full loop, matches previous 48s CSS duration
+
+    function step(ts: number) {
+      const s = anim.current;
+      const dt = s.lastTs > 0 ? Math.min(ts - s.lastTs, 50) : 0;
+      s.lastTs = ts;
+
+      if (!s.paused) {
+        s.pos += s.dir * (s.halfWidth / DURATION) * dt;
+        // Seamless wrap in both directions
+        if (s.pos <= -s.halfWidth) s.pos += s.halfWidth;
+        if (s.pos > 0) s.pos -= s.halfWidth;
+        track.style.transform = `translateX(${s.pos}px)`;
+      }
+
+      rafId.current = requestAnimationFrame(step);
+    }
+
+    rafId.current = requestAnimationFrame(step);
+    const animState = anim.current;
+    return () => {
+      cancelAnimationFrame(rafId.current);
+      animState.lastTs = 0;
+    };
+  }, []);
+
+  // Keep animation frozen while the modal is open.
+  useEffect(() => {
+    anim.current.paused = preview !== null;
+  }, [preview]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const { left, width } = e.currentTarget.getBoundingClientRect();
     const ratio = (e.clientX - left) / width;
-    if (ratio < 0.25) setScrollDir('left');
-    else if (ratio > 0.75) setScrollDir('right');
-    else setScrollDir('paused');
-  }
+    const s = anim.current;
+    if (ratio < 0.25) { s.dir = -1; s.paused = false; }
+    else if (ratio > 0.75) { s.dir = 1; s.paused = false; }
+    else { s.paused = true; }
+  }, []);
 
-  // Keep carousel frozen while modal is open so the user returns to the same position.
-  const modalOpen = preview !== null;
-  const playing = !modalOpen && scrollDir !== 'paused';
+  const handleMouseLeave = useCallback(() => {
+    anim.current.dir = -1;
+    anim.current.paused = false;
+  }, []);
 
   return (
     <>
@@ -126,18 +168,10 @@ export default function MentorCarousel() {
           className="relative py-4"
           style={{ overflowX: 'clip' }}
           onMouseMove={handleMouseMove}
-          onMouseLeave={() => setScrollDir('left')}
+          onMouseLeave={handleMouseLeave}
         >
-          <div
-            className="flex animate-carousel-left"
-            style={{
-              width: 'max-content',
-              animationDuration: '48s',
-              animationPlayState: playing ? 'running' : 'paused',
-              animationDirection: scrollDir === 'right' ? 'reverse' : 'normal',
-            }}
-            aria-hidden="true"
-          >
+          {/* No CSS animation class — position is driven entirely by the RAF loop above */}
+          <div ref={trackRef} className="flex" style={{ width: 'max-content' }} aria-hidden="true">
             {DOUBLED.map((mentor, i) => (
               <MentorCard
                 key={`${mentor.name}-${i}`}

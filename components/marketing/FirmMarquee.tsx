@@ -18,7 +18,7 @@ function firmLogoUrl(name: string): string | null {
   return companyFaviconUrl(name) ?? schoolFaviconUrl(name);
 }
 
-const doubled = [...FIRMS, ...FIRMS];
+const doubled = [...FIRMS, ...FIRMS, ...FIRMS, ...FIRMS];
 
 function FirmLogo({ name }: { name: string }) {
   const [failed, setFailed] = useState(false);
