@@ -1,0 +1,250 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+// Nodes sit along the mentored curve as fractions of its length.
+// The mentor enters early, at MENTOR_T; the milestones follow. Keeping these
+// spaced apart matters — an earlier layout put the mentor marker directly on
+// top of a milestone label.
+const MENTOR_T = 0.15;
+
+const NODES = [
+  { t: 0.36, label: 'Clarity',      note: 'Know what the path actually looks like.' },
+  { t: 0.56, label: 'Preparation',  note: 'Show up ready to make the time count.' },
+  { t: 0.75, label: 'Introduction', note: 'Someone vouches, because they know your work.' },
+  { t: 0.92, label: 'Opportunity',  note: 'A door you could not have found alone.' },
+];
+
+const W = 720;
+const H = 300;
+const START = { x: 60, y: 232 };
+const FLAT_END = { x: 664, y: 208 };
+
+// Quadratic curve from START, bending upward. `lift` scales how far it bends.
+function curvePoint(t: number, lift: number) {
+  const cx = 300, cyBase = 236;
+  const cy = cyBase - 210 * lift;
+  const ex = 664, eyBase = 208;
+  const ey = eyBase - 168 * lift;
+  const mt = 1 - t;
+  return {
+    x: mt * mt * START.x + 2 * mt * t * cx + t * t * ex,
+    y: mt * mt * START.y + 2 * mt * t * cy + t * t * ey,
+  };
+}
+
+function curvePath(lift: number) {
+  const cy = 236 - 210 * lift;
+  const ey = 208 - 168 * lift;
+  return `M ${START.x} ${START.y} Q 300 ${cy} 664 ${ey}`;
+}
+
+export default function TrajectoryViz() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [lift, setLift] = useState(0);
+  const [reduced, setReduced] = useState(false);
+  const [activeNode, setActiveNode] = useState<number | null>(null);
+
+  // Target lift lives in a ref; a RAF loop eases the rendered value toward it
+  // so pointer movement never drives a render at pointer frequency.
+  const target = useRef(0);
+  const raf = useRef(0);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  // Touch and reduced-motion get a single scroll-triggered resolve instead of
+  // continuous pointer control.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const coarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (!coarse && !reduced) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        if (reduced) { setLift(1); io.disconnect(); return; }
+        const started = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - started) / 1100, 1);
+          setLift(1 - Math.pow(1 - p, 3));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        io.disconnect();
+      },
+      { threshold: 0.45 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  const startLoop = () => {
+    if (raf.current) return;
+    const tick = () => {
+      setLift((prev) => {
+        const next = prev + (target.current - prev) * 0.14;
+        if (Math.abs(target.current - next) < 0.002) {
+          raf.current = 0;
+          return target.current;
+        }
+        raf.current = requestAnimationFrame(tick);
+        return next;
+      });
+    };
+    raf.current = requestAnimationFrame(tick);
+  };
+
+  useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
+
+  const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== 'mouse' || reduced) return;
+    const { left, width } = e.currentTarget.getBoundingClientRect();
+    target.current = Math.min(Math.max((e.clientX - left) / width, 0), 1);
+    startLoop();
+  };
+
+  const handleLeave = () => {
+    if (reduced) return;
+    target.current = 0;
+    startLoop();
+  };
+
+  const mentorPt = curvePoint(MENTOR_T, lift);
+  const active = activeNode !== null ? NODES[activeNode] : null;
+
+  return (
+    <section
+      className="py-20 sm:py-24 px-6 lg:px-10 bg-navy-900 overflow-hidden"
+      aria-labelledby="trajectory-heading"
+    >
+      <div className="max-w-5xl mx-auto">
+        <div className="max-w-xl mb-10">
+          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+            The difference
+          </p>
+          <h2
+            id="trajectory-heading"
+            className="font-serif text-white leading-[1.05] mb-4"
+            style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
+          >
+            The right mentor can<br />change your trajectory.
+          </h2>
+          <p className="text-navy-400 font-light text-[14px]">
+            {reduced ? 'Guidance widens the set of paths available to you.'
+                     : 'Move across the chart.'}
+          </p>
+        </div>
+
+        <div
+          ref={wrapRef}
+          onPointerMove={handleMove}
+          onPointerLeave={handleLeave}
+          className="relative"
+        >
+          <svg
+            viewBox={`0 0 ${W} ${H}`}
+            className="w-full h-auto"
+            role="img"
+            aria-label="A chart comparing an unmentored path, which stays flat, against a mentored path that bends upward through clarity, preparation, introduction, and opportunity."
+          >
+            <defs>
+              <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stopColor="#5265b0" />
+                <stop offset="100%" stopColor="#dde3f5" />
+              </linearGradient>
+            </defs>
+
+            {/* Unmentored baseline — always visible, deliberately inert */}
+            <path
+              d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
+              stroke="#2d3668"
+              strokeWidth="1.5"
+              strokeDasharray="5 6"
+              fill="none"
+            />
+            <text x={FLAT_END.x} y={FLAT_END.y + 22} textAnchor="end" fill="#3d4a8f" fontSize="11" fontWeight="500">
+              without mentorship
+            </text>
+
+            {/* Mentored curve */}
+            <path
+              d={curvePath(lift)}
+              stroke="url(#traj-grad)"
+              strokeWidth="2.5"
+              fill="none"
+              strokeLinecap="round"
+              style={{ opacity: 0.25 + lift * 0.75 }}
+            />
+
+            {/* Origin — the student */}
+            <circle cx={START.x} cy={START.y} r="6" fill="#ffffff" />
+            <text x={START.x} y={START.y + 26} textAnchor="middle" fill="#879bd3" fontSize="11" fontWeight="600">
+              You
+            </text>
+
+            {/* The mentor enters as the curve lifts */}
+            <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
+              <circle cx={mentorPt.x} cy={mentorPt.y} r="7" fill="#1a1f3a" stroke="#ffffff" strokeWidth="2" />
+              <text x={mentorPt.x} y={mentorPt.y - 16} textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="600">
+                Mentor
+              </text>
+            </g>
+
+            {/* Milestones appear in order as the curve resolves */}
+            {NODES.map((node, i) => {
+              const p = curvePoint(node.t, lift);
+              const reveal = Math.max(0, Math.min(1, (lift - node.t * 0.62) / 0.2));
+              const isActive = activeNode === i;
+              return (
+                <g key={node.label} style={{ opacity: reveal }}>
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={isActive ? 7 : 4.5}
+                    fill={isActive ? '#ffffff' : '#a4b3de'}
+                    style={{ transition: 'r 180ms ease, fill 180ms ease', cursor: 'pointer' }}
+                    onPointerEnter={() => setActiveNode(i)}
+                    onPointerLeave={() => setActiveNode(null)}
+                  />
+                  <text
+                    x={p.x}
+                    y={p.y - 16}
+                    textAnchor="middle"
+                    fill={isActive ? '#ffffff' : '#879bd3'}
+                    fontSize="10.5"
+                    fontWeight="600"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    {node.label}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+
+          {/* Node detail — reserved height so the chart never shifts */}
+          <div className="min-h-[38px] mt-1 text-center">
+            <p
+              className="text-[13px] text-navy-300 font-light transition-opacity duration-200"
+              style={{ opacity: active ? 1 : 0 }}
+            >
+              {active?.note ?? ' '}
+            </p>
+          </div>
+        </div>
+
+        <p className="text-[11px] text-navy-600 font-light text-center max-w-md mx-auto">
+          Illustrative. Mentorship changes the paths available to you — it does not
+          guarantee an outcome.
+        </p>
+      </div>
+    </section>
+  );
+}

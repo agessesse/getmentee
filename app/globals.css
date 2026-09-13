@@ -13,14 +13,16 @@
 }
 
 /* ── Marketing animations ── */
-@keyframes carousel-left {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 
-@keyframes carousel-right {
+/* Credibility rail drifts right, opposing the mentor carousel's leftward
+   drift. The people carousels are driven by requestAnimationFrame, not CSS. */
+@keyframes rail-right {
   from { transform: translateX(-50%); }
   to   { transform: translateX(0); }
+}
+
+.animate-rail-right {
+  animation: rail-right 66s linear infinite;
 }
 
 /* Intro streaks — thin energy lines racing toward center */
@@ -38,19 +40,8 @@
   100% { transform: translateX(-22%); opacity: 0; }
 }
 
-.animate-carousel-left {
-  animation: carousel-left 40s linear infinite;
-}
-
-.animate-carousel-right {
-  animation: carousel-right 45s linear infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .animate-carousel-left,
-  .animate-carousel-right {
-    animation: none;
-  }
+  .animate-rail-right { animation: none; }
 }
 
 /* ── Editorial scroll-reveal ── */

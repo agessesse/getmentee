@@ -3,144 +3,132 @@
 import { useState } from 'react';
 
 const STAGES = [
-  {
-    id: 'learn',
-    verb: 'Learn',
-    line: 'Ask better questions.',
-    detail:
-      'You find someone who has already made the decisions you are facing, and you come prepared enough to make the conversation worth their time.',
-  },
-  {
-    id: 'apply',
-    verb: 'Apply',
-    line: 'Act on the answer.',
-    detail:
-      'Advice becomes valuable the moment you use it. Goals, action items, and follow-ups turn a good conversation into actual movement.',
-  },
-  {
-    id: 'grow',
-    verb: 'Grow',
-    line: 'Build a track record.',
-    detail:
-      'Progress compounds. The person you are two years in has context, judgment, and a network that the person you are today does not.',
-  },
-  {
-    id: 'return',
-    verb: 'Return',
-    line: 'Become worth learning from.',
-    detail:
-      'Eventually you are the one who has walked the path. The students behind you need exactly what you once needed.',
-  },
+  { verb: 'Learn',  line: 'Ask better questions.' },
+  { verb: 'Apply',  line: 'Act on the answer.' },
+  { verb: 'Grow',   line: 'Build a track record.' },
+  { verb: 'Return', line: 'Become worth learning from.' },
 ] as const;
+
+const R = 108;
+const C = 150;
+
+function nodePos(i: number) {
+  // Start at the top, proceed clockwise.
+  const angle = (i / STAGES.length) * Math.PI * 2 - Math.PI / 2;
+  return { x: C + R * Math.cos(angle), y: C + R * Math.sin(angle) };
+}
 
 export default function Flywheel() {
   const [active, setActive] = useState(0);
   const stage = STAGES[active];
+  const isReturn = active === STAGES.length - 1;
 
   return (
-    <section
-      className="py-20 sm:py-24 px-6 lg:px-10 bg-navy-900"
-      aria-labelledby="flywheel-heading"
-    >
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr,1.1fr] gap-14 lg:gap-20 items-center">
+    <section className="py-20 sm:py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100" aria-labelledby="flywheel-heading">
+      <div className="max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-          {/* Left: framing */}
           <div>
             <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
               What mentorship creates
             </p>
             <h2
               id="flywheel-heading"
-              className="font-serif text-white leading-[1.05] mb-6"
-              style={{ fontSize: 'clamp(2.2rem, 5vw, 3.4rem)' }}
+              className="font-serif text-navy-900 leading-[1.05] mb-5"
+              style={{ fontSize: 'clamp(2.1rem, 4.8vw, 3.3rem)' }}
             >
               It doesn&apos;t end<br />with you.
             </h2>
-            <p className="text-navy-300 font-light leading-relaxed text-[15px] max-w-md mb-8">
-              Mentorship is not a transaction that closes. The student who was
-              given time and honesty becomes the professional who gives it.
-              That is the whole engine.
-            </p>
 
-            {/* Active stage detail */}
-            <div className="border-l-2 border-navy-600 pl-5 min-h-[104px]">
-              <p className="text-white font-semibold text-sm mb-1.5">
-                {stage.verb} — <span className="text-navy-300 font-normal">{stage.line}</span>
+            {/* Reserved height keeps the layout still as the label changes */}
+            <div className="min-h-[76px] border-l-2 border-navy-200 pl-5">
+              <p className="font-serif text-navy-900 text-[26px] leading-none mb-1.5">
+                {stage.verb}
               </p>
-              <p className="text-navy-400 font-light text-[13.5px] leading-relaxed">
-                {stage.detail}
-              </p>
+              <p className="text-gray-500 font-light text-[14.5px]">{stage.line}</p>
             </div>
-          </div>
 
-          {/* Right: the cycle */}
-          <div>
-            <ol className="relative" role="list">
-              {STAGES.map((s, i) => {
-                const isActive = i === active;
-                const isLast = i === STAGES.length - 1;
-                return (
-                  <li key={s.id} className="relative">
-                    {/* Connector — dashed on the final wrap-around to read as a loop */}
-                    <div
-                      className={`absolute left-[19px] top-10 w-px ${
-                        isLast
-                          ? 'border-l border-dashed border-navy-700'
-                          : 'bg-navy-700'
-                      }`}
-                      style={{ height: 'calc(100% - 8px)' }}
-                      aria-hidden="true"
-                    />
-                    <button
-                      onMouseEnter={() => setActive(i)}
-                      onFocus={() => setActive(i)}
-                      onClick={() => setActive(i)}
-                      aria-current={isActive ? 'step' : undefined}
-                      className="group relative w-full text-left flex items-start gap-5 pb-7 focus-visible:outline-none"
-                    >
-                      <span
-                        className={`relative z-10 w-10 h-10 rounded-full flex-none flex items-center justify-center border transition-colors duration-300 ${
-                          isActive
-                            ? 'bg-white border-white'
-                            : 'bg-navy-900 border-navy-700 group-hover:border-navy-500'
-                        }`}
-                      >
-                        <span
-                          className={`text-[11px] font-bold tabular-nums transition-colors duration-300 ${
-                            isActive ? 'text-navy-900' : 'text-navy-400'
-                          }`}
-                        >
-                          0{i + 1}
-                        </span>
-                      </span>
-                      <span className="pt-1.5">
-                        <span
-                          className={`block font-serif leading-none transition-colors duration-300 ${
-                            isActive ? 'text-white' : 'text-navy-500 group-hover:text-navy-300'
-                          }`}
-                          style={{ fontSize: 'clamp(1.6rem, 3.4vw, 2.3rem)' }}
-                        >
-                          {s.verb}
-                        </span>
-                        <span
-                          className={`block text-[12.5px] font-light mt-1.5 transition-colors duration-300 ${
-                            isActive ? 'text-navy-300' : 'text-navy-600'
-                          }`}
-                        >
-                          {s.line}
-                        </span>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-
-            {/* Loop-closing note */}
-            <p className="text-[11px] text-navy-600 font-light pl-[60px] -mt-2">
+            <p
+              className="text-[13px] text-navy-600 font-medium mt-6 transition-opacity duration-500"
+              style={{ opacity: isReturn ? 1 : 0.35 }}
+            >
               …and the cycle starts again, one person further along.
             </p>
+          </div>
+
+          {/* The wheel */}
+          <div className="flex justify-center">
+            <svg viewBox="0 0 300 300" className="w-full max-w-[300px] h-auto" role="img" aria-label="A four-stage cycle: Learn, Apply, Grow, Return — which loops back to Learn.">
+              <circle cx={C} cy={C} r={R} fill="none" stroke="#dde3f5" strokeWidth="1.5" />
+
+              {/* Progress arc grows as the user moves through the cycle */}
+              <circle
+                cx={C} cy={C} r={R}
+                fill="none"
+                stroke="#2d3668"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * R}
+                strokeDashoffset={2 * Math.PI * R * (1 - (active + 1) / STAGES.length)}
+                transform={`rotate(-90 ${C} ${C})`}
+                style={{ transition: 'stroke-dashoffset 520ms cubic-bezier(0.16,1,0.3,1)' }}
+              />
+
+              {STAGES.map((s, i) => {
+                const { x, y } = nodePos(i);
+                const isActive = i === active;
+                return (
+                  <g
+                    key={s.verb}
+                    onPointerEnter={() => setActive(i)}
+                    onClick={() => setActive(i)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <circle cx={x} cy={y} r="26" fill="transparent" />
+                    <circle
+                      cx={x} cy={y}
+                      r={isActive ? 17 : 13}
+                      fill={isActive ? '#1a1f3a' : '#ffffff'}
+                      stroke={isActive ? '#1a1f3a' : '#c0cbe9'}
+                      strokeWidth="1.5"
+                      style={{ transition: 'r 240ms cubic-bezier(0.16,1,0.3,1), fill 240ms ease' }}
+                    />
+                    <text
+                      x={x} y={y + 3.5}
+                      textAnchor="middle"
+                      fontSize="10"
+                      fontWeight="700"
+                      fill={isActive ? '#ffffff' : '#879bd3'}
+                      style={{ pointerEvents: 'none' }}
+                    >
+                      0{i + 1}
+                    </text>
+                    <text
+                      x={x} y={y + (y < C ? -26 : 34)}
+                      textAnchor="middle"
+                      fontSize="12.5"
+                      fontWeight="600"
+                      fill={isActive ? '#1a1f3a' : '#879bd3'}
+                      style={{ pointerEvents: 'none', transition: 'fill 240ms ease' }}
+                    >
+                      {s.verb}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {/* Loop-closure cue, lit only once Return is reached */}
+              <text
+                x={C} y={C + 4}
+                textAnchor="middle"
+                fontSize="11"
+                fontWeight="600"
+                fill="#5265b0"
+                style={{ opacity: isReturn ? 1 : 0, transition: 'opacity 400ms ease' }}
+              >
+                ↻ begins again
+              </text>
+            </svg>
           </div>
 
         </div>

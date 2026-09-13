@@ -1,69 +1,99 @@
-const GAPS = [
+'use client';
+
+import { useState } from 'react';
+
+const SIDES = [
   {
-    who: 'For students',
-    problem: 'You know where you want to go. You don’t know who to ask.',
+    id: 'student',
+    who: 'Student',
+    line: 'I don’t know who to ask.',
     detail:
-      'Finding the name is easy. Knowing what to ask, how to ask it, and how to turn one reply into a relationship that keeps moving — that is the part nobody teaches.',
+      'Finding the name is easy. Knowing what to ask, how to ask it, and how to turn one reply into a relationship — nobody teaches that.',
   },
   {
-    who: 'For professionals',
-    problem: 'You’re willing to help. Nobody built you a way to do it well.',
+    id: 'professional',
+    who: 'Professional',
+    line: 'I want to help, but requests go nowhere.',
     detail:
-      'Requests arrive with no context and no follow-through. There is no structure for mentoring someone consistently, so good intentions decay into unanswered messages.',
+      'Messages arrive with no context and no follow-through. There is no structure for mentoring consistently, so good intentions decay.',
   },
-];
+] as const;
 
 export default function ProblemSection() {
+  const [open, setOpen] = useState<string | null>(null);
+
   return (
     <section
       className="py-20 sm:py-24 px-6 lg:px-10 bg-white border-t border-gray-100"
       aria-labelledby="problem-heading"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
+        <h2
+          id="problem-heading"
+          className="font-serif text-navy-900 leading-[1.06] text-center mb-14 mx-auto max-w-2xl"
+          style={{ fontSize: 'clamp(2.1rem, 5vw, 3.4rem)' }}
+        >
+          Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
+        </h2>
 
-        {/* Editorial statement */}
-        <div className="max-w-3xl mb-14">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-6">
-            The problem
-          </p>
-          <h2
-            id="problem-heading"
-            className="font-serif text-navy-900 leading-[1.08] mb-6"
-            style={{ fontSize: 'clamp(2.1rem, 5vw, 3.4rem)' }}
-          >
-            Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
-          </h2>
-          <p className="text-gray-500 font-light leading-relaxed text-[16px] max-w-xl">
-            Who your parents know. Which alumni answered. Whether the person
-            across the table happened to take an interest. That is a bad system
-            for something this consequential — and it fails both sides of it.
-          </p>
+        {/* Two failing sides, converging */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          {SIDES.map((side) => {
+            const isOpen = open === side.id;
+            return (
+              <button
+                key={side.id}
+                onClick={() => setOpen(isOpen ? null : side.id)}
+                onPointerEnter={() => setOpen(side.id)}
+                aria-expanded={isOpen}
+                className={`text-left rounded-2xl border p-6 sm:p-7 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
+                  isOpen
+                    ? 'border-navy-300 bg-navy-50/40 shadow-sm'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
+                <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.2em] mb-3">
+                  {side.who}
+                </p>
+                <p className="font-serif text-navy-900 text-[21px] sm:text-[23px] leading-snug">
+                  “{side.line}”
+                </p>
+                {/* Grid-rows trick animates height without measuring anything */}
+                <div
+                  className="grid transition-all duration-300 ease-out"
+                  style={{
+                    gridTemplateRows: isOpen ? '1fr' : '0fr',
+                    opacity: isOpen ? 1 : 0,
+                    marginTop: isOpen ? 14 : 0,
+                  }}
+                >
+                  <div className="overflow-hidden">
+                    <p className="text-gray-500 font-light text-[13.5px] leading-relaxed">
+                      {side.detail}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Two-sided failure */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
-          {GAPS.map((gap) => (
-            <div key={gap.who} className="bg-white p-7 sm:p-9">
-              <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.2em] mb-4">
-                {gap.who}
-              </p>
-              <p className="text-navy-900 font-semibold text-[17px] leading-snug mb-3">
-                {gap.problem}
-              </p>
-              <p className="text-gray-500 font-light text-[14px] leading-relaxed">
-                {gap.detail}
-              </p>
-            </div>
-          ))}
+        {/* Convergence */}
+        <div className="flex flex-col items-center mt-10" aria-hidden="true">
+          <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em] py-2.5">
+            Luck
+          </p>
+          <div className="w-px h-8 bg-gradient-to-b from-gray-300 to-navy-900" />
         </div>
 
-        {/* Resolution */}
-        <p className="mt-10 text-navy-800 font-light text-[17px] leading-relaxed max-w-xl">
-          Mentable exists to close both gaps at once — by connecting people
-          willing to teach with people genuinely ready to learn, and giving the
-          relationship somewhere to go after the first conversation.
+        <p className="text-center font-serif text-navy-900 text-[26px] sm:text-[30px] mt-3">
+          Mentable
         </p>
-
+        <p className="text-center text-gray-500 font-light text-[14.5px] mt-2.5 max-w-sm mx-auto leading-relaxed">
+          Both sides, connected on purpose — with somewhere for the relationship
+          to go after the first conversation.
+        </p>
       </div>
     </section>
   );

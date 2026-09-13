@@ -1,349 +1,348 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Circle, CheckCircle, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { Circle, CheckCircle2, ArrowRight, Calendar, Target, Send, Search } from 'lucide-react';
+import { trackLandingEvent } from '@/lib/landing-analytics';
 
-// ─── Tab definitions ──────────────────────────────────────────────────────────
-
-const TABS = [
-  { id: 'discover', label: 'Discover', url: 'discover' },
-  { id: 'request', label: 'Request', url: 'requests' },
-  { id: 'goals', label: 'Goals', url: 'goals' },
-  { id: 'sessions', label: 'Sessions', url: 'schedule' },
+const STAGES = [
+  { id: 'discover', label: 'Discover', icon: Search,   url: 'discover' },
+  { id: 'request',  label: 'Request',  icon: Send,     url: 'requests' },
+  { id: 'goals',    label: 'Goals',    icon: Target,   url: 'goals' },
+  { id: 'session',  label: 'Session',  icon: Calendar, url: 'schedule' },
 ] as const;
 
-type TabId = (typeof TABS)[number]['id'];
+type StageId = (typeof STAGES)[number]['id'];
 
-// ─── Demo panels ─────────────────────────────────────────────────────────────
-
-function DiscoverPanel() {
-  return (
-    <div className="flex flex-col sm:flex-row gap-6 items-start">
-      {/* Mentor card */}
-      <div className="w-full sm:w-72 flex-none bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="relative h-44 bg-gray-100">
-          <Image
-            src="/people/christopher-floyd.jpg"
-            alt="Christopher Floyd, CFA"
-            fill
-            className="object-cover"
-            style={{ objectPosition: '50% 5%' }}
-            sizes="(max-width: 640px) 100vw, 288px"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/65 to-transparent" />
-          <div className="absolute bottom-3 left-4 right-4">
-            <p className="text-[9px] font-semibold text-white/70 uppercase tracking-[0.18em]">Mentor</p>
-            <p className="text-sm font-bold text-white leading-tight">Christopher Floyd, CFA</p>
-          </div>
-        </div>
-        <div className="p-4">
-          <p className="text-[11px] text-gray-500 mb-3 font-light">Head of Institutional Sales · Bondway.ai</p>
-          <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2">Can help with</p>
-          <div className="flex flex-wrap gap-1.5">
-            {['Fixed Income', 'Capital Markets', 'Career Development'].map((tag) => (
-              <span key={tag} className="text-[10px] font-medium text-navy-700 bg-navy-50 rounded-full px-2.5 py-0.5">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-50">
-            <div className="w-full bg-navy-900 text-white rounded-xl py-2.5 text-xs font-medium text-center select-none">
-              Request mentorship
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Context */}
-      <div className="flex-1 pt-2">
-        <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-3">How discovery works</p>
-        <p className="text-sm text-gray-600 font-light leading-relaxed mb-4">
-          Browse mentors filtered by industry, career stage, and the specific areas they can help
-          you navigate. See exactly why each one is relevant before you reach out.
-        </p>
-        <p className="text-sm text-gray-400 font-light leading-relaxed">
-          Every mentor profile shows their background, expertise, and what brought them to Mentable
-          — so your first message isn&apos;t cold. It&apos;s informed.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function RequestPanel() {
-  return (
-    <div className="flex flex-col sm:flex-row gap-6 items-start">
-      {/* Request card */}
-      <div className="w-full sm:w-72 flex-none bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-        {/* Recipient */}
-        <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-          <div className="relative w-9 h-9 rounded-full overflow-hidden flex-none bg-gray-100">
-            <Image
-              src="/people/christopher-floyd.jpg"
-              alt="Christopher Floyd"
-              fill
-              className="object-cover"
-              style={{ objectPosition: '50% 5%' }}
-              sizes="36px"
-            />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs font-semibold text-navy-900 truncate">Christopher Floyd, CFA</p>
-            <p className="text-[10px] text-gray-400 font-light truncate">Bondway.ai</p>
-          </div>
-          <span className="ml-auto flex-none text-[10px] font-medium bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">
-            Pending
-          </span>
-        </div>
-
-        {/* Message */}
-        <div>
-          <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">Your message</p>
-          <p className="text-[11px] text-gray-600 font-light leading-relaxed bg-gray-50 rounded-xl p-3">
-            &ldquo;I&rsquo;m studying economics at UNC and hoping to build a career in fixed income. I&rsquo;d love to learn from your path navigating institutional markets.&rdquo;
-          </p>
-        </div>
-
-        {/* Goal */}
-        <div>
-          <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">Working toward</p>
-          <p className="text-[11px] text-gray-600 font-light bg-gray-50 rounded-xl p-3">
-            A career in fixed-income markets after graduation.
-          </p>
-        </div>
-
-        <p className="text-[10px] text-gray-300 text-center pt-1">Sent January 12, 2026</p>
-      </div>
-
-      {/* Context */}
-      <div className="flex-1 pt-2">
-        <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-3">How requesting works</p>
-        <p className="text-sm text-gray-600 font-light leading-relaxed mb-4">
-          When you request mentorship, you share what you&apos;re working toward and why this person
-          specifically makes sense for you. Context replaces cold outreach.
-        </p>
-        <p className="text-sm text-gray-400 font-light leading-relaxed">
-          Mentors see your profile, your goals, and your message before deciding whether to accept.
-          Every connection starts with purpose.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function GoalsPanel() {
-  return (
-    <div className="flex flex-col sm:flex-row gap-6 items-start">
-      {/* Goals card */}
-      <div className="w-full sm:w-72 flex-none bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-xs font-semibold text-navy-900">Goals</p>
-          <span className="text-[10px] text-gray-400 font-light">With Christopher Floyd</span>
-        </div>
-
-        {/* Active goal */}
-        <div className="border border-gray-100 rounded-xl p-4 hover:border-navy-100 transition-colors">
-          <div className="flex items-start gap-3">
-            <div className="w-4 h-4 rounded-full border-2 border-gray-200 flex-none mt-0.5" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-navy-900 leading-tight">Markets Internship Preparation</p>
-              <p className="text-[10px] text-gray-400 mt-1">Target: June 2027</p>
-              <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
-                Build the foundation to excel in a fixed-income markets role.
-              </p>
-              <span className="inline-block mt-2 text-[9px] font-semibold text-green-600 bg-green-50 rounded-full px-2 py-0.5">
-                Active
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Add goal */}
-        <button className="mt-3 w-full py-2.5 border border-dashed border-gray-200 rounded-xl text-[10px] text-gray-400 hover:border-navy-300 hover:text-navy-600 transition-colors flex items-center justify-center gap-1.5">
-          <Plus className="w-3 h-3" aria-hidden="true" />
-          Add a goal
-        </button>
-
-        <p className="text-[9px] text-gray-300 text-center mt-3">Example — illustrative</p>
-      </div>
-
-      {/* Context */}
-      <div className="flex-1 pt-2">
-        <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-3">How goals work</p>
-        <p className="text-sm text-gray-600 font-light leading-relaxed mb-4">
-          Goals give your mentorship direction. Set them with your mentor, track your progress
-          over time, and revisit them as your priorities evolve.
-        </p>
-        <p className="text-sm text-gray-400 font-light leading-relaxed">
-          A goal with a deadline and a partner who checks in on it is fundamentally different
-          from an ambition that lives in your notes.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function SessionsPanel() {
-  return (
-    <div className="flex flex-col sm:flex-row gap-6 items-start">
-      {/* Session card */}
-      <div className="w-full sm:w-72 flex-none space-y-3">
-        {/* Upcoming session */}
-        <div className="bg-navy-50 rounded-2xl p-4">
-          <p className="text-[9px] font-semibold text-navy-400 uppercase tracking-wider mb-3">Upcoming session</p>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="relative w-9 h-9 rounded-full overflow-hidden flex-none bg-gray-200">
-              <Image
-                src="/people/christopher-floyd.jpg"
-                alt="Christopher Floyd"
-                fill
-                className="object-cover"
-                style={{ objectPosition: '50% 5%' }}
-                sizes="36px"
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-navy-900 truncate">Christopher Floyd, CFA</p>
-              <p className="text-[10px] text-navy-500 font-light truncate">Head of Institutional Sales</p>
-            </div>
-          </div>
-          <div className="space-y-1 text-[10px] text-navy-600 font-light">
-            <p>Tuesday, June 3 · 2:00 PM</p>
-            <p>60 min · Video call</p>
-          </div>
-        </div>
-
-        {/* Action items */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Action items from last session
-          </p>
-          <div className="space-y-2.5">
-            <div className="flex items-center gap-2.5">
-              <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-none" aria-hidden="true" />
-              <p className="text-[11px] text-gray-400 line-through font-light">
-                Research fixed-income desk structure
-              </p>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <Circle className="w-3.5 h-3.5 text-gray-300 flex-none" aria-hidden="true" />
-              <p className="text-[11px] text-gray-600 font-light">
-                Practice communicating bond pricing concepts
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <p className="text-[9px] text-gray-300 text-center">Example — illustrative</p>
-      </div>
-
-      {/* Context */}
-      <div className="flex-1 pt-2">
-        <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-3">How sessions work</p>
-        <p className="text-sm text-gray-600 font-light leading-relaxed mb-4">
-          Schedule sessions with your mentor, set an agenda, and leave each one with action items
-          you&apos;re both accountable to. Progress doesn&apos;t live in your inbox. It lives in the work.
-        </p>
-        <p className="text-sm text-gray-400 font-light leading-relaxed">
-          Every session builds on the last. The relationship compounds because the record is there —
-          what you discussed, what you committed to, and what changed as a result.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ─── Main component ───────────────────────────────────────────────────────────
-
-const PANELS: Record<TabId, React.ReactNode> = {
-  discover: <DiscoverPanel />,
-  request: <RequestPanel />,
-  goals: <GoalsPanel />,
-  sessions: <SessionsPanel />,
+const MENTOR = {
+  name: 'Christopher Floyd, CFA',
+  role: 'Head of Institutional Sales · Bondway.ai',
+  photo: '/people/christopher-floyd.jpg',
+  helps: ['Fixed Income', 'Capital Markets'],
 };
 
-export default function ProductDemo() {
-  const [activeId, setActiveId] = useState<TabId>('discover');
-  const activeTab = TABS.find((t) => t.id === activeId)!;
+// ─── Stage 1: Discover ────────────────────────────────────────────────────────
+
+function Discover({ onPick }: { onPick: () => void }) {
+  return (
+    <div className="space-y-3">
+      <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em]">
+        Mentors matching fixed income
+      </p>
+
+      <button
+        onClick={onPick}
+        className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-200 hover:border-navy-300 hover:shadow-md transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+      >
+        <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-none bg-gray-100">
+          <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="56px" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
+          <p className="text-[11px] text-gray-400 font-light truncate">{MENTOR.role}</p>
+          <div className="flex flex-wrap gap-1 mt-1.5">
+            {MENTOR.helps.map((t) => (
+              <span key={t} className="text-[9px] font-medium text-navy-700 bg-navy-50 rounded-full px-2 py-0.5">{t}</span>
+            ))}
+          </div>
+        </div>
+        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
+      </button>
+
+      {[
+        { n: 'Tiffany Lakey', r: 'Chief of Staff, CIB · Wells Fargo' },
+        { n: 'Will Alston', r: 'Head of Corporate Banking · Wells Fargo' },
+      ].map((m) => (
+        <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white/60 rounded-xl border border-gray-100 opacity-55">
+          <div className="w-14 h-14 rounded-xl flex-none bg-navy-100" />
+          <div className="min-w-0">
+            <p className="text-[13px] font-semibold text-navy-900 truncate">{m.n}</p>
+            <p className="text-[11px] text-gray-400 font-light truncate">{m.r}</p>
+          </div>
+        </div>
+      ))}
+
+      <p className="text-[10px] text-navy-500 font-medium pt-1">↑ Pick Christopher to continue</p>
+    </div>
+  );
+}
+
+// ─── Stage 2: Request ─────────────────────────────────────────────────────────
+
+function Request({ onSend }: { onSend: () => void }) {
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (!sent) return;
+    const t = setTimeout(onSend, 750);
+    return () => clearTimeout(t);
+  }, [sent, onSend]);
 
   return (
-    <section
-      className="py-20 px-6 lg:px-10 bg-white border-t border-gray-100"
-      aria-labelledby="product-demo-heading"
-    >
-      <div className="max-w-6xl mx-auto">
-
-        {/* Header */}
-        <div className="mb-10">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-            The platform
-          </p>
-          <h2
-            id="product-demo-heading"
-            className="font-bold text-navy-900 leading-tight mb-3"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)' }}
-          >
-            Not a directory. A structured relationship.
-          </h2>
-          <p className="text-gray-400 text-sm font-light leading-relaxed max-w-md">
-            From discovering who makes sense for you to tracking what you actually build together.
-          </p>
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 pb-3.5 border-b border-gray-100">
+        <div className="relative w-9 h-9 rounded-full overflow-hidden flex-none bg-gray-100">
+          <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="36px" />
         </div>
+        <div className="min-w-0">
+          <p className="text-[12px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
+          <p className="text-[10px] text-gray-400 font-light">Requesting mentorship</p>
+        </div>
+      </div>
 
-        {/* Tab navigation */}
-        <div
-          role="tablist"
-          aria-label="Product feature tabs"
-          className="flex gap-1 p-1 bg-gray-100 rounded-xl w-fit max-w-full mb-8 overflow-x-auto"
-        >
-          {TABS.map((tab) => (
+      <div>
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">
+          What are you hoping to learn?
+        </p>
+        <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100">
+          Fixed-income strategy and how markets desks actually work
+        </div>
+      </div>
+
+      <div>
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">
+          Why Christopher?
+        </p>
+        <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100 leading-relaxed">
+          Three decades in institutional fixed income — exactly the path I&apos;m trying to understand.
+        </div>
+      </div>
+
+      <button
+        onClick={() => setSent(true)}
+        disabled={sent}
+        className={`w-full rounded-xl py-2.5 text-[12px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
+          sent ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-navy-900 text-white hover:bg-navy-800'
+        }`}
+      >
+        {sent ? 'Request sent — Christopher accepted' : 'Request mentorship'}
+      </button>
+      <p className="text-[9.5px] text-gray-300 text-center">Nothing is actually sent from this demo.</p>
+    </div>
+  );
+}
+
+// ─── Stage 3: Goals ───────────────────────────────────────────────────────────
+
+function Goals({ onNext }: { onNext: () => void }) {
+  const [done, setDone] = useState<Record<string, boolean>>({ a: true, b: false });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[12px] font-semibold text-navy-900">Shared goal</p>
+        <span className="text-[9px] font-semibold text-green-700 bg-green-50 rounded-full px-2 py-0.5">Active</span>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <p className="text-[13px] font-semibold text-navy-900 leading-snug">
+          Understand fixed-income career paths
+        </p>
+        <p className="text-[10px] text-gray-400 mt-1">Target: June 2027 · with Christopher</p>
+      </div>
+
+      <div>
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2">Next steps</p>
+        <div className="space-y-1.5">
+          {[
+            { k: 'a', t: 'Read up on how a rates desk is structured' },
+            { k: 'b', t: 'Prepare 3 questions before Thursday' },
+          ].map((item) => (
             <button
-              key={tab.id}
-              role="tab"
-              aria-selected={activeId === tab.id}
-              aria-controls={`panel-${tab.id}`}
-              onClick={() => setActiveId(tab.id)}
-              className={`flex-none px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
-                activeId === tab.id
-                  ? 'bg-white text-navy-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              key={item.k}
+              onClick={() => setDone((d) => ({ ...d, [item.k]: !d[item.k] }))}
+              className="w-full flex items-center gap-2.5 text-left p-2 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+              aria-pressed={done[item.k]}
             >
-              {tab.label}
+              {done[item.k]
+                ? <CheckCircle2 className="w-4 h-4 text-green-500 flex-none" aria-hidden="true" />
+                : <Circle className="w-4 h-4 text-gray-300 flex-none" aria-hidden="true" />}
+              <span className={`text-[12px] ${done[item.k] ? 'text-gray-400 line-through font-light' : 'text-navy-800'}`}>
+                {item.t}
+              </span>
             </button>
           ))}
         </div>
+        <p className="text-[9.5px] text-gray-300 mt-2 pl-2">Try checking one off.</p>
+      </div>
 
-        {/* Browser chrome + content */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
-          {/* Minimal browser chrome — desktop only */}
-          <div className="hidden sm:flex bg-gray-50 border-b border-gray-100 px-4 py-2.5 items-center gap-3">
-            <div className="flex gap-1.5" aria-hidden="true">
-              <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-              <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-              <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
-            </div>
-            <div className="flex-1 bg-white rounded border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs">
-              mentable.com/{activeTab.url}
-            </div>
+      <button
+        onClick={onNext}
+        className="w-full rounded-xl py-2.5 text-[12px] font-semibold bg-navy-900 text-white hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+      >
+        See the upcoming session
+      </button>
+    </div>
+  );
+}
+
+// ─── Stage 4: Session ─────────────────────────────────────────────────────────
+
+function Session() {
+  return (
+    <div className="space-y-3.5">
+      <div className="bg-navy-900 rounded-xl p-4">
+        <p className="text-[9px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
+        <div className="flex items-center gap-3">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-navy-700">
+            <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
           </div>
-
-          {/* Panel content */}
-          <div
-            id={`panel-${activeId}`}
-            role="tabpanel"
-            aria-labelledby={`tab-${activeId}`}
-            className="p-6 sm:p-8"
-          >
-            {PANELS[activeId]}
+          <div className="min-w-0">
+            <p className="text-[12px] font-semibold text-white truncate">{MENTOR.name}</p>
+            <p className="text-[11px] text-navy-300 font-light">Thursday · 4:00 PM · 45 min</p>
           </div>
         </div>
+      </div>
 
-        <p className="text-center text-[11px] text-gray-300 mt-4">
-          Illustrative example using real Mentable capabilities.
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2.5">Prep</p>
+        <ul className="space-y-1.5">
+          {[
+            'Questions on desk structure and day-to-day',
+            'Progress against the shared goal',
+            'What to read before the next session',
+          ].map((t) => (
+            <li key={t} className="flex items-start gap-2 text-[12px] text-navy-800 font-light">
+              <span className="w-1 h-1 rounded-full bg-navy-400 mt-1.5 flex-none" aria-hidden="true" />
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2.5">
+          Carried over from last session
         </p>
+        <div className="flex items-center gap-2.5">
+          <CheckCircle2 className="w-4 h-4 text-green-500 flex-none" aria-hidden="true" />
+          <span className="text-[12px] text-gray-400 line-through font-light">Research fixed-income desk structure</span>
+        </div>
+      </div>
 
+      <p className="text-[11px] text-navy-600 font-medium text-center pt-1">
+        That loop is the product.
+      </p>
+    </div>
+  );
+}
+
+// ─── Shell ────────────────────────────────────────────────────────────────────
+
+export default function ProductDemo() {
+  const [stage, setStage] = useState<StageId>('discover');
+  const [visited, setVisited] = useState<Set<StageId>>(() => new Set<StageId>(['discover']));
+
+  const go = (next: StageId) => {
+    setStage(next);
+    setVisited((v) => new Set(v).add(next));
+    trackLandingEvent('product_demo_stage_viewed', { stage: next });
+  };
+
+  useEffect(() => { trackLandingEvent('product_demo_interacted', { stage }); }, [stage]);
+
+  const activeIdx = STAGES.findIndex((s) => s.id === stage);
+  const activeStage = STAGES[activeIdx];
+
+  return (
+    <section className="py-20 sm:py-24 px-6 lg:px-10 bg-white border-t border-gray-100" aria-labelledby="product-demo-heading">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,1.15fr] gap-10 lg:gap-16 items-start">
+
+          {/* Left: framing + stage nav */}
+          <div className="lg:sticky lg:top-24">
+            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+              The product
+            </p>
+            <h2
+              id="product-demo-heading"
+              className="font-serif text-navy-900 leading-[1.05] mb-5"
+              style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
+            >
+              Not a directory.<br />A structured relationship.
+            </h2>
+            <p className="text-gray-500 font-light text-[15px] leading-relaxed mb-7 max-w-sm">
+              Walk the loop yourself.
+            </p>
+
+            <ol className="space-y-1" role="tablist" aria-label="Product stages">
+              {STAGES.map((s, i) => {
+                const isActive = s.id === stage;
+                const seen = visited.has(s.id);
+                const Icon = s.icon;
+                return (
+                  <li key={s.id}>
+                    <button
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls="demo-panel"
+                      onClick={() => go(s.id)}
+                      className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
+                        isActive ? 'bg-navy-900' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <span
+                        className={`w-7 h-7 rounded-lg flex-none flex items-center justify-center transition-colors ${
+                          isActive ? 'bg-white/15' : seen ? 'bg-navy-50' : 'bg-gray-100'
+                        }`}
+                      >
+                        <Icon
+                          className={`w-3.5 h-3.5 ${isActive ? 'text-white' : seen ? 'text-navy-600' : 'text-gray-400'}`}
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className={`text-[14px] font-medium ${isActive ? 'text-white' : 'text-navy-800'}`}>
+                        {s.label}
+                      </span>
+                      <span className={`ml-auto text-[10px] tabular-nums ${isActive ? 'text-white/50' : 'text-gray-300'}`}>
+                        0{i + 1}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <Link
+              href="/signup"
+              onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'start_building_your_mentorship' })}
+              className="group inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+            >
+              Start building your mentorship
+              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+            </Link>
+          </div>
+
+          {/* Right: the app window */}
+          <div>
+            <div className="bg-gray-50 rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+              <div className="hidden sm:flex bg-white border-b border-gray-100 px-4 py-2.5 items-center gap-3">
+                <div className="flex gap-1.5" aria-hidden="true">
+                  {[0, 1, 2].map((i) => <div key={i} className="w-2.5 h-2.5 rounded-full bg-gray-200" />)}
+                </div>
+                <div className="flex-1 bg-gray-50 rounded border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs truncate">
+                  mentable.com/{activeStage.url}
+                </div>
+              </div>
+
+              <div id="demo-panel" role="tabpanel" className="p-5 sm:p-6 min-h-[430px]">
+                {stage === 'discover' && <Discover onPick={() => go('request')} />}
+                {stage === 'request'  && <Request onSend={() => go('goals')} />}
+                {stage === 'goals'    && <Goals onNext={() => go('session')} />}
+                {stage === 'session'  && <Session />}
+              </div>
+            </div>
+
+            <p aria-live="polite" className="sr-only">
+              Showing stage {activeIdx + 1} of {STAGES.length}: {activeStage.label}
+            </p>
+            <p className="text-center text-[11px] text-gray-300 mt-3">
+              Illustrative demo using real Mentable capabilities.
+            </p>
+          </div>
+
+        </div>
       </div>
     </section>
   );

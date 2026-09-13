@@ -1,179 +1,145 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
+import CarouselShell from '@/components/marketing/CarouselShell';
+import { trackLandingEvent } from '@/lib/landing-analytics';
 
-const DOUBLED = [...SOURCED_NEAR_PEERS, ...SOURCED_NEAR_PEERS];
-
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-    </svg>
-  );
+// Short school label for the card foot — full name lives in the profile modal.
+function shortSchool(person: SourcedNearPeer): string | null {
+  if (!person.school) return null;
+  // Map known long names explicitly; a blind slice cut words in half.
+  const MAP: Record<string, string> = {
+    'UNC Kenan-Flagler Business School / University of North Carolina at Chapel Hill': 'UNC Kenan-Flagler',
+    'UNC Kenan-Flagler Business School': 'UNC Kenan-Flagler',
+    'University of North Carolina at Chapel Hill': 'UNC',
+    'UC Berkeley — Haas School of Business': 'UC Berkeley · Haas',
+    'University of Minnesota — Carlson School of Management': 'Minnesota · Carlson',
+    'London School of Economics and Political Science': 'LSE',
+    'University of Pennsylvania': 'UPenn',
+    'University of New Hampshire': 'New Hampshire',
+  };
+  return MAP[person.school] ?? person.school.replace('University of ', '');
 }
 
 function MenteeCard({
   person,
+  index,
+  hovered,
+  onHoverChange,
+  interactive,
   onPreview,
 }: {
   person: SourcedNearPeer;
+  index: number;
+  hovered: boolean;
+  onHoverChange: (h: boolean) => void;
+  interactive: boolean;
   onPreview: () => void;
 }) {
-  const initials = `${person.firstName[0]}${person.lastName[0]}`;
+  const [imgError, setImgError] = useState(false);
   const fullName = `${person.firstName} ${person.lastName}`;
-  const shortSchool =
-    person.school && person.school.length > 34
-      ? person.school.slice(0, 32) + '…'
-      : person.school;
+  const initials = `${person.firstName[0]}${person.lastName[0]}`;
+  const school = shortSchool(person);
+  const gradYear = person.expectedGraduation ? `’${person.expectedGraduation.slice(-2)}` : null;
+  const org = person.experience?.[0]?.organization;
+  const logo = org ? companyFaviconUrl(org) : null;
+  const schoolLogo = person.school ? schoolFaviconUrl(person.school) : null;
 
   return (
-    <div className="flex-none w-[200px] sm:w-[220px] px-3 motion-safe:hover:scale-[1.04] motion-safe:hover:-translate-y-1.5 transition-transform duration-300">
+    <div
+      className="flex-none w-[210px] sm:w-[228px] px-3"
+      onPointerEnter={() => onHoverChange(true)}
+      onPointerLeave={() => onHoverChange(false)}
+    >
       <button
         onClick={onPreview}
-        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-xl"
+        tabIndex={interactive ? 0 : -1}
+        onFocus={() => interactive && onHoverChange(true)}
+        onBlur={() => interactive && onHoverChange(false)}
+        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
+        style={{ transform: hovered ? 'translateY(-6px) scale(1.045)' : 'none' }}
         aria-label={`View ${fullName}'s profile`}
       >
-        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-xl mb-3">
-          {person.image ? (
+        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
+          {person.image && !imgError ? (
             <Image
               src={person.image}
-              alt={fullName}
+              alt=""
               fill
-              className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-[1.04] transition-all duration-700 ease-out"
-              style={{ objectPosition: person.portraitPosition ?? '50% 20%' }}
-              sizes="(max-width: 640px) 200px, 220px"
+              className="object-cover transition-all duration-700 ease-out"
+              style={{
+                objectPosition: person.portraitPosition ?? '50% 20%',
+                filter: hovered ? 'grayscale(0)' : 'grayscale(1)',
+                transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              }}
+              sizes="228px"
+              priority={index < 4}
+              loading={index < 4 ? undefined : 'lazy'}
+              onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-navy-100">
-              <span className="text-3xl font-bold text-navy-500">{initials}</span>
+            <div className="w-full h-full flex items-center justify-center bg-navy-800">
+              <span className="text-3xl font-bold text-white select-none">{initials}</span>
+            </div>
+          )}
+
+          {/* Mirror of the mentor card: what they want to learn, not what they've done */}
+          <div
+            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/95 via-navy-900/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
+            style={{
+              opacity: hovered ? 1 : 0,
+              transform: hovered ? 'translateY(0)' : 'translateY(8px)',
+            }}
+          >
+            <p className="text-[8.5px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1.5">
+              Learning about
+            </p>
+            {person.interestTags.slice(0, 2).map((tag) => (
+              <p key={tag} className="text-[12px] font-medium text-white leading-snug">
+                {tag}
+              </p>
+            ))}
+            <span className="inline-flex items-center gap-1 mt-2.5 text-[10px] font-semibold text-white">
+              View profile
+              <ArrowRight className="w-3 h-3" aria-hidden="true" />
+            </span>
+          </div>
+        </div>
+
+        {/* Fixed height keeps every card's baseline aligned regardless of name length */}
+        <div className="px-0.5 h-[52px]">
+          <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{fullName}</p>
+          <p className="text-[11px] text-gray-400 mt-1 font-light">
+            {school}
+            {school && gradYear && ' · '}
+            {gradYear}
+          </p>
+          {(schoolLogo || logo) && (
+            <div className="flex items-center gap-1.5 mt-2">
+              {schoolLogo && <LogoChip url={schoolLogo} name={person.school ?? ''} />}
+              {logo && org && <LogoChip url={logo} name={org} />}
             </div>
           )}
         </div>
-        <div className="px-0.5">
-          <p className="font-semibold text-navy-900 text-sm leading-tight group-hover:text-navy-700 transition-colors">
-            {fullName}
-          </p>
-          {shortSchool && (
-            <p className="text-[11px] text-gray-400 mt-0.5 leading-tight font-light line-clamp-1">
-              {shortSchool}
-            </p>
-          )}
-          {person.expectedGraduation && (
-            <p className="text-[11px] text-navy-500 font-medium mt-0.5">
-              &rsquo;{person.expectedGraduation.slice(-2)}
-            </p>
-          )}
-          {person.interestTags.length > 0 && (
-            <p className="text-[10px] text-gray-400 font-light mt-2 leading-relaxed">
-              {person.interestTags.slice(0, 2).join(' · ')}
-            </p>
-          )}
-        </div>
       </button>
-
-      {(() => {
-        const schoolUrl = person.school ? schoolFaviconUrl(person.school) : null;
-        const employerUrls = (person.experience ?? [])
-          .map((e) => ({ name: e.organization, url: companyFaviconUrl(e.organization) }))
-          .filter((e): e is { name: string; url: string } => e.url !== null);
-        if (!schoolUrl && employerUrls.length === 0) return null;
-        return (
-          <div className="flex items-center gap-1.5 mt-2 px-0.5 flex-wrap">
-            {schoolUrl && <LogoChip name={person.school!} url={schoolUrl} />}
-            {schoolUrl && employerUrls.length > 0 && (
-              <span className="w-px h-3 bg-gray-200 flex-none" aria-hidden="true" />
-            )}
-            {employerUrls.map((e) => (
-              <LogoChip key={e.name} name={e.name} url={e.url} dim />
-            ))}
-          </div>
-        );
-      })()}
-
-      {person.linkedInUrl && (
-        <a
-          href={person.linkedInUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`View ${fullName} on LinkedIn`}
-          className="inline-flex items-center gap-1.5 mt-2 px-0.5 text-gray-400 hover:text-[#0A66C2] transition-colors"
-        >
-          <LinkedInIcon className="w-3.5 h-3.5 flex-none" />
-          <span className="text-[11px] font-medium">LinkedIn</span>
-        </a>
-      )}
     </div>
   );
 }
 
 export default function MenteeCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  // All mutable animation state lives in a ref so RAF reads/writes are instant.
-  const anim = useRef({ pos: 0, dir: -1 as -1 | 1, paused: false, halfWidth: 0, lastTs: 0 });
-  const rafId = useRef(0);
-
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const track: HTMLDivElement = trackRef.current!;
-    if (!track) return;
-
-    anim.current.halfWidth = track.scrollWidth / 2;
-    const DURATION = 60_000; // ms per full loop
-
-    function step(ts: number) {
-      const s = anim.current;
-      const dt = s.lastTs > 0 ? Math.min(ts - s.lastTs, 50) : 0;
-      s.lastTs = ts;
-
-      if (!s.paused) {
-        s.pos += s.dir * (s.halfWidth / DURATION) * dt;
-        // Seamless wrap in both directions
-        if (s.pos <= -s.halfWidth) s.pos += s.halfWidth;
-        if (s.pos > 0) s.pos -= s.halfWidth;
-        track.style.transform = `translateX(${s.pos}px)`;
-      }
-
-      rafId.current = requestAnimationFrame(step);
-    }
-
-    rafId.current = requestAnimationFrame(step);
-    const animState = anim.current;
-    return () => {
-      cancelAnimationFrame(rafId.current);
-      animState.lastTs = 0;
-    };
-  }, []);
-
-  // Keep animation frozen while the modal is open.
-  useEffect(() => {
-    anim.current.paused = preview !== null;
-  }, [preview]);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, width } = e.currentTarget.getBoundingClientRect();
-    const ratio = (e.clientX - left) / width;
-    const s = anim.current;
-    if (ratio < 0.25) { s.dir = -1; s.paused = false; }
-    else if (ratio > 0.75) { s.dir = 1; s.paused = false; }
-    else { s.paused = true; }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    anim.current.dir = -1;
-    anim.current.paused = false;
-  }, []);
 
   return (
     <>
-      <section className="py-14 border-t border-gray-100" aria-labelledby="mentees-heading">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
+      <section className="py-14 sm:py-16 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-9">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
             Who this is built for
           </p>
@@ -185,29 +151,38 @@ export default function MenteeCarousel() {
             Ambition gets you started.<br className="hidden sm:block" />{' '}
             Coachability moves you forward.
           </h2>
-          <p className="text-gray-500 text-[15px] font-light mt-3.5 max-w-lg leading-relaxed">
-            Students and early-career professionals who show up prepared, ask
-            real questions, and act on the answer. Their trajectories are being
-            shaped right now.
-          </p>
         </div>
 
-        <div
-          className="relative py-4"
-          style={{ overflowX: 'clip' }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* No CSS animation class — position is driven entirely by the RAF loop above */}
-          <div ref={trackRef} className="flex" style={{ width: 'max-content' }} aria-hidden="true">
-            {DOUBLED.map((person, i) => (
-              <MenteeCard
-                key={`${person.slug}-${i}`}
-                person={person}
-                onPreview={() => setPreview({ kind: 'mentee', data: person })}
-              />
-            ))}
-          </div>
+        <CarouselShell
+          items={SOURCED_NEAR_PEERS}
+          keyOf={(p) => p.slug}
+          idleDirection={-1}
+          frozen={preview !== null}
+          label="Students on Mentable"
+          renderItem={(person, { hovered, onHoverChange, interactive }) => (
+            <MenteeCard
+              person={person}
+              index={SOURCED_NEAR_PEERS.indexOf(person)}
+              hovered={hovered}
+              onHoverChange={onHoverChange}
+              interactive={interactive}
+              onPreview={() => {
+                trackLandingEvent('mentee_card_opened', { slug: person.slug });
+                setPreview({ kind: 'mentee', data: person });
+              }}
+            />
+          )}
+        />
+
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 mt-8">
+          <Link
+            href="/signup"
+            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'im_ready_to_learn' })}
+            className="group inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+          >
+            I&apos;m ready to learn
+            <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+          </Link>
         </div>
       </section>
 
