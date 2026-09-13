@@ -1,107 +1,69 @@
-const STEPS = [
+const GAPS = [
   {
-    label: 'Access',
-    text: 'Successful people are findable. Professional networks have made that easier than ever.',
-    accent: false,
+    who: 'For students',
+    problem: 'You know where you want to go. You don’t know who to ask.',
+    detail:
+      'Finding the name is easy. Knowing what to ask, how to ask it, and how to turn one reply into a relationship that keeps moving — that is the part nobody teaches.',
   },
   {
-    label: 'Connection',
-    text: 'Getting the right person to respond — to you specifically — is harder.',
-    accent: false,
-  },
-  {
-    label: 'Relationship',
-    text: 'Turning a good conversation into something ongoing and structured is harder still.',
-    accent: false,
-  },
-  {
-    label: 'Progress',
-    text: 'Mentee is built for the distance between introduction and momentum.',
-    accent: true,
+    who: 'For professionals',
+    problem: 'You’re willing to help. Nobody built you a way to do it well.',
+    detail:
+      'Requests arrive with no context and no follow-through. There is no structure for mentoring someone consistently, so good intentions decay into unanswered messages.',
   },
 ];
 
 export default function ProblemSection() {
   return (
     <section
-      className="py-20 px-6 lg:px-10 bg-white border-t border-gray-100"
+      className="py-20 sm:py-24 px-6 lg:px-10 bg-white border-t border-gray-100"
       aria-labelledby="problem-heading"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-          {/* Left: framing */}
-          <div>
-            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-              Why Mentee exists
-            </p>
-            <h2
-              id="problem-heading"
-              className="font-bold text-navy-900 leading-tight mb-6"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)' }}
-            >
-              Finding the right person<br className="hidden sm:block" /> is only the beginning.
-            </h2>
-            <p className="text-gray-500 font-light leading-relaxed text-[15px] mb-5">
-              LinkedIn can show you who they are. Cold outreach might get you a response.
-              But knowing how to reach the right person with genuine context, and then turning
-              that conversation into an ongoing mentorship — that requires something different.
-            </p>
-            <p className="text-gray-400 font-light leading-relaxed text-[14px]">
-              That&apos;s the gap Mentee is built to close.
-            </p>
-          </div>
-
-          {/* Right: Access → Connection → Relationship → Progress vertical flow */}
-          <div className="lg:pt-8">
-            {STEPS.map((step, i) => (
-              <div key={step.label} className="relative flex items-start gap-5">
-                {/* Vertical connector line */}
-                {i < STEPS.length - 1 && (
-                  <div
-                    className="absolute left-[13px] top-7 w-px bg-gray-100"
-                    style={{ height: 'calc(100% - 4px)' }}
-                    aria-hidden="true"
-                  />
-                )}
-                {/* Circle node */}
-                <div
-                  className={`w-7 h-7 rounded-full flex-none flex items-center justify-center mt-0.5 relative z-10 border ${
-                    step.accent
-                      ? 'bg-navy-900 border-navy-900'
-                      : 'bg-white border-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`text-[10px] font-bold tabular-nums ${
-                      step.accent ? 'text-white' : 'text-gray-400'
-                    }`}
-                  >
-                    {i + 1}
-                  </span>
-                </div>
-                {/* Content */}
-                <div className={i < STEPS.length - 1 ? 'pb-8' : 'pb-0'}>
-                  <p
-                    className={`text-sm font-semibold mb-1 ${
-                      step.accent ? 'text-navy-900' : 'text-gray-700'
-                    }`}
-                  >
-                    {step.label}
-                  </p>
-                  <p
-                    className={`text-[13px] font-light leading-relaxed ${
-                      step.accent ? 'text-gray-600' : 'text-gray-400'
-                    }`}
-                  >
-                    {step.text}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
+        {/* Editorial statement */}
+        <div className="max-w-3xl mb-14">
+          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-6">
+            The problem
+          </p>
+          <h2
+            id="problem-heading"
+            className="font-serif text-navy-900 leading-[1.08] mb-6"
+            style={{ fontSize: 'clamp(2.1rem, 5vw, 3.4rem)' }}
+          >
+            Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
+          </h2>
+          <p className="text-gray-500 font-light leading-relaxed text-[16px] max-w-xl">
+            Who your parents know. Which alumni answered. Whether the person
+            across the table happened to take an interest. That is a bad system
+            for something this consequential — and it fails both sides of it.
+          </p>
         </div>
+
+        {/* Two-sided failure */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-100 border border-gray-100 rounded-2xl overflow-hidden">
+          {GAPS.map((gap) => (
+            <div key={gap.who} className="bg-white p-7 sm:p-9">
+              <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.2em] mb-4">
+                {gap.who}
+              </p>
+              <p className="text-navy-900 font-semibold text-[17px] leading-snug mb-3">
+                {gap.problem}
+              </p>
+              <p className="text-gray-500 font-light text-[14px] leading-relaxed">
+                {gap.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Resolution */}
+        <p className="mt-10 text-navy-800 font-light text-[17px] leading-relaxed max-w-xl">
+          Mentable exists to close both gaps at once — by connecting people
+          willing to teach with people genuinely ready to learn, and giving the
+          relationship somewhere to go after the first conversation.
+        </p>
+
       </div>
     </section>
   );

@@ -143,7 +143,7 @@ export default function SignInTransition({ onComplete }: Props) {
             userSelect: 'none',
           }}
         >
-          Mentee
+          Mentable
         </span>
       </div>
     </div>

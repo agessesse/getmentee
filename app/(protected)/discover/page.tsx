@@ -202,7 +202,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
           View profile
         </Link>
         <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-gray-50 text-xs font-medium text-gray-400 cursor-default">
-          Not yet on Mentee
+          Not yet on Mentable
         </div>
       </div>
     </div>

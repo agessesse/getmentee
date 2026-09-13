@@ -38,7 +38,7 @@ export function LoginForm() {
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-navy-900 mb-1.5">Welcome back</h2>
-        <p className="text-gray-500 text-sm">Sign in to your Mentee account.</p>
+        <p className="text-gray-500 text-sm">Sign in to your Mentable account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

@@ -152,7 +152,7 @@ function PilotBanner() {
       <div>
         <p className="text-sm font-semibold text-amber-900">No active funding programs yet</p>
         <p className="text-xs text-amber-700 mt-1 leading-relaxed">
-          The Opportunity Fund is in its pilot phase. Mentee is building partnerships to launch the first funded cohort.
+          The Opportunity Fund is in its pilot phase. Mentable is building partnerships to launch the first funded cohort.
           Expressing interest below helps us understand demand and prioritize which programs to launch first.
         </p>
       </div>
@@ -369,7 +369,7 @@ export default function OpportunitiesPage() {
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-navy-600">Pilot</span>
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
         </div>
-        <h1 className="text-2xl font-bold text-navy-900 mb-3">Mentee Opportunity Fund</h1>
+        <h1 className="text-2xl font-bold text-navy-900 mb-3">Mentable Opportunity Fund</h1>
         <p className="text-gray-500 text-sm leading-relaxed max-w-2xl">
           A mentor can show you the next step. The Opportunity Fund is being built to make sure financial
           barriers don&apos;t prevent you from taking it — covering targeted professional-development needs
@@ -428,7 +428,7 @@ export default function OpportunitiesPage() {
             status, and other approved designations — but Pell eligibility is not the only path.
           </p>
           <p>
-            Mentee distinguishes between <strong className="text-navy-800">self-attested</strong> and{' '}
+            Mentable distinguishes between <strong className="text-navy-800">self-attested</strong> and{' '}
             <strong className="text-navy-800">verified</strong> information. Submitting a financial need profile
             marks it as self-reported. Verification processes — where applicable — will be defined when specific
             funded programs launch.
@@ -440,7 +440,7 @@ export default function OpportunitiesPage() {
           <div className="flex items-start gap-2 mt-2 p-3 bg-white border border-gray-100 rounded-xl">
             <Info className="w-4 h-4 text-navy-500 flex-shrink-0 mt-0.5" />
             <p className="text-gray-500">
-              All grant decisions are made by the Mentee team, not mentors or sponsors, to ensure fairness and prevent conflicts of interest.
+              All grant decisions are made by the Mentable team, not mentors or sponsors, to ensure fairness and prevent conflicts of interest.
             </p>
           </div>
         </div>

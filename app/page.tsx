@@ -11,16 +11,18 @@ import InviteModal from '@/components/marketing/InviteModal';
 import FirmMarquee from '@/components/marketing/FirmMarquee';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
+import Flywheel from '@/components/marketing/Flywheel';
+import Wordmark, { BRAND_DEFINITION, BRAND_PRONUNCIATION } from '@/components/ui/Wordmark';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const OUTCOMES = [
-  { label: 'Clarity', description: 'A sharper picture of what you want and a realistic path to get there.' },
-  { label: 'Capability', description: 'Skills and frameworks you can apply the next day.' },
-  { label: 'Confidence', description: 'The kind that comes from someone who has done it telling you that you can.' },
-  { label: 'Access', description: 'Introductions and context that would take years to find on your own.' },
-  { label: 'Accountability', description: 'Someone invested in your progress who notices when you stop showing up.' },
-  { label: 'Continuity', description: 'A relationship that outlasts the first conversation and compounds over time.' },
+  { label: 'Clarity', description: 'Know what the path actually looks like, not how it’s described in a brochure.' },
+  { label: 'Confidence', description: 'Walk into rooms with context you didn’t have before.' },
+  { label: 'Opportunity', description: 'Preparation is what turns an introduction into a possibility.' },
+  { label: 'Accountability', description: 'Turn conversations into commitments someone else is watching.' },
+  { label: 'Perspective', description: 'Borrow lessons that took someone else a decade to learn.' },
+  { label: 'Reciprocity', description: 'Eventually become the person you once needed.' },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -38,7 +40,7 @@ export default function LandingPage() {
       {/* ── Navigation ──────────────────────────────────────────────────────── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-cream-50/90 backdrop-blur-sm border-b border-gray-100/80">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold text-navy-900 tracking-tight">Mentee</span>
+          <Wordmark className="text-navy-900" />
           <div className="flex items-center gap-7">
             <Link
               href="/login"
@@ -56,40 +58,55 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── 1. Hero ──────────────────────────────────────────────────────────── */}
-      <section className="pt-36 pb-24 px-6 lg:px-10" aria-labelledby="hero-heading">
+      {/* ── 01. Hero ─────────────────────────────────────────────────────────── */}
+      <section className="pt-32 sm:pt-36 pb-16 sm:pb-20 px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr,360px] gap-12 lg:gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr,340px] gap-12 lg:gap-16 items-center">
 
             {/* Text */}
             <div>
+              {/* Dictionary treatment — makes the name self-explaining */}
+              <div className="mb-9 pb-7 border-b border-gray-200/80 max-w-lg">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
+                  <span className="font-serif text-navy-900 text-[26px] sm:text-[30px] leading-none">
+                    Mentable
+                  </span>
+                  <span className="text-gray-400 text-sm font-light">
+                    {BRAND_PRONUNCIATION}
+                  </span>
+                  <span className="text-gray-400 text-sm italic font-light">adjective</span>
+                </div>
+                <p className="text-navy-700 text-[15px] font-light">
+                  {BRAND_DEFINITION}
+                </p>
+              </div>
+
               <h1
                 id="hero-heading"
-                className="font-serif text-navy-900 leading-[0.96] tracking-tight mb-10 max-w-4xl"
-                style={{ fontSize: 'clamp(2.9rem, 8.5vw, 6.5rem)' }}
+                className="font-serif text-navy-900 leading-[0.98] tracking-tight mb-7 max-w-3xl"
+                style={{ fontSize: 'clamp(2.6rem, 7vw, 5.2rem)' }}
               >
                 The right mentor<br />
-                changes your<br />
+                can change your<br />
                 trajectory.
               </h1>
 
-              <p className="text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-12">
-                You shouldn&apos;t have to figure out your career alone. Mentee connects ambitious people
-                with experienced mentors who&apos;ve already navigated the decisions they&apos;re facing
-                — and helps turn good conversations into lasting relationships.
+              <p className="text-lg sm:text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-10">
+                Mentable connects ambitious students with people who have walked
+                the path ahead — and chose to come back.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-start gap-5">
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <Link
                   href="/signup"
-                  className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl"
+                  className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 transition-colors rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
                 >
-                  Find my mentor
+                  Find your mentor
                   <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/signup"
-                  className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400"
+                  className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
                 >
                   Become a mentor
                   <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
@@ -97,61 +114,55 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Portrait pair + connection indicator */}
-            <div className="hidden lg:flex flex-col items-center gap-4" aria-hidden="true">
-              {/* Stacked portrait cards */}
-              <div className="relative h-[400px] w-full">
-                {/* Christopher Floyd — top right */}
-                <div className="absolute top-4 right-4 w-[200px] h-[285px] rounded-2xl overflow-hidden shadow-2xl rotate-[2.5deg] border-[3px] border-white">
+            {/* Two sides of the relationship, made literal */}
+            <div className="hidden lg:block" aria-hidden="true">
+              <div className="relative h-[380px] w-full">
+                {/* Mentor — above */}
+                <div className="absolute top-0 right-2 w-[196px] h-[268px] rounded-2xl overflow-hidden shadow-2xl rotate-[2.5deg] border-[3px] border-white">
                   <Image
                     src="/people/christopher-floyd.jpg"
-                    alt="Christopher Floyd, CFA — Mentor"
+                    alt=""
                     fill
                     className="object-cover"
                     style={{ objectPosition: '50% 5%' }}
-                    sizes="200px"
+                    sizes="196px"
                     priority
                   />
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
-                    <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.22em]">Mentor</p>
-                    <p className="text-[11px] font-bold text-white leading-tight">Christopher Floyd, CFA</p>
-                    <p className="text-[10px] text-white/70 mt-0.5 font-light">Head of Institutional Sales</p>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-3 pt-10">
+                    <p className="text-[9px] font-semibold text-white/70 uppercase tracking-[0.22em]">
+                      Willing to teach
+                    </p>
+                    <p className="text-[11px] font-bold text-white leading-tight mt-0.5">
+                      Christopher Floyd, CFA
+                    </p>
+                    <p className="text-[10px] text-white/70 mt-0.5 font-light">
+                      Head of Institutional Sales
+                    </p>
                   </div>
                 </div>
 
-                {/* Abel Gessesse — bottom left */}
-                <div className="absolute bottom-4 left-4 w-[172px] h-[245px] rounded-2xl overflow-hidden shadow-2xl rotate-[-2.5deg] border-[3px] border-white">
+                {/* Student — below */}
+                <div className="absolute bottom-0 left-2 w-[168px] h-[232px] rounded-2xl overflow-hidden shadow-2xl rotate-[-2.5deg] border-[3px] border-white">
                   <Image
                     src="/people/abel-gessesse.jpg"
-                    alt="Abel Gessesse — Mentee"
+                    alt=""
                     fill
                     className="object-cover"
                     style={{ objectPosition: '50% 15%' }}
-                    sizes="172px"
+                    sizes="168px"
                     priority
                   />
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-3 pb-3 pt-10">
-                    <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.22em]">Mentee</p>
-                    <p className="text-[11px] font-bold text-white leading-tight">Abel Gessesse</p>
-                    <p className="text-[10px] text-white/70 mt-0.5 font-light">UNC Kenan-Flagler</p>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-3 pt-10">
+                    <p className="text-[9px] font-semibold text-white/70 uppercase tracking-[0.22em]">
+                      Ready to learn
+                    </p>
+                    <p className="text-[11px] font-bold text-white leading-tight mt-0.5">
+                      Abel Gessesse
+                    </p>
+                    <p className="text-[10px] text-white/70 mt-0.5 font-light">
+                      UNC Kenan-Flagler
+                    </p>
                   </div>
-                </div>
-              </div>
-
-              {/* Why this connection makes sense */}
-              <div className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-xl px-5 py-3.5 shadow-sm text-center w-full max-w-[320px]">
-                <p className="text-[9px] font-bold text-navy-400 uppercase tracking-[0.2em] mb-2">
-                  Why this connection makes sense
-                </p>
-                <div className="flex gap-1.5 justify-center flex-wrap">
-                  {['Fixed Income', 'Career Development', 'Markets'].map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-medium text-navy-700 bg-navy-50 rounded-full px-2.5 py-0.5"
-                    >
-                      {tag}
-                    </span>
-                  ))}
                 </div>
               </div>
             </div>
@@ -160,83 +171,85 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 2. Problem: why Mentee exists ────────────────────────────────────── */}
+      {/* ── 02. The problem ──────────────────────────────────────────────────── */}
       <ProblemSection />
 
-      {/* ── 3. Mentor network ────────────────────────────────────────────────── */}
+      {/* ── 03. Mentors — who could I learn from? ────────────────────────────── */}
       <MentorCarousel />
-
-      {/* Understated social proof — institutions these mentors represent */}
       <FirmMarquee />
 
-      {/* ── 4. Mentee community ──────────────────────────────────────────────── */}
+      {/* ── 04. Mentable students — who is this built for? ───────────────────── */}
       <MenteeCarousel />
 
-      {/* ── 5. Product experience ────────────────────────────────────────────── */}
+      {/* ── 05. Product — how does it actually help? ─────────────────────────── */}
       <ProductDemo />
 
-      {/* ── 6. The reward of mentorship ──────────────────────────────────────── */}
-      <section className="py-24 px-6 lg:px-10 bg-navy-900" aria-labelledby="reward-heading">
-        <div className="max-w-6xl mx-auto">
+      {/* ── 06. Flywheel — what happens over time? ───────────────────────────── */}
+      <Flywheel />
 
-          <div className="mb-16 max-w-2xl">
-            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-6">
+      {/* ── 07. Outcomes — why does this matter? ─────────────────────────────── */}
+      <section
+        className="py-20 sm:py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100"
+        aria-labelledby="outcomes-heading"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12 max-w-xl">
+            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
               What it produces
             </p>
             <h2
-              id="reward-heading"
-              className="font-serif text-white leading-tight mb-6"
-              style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+              id="outcomes-heading"
+              className="font-serif text-navy-900 leading-[1.05] mb-5"
+              style={{ fontSize: 'clamp(2.1rem, 5vw, 3.4rem)' }}
             >
-              The reward of<br />mentorship.
+              What you actually walk away with.
             </h2>
-            <p className="text-navy-300 font-light leading-relaxed text-[15px] max-w-lg">
-              Good mentorship doesn&apos;t produce a single outcome. It changes how you think,
-              what you see as possible, and who you become. These six things don&apos;t arrive
-              in one conversation — they compound across every one that follows.
+            <p className="text-gray-500 font-light leading-relaxed text-[15px] max-w-lg">
+              None of this arrives in a single conversation. It compounds across
+              every one that follows.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-navy-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
             {OUTCOMES.map((outcome) => (
-              <div key={outcome.label} className="bg-navy-900 p-8 hover:bg-navy-800/60 transition-colors">
-                <p className="text-white font-semibold text-base mb-2">{outcome.label}</p>
-                <p className="text-navy-400 font-light text-[14px] leading-relaxed">{outcome.description}</p>
+              <div
+                key={outcome.label}
+                className="bg-cream-50 p-7 sm:p-8 hover:bg-white transition-colors"
+              >
+                <p className="font-serif text-navy-900 text-[22px] leading-none mb-2.5">
+                  {outcome.label}
+                </p>
+                <p className="text-gray-500 font-light text-[14px] leading-relaxed">
+                  {outcome.description}
+                </p>
               </div>
             ))}
           </div>
-
-          <div className="mt-14 pt-10 border-t border-navy-800">
-            <p className="text-navy-500 font-light text-[15px] max-w-xl leading-relaxed">
-              None of these are guaranteed. All are possible when the right two people
-              find each other and build something together. That&apos;s what Mentee is for.
-            </p>
-          </div>
-
         </div>
       </section>
 
-      {/* ── 7. Opportunity Fund ──────────────────────────────────────────────── */}
-      <section className="py-20 px-6 lg:px-10 border-t border-gray-100 bg-gray-50/40">
+      {/* ── 08. Opportunity Fund ─────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-20 px-6 lg:px-10 border-t border-gray-100 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <div>
-              <p className="text-[11px] font-semibold text-amber-600 uppercase tracking-[0.22em] mb-6">
+              <p className="text-[11px] font-semibold text-amber-600 uppercase tracking-[0.22em] mb-5">
                 Beyond advice
               </p>
               <h2
-                className="font-serif text-navy-900 leading-tight mb-6"
-                style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)' }}
+                className="font-serif text-navy-900 leading-[1.08] mb-5"
+                style={{ fontSize: 'clamp(1.9rem, 4.2vw, 2.8rem)' }}
               >
-                Access doesn&apos;t stop<br />at the introduction.
+                Preparation shouldn&apos;t<br />depend on a budget.
               </h2>
               <p className="text-gray-500 leading-relaxed mb-4 font-light text-[15px]">
                 Great mentorship can open a door. For students with demonstrated
-                financial need, Mentee is building an Opportunity Fund to remove
+                financial need, Mentable is building an Opportunity Fund to remove
                 the practical barriers that stand between guidance and action.
               </p>
-              <p className="text-gray-400 text-sm leading-relaxed mb-8">
-                The Opportunity Fund is in its pilot phase. We are building partnerships to fund the first cohort.
+              <p className="text-gray-400 text-sm leading-relaxed mb-7">
+                The Opportunity Fund is in its pilot phase. We are building
+                partnerships to fund the first cohort.
               </p>
               <Link
                 href="/signup"
@@ -247,7 +260,7 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <div className="space-y-0 divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 lg:pt-2">
               {[
                 { label: 'Professional Attire', detail: 'Interview suit, tailoring, professional footwear' },
                 { label: 'Networking', detail: 'Coffee chats, industry events, professional meetups' },
@@ -267,43 +280,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 8. Final CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100" aria-labelledby="cta-heading">
+      {/* ── 09. Final CTA ────────────────────────────────────────────────────── */}
+      <section
+        className="py-20 sm:py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100"
+        aria-labelledby="cta-heading"
+      >
         <div className="max-w-6xl mx-auto">
           <h2
             id="cta-heading"
-            className="font-serif text-navy-900 leading-tight mb-6 max-w-2xl"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
+            className="font-serif text-navy-900 leading-[1.03] mb-6 max-w-2xl"
+            style={{ fontSize: 'clamp(2.3rem, 5.5vw, 4.2rem)' }}
           >
-            Find out who you<br />should be learning from.
+            Someone helped them get there.<br />Now they&apos;re here for you.
           </h2>
-          <p className="text-gray-500 font-light mb-10 max-w-md text-[15px] leading-relaxed">
-            Tell us where you are, where you&apos;re trying to go, and what you want help
-            navigating. Build your profile and start discovering the people who could
-            help you move forward.
+          <p className="text-gray-500 font-light mb-9 max-w-md text-[15px] leading-relaxed">
+            Tell us where you are and what you&apos;re trying to figure out.
+            The rest starts with one conversation.
           </p>
-          <div className="flex flex-col sm:flex-row items-start gap-5">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <Link
               href="/signup"
-              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-semibold hover:bg-navy-800 transition-colors rounded-xl"
+              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-semibold hover:bg-navy-800 transition-colors rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
             >
-              Build my mentorship profile
+              Find your mentor
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </Link>
             <Link
               href="/signup"
-              className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400"
+              className="group inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
               Become a mentor
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </Link>
           </div>
-          <p className="text-gray-400 text-sm mt-6">Free to join.</p>
-          <p className="text-gray-400 text-sm mt-3">
-            Know someone who would make a great mentor?{' '}
+          <p className="text-gray-400 text-sm mt-6">
+            Free to join. Know someone worth learning from?{' '}
             <button
               onClick={() => setInviteOpen(true)}
-              className="text-navy-600 underline underline-offset-2 hover:text-navy-900 transition-colors"
+              className="text-navy-600 underline underline-offset-2 hover:text-navy-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
               Invite them
             </button>
@@ -312,20 +326,20 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="py-16 px-6 lg:px-10 bg-navy-900 border-t border-navy-800">
+      <footer className="py-14 px-6 lg:px-10 bg-navy-900">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-10">
-            <span className="text-2xl font-bold text-white tracking-tight">Mentee</span>
+          <div className="mb-9">
+            <Wordmark size="lg" className="text-white" />
             <p className="text-navy-500 font-light mt-2 max-w-xs text-sm leading-relaxed">
-              Helping ambitious people find the mentors who change what&apos;s possible.
+              Find someone worth learning from. Become someone worth mentoring.
             </p>
           </div>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-8 border-t border-navy-800">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-navy-800">
             <div className="flex gap-7 text-sm text-navy-500">
               <Link href="/login" className="hover:text-white transition-colors">Sign in</Link>
               <Link href="/signup" className="hover:text-white transition-colors">Create account</Link>
             </div>
-            <p className="text-sm text-navy-700">&copy; 2026 Mentee. All rights reserved.</p>
+            <p className="text-sm text-navy-700">&copy; 2026 Mentable. All rights reserved.</p>
           </div>
         </div>
       </footer>

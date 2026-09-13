@@ -1,4 +1,4 @@
-# Mentee
+# Mentable
 
 A mentorship platform connecting students and young professionals with experienced mentors.
 

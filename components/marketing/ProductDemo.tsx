@@ -63,7 +63,7 @@ function DiscoverPanel() {
           you navigate. See exactly why each one is relevant before you reach out.
         </p>
         <p className="text-sm text-gray-400 font-light leading-relaxed">
-          Every mentor profile shows their background, expertise, and what brought them to Mentee
+          Every mentor profile shows their background, expertise, and what brought them to Mentable
           — so your first message isn&apos;t cold. It&apos;s informed.
         </p>
       </div>
@@ -295,7 +295,7 @@ export default function ProductDemo() {
         <div
           role="tablist"
           aria-label="Product feature tabs"
-          className="flex gap-1 p-1 bg-gray-100 rounded-xl w-fit mb-8 overflow-x-auto"
+          className="flex gap-1 p-1 bg-gray-100 rounded-xl w-fit max-w-full mb-8 overflow-x-auto"
         >
           {TABS.map((tab) => (
             <button
@@ -325,7 +325,7 @@ export default function ProductDemo() {
               <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
             </div>
             <div className="flex-1 bg-white rounded border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs">
-              getmentee.com/{activeTab.url}
+              mentable.com/{activeTab.url}
             </div>
           </div>
 
@@ -341,7 +341,7 @@ export default function ProductDemo() {
         </div>
 
         <p className="text-center text-[11px] text-gray-300 mt-4">
-          Illustrative example using real Mentee capabilities.
+          Illustrative example using real Mentable capabilities.
         </p>
 
       </div>

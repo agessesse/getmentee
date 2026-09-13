@@ -5,7 +5,7 @@ import { ImageResponse } from 'next/og';
 // so it stays in sync with the wordmark and needs no asset pipeline.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-export const alt = 'Mentee — Find the Mentor Who Changes Everything';
+export const alt = 'Mentable — Find someone worth learning from';
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -30,7 +30,7 @@ export default function OpengraphImage() {
             marginBottom: 40,
           }}
         >
-          Mentee
+          Mentable
         </div>
         <div
           style={{
@@ -42,7 +42,7 @@ export default function OpengraphImage() {
             maxWidth: 900,
           }}
         >
-          The right mentor changes your trajectory.
+          The right mentor can change your trajectory.
         </div>
       </div>
     ),

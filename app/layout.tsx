@@ -25,21 +25,21 @@ const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: '/' },
-  title: 'Mentee — Find the Mentor Who Changes Everything',
+  title: 'Mentable — Find someone worth learning from',
   description:
-    'Mentee connects ambitious students and early-career professionals with experienced mentors at leading firms. Match, connect, meet, and grow.',
+    'Mentable connects ambitious students with experienced professionals who have walked the path ahead. Find a mentor, set goals, and follow through.',
   openGraph: {
-    title: 'Mentee — Find the Mentor Who Changes Everything',
+    title: 'Mentable — Find someone worth learning from',
     description:
-      'A curated mentorship platform built around matching, accountability, and long-term career development.',
+      'Teachable. Coachable. Ready to grow. A mentorship platform built around real relationships, goals, and follow-through.',
     type: 'website',
-    siteName: 'Mentee',
+    siteName: 'Mentable',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mentee — Find the Mentor Who Changes Everything',
+    title: 'Mentable — Find someone worth learning from',
     description:
-      'A curated mentorship platform built around matching, accountability, and long-term career development.',
+      'Teachable. Coachable. Ready to grow. A mentorship platform built around real relationships, goals, and follow-through.',
   },
 };
 

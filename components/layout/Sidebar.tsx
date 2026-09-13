@@ -115,7 +115,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
             className="text-xl font-bold text-white tracking-tight"
             onClick={onClose}
           >
-            Mentee
+            Mentable
           </Link>
           <button
             onClick={onClose}

@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { BRAND, BRAND_DEFINITION } from '@/components/ui/Wordmark';
 
 // Bump this key when the animation changes substantially — returning users
 // will see it fresh once then be skipped for the rest of the session.
-const SESSION_KEY = 'mentee_intro_v4';
+const SESSION_KEY = 'mentable_intro_v5';
 
 // ─── Streak configuration ─────────────────────────────────────────────────────
 // Each streak is a thin luminous line that races from an edge toward center,
@@ -59,24 +60,24 @@ export default function IntroSequence() {
     if (reduced) {
       // Reduced-motion path: dark screen → wordmark fades in → dissolve, no streaks
       setPhase('form');
-      const t1 = setTimeout(() => setPhase('hold'), 700);
-      const t2 = setTimeout(() => setPhase('wipe'), 1400);
+      const t1 = setTimeout(() => setPhase('hold'), 650);
+      const t2 = setTimeout(() => setPhase('wipe'), 1750);
       const t3 = setTimeout(() => {
         localStorage.setItem(SESSION_KEY, '1');
         setPhase('done');
-      }, 1950);
+      }, 2300);
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
     }
 
     // Full animation path
     const t1 = setTimeout(() => setPhase('streaks'), 150);  // streaks enter
     const t2 = setTimeout(() => setPhase('form'),    820);  // wordmark begins forming
-    const t3 = setTimeout(() => setPhase('hold'),   1700);  // fully resolved
-    const t4 = setTimeout(() => setPhase('wipe'),   2350);  // curtain rises
+    const t3 = setTimeout(() => setPhase('hold'),   1650);  // resolved; definition lands
+    const t4 = setTimeout(() => setPhase('wipe'),   2750);  // curtain rises
     const t5 = setTimeout(() => {
       localStorage.setItem(SESSION_KEY, '1');
       setPhase('done');
-    }, 3050);
+    }, 3450);
 
     return () => { [t1, t2, t3, t4, t5].forEach(clearTimeout); };
   }, []);
@@ -85,6 +86,9 @@ export default function IntroSequence() {
 
   const showStreaks = phase === 'streaks' || phase === 'form' || phase === 'hold' || phase === 'wipe';
   const wordFormed  = phase === 'form' || phase === 'hold' || phase === 'wipe';
+  // The definition lands only once the name has fully resolved, so the reveal
+  // reads as an answer to the name rather than competing with it.
+  const definitionShown = phase === 'hold' || phase === 'wipe';
 
   return (
     // Navy curtain — translateY(-100%) wipes it upward on 'wipe' phase
@@ -95,7 +99,7 @@ export default function IntroSequence() {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        backgroundColor: '#1a1f3a', // navy-900 — canonical Mentee dark
+        backgroundColor: '#1a1f3a', // navy-900 — canonical brand dark
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         transition: phase === 'wipe'
@@ -144,22 +148,24 @@ export default function IntroSequence() {
         );
       })}
 
-      {/* Wordmark — materialises from blur as streaks converge */}
+      {/* Wordmark — materialises from blur as streaks converge, then defines itself */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           pointerEvents: 'none',
+          padding: '0 24px',
         }}
       >
         <span
           style={{
             fontWeight: 700,
             color: '#ffffff',
-            fontSize: 'clamp(2.5rem, 10vw, 5rem)',
+            fontSize: 'clamp(2.2rem, 9vw, 5rem)',
             // Wide letter-spacing collapses to tight tracking as the word forms —
             // the motion reads as individual elements magnetising into a single name.
             letterSpacing: wordFormed ? '-0.015em' : '0.18em',
@@ -172,9 +178,29 @@ export default function IntroSequence() {
               'letter-spacing 950ms cubic-bezier(0.16, 1, 0.3, 1)',
             ].join(', '),
             userSelect: 'none',
+            textAlign: 'center',
           }}
         >
-          Mentee
+          {BRAND}
+        </span>
+
+        {/* Definition resolves a beat after the name, answering the question it raises */}
+        <span
+          style={{
+            marginTop: 'clamp(12px, 2vw, 20px)',
+            color: '#a4b3de',
+            fontSize: 'clamp(0.72rem, 2.1vw, 0.95rem)',
+            fontWeight: 300,
+            letterSpacing: '0.16em',
+            textTransform: 'lowercase',
+            opacity: definitionShown ? 1 : 0,
+            transform: definitionShown ? 'translateY(0)' : 'translateY(6px)',
+            transition: 'opacity 520ms ease 120ms, transform 620ms cubic-bezier(0.16, 1, 0.3, 1) 120ms',
+            userSelect: 'none',
+            textAlign: 'center',
+          }}
+        >
+          {BRAND_DEFINITION}
         </span>
       </div>
     </div>

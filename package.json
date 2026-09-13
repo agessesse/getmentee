@@ -1,7 +1,7 @@
 {
-  "name": "mentee",
+  "name": "mentable",
   "version": "0.1.0",
-  "description": "Mentee - A mentorship platform built with Next.js and Supabase",
+  "description": "Mentable - A mentorship platform built with Next.js and Supabase",
   "private": true,
   "scripts": {
     "dev": "next dev",

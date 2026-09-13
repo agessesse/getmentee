@@ -8,7 +8,7 @@ interface InviteModalProps {
   onClose: () => void;
 }
 
-const INVITE_MESSAGE = `I've been building a mentorship platform called Mentee that connects ambitious students with professionals who have already traveled their path.
+const INVITE_MESSAGE = `I've been building a mentorship platform called Mentable that connects ambitious students with professionals who have already traveled their path.
 
 I think you'd make an exceptional mentor. If you're open to it, you can create a profile at:
 
@@ -42,7 +42,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
   const handleNativeShare = async () => {
     if (navigator.share) {
       await navigator.share({
-        title: 'Join Mentee as a mentor',
+        title: 'Join Mentable as a mentor',
         text: INVITE_MESSAGE,
         url: 'https://getmentee.com/signup',
       }).catch(() => null);

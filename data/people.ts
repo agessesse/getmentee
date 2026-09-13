@@ -8,7 +8,7 @@
 //     from application data — never hardcoded here.
 //   • status: 'sourced'  = profile record only, person has not signed up.
 //             'invited'  = invitation sent.
-//             'active'   = authenticated Mentee user.
+//             'active'   = authenticated Mentable user.
 //   • is_founding_mentor defaults to false — set explicitly after opt-in.
 //
 // HOW TO EDIT:

@@ -60,7 +60,7 @@ export function SignupForm() {
     return (
       <div className="w-full max-w-lg mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold text-navy-900 mb-3">Join Mentee</h1>
+          <h1 className="text-3xl font-bold text-navy-900 mb-3">Join Mentable</h1>
           <p className="text-gray-500">Are you looking for guidance, or offering it?</p>
         </div>
 

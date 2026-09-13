@@ -224,7 +224,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
       {/* Invitation note */}
       <div className="bg-navy-50 rounded-2xl border border-navy-100 p-5 text-center">
         <p className="text-sm text-navy-700 font-light">
-          {person.firstName} has been invited to join Mentee. Once active, you&apos;ll be able to
+          {person.firstName} has been invited to join Mentable. Once active, you&apos;ll be able to
           connect directly through the platform.
         </p>
       </div>

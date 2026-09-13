@@ -162,17 +162,19 @@ export default function MentorCarousel() {
       <section className="py-14 border-t border-gray-100" aria-labelledby="mentor-carousel-heading">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-10">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-            Our mentors
+            Who you could learn from
           </p>
           <h2
             id="mentor-carousel-heading"
-            className="font-bold text-navy-900 leading-tight"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)' }}
+            className="font-serif text-navy-900 leading-[1.05]"
+            style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
-            Experience worth<br className="sm:hidden" /> passing forward.
+            People who walked it first —<br className="hidden sm:block" />{' '}
+            and chose to come back.
           </h2>
-          <p className="text-gray-400 text-sm font-light mt-2 max-w-sm leading-relaxed">
-            Professionals who chose to invest their expertise in the people coming up behind them.
+          <p className="text-gray-500 text-[15px] font-light mt-3.5 max-w-lg leading-relaxed">
+            Nobody assigned them this. Every mentor here decided that what they
+            learned the hard way was worth handing to someone else.
           </p>
         </div>
 
