@@ -29,7 +29,7 @@ export default function Flywheel() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
           <div>
-            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-5">
               How it compounds
             </p>
             <h2
@@ -58,7 +58,7 @@ export default function Flywheel() {
 
           {/* The wheel */}
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 300" className="w-full max-w-[300px] h-auto" role="img" aria-label="A four-stage cycle: Learn, Apply, Grow, Return — which loops back to Learn.">
+            <svg viewBox="0 0 300 300" className="w-full max-w-[300px] h-auto" role="img" aria-label="A four-stage cycle: Learn, Apply, Grow, Return, which loops back to Learn.">
               <circle cx={C} cy={C} r={R} fill="none" stroke="#dde3f5" strokeWidth="1.5" />
 
               {/* Progress arc grows as the user moves through the cycle */}
@@ -98,7 +98,7 @@ export default function Flywheel() {
                       textAnchor="middle"
                       fontSize="10"
                       fontWeight="700"
-                      fill={isActive ? '#ffffff' : '#879bd3'}
+                      fill={isActive ? '#ffffff' : '#5265b0'}
                       style={{ pointerEvents: 'none' }}
                     >
                       0{i + 1}
@@ -108,7 +108,7 @@ export default function Flywheel() {
                       textAnchor="middle"
                       fontSize="12.5"
                       fontWeight="600"
-                      fill={isActive ? '#1a1f3a' : '#879bd3'}
+                      fill={isActive ? '#1a1f3a' : '#5265b0'}
                       style={{ pointerEvents: 'none', transition: 'fill 240ms ease' }}
                     >
                       {s.verb}

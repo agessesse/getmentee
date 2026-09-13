@@ -164,7 +164,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                 <p className="text-white/85 text-sm mt-0.5 leading-snug drop-shadow">{titleLine}</p>
               )}
               {subLine && (
-                <p className={`text-sm mt-0.5 leading-snug drop-shadow ${titleLine ? 'text-white/60 text-xs' : 'text-white/85'}`}>
+                <p className={`text-sm mt-0.5 leading-snug drop-shadow ${titleLine ? 'text-white/80 text-xs' : 'text-white/85'}`}>
                   {subLine}
                 </p>
               )}

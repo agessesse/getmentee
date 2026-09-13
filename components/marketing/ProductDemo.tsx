@@ -27,7 +27,7 @@ const MENTOR = {
 function Discover({ onPick }: { onPick: () => void }) {
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em]">
+      <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
         Mentors matching fixed income
       </p>
 
@@ -40,30 +40,30 @@ function Discover({ onPick }: { onPick: () => void }) {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
-          <p className="text-[11px] text-gray-400 font-light truncate">{MENTOR.role}</p>
+          <p className="text-[11px] text-gray-500 font-light truncate">{MENTOR.role}</p>
           <div className="flex flex-wrap gap-1 mt-1.5">
             {MENTOR.helps.map((t) => (
               <span key={t} className="text-[10px] font-medium text-navy-700 bg-navy-50 rounded-full px-2 py-0.5">{t}</span>
             ))}
           </div>
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
+        <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
       </button>
 
       {[
         { n: 'Tiffany Lakey', r: 'Chief of Staff, CIB · Wells Fargo' },
         { n: 'Will Alston', r: 'Head of Corporate Banking · Wells Fargo' },
       ].map((m) => (
-        <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white/60 rounded-xl border border-gray-100 opacity-55">
+        <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-100 opacity-80">
           <div className="w-14 h-14 rounded-xl flex-none bg-navy-100" />
           <div className="min-w-0">
             <p className="text-[14px] font-semibold text-navy-900 truncate">{m.n}</p>
-            <p className="text-[11px] text-gray-400 font-light truncate">{m.r}</p>
+            <p className="text-[11px] text-gray-500 font-light truncate">{m.r}</p>
           </div>
         </div>
       ))}
 
-      <p className="text-[10px] text-navy-500 font-medium pt-1">↑ Pick Christopher to continue</p>
+      <p className="text-[10px] text-navy-600 font-medium pt-1">↑ Pick Christopher to continue</p>
     </div>
   );
 }
@@ -87,12 +87,12 @@ function Request({ onSend }: { onSend: () => void }) {
         </div>
         <div className="min-w-0">
           <p className="text-[12px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
-          <p className="text-[10px] text-gray-400 font-light">Requesting mentorship</p>
+          <p className="text-[10px] text-gray-500 font-light">Requesting mentorship</p>
         </div>
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-1.5">
           What are you hoping to learn?
         </p>
         <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100">
@@ -101,11 +101,11 @@ function Request({ onSend }: { onSend: () => void }) {
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-1.5">
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-1.5">
           Why Christopher?
         </p>
         <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100 leading-relaxed">
-          Three decades in institutional fixed income — exactly the path I&apos;m trying to understand.
+          Three decades in institutional fixed income. That is the path I am trying to understand.
         </div>
       </div>
 
@@ -116,9 +116,9 @@ function Request({ onSend }: { onSend: () => void }) {
           sent ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-navy-900 text-white hover:bg-navy-800'
         }`}
       >
-        {sent ? 'Request sent — Christopher accepted' : 'Request mentorship'}
+        {sent ? 'Request sent. Christopher accepted.' : 'Request mentorship'}
       </button>
-      <p className="text-[10px] text-gray-300 text-center">Nothing is actually sent from this demo.</p>
+      <p className="text-[11px] text-gray-500 text-center">Nothing is sent from this preview.</p>
     </div>
   );
 }
@@ -139,11 +139,11 @@ function Goals({ onNext }: { onNext: () => void }) {
         <p className="text-[14px] font-semibold text-navy-900 leading-snug">
           Understand fixed-income career paths
         </p>
-        <p className="text-[10px] text-gray-400 mt-1">Target: June 2027 · with Christopher</p>
+        <p className="text-[10px] text-gray-500 mt-1">Target: June 2027 · with Christopher</p>
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2">Next steps</p>
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2">Next steps</p>
         <div className="space-y-1.5">
           {[
             { k: 'a', t: 'Read up on how a rates desk is structured' },
@@ -157,14 +157,14 @@ function Goals({ onNext }: { onNext: () => void }) {
             >
               {done[item.k]
                 ? <CheckCircle2 className="w-4 h-4 text-green-500 flex-none" aria-hidden="true" />
-                : <Circle className="w-4 h-4 text-gray-300 flex-none" aria-hidden="true" />}
-              <span className={`text-[12px] ${done[item.k] ? 'text-gray-400 line-through font-light' : 'text-navy-800'}`}>
+                : <Circle className="w-4 h-4 text-gray-500 flex-none" aria-hidden="true" />}
+              <span className={`text-[12px] ${done[item.k] ? 'text-gray-500 line-through font-light' : 'text-navy-800'}`}>
                 {item.t}
               </span>
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-gray-300 mt-2 pl-2">Try checking one off.</p>
+        <p className="text-[10px] text-gray-500 mt-2 pl-2">Try checking one off.</p>
       </div>
 
       <button
@@ -183,7 +183,7 @@ function Session() {
   return (
     <div className="space-y-3.5">
       <div className="bg-navy-900 rounded-xl p-4">
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-navy-700">
             <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
@@ -196,7 +196,7 @@ function Session() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2.5">Prep</p>
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2.5">Prep</p>
         <ul className="space-y-1.5">
           {[
             'Questions on desk structure and day-to-day',
@@ -212,12 +212,12 @@ function Session() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-wider mb-2.5">
+        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2.5">
           Carried over from last session
         </p>
         <div className="flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-green-500 flex-none" aria-hidden="true" />
-          <span className="text-[12px] text-gray-400 line-through font-light">Research fixed-income desk structure</span>
+          <span className="text-[12px] text-gray-500 line-through font-light">Research fixed-income desk structure</span>
         </div>
       </div>
 
@@ -252,7 +252,7 @@ export default function ProductDemo() {
 
           {/* Left: framing + stage nav */}
           <div className="lg:sticky lg:top-24">
-            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-5">
               The product
             </p>
             <h2
@@ -260,10 +260,10 @@ export default function ProductDemo() {
               className="font-serif text-navy-900 leading-[1.05] mb-5"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
-              Not a directory.<br />A relationship with direction.
+              Everything after<br />the introduction.
             </h2>
-            <p className="text-gray-500 font-light text-[15px] leading-relaxed mb-7 max-w-md">
-              Discover the right person. Ask intentionally. Set goals. Keep moving.
+            <p className="text-gray-500 text-[16px] leading-relaxed mb-7 max-w-md">
+              Requests, goals, sessions, and follow-up in one place. Click through the four steps.
             </p>
 
             <ol className="space-y-1" role="tablist" aria-label="Product stages">
@@ -288,14 +288,14 @@ export default function ProductDemo() {
                         }`}
                       >
                         <Icon
-                          className={`w-3.5 h-3.5 ${isActive ? 'text-white' : seen ? 'text-navy-600' : 'text-gray-400'}`}
+                          className={`w-3.5 h-3.5 ${isActive ? 'text-white' : seen ? 'text-navy-600' : 'text-gray-500'}`}
                           aria-hidden="true"
                         />
                       </span>
                       <span className={`text-[14px] font-medium ${isActive ? 'text-white' : 'text-navy-800'}`}>
                         {s.label}
                       </span>
-                      <span className={`ml-auto text-[10px] tabular-nums ${isActive ? 'text-white/50' : 'text-gray-300'}`}>
+                      <span className={`ml-auto text-[10px] tabular-nums ${isActive ? 'text-white/70' : 'text-gray-500'}`}>
                         0{i + 1}
                       </span>
                     </button>
@@ -321,7 +321,7 @@ export default function ProductDemo() {
                 <div className="flex gap-1.5" aria-hidden="true">
                   {[0, 1, 2].map((i) => <div key={i} className="w-2.5 h-2.5 rounded-full bg-gray-200" />)}
                 </div>
-                <div className="flex-1 bg-gray-50 rounded-lg border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs truncate">
+                <div className="flex-1 bg-gray-50 rounded-lg border border-gray-200 px-3 py-1 text-[11px] text-gray-500 font-mono max-w-xs truncate">
                   mentable.com/{activeStage.url}
                 </div>
               </div>
@@ -337,8 +337,8 @@ export default function ProductDemo() {
             <p aria-live="polite" className="sr-only">
               Showing stage {activeIdx + 1} of {STAGES.length}: {activeStage.label}
             </p>
-            <p className="text-center text-[11px] text-gray-300 mt-3">
-              Illustrative demo using real Mentable capabilities.
+            <p className="text-center text-[11px] text-gray-500 mt-3">
+              A preview of the real product.
             </p>
           </div>
 

@@ -36,13 +36,13 @@ export default function HeroReveal() {
           Mentable
         </span>
         <span
-          className="text-gray-400 text-sm font-light motion-safe:transition-opacity motion-safe:duration-500"
+          className="text-gray-500 text-sm font-light motion-safe:transition-opacity motion-safe:duration-500"
           style={{ opacity: shown(2) ? 1 : 0 }}
         >
           {BRAND_PRONUNCIATION}
         </span>
         <span
-          className="text-gray-400 text-sm italic font-light motion-safe:transition-opacity motion-safe:duration-500"
+          className="text-gray-500 text-sm italic font-light motion-safe:transition-opacity motion-safe:duration-500"
           style={{ opacity: shown(2) ? 1 : 0 }}
         >
           adjective

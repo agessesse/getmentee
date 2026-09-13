@@ -5,7 +5,7 @@ import { ImageResponse } from 'next/og';
 // so it stays in sync with the wordmark and needs no asset pipeline.
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-export const alt = 'Mentable — Find someone worth learning from';
+export const alt = 'Mentable: find someone worth learning from';
 
 export default function OpengraphImage() {
   return new ImageResponse(

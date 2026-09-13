@@ -92,18 +92,18 @@ export default function HeroPair() {
                   priority
                 />
               )}
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/92 via-black/60 to-transparent px-3 pb-3 pt-12">
-                <p className="text-[10px] font-semibold text-white/85 uppercase tracking-[0.18em]">
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/85 to-transparent px-3 pb-3 pt-14">
+                <p className="text-[10px] font-semibold text-white uppercase tracking-[0.18em]">
                   {card.eyebrow}
                 </p>
-                <p className="text-[11px] font-bold text-white leading-tight mt-0.5">{card.name}</p>
-                <p className="text-[10px] text-white/80 mt-0.5 font-light">{card.sub}</p>
+                <p className="text-[12px] font-bold text-white leading-tight mt-0.5">{card.name}</p>
+                <p className="text-[11px] text-white/90 mt-0.5">{card.sub}</p>
 
                 <div
                   className="motion-safe:transition-all motion-safe:duration-300 overflow-hidden"
                   style={{ maxHeight: active ? 56 : 0, opacity: active ? 1 : 0, marginTop: active ? 8 : 0 }}
                 >
-                  <p className="text-[10px] font-semibold text-white/50 uppercase tracking-[0.18em] mb-1">
+                  <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1">
                     {card.revealLabel}
                   </p>
                   {card.reveal.map((t) => (

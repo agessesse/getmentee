@@ -373,7 +373,7 @@ export default function ProfileSetupPage() {
                 <TextInput type="number" value={graduationYear} onChange={(e) => setGraduationYear(e.target.value)} placeholder="2026" min="1990" max="2035" />
               </Field>
             </div>
-            <Field label="LinkedIn URL" hint="Optional — helps establish credibility">
+            <Field label="LinkedIn URL" hint="Optional. Helps establish credibility.">
               <TextInput value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} placeholder="https://linkedin.com/in/yourname" type="url" />
             </Field>
           </>
@@ -414,9 +414,9 @@ export default function ProfileSetupPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Experience level">
                 <SelectInput value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)}>
-                  <option value="beginner">Beginner — just getting started</option>
-                  <option value="intermediate">Intermediate — some exposure</option>
-                  <option value="advanced">Advanced — hands-on experience</option>
+                  <option value="beginner">Beginner: just getting started</option>
+                  <option value="intermediate">Intermediate: some exposure</option>
+                  <option value="advanced">Advanced: hands-on experience</option>
                 </SelectInput>
               </Field>
               <Field label="Preferred format">
@@ -427,7 +427,7 @@ export default function ProfileSetupPage() {
                 </SelectInput>
               </Field>
             </div>
-            <Field label="Bio" hint="Introduce yourself — your background, what you're working toward, why you're here.">
+            <Field label="Bio" hint="Introduce yourself: your background, what you're working toward, why you're here.">
               <TextArea rows={4} value={menteeBio} onChange={(e) => setMenteeBio(e.target.value)} placeholder="Junior at UNC Kenan-Flagler targeting investment banking. Active in the Financial Leadership Program and UNC Investment Club..." />
             </Field>
             <Field label="Timezone">

@@ -96,10 +96,10 @@ function MentorCard({
         <div className="px-0.5 h-[52px]">
           <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
           {(showTitle || showCompany) && (
-            <p className="text-[11px] text-gray-400 mt-1 leading-snug font-light line-clamp-2">
+            <p className="text-[11px] text-gray-500 mt-1 leading-snug font-light line-clamp-2">
               {showTitle && mentor.title}
               {showTitle && showCompany && ' · '}
-              {showCompany && <span className="text-navy-500 font-medium">{mentor.company}</span>}
+              {showCompany && <span className="text-navy-600 font-medium">{mentor.company}</span>}
             </p>
           )}
         </div>
@@ -115,7 +115,7 @@ export default function MentorCarousel() {
     <>
       <section className="py-16 sm:py-20 bg-cream-50" aria-labelledby="mentor-carousel-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
+          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-4">
             Willing to teach
           </p>
           <h2
@@ -123,8 +123,8 @@ export default function MentorCarousel() {
             className="font-serif text-navy-900 leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
-            People who walked it first —<br className="hidden sm:block" />{' '}
-            and chose to come back.
+            People who walked the path first,<br className="hidden sm:block" />{' '}
+            then came back to teach.
           </h2>
         </div></div>
 

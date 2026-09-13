@@ -14,7 +14,7 @@ I think you'd make an exceptional mentor. If you're open to it, you can create a
 
 https://getmentee.com/signup
 
-Takes under 5 minutes. You control how many mentees you take on and when you're available. No obligation — just a chance to open doors for the next generation the way someone once did for you.`;
+Takes under 5 minutes. You control how many mentees you take on and when you're available. No obligation. Just a chance to open a door for someone the way it was once opened for you.`;
 
 export default function InviteModal({ open, onClose }: InviteModalProps) {
   const [copied, setCopied] = useState(false);

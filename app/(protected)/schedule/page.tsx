@@ -209,7 +209,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
       </div>
 
       <p className="text-xs text-gray-400">
-        These are recurring weekly windows — they don&apos;t block specific dates or sync with external calendars.
+        These are recurring weekly windows. They do not block specific dates or sync with external calendars.
       </p>
     </div>
   );

@@ -73,7 +73,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
       <div className="flex items-center gap-2 mb-4">
         <FileText className="w-4 h-4 text-navy-600" />
         <h3 className="text-sm font-semibold text-navy-900">
-          Pre-Meeting Brief — {menteeName}
+          Pre-Meeting Brief: {menteeName}
         </h3>
       </div>
 

@@ -372,13 +372,13 @@ export default function OpportunitiesPage() {
         <h1 className="text-2xl font-bold text-navy-900 mb-3">Mentable Opportunity Fund</h1>
         <p className="text-gray-500 text-sm leading-relaxed max-w-2xl">
           A mentor can show you the next step. The Opportunity Fund is being built to make sure financial
-          barriers don&apos;t prevent you from taking it — covering targeted professional-development needs
+          barriers do not prevent you from taking it, covering targeted professional-development needs
           like attire, travel, networking, and career-development expenses for students with demonstrated financial need.
         </p>
         {!isMentee && (
           <div className="mt-4 p-4 bg-navy-50 border border-navy-100 rounded-xl text-sm text-navy-700">
             This program is designed for mentees with demonstrated financial need. As a mentor, you may be asked to endorse
-            a mentee&apos;s request as developmentally relevant — you&apos;ll never see their financial details.
+            a mentee&apos;s request as developmentally relevant. You will never see their financial details.
           </div>
         )}
       </div>
@@ -409,7 +409,7 @@ export default function OpportunitiesPage() {
         </h2>
         <p className="text-xs text-gray-400 mb-4">
           These are the types of professional-development needs the fund is designed to address.
-          Not every expense will qualify — eligibility depends on the specific fund and circumstances.
+          Not every expense will qualify. Eligibility depends on the specific fund and circumstances.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {CATEGORIES.map((cat) => <CategoryCard key={cat.key} cat={cat} />)}
@@ -425,12 +425,12 @@ export default function OpportunitiesPage() {
           <p>
             Eligibility for funded programs is intended for students with demonstrated financial need.
             Indicators may include Pell Grant receipt or eligibility, institutional need-based aid, first-generation
-            status, and other approved designations — but Pell eligibility is not the only path.
+            status, and other approved designations. Pell eligibility is not the only path.
           </p>
           <p>
             Mentable distinguishes between <strong className="text-navy-800">self-attested</strong> and{' '}
             <strong className="text-navy-800">verified</strong> information. Submitting a financial need profile
-            marks it as self-reported. Verification processes — where applicable — will be defined when specific
+            marks it as self-reported. Verification processes, where applicable, will be defined when specific
             funded programs launch.
           </p>
           <p>
@@ -458,7 +458,7 @@ export default function OpportunitiesPage() {
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
                   Self-reported information used for eligibility when funded programs launch.
-                  {' '}Your responses are private — mentors and other users cannot see them.
+                  {' '}Your responses are private. Mentors and other users cannot see them.
                 </p>
               </div>
               {needProfile && (
@@ -651,7 +651,7 @@ export default function OpportunitiesPage() {
             {interestSuccess && (
               <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl flex items-center gap-2 text-sm text-green-700">
                 <CheckCircle className="w-4 h-4" />
-                Thank you — we&apos;ve noted what would help you.
+                Thank you. We have noted what would help you.
               </div>
             )}
 

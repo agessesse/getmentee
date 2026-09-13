@@ -193,7 +193,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
                   <p className="text-sm font-semibold text-navy-900">{edu.institution}</p>
                   {edu.degree && (
                     <p className="text-xs text-gray-500">
-                      {edu.degree}{edu.field ? ` — ${edu.field}` : ''}
+                      {edu.degree}{edu.field ? `: ${edu.field}` : ''}
                     </p>
                   )}
                   {!edu.degree && edu.field && (
@@ -392,7 +392,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
           .filter(Boolean)
           .join(' · ') || 'Mentee';
 
-  const title = `${name}${credential} — ${role}`;
+  const title = `${name}${credential}, ${role}`;
   const description = p.bio.length > 155 ? `${p.bio.slice(0, 152)}…` : p.bio;
   const canonical = `/people/${p.slug}`;
 

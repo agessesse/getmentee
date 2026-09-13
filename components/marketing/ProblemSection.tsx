@@ -8,14 +8,14 @@ const SIDES = [
     who: 'Student',
     line: 'I don’t know who to ask.',
     detail:
-      'Finding the name is easy. Knowing what to ask — and how to turn one reply into a relationship — is not.',
+      'Finding a name is easy. Knowing what to ask, and how to turn one reply into an ongoing relationship, is not.',
   },
   {
     id: 'professional',
     who: 'Professional',
     line: 'I want to help, but requests go nowhere.',
     detail:
-      'Messages arrive with no context and no follow-through, so good intentions quietly decay.',
+      'Requests arrive with no context and no follow-up, so people who want to help end up doing nothing.',
   },
 ] as const;
 
@@ -52,7 +52,7 @@ export default function ProblemSection() {
                     : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">
+                <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em] mb-3">
                   {side.who}
                 </p>
                 <p className="font-serif text-navy-900 text-[21px] sm:text-[24px] leading-snug">
@@ -68,7 +68,7 @@ export default function ProblemSection() {
                   }}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-gray-500 font-light text-[14px] leading-relaxed">
+                    <p className="text-gray-500 text-[15px] leading-relaxed">
                       {side.detail}
                     </p>
                   </div>
@@ -81,7 +81,7 @@ export default function ProblemSection() {
         {/* Convergence */}
         <div className="flex flex-col items-center mt-10" aria-hidden="true">
           <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em] py-2.5">
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] py-2.5">
             Luck
           </p>
           <div className="w-px h-8 bg-gradient-to-b from-gray-300 to-navy-900" />
@@ -91,7 +91,7 @@ export default function ProblemSection() {
           Mentable
         </p>
         <p className="text-center text-gray-500 font-light text-[15px] mt-2.5 max-w-sm mx-auto leading-relaxed">
-          Both sides, connected on purpose — with somewhere to go next.
+          Mentable replaces the luck with a process.
         </p>
       </div>
     </section>

@@ -158,7 +158,7 @@ export default function TrajectoryViz() {
         <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
 
           <div>
-            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-navy-400 uppercase tracking-[0.22em] mb-5">
               The difference
             </p>
             <h2
@@ -166,7 +166,7 @@ export default function TrajectoryViz() {
               className="font-serif text-white leading-[1.05] mb-4"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
-              Same start.<br />Different doors.
+              What changes when<br />someone has done it before.
             </h2>
 
             {/* Reserved height: the hint is replaced in place by the hovered
@@ -188,9 +188,9 @@ export default function TrajectoryViz() {
               </p>
             </div>
 
-            <p className="text-[11px] text-navy-600 font-light mt-6 max-w-xs leading-relaxed">
-              Illustrative. Mentorship changes what&apos;s reachable — it
-              doesn&apos;t guarantee an outcome.
+            <p className="text-[11px] text-navy-300 font-light mt-6 max-w-xs leading-relaxed">
+              Illustrative. Mentorship changes what is reachable. It does not
+              guarantee an outcome.
             </p>
           </div>
 
@@ -222,7 +222,7 @@ export default function TrajectoryViz() {
               strokeDasharray="5 6"
               fill="none"
             />
-            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#3d4a8f" fontSize={11 * k} fontWeight="500">
+            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#879bd3" fontSize={11 * k} fontWeight="500">
               without mentorship
             </text>
 

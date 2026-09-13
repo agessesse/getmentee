@@ -216,7 +216,7 @@ export default function BookingModal({
         {daySlots.length > 0 && (
           <div>
             <p className="text-xs text-gray-500 mb-2">
-              Available windows on {DAYS[selectedDow!]} — click to auto-fill:
+              Available windows on {DAYS[selectedDow!]}. Click to auto-fill:
             </p>
             <div className="flex flex-wrap gap-2">
               {daySlots.map((slot) => {
@@ -245,7 +245,7 @@ export default function BookingModal({
         {/* Warning when chosen date doesn't align with any available window */}
         {form.date && slots.length > 0 && daySlots.length === 0 && (
           <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
-            The mentor hasn&apos;t listed availability for {DAYS[selectedDow!]}s. You can still book — they&apos;ll receive a notification to confirm.
+            The mentor hasn&apos;t listed availability for {DAYS[selectedDow!]}s. You can still book. They will receive a notification to confirm.
           </p>
         )}
 

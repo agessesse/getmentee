@@ -107,14 +107,14 @@ export default function CarouselShell<T>({
           style={{ opacity: driveDirection === 0 ? 0 : 0.65 }}
           aria-hidden="true"
         >
-          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-navy-400">
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-navy-600">
             {driveDirection > 0 ? 'more →' : '← more'}
           </span>
         </div>
       )}
 
       {nativeScroll && (
-        <p className="text-center text-[11px] text-gray-400 font-light mt-1">
+        <p className="text-center text-[11px] text-gray-500 font-light mt-1">
           Swipe to explore
         </p>
       )}

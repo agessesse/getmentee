@@ -420,8 +420,8 @@ export default function DashboardPage() {
               </h1>
               <p className="text-gray-500 mt-1 text-sm">
                 {isMentee
-                  ? 'Your mentorship dashboard — goals, sessions, and connections.'
-                  : 'Your mentoring overview — requests, mentees, and impact.'}
+                  ? 'Goals, sessions, and connections.'
+                  : 'Requests, mentees, and impact.'}
               </p>
             </div>
           </div>
@@ -531,8 +531,8 @@ export default function DashboardPage() {
           </div>
           <p className="text-gray-500 mt-1 text-sm">
             {isMentee
-              ? 'Your mentorship dashboard — goals, sessions, and connections.'
-              : 'Your mentoring overview — requests, mentees, and impact.'}
+              ? 'Goals, sessions, and connections.'
+              : 'Requests, mentees, and impact.'}
           </p>
         </div>
 
@@ -820,7 +820,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-              Professional-development funding for students with demonstrated financial need — attire, travel, networking, and more.
+              Professional-development funding for students with demonstrated financial need. Attire, travel, networking, and more.
             </p>
           </div>
           <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-500 transition-colors flex-shrink-0 mt-3" />
@@ -835,7 +835,7 @@ export default function DashboardPage() {
           </h2>
           <p className="text-navy-300 text-sm mb-5 font-light">
             {isMentee
-              ? 'Browse mentors at leading firms — professionals ready to help you build your path.'
+              ? 'Browse mentors at leading firms. Professionals ready to help you build your path.'
               : 'Your profile is live. Set your availability and start accepting requests.'}
           </p>
           <div className="flex flex-wrap gap-3">

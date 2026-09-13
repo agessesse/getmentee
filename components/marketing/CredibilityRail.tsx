@@ -54,7 +54,7 @@ function Affiliation({ name }: { name: string }) {
 export default function CredibilityRail() {
   return (
     <div className="py-9 border-y border-gray-100 bg-white overflow-hidden">
-      <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.18em] text-center mb-6 px-6">
+      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.18em] text-center mb-6 px-6">
         People on Mentable have studied and worked at
       </p>
 

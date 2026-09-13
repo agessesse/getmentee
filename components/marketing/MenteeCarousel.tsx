@@ -116,7 +116,7 @@ function MenteeCard({
         {/* Fixed height keeps every card's baseline aligned regardless of name length */}
         <div className="px-0.5 h-[52px]">
           <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{fullName}</p>
-          <p className="text-[11px] text-gray-400 mt-1 font-light">
+          <p className="text-[11px] text-gray-500 mt-1 font-light">
             {school}
             {school && gradYear && ' · '}
             {gradYear}
@@ -140,7 +140,7 @@ export default function MenteeCarousel() {
     <>
       <section className="py-16 sm:py-20 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
+          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-4">
             Ready to learn
           </p>
           <h2
@@ -148,8 +148,8 @@ export default function MenteeCarousel() {
             className="font-serif text-navy-900 leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
-            Ambition gets you started.<br className="hidden sm:block" />{' '}
-            Coachability moves you forward.
+            Students who come prepared<br className="hidden sm:block" />{' '}
+            and follow through.
           </h2>
         </div></div>
 

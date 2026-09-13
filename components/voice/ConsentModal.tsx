@@ -36,8 +36,8 @@ export default function ConsentModal({
           </p>
           <ul className="space-y-2 pl-4">
             <li className="list-disc">
-              Everyone in the conversation — <span className="font-medium">{mentorName}</span> and{' '}
-              <span className="font-medium">{menteeName}</span> — should consent before recording
+              Everyone in the conversation, <span className="font-medium">{mentorName}</span> and{' '}
+              <span className="font-medium">{menteeName}</span>, should consent before recording
               begins.
             </li>
             <li className="list-disc">
