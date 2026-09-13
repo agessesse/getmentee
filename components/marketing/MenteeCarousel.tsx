@@ -141,7 +141,7 @@ export default function MenteeCarousel() {
       <section className="py-14 sm:py-16 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-9">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-            Who this is built for
+            Ready to learn
           </p>
           <h2
             id="mentees-heading"
@@ -177,10 +177,10 @@ export default function MenteeCarousel() {
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mt-8">
           <Link
             href="/signup"
-            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'im_ready_to_learn' })}
+            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
             className="group inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >
-            I&apos;m ready to learn
+            Create your profile
             <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
           </Link>
         </div>

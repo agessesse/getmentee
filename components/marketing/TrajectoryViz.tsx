@@ -134,7 +134,7 @@ export default function TrajectoryViz() {
             className="font-serif text-white leading-[1.05] mb-4"
             style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
           >
-            The right mentor can<br />change your trajectory.
+            Same start.<br />Different doors.
           </h2>
           <p className="text-navy-400 font-light text-[14px]">
             {reduced ? 'Guidance widens the set of paths available to you.'
@@ -241,7 +241,7 @@ export default function TrajectoryViz() {
         </div>
 
         <p className="text-[11px] text-navy-600 font-light text-center max-w-md mx-auto">
-          Illustrative. Mentorship changes the paths available to you — it does not
+          Illustrative. Mentorship changes what&apos;s reachable — it doesn&apos;t
           guarantee an outcome.
         </p>
       </div>

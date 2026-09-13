@@ -19,7 +19,6 @@ const AFFILIATIONS = [
   'Duke University',
   'Fifth Third Securities',
   'Columbia University',
-  'JPMorganChase',
   'UC Berkeley',
   'Georgetown University',
   'Envoy Capital Advisors',
@@ -76,8 +75,8 @@ export default function CredibilityRail() {
 
       {/* Static, readable equivalent for screen readers and reduced motion */}
       <p className="sr-only">
-        Affiliations include {AFFILIATIONS.join(', ')}. These are the institutions
-        that people on Mentable have studied or worked at, not endorsements of Mentable.
+        Institutions that people on Mentable have studied or worked at:
+        {AFFILIATIONS.join(', ')}. Not endorsements of Mentable.
       </p>
     </div>
   );

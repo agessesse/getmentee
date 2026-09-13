@@ -18,16 +18,14 @@ import InviteModal from '@/components/marketing/InviteModal';
 import Wordmark from '@/components/ui/Wordmark';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 
-// One outcome carries the section; the rest support it. Equal weighting across
-// six cards was what made this read as filler.
+// Four outcomes, weighted: two carry the section, each with one supporting
+// idea. Six equally sized cards read as filler and blunted all of them.
 const LEAD_OUTCOMES = [
   { label: 'Clarity', body: 'Know what the path actually looks like, not how it’s described in a brochure.' },
   { label: 'Opportunity', body: 'Preparation is what turns an introduction into a possibility.' },
 ];
 
 const SUPPORTING_OUTCOMES = [
-  { label: 'Confidence', body: 'Walk into rooms with context you didn’t have before.' },
-  { label: 'Perspective', body: 'Borrow lessons that took someone else a decade to learn.' },
   { label: 'Accountability', body: 'Turn conversations into commitments someone else is watching.' },
   { label: 'Reciprocity', body: 'Eventually become the person you once needed.' },
 ];
@@ -70,8 +68,8 @@ export default function LandingPage() {
               </h1>
 
               <p className="text-lg sm:text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-10">
-                Mentable connects ambitious students with people who have walked
-                the path ahead — and chose to come back.
+                Mentable connects ambitious students with professionals who have
+                already made the decisions they&apos;re facing.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
@@ -125,10 +123,10 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <h2
             id="outcomes-heading"
-            className="font-serif text-navy-900 leading-[1.05] mb-12 max-w-lg"
+            className="font-serif text-navy-900 leading-[1.05] mb-12 max-w-xl"
             style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
           >
-            What you actually walk away with.
+            What you actually<br className="hidden sm:block" /> walk away with.
           </h2>
 
           <div className="space-y-10">
@@ -141,14 +139,15 @@ export default function LandingPage() {
                   >
                     {lead.label}
                   </p>
-                  <p className="text-gray-500 font-light text-[15px] leading-relaxed max-w-md">
-                    {lead.body}
-                  </p>
-                </div>
 
-                {/* Two supporting concepts sit under each lead, revealing on hover */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 mt-7 pt-6 border-t border-gray-100">
-                  {SUPPORTING_OUTCOMES.slice(i * 2, i * 2 + 2).map((s) => (
+                  {/* The supporting idea nests under its lead's description so it
+                      reads as subordinate rather than floating in the gutter. */}
+                  <div className="max-w-md">
+                    <p className="text-gray-500 font-light text-[15px] leading-relaxed">
+                      {lead.body}
+                    </p>
+                    <div className="mt-6 pt-5 border-t border-gray-100">
+                      {SUPPORTING_OUTCOMES.slice(i, i + 1).map((s) => (
                     <button
                       key={s.label}
                       onPointerEnter={() => setOutcome(s.label)}
@@ -174,8 +173,10 @@ export default function LandingPage() {
                           <p className="text-gray-500 font-light text-[13.5px] leading-relaxed">{s.body}</p>
                         </div>
                       </div>
-                    </button>
-                  ))}
+                      </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -192,7 +193,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div>
               <p className="text-[11px] font-semibold text-amber-400 uppercase tracking-[0.22em] mb-5">
-                Beyond advice
+                A Mentable initiative
               </p>
               <h2
                 id="fund-heading"
@@ -202,13 +203,11 @@ export default function LandingPage() {
                 Preparation shouldn&apos;t<br />depend on a budget.
               </h2>
               <p className="text-navy-300 leading-relaxed mb-4 font-light text-[15px] max-w-md">
-                For students with demonstrated financial need, Mentable is building
-                an Opportunity Fund to remove the practical barriers between
-                guidance and action.
+                For students with demonstrated financial need, we&apos;re building a
+                fund to remove the practical barriers between guidance and action.
               </p>
               <p className="text-navy-500 text-[13px] leading-relaxed mb-7">
-                The Opportunity Fund is in its pilot phase. We are building
-                partnerships to fund the first cohort.
+                In pilot. We&apos;re building partnerships to fund the first cohort.
               </p>
               <Link
                 href="/signup"
@@ -268,7 +267,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <p className="text-gray-400 text-sm mt-6">
-            Free to join. Know someone worth learning from?{' '}
+            Free to join. Know someone who should be here?{' '}
             <button
               onClick={() => setInviteOpen(true)}
               className="text-navy-600 underline underline-offset-2 hover:text-navy-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"

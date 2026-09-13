@@ -8,14 +8,14 @@ const SIDES = [
     who: 'Student',
     line: 'I don’t know who to ask.',
     detail:
-      'Finding the name is easy. Knowing what to ask, how to ask it, and how to turn one reply into a relationship — nobody teaches that.',
+      'Finding the name is easy. Knowing what to ask — and how to turn one reply into a relationship — is not.',
   },
   {
     id: 'professional',
     who: 'Professional',
     line: 'I want to help, but requests go nowhere.',
     detail:
-      'Messages arrive with no context and no follow-through. There is no structure for mentoring consistently, so good intentions decay.',
+      'Messages arrive with no context and no follow-through, so good intentions quietly decay.',
   },
 ] as const;
 
@@ -91,8 +91,7 @@ export default function ProblemSection() {
           Mentable
         </p>
         <p className="text-center text-gray-500 font-light text-[14.5px] mt-2.5 max-w-sm mx-auto leading-relaxed">
-          Both sides, connected on purpose — with somewhere for the relationship
-          to go after the first conversation.
+          Both sides, connected on purpose — with somewhere to go next.
         </p>
       </div>
     </section>

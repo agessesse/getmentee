@@ -116,7 +116,7 @@ export default function MentorCarousel() {
       <section className="py-14 sm:py-16 bg-cream-50" aria-labelledby="mentor-carousel-heading">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-9">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
-            Who you could learn from
+            Willing to teach
           </p>
           <h2
             id="mentor-carousel-heading"
@@ -152,10 +152,10 @@ export default function MentorCarousel() {
         <div className="max-w-6xl mx-auto px-6 lg:px-10 mt-8">
           <Link
             href="/signup"
-            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'see_who_you_could_learn_from' })}
+            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
             className="group inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >
-            See who you could learn from
+            Meet the mentors
             <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
           </Link>
         </div>

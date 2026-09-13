@@ -10,7 +10,7 @@ const STAGES = [
   { id: 'discover', label: 'Discover', icon: Search,   url: 'discover' },
   { id: 'request',  label: 'Request',  icon: Send,     url: 'requests' },
   { id: 'goals',    label: 'Goals',    icon: Target,   url: 'goals' },
-  { id: 'session',  label: 'Session',  icon: Calendar, url: 'schedule' },
+  { id: 'session',  label: 'Sessions', icon: Calendar, url: 'schedule' },
 ] as const;
 
 type StageId = (typeof STAGES)[number]['id'];
@@ -260,10 +260,10 @@ export default function ProductDemo() {
               className="font-serif text-navy-900 leading-[1.05] mb-5"
               style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
             >
-              Not a directory.<br />A structured relationship.
+              Not a directory.<br />A relationship with direction.
             </h2>
-            <p className="text-gray-500 font-light text-[15px] leading-relaxed mb-7 max-w-sm">
-              Walk the loop yourself.
+            <p className="text-gray-500 font-light text-[15px] leading-relaxed mb-7 max-w-md">
+              Discover the right person. Ask intentionally. Set goals. Keep moving.
             </p>
 
             <ol className="space-y-1" role="tablist" aria-label="Product stages">

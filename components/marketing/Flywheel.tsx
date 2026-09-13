@@ -30,7 +30,7 @@ export default function Flywheel() {
 
           <div>
             <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
-              What mentorship creates
+              How it compounds
             </p>
             <h2
               id="flywheel-heading"
