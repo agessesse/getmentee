@@ -39,11 +39,11 @@ function Discover({ onPick }: { onPick: () => void }) {
           <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="56px" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
+          <p className="text-[14px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
           <p className="text-[11px] text-gray-400 font-light truncate">{MENTOR.role}</p>
           <div className="flex flex-wrap gap-1 mt-1.5">
             {MENTOR.helps.map((t) => (
-              <span key={t} className="text-[9px] font-medium text-navy-700 bg-navy-50 rounded-full px-2 py-0.5">{t}</span>
+              <span key={t} className="text-[10px] font-medium text-navy-700 bg-navy-50 rounded-full px-2 py-0.5">{t}</span>
             ))}
           </div>
         </div>
@@ -57,7 +57,7 @@ function Discover({ onPick }: { onPick: () => void }) {
         <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white/60 rounded-xl border border-gray-100 opacity-55">
           <div className="w-14 h-14 rounded-xl flex-none bg-navy-100" />
           <div className="min-w-0">
-            <p className="text-[13px] font-semibold text-navy-900 truncate">{m.n}</p>
+            <p className="text-[14px] font-semibold text-navy-900 truncate">{m.n}</p>
             <p className="text-[11px] text-gray-400 font-light truncate">{m.r}</p>
           </div>
         </div>
@@ -118,7 +118,7 @@ function Request({ onSend }: { onSend: () => void }) {
       >
         {sent ? 'Request sent — Christopher accepted' : 'Request mentorship'}
       </button>
-      <p className="text-[9.5px] text-gray-300 text-center">Nothing is actually sent from this demo.</p>
+      <p className="text-[10px] text-gray-300 text-center">Nothing is actually sent from this demo.</p>
     </div>
   );
 }
@@ -132,11 +132,11 @@ function Goals({ onNext }: { onNext: () => void }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-[12px] font-semibold text-navy-900">Shared goal</p>
-        <span className="text-[9px] font-semibold text-green-700 bg-green-50 rounded-full px-2 py-0.5">Active</span>
+        <span className="text-[10px] font-semibold text-green-700 bg-green-50 rounded-full px-2 py-0.5">Active</span>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[13px] font-semibold text-navy-900 leading-snug">
+        <p className="text-[14px] font-semibold text-navy-900 leading-snug">
           Understand fixed-income career paths
         </p>
         <p className="text-[10px] text-gray-400 mt-1">Target: June 2027 · with Christopher</p>
@@ -164,7 +164,7 @@ function Goals({ onNext }: { onNext: () => void }) {
             </button>
           ))}
         </div>
-        <p className="text-[9.5px] text-gray-300 mt-2 pl-2">Try checking one off.</p>
+        <p className="text-[10px] text-gray-300 mt-2 pl-2">Try checking one off.</p>
       </div>
 
       <button
@@ -183,7 +183,7 @@ function Session() {
   return (
     <div className="space-y-3.5">
       <div className="bg-navy-900 rounded-xl p-4">
-        <p className="text-[9px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
+        <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-navy-700">
             <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
@@ -258,7 +258,7 @@ export default function ProductDemo() {
             <h2
               id="product-demo-heading"
               className="font-serif text-navy-900 leading-[1.05] mb-5"
-              style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
               Not a directory.<br />A relationship with direction.
             </h2>
@@ -307,7 +307,7 @@ export default function ProductDemo() {
             <Link
               href="/signup"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'start_building_your_mentorship' })}
-              className="group inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+              className="group tap-target inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
               Start building your mentorship
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
@@ -321,7 +321,7 @@ export default function ProductDemo() {
                 <div className="flex gap-1.5" aria-hidden="true">
                   {[0, 1, 2].map((i) => <div key={i} className="w-2.5 h-2.5 rounded-full bg-gray-200" />)}
                 </div>
-                <div className="flex-1 bg-gray-50 rounded border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs truncate">
+                <div className="flex-1 bg-gray-50 rounded-lg border border-gray-200 px-3 py-1 text-[11px] text-gray-400 font-mono max-w-xs truncate">
                   mentable.com/{activeStage.url}
                 </div>
               </div>

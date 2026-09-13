@@ -18,8 +18,8 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 // coupling it to card hover as well made the two fight, since cards tile the
 // entire strip and left every card permanently creeping under the cursor.
 const DEAD_ZONE = 0.34;
-const MAX_VELOCITY = 780; // px/sec at the outer edge
-const IDLE_VELOCITY = 26; // px/sec ambient drift when pointer is away
+const MAX_VELOCITY = 520; // px/sec at the outer edge — slow enough to read names
+const IDLE_VELOCITY = 20; // px/sec ambient drift when pointer is away
 const DAMPING = 5.5;      // higher = velocity converges on target faster
 const MAX_FRAME_MS = 50;  // clamp dt so tab-switches don't teleport the track
 

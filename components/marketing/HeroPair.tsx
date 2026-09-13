@@ -30,7 +30,7 @@ export default function HeroPair() {
         trackLandingEvent('mentor_card_opened', { name: MENTOR.name, surface: 'hero' });
         setPreview({ kind: 'mentor', data: MENTOR });
       },
-      box: 'absolute top-0 right-2 w-[196px] h-[268px] rotate-[2.5deg]',
+      box: 'absolute top-0 right-0 w-[190px] h-[260px] rotate-[2.5deg]',
     },
     {
       id: 'student' as const,
@@ -45,7 +45,7 @@ export default function HeroPair() {
         trackLandingEvent('mentee_card_opened', { slug: STUDENT.slug, surface: 'hero' });
         setPreview({ kind: 'mentee', data: STUDENT });
       },
-      box: 'absolute bottom-0 left-2 w-[172px] h-[236px] rotate-[-2.5deg]',
+      box: 'absolute bottom-0 left-0 w-[172px] h-[232px] rotate-[-2.5deg]',
     },
   ];
 
@@ -55,11 +55,11 @@ export default function HeroPair() {
         {/* Relationship line — brightens when either side is engaged */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 340 392"
+          viewBox="0 0 400 392"
           aria-hidden="true"
         >
           <line
-            x1="118" y1="268" x2="222" y2="132"
+            x1="150" y1="176" x2="238" y2="248"
             stroke={hover ? '#5265b0' : '#c0cbe9'}
             strokeWidth={hover ? 1.8 : 1}
             strokeDasharray="4 5"
@@ -92,18 +92,18 @@ export default function HeroPair() {
                   priority
                 />
               )}
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 to-transparent px-3 pb-3 pt-10">
-                <p className="text-[9px] font-semibold text-white/70 uppercase tracking-[0.22em]">
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/92 via-black/60 to-transparent px-3 pb-3 pt-12">
+                <p className="text-[10px] font-semibold text-white/85 uppercase tracking-[0.18em]">
                   {card.eyebrow}
                 </p>
                 <p className="text-[11px] font-bold text-white leading-tight mt-0.5">{card.name}</p>
-                <p className="text-[10px] text-white/70 mt-0.5 font-light">{card.sub}</p>
+                <p className="text-[10px] text-white/80 mt-0.5 font-light">{card.sub}</p>
 
                 <div
                   className="motion-safe:transition-all motion-safe:duration-300 overflow-hidden"
                   style={{ maxHeight: active ? 56 : 0, opacity: active ? 1 : 0, marginTop: active ? 8 : 0 }}
                 >
-                  <p className="text-[8px] font-bold text-white/50 uppercase tracking-[0.18em] mb-1">
+                  <p className="text-[10px] font-semibold text-white/50 uppercase tracking-[0.18em] mb-1">
                     {card.revealLabel}
                   </p>
                   {card.reveal.map((t) => (

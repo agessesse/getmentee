@@ -76,3 +76,21 @@ a:hover .arrow-slide,
 button:hover .arrow-slide {
   transform: translateX(4px);
 }
+
+/* ── Touch target expansion ──
+   Inline text links sit at 20–28px tall, well under the 44px comfortable-tap
+   threshold. This grows the hit area vertically via a pseudo-element so the
+   underline stays tight against the text and nothing reflows. Scoped to coarse
+   pointers, so mouse hit areas remain exactly as designed. */
+@media (pointer: coarse) {
+  .tap-target { position: relative; }
+  .tap-target::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 44px;
+  }
+}

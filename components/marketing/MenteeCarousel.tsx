@@ -64,7 +64,7 @@ function MenteeCard({
         onFocus={() => interactive && onHoverChange(true)}
         onBlur={() => interactive && onHoverChange(false)}
         className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
-        style={{ transform: hovered ? 'translateY(-6px) scale(1.045)' : 'none' }}
+        style={{ transform: hovered ? 'translateY(-6px) scale(1.025)' : 'none' }}
         aria-label={`View ${fullName}'s profile`}
       >
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
@@ -77,7 +77,7 @@ function MenteeCard({
               style={{
                 objectPosition: person.portraitPosition ?? '50% 20%',
                 filter: hovered ? 'grayscale(0)' : 'grayscale(1)',
-                transform: hovered ? 'scale(1.05)' : 'scale(1)',
+                transform: hovered ? 'scale(1.02)' : 'scale(1)',
               }}
               sizes="228px"
               priority={index < 4}
@@ -98,7 +98,7 @@ function MenteeCard({
               transform: hovered ? 'translateY(0)' : 'translateY(8px)',
             }}
           >
-            <p className="text-[8.5px] font-bold text-white/60 uppercase tracking-[0.2em] mb-1.5">
+            <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
               Learning about
             </p>
             {person.interestTags.slice(0, 2).map((tag) => (
@@ -138,8 +138,8 @@ export default function MenteeCarousel() {
 
   return (
     <>
-      <section className="py-14 sm:py-16 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 mb-9">
+      <section className="py-16 sm:py-20 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
+        <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-4">
             Ready to learn
           </p>
@@ -151,7 +151,7 @@ export default function MenteeCarousel() {
             Ambition gets you started.<br className="hidden sm:block" />{' '}
             Coachability moves you forward.
           </h2>
-        </div>
+        </div></div>
 
         <CarouselShell
           items={SOURCED_NEAR_PEERS}
@@ -174,16 +174,16 @@ export default function MenteeCarousel() {
           )}
         />
 
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 mt-8">
+        <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <Link
             href="/signup"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
-            className="group inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+            className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >
             Create your profile
             <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
           </Link>
-        </div>
+        </div></div>
       </section>
 
       <ProfilePreviewModal target={preview} onClose={() => setPreview(null)} />

@@ -199,7 +199,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                     {statementSectionLabel}
                   </p>
                   {statementLabel && (
-                    <span className="text-[9px] font-medium text-gray-400 uppercase tracking-[0.08em] border border-gray-200 rounded-full px-1.5 py-0.5">
+                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.08em] border border-gray-200 rounded-full px-1.5 py-0.5">
                       {statementLabel}
                     </span>
                   )}

@@ -31,7 +31,7 @@ export default function ProblemSection() {
         <h2
           id="problem-heading"
           className="font-serif text-navy-900 leading-[1.06] text-center mb-14 mx-auto max-w-2xl"
-          style={{ fontSize: 'clamp(2.1rem, 5vw, 3.4rem)' }}
+          style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
         >
           Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
         </h2>
@@ -52,10 +52,10 @@ export default function ProblemSection() {
                     : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.2em] mb-3">
+                <p className="text-[10px] font-semibold text-navy-400 uppercase tracking-[0.18em] mb-3">
                   {side.who}
                 </p>
-                <p className="font-serif text-navy-900 text-[21px] sm:text-[23px] leading-snug">
+                <p className="font-serif text-navy-900 text-[21px] sm:text-[24px] leading-snug">
                   “{side.line}”
                 </p>
                 {/* Grid-rows trick animates height without measuring anything */}
@@ -68,7 +68,7 @@ export default function ProblemSection() {
                   }}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-gray-500 font-light text-[13.5px] leading-relaxed">
+                    <p className="text-gray-500 font-light text-[14px] leading-relaxed">
                       {side.detail}
                     </p>
                   </div>
@@ -90,7 +90,7 @@ export default function ProblemSection() {
         <p className="text-center font-serif text-navy-900 text-[26px] sm:text-[30px] mt-3">
           Mentable
         </p>
-        <p className="text-center text-gray-500 font-light text-[14.5px] mt-2.5 max-w-sm mx-auto leading-relaxed">
+        <p className="text-center text-gray-500 font-light text-[15px] mt-2.5 max-w-sm mx-auto leading-relaxed">
           Both sides, connected on purpose — with somewhere to go next.
         </p>
       </div>

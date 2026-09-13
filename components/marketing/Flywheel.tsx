@@ -25,7 +25,7 @@ export default function Flywheel() {
 
   return (
     <section className="py-20 sm:py-24 px-6 lg:px-10 bg-cream-50 border-t border-gray-100" aria-labelledby="flywheel-heading">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
           <div>
@@ -35,21 +35,21 @@ export default function Flywheel() {
             <h2
               id="flywheel-heading"
               className="font-serif text-navy-900 leading-[1.05] mb-5"
-              style={{ fontSize: 'clamp(2.1rem, 4.8vw, 3.3rem)' }}
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
               It doesn&apos;t end<br />with you.
             </h2>
 
             {/* Reserved height keeps the layout still as the label changes */}
             <div className="min-h-[76px] border-l-2 border-navy-200 pl-5">
-              <p className="font-serif text-navy-900 text-[26px] leading-none mb-1.5">
+              <p className="font-serif text-navy-900 text-[24px] leading-none mb-1.5">
                 {stage.verb}
               </p>
-              <p className="text-gray-500 font-light text-[14.5px]">{stage.line}</p>
+              <p className="text-gray-500 font-light text-[15px]">{stage.line}</p>
             </div>
 
             <p
-              className="text-[13px] text-navy-600 font-medium mt-6 transition-opacity duration-500"
+              className="text-[14px] text-navy-600 font-medium mt-6 transition-opacity duration-500"
               style={{ opacity: isReturn ? 1 : 0.35 }}
             >
               …and the cycle starts again, one person further along.

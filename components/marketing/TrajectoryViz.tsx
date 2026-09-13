@@ -43,28 +43,35 @@ export default function TrajectoryViz() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [lift, setLift] = useState(0);
   const [reduced, setReduced] = useState(false);
+  const [coarse, setCoarse] = useState(false);
+  // Rendered width of the SVG, used to keep label size constant across
+  // viewports. A fixed breakpoint multiplier over-scaled tablets badly.
+  const [svgW, setSvgW] = useState(700);
   const [activeNode, setActiveNode] = useState<number | null>(null);
 
   // Target lift lives in a ref; a RAF loop eases the rendered value toward it
   // so pointer movement never drives a render at pointer frequency.
   const target = useRef(0);
   const raf = useRef(0);
+  // Set once the pointer takes over, so the entry animation yields to it.
+  const scrubbed = useRef(false);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
+    const cq = window.matchMedia('(pointer: coarse)');
+    const onChange = () => { setReduced(mq.matches); setCoarse(cq.matches); };
+    onChange();
     mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+    cq.addEventListener('change', onChange);
+    return () => { mq.removeEventListener('change', onChange); cq.removeEventListener('change', onChange); };
   }, []);
 
-  // Touch and reduced-motion get a single scroll-triggered resolve instead of
-  // continuous pointer control.
+  // Every device resolves the curve once on scroll-in, so the section is never
+  // blank; mouse users can then scrub it with the pointer.
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    const coarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
-    if (!coarse && !reduced) return;
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -72,6 +79,7 @@ export default function TrajectoryViz() {
         if (reduced) { setLift(1); io.disconnect(); return; }
         const started = performance.now();
         const tick = (now: number) => {
+          if (scrubbed.current) return;
           const p = Math.min((now - started) / 1100, 1);
           setLift(1 - Math.pow(1 - p, 3));
           if (p < 1) requestAnimationFrame(tick);
@@ -103,19 +111,41 @@ export default function TrajectoryViz() {
 
   useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
 
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => {
+      const w = e.contentRect.width;
+      if (w > 0) setSvgW(w);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== 'mouse' || reduced) return;
     const { left, width } = e.currentTarget.getBoundingClientRect();
-    target.current = Math.min(Math.max((e.clientX - left) / width, 0), 1);
+    // Floor at 0.25 so the curve never collapses while being scrubbed.
+    scrubbed.current = true;
+    const t = (e.clientX - left) / width;
+    target.current = Math.min(Math.max(t, 0.25), 1);
     startLoop();
   };
+
+  const RESTING_LIFT = 1;
 
   const handleLeave = () => {
     if (reduced) return;
-    target.current = 0;
+    // Settle back to fully resolved rather than collapsing to a flat line.
+    target.current = RESTING_LIFT;
     startLoop();
   };
 
+  // The viewBox is a fixed 720 units wide, so anything inside it shrinks in
+  // proportion to the rendered width. Scaling by 700/width holds glyphs at a
+  // near-constant on-screen size from a 342px phone to a 1000px desktop.
+  const k = Math.min(2.2, Math.max(0.85, 700 / svgW));
+  const narrow = svgW < 480;
   const mentorPt = curvePoint(MENTOR_T, lift);
   const active = activeNode !== null ? NODES[activeNode] : null;
 
@@ -124,23 +154,45 @@ export default function TrajectoryViz() {
       className="py-20 sm:py-24 px-6 lg:px-10 bg-navy-900 overflow-hidden"
       aria-labelledby="trajectory-heading"
     >
-      <div className="max-w-5xl mx-auto">
-        <div className="max-w-xl mb-10">
-          <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
-            The difference
-          </p>
-          <h2
-            id="trajectory-heading"
-            className="font-serif text-white leading-[1.05] mb-4"
-            style={{ fontSize: 'clamp(2rem, 4.6vw, 3.2rem)' }}
-          >
-            Same start.<br />Different doors.
-          </h2>
-          <p className="text-navy-400 font-light text-[14px]">
-            {reduced ? 'Guidance widens the set of paths available to you.'
-                     : 'Move across the chart.'}
-          </p>
-        </div>
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
+
+          <div>
+            <p className="text-[11px] font-semibold text-navy-500 uppercase tracking-[0.22em] mb-5">
+              The difference
+            </p>
+            <h2
+              id="trajectory-heading"
+              className="font-serif text-white leading-[1.05] mb-4"
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
+            >
+              Same start.<br />Different doors.
+            </h2>
+
+            {/* Reserved height: the hint is replaced in place by the hovered
+                node's note, so nothing below it ever shifts. */}
+            <div className="min-h-[62px]">
+              <p
+                className="text-navy-400 font-light text-[14px] transition-opacity duration-200"
+                style={{ opacity: active ? 0 : 1 }}
+              >
+                {reduced || coarse
+                  ? 'Guidance widens the set of paths available to you.'
+                  : 'Move across the chart.'}
+              </p>
+              <p
+                className="text-navy-200 font-light text-[14px] -mt-[21px] transition-opacity duration-200"
+                style={{ opacity: active ? 1 : 0 }}
+              >
+                {active?.note ?? ' '}
+              </p>
+            </div>
+
+            <p className="text-[11px] text-navy-600 font-light mt-6 max-w-xs leading-relaxed">
+              Illustrative. Mentorship changes what&apos;s reachable — it
+              doesn&apos;t guarantee an outcome.
+            </p>
+          </div>
 
         <div
           ref={wrapRef}
@@ -149,8 +201,9 @@ export default function TrajectoryViz() {
           className="relative"
         >
           <svg
-            viewBox={`0 0 ${W} ${H}`}
-            className="w-full h-auto"
+            ref={svgRef}
+            viewBox={narrow ? `0 -10 ${W} ${H + 40}` : `0 14 ${W} ${H - 32}`}
+            className="w-full h-auto block"
             role="img"
             aria-label="A chart comparing an unmentored path, which stays flat, against a mentored path that bends upward through clarity, preparation, introduction, and opportunity."
           >
@@ -165,11 +218,11 @@ export default function TrajectoryViz() {
             <path
               d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
               stroke="#2d3668"
-              strokeWidth="1.5"
+              strokeWidth={1.5 * k}
               strokeDasharray="5 6"
               fill="none"
             />
-            <text x={FLAT_END.x} y={FLAT_END.y + 22} textAnchor="end" fill="#3d4a8f" fontSize="11" fontWeight="500">
+            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#3d4a8f" fontSize={11 * k} fontWeight="500">
               without mentorship
             </text>
 
@@ -177,22 +230,22 @@ export default function TrajectoryViz() {
             <path
               d={curvePath(lift)}
               stroke="url(#traj-grad)"
-              strokeWidth="2.5"
+              strokeWidth={2.5 * k}
               fill="none"
               strokeLinecap="round"
               style={{ opacity: 0.25 + lift * 0.75 }}
             />
 
             {/* Origin — the student */}
-            <circle cx={START.x} cy={START.y} r="6" fill="#ffffff" />
-            <text x={START.x} y={START.y + 26} textAnchor="middle" fill="#879bd3" fontSize="11" fontWeight="600">
+            <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
+            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#879bd3" fontSize={11 * k} fontWeight="600">
               You
             </text>
 
             {/* The mentor enters as the curve lifts */}
             <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
-              <circle cx={mentorPt.x} cy={mentorPt.y} r="7" fill="#1a1f3a" stroke="#ffffff" strokeWidth="2" />
-              <text x={mentorPt.x} y={mentorPt.y - 16} textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="600">
+              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#1a1f3a" stroke="#ffffff" strokeWidth={2 * k} />
+              <text x={mentorPt.x} y={mentorPt.y - 16 * k} textAnchor="middle" fill="#ffffff" fontSize={11 * k} fontWeight="600">
                 Mentor
               </text>
             </g>
@@ -207,43 +260,32 @@ export default function TrajectoryViz() {
                   <circle
                     cx={p.x}
                     cy={p.y}
-                    r={isActive ? 7 : 4.5}
+                    r={(isActive ? 7 : 4.5) * k}
                     fill={isActive ? '#ffffff' : '#a4b3de'}
                     style={{ transition: 'r 180ms ease, fill 180ms ease', cursor: 'pointer' }}
                     onPointerEnter={() => setActiveNode(i)}
                     onPointerLeave={() => setActiveNode(null)}
                   />
-                  <text
-                    x={p.x}
-                    y={p.y - 16}
-                    textAnchor="middle"
-                    fill={isActive ? '#ffffff' : '#879bd3'}
-                    fontSize="10.5"
-                    fontWeight="600"
-                    style={{ pointerEvents: 'none' }}
-                  >
-                    {node.label}
-                  </text>
+                  {(!narrow || i === 0 || i === NODES.length - 1) && (
+                    <text
+                      x={p.x}
+                      y={p.y - 16 * k}
+                      textAnchor={narrow && i === NODES.length - 1 ? 'end' : 'middle'}
+                      fill={isActive ? '#ffffff' : '#879bd3'}
+                      fontSize={10.5 * k}
+                      fontWeight="600"
+                      style={{ pointerEvents: 'none' }}
+                    >
+                      {node.label}
+                    </text>
+                  )}
                 </g>
               );
             })}
           </svg>
-
-          {/* Node detail — reserved height so the chart never shifts */}
-          <div className="min-h-[38px] mt-1 text-center">
-            <p
-              className="text-[13px] text-navy-300 font-light transition-opacity duration-200"
-              style={{ opacity: active ? 1 : 0 }}
-            >
-              {active?.note ?? ' '}
-            </p>
-          </div>
         </div>
 
-        <p className="text-[11px] text-navy-600 font-light text-center max-w-md mx-auto">
-          Illustrative. Mentorship changes what&apos;s reachable — it doesn&apos;t
-          guarantee an outcome.
-        </p>
+        </div>
       </div>
     </section>
   );
