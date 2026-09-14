@@ -74,7 +74,7 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all flex-shrink-0 ${
-                  done ? 'bg-sage-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-500'
+                  done ? 'bg-sage-600 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-600'
                 }`}
                 aria-label={`Step ${step}: ${labels[i]}${done ? ' (complete)' : active ? ' (current)' : ''}`}
               >
@@ -85,7 +85,7 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
               </span>
             </div>
             {i < total - 1 && (
-              <div className={`h-0.5 flex-1 mx-2 mt-4 transition-colors flex-shrink ${done ? 'bg-sage-500' : 'bg-gray-200'}`} />
+              <div className={`h-0.5 flex-1 mx-2 mt-4 transition-colors flex-shrink ${done ? 'bg-sage-600' : 'bg-gray-200'}`} />
             )}
           </div>
         );
