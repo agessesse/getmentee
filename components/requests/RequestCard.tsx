@@ -7,6 +7,7 @@ import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import { NAME_UNAVAILABLE } from '@/lib/display-name';
 
 type RequestStatus = 'pending' | 'approved' | 'declined';
 
@@ -36,6 +37,26 @@ const statusVariant: Record<RequestStatus, 'green' | 'red' | 'yellow'> = {
   declined: 'red',
   pending: 'yellow',
 };
+
+/**
+ * The badge used to print the raw database value. "pending" tells a mentee
+ * nothing about who is holding the request or what happens next, and the same
+ * word means two different things depending on which side you are on.
+ */
+function statusLabel(
+  status: RequestStatus,
+  role: 'mentor' | 'mentee',
+  partnerFirstName: string
+): string {
+  const named = partnerFirstName && partnerFirstName !== NAME_UNAVAILABLE;
+  if (status === 'pending') {
+    return role === 'mentee'
+      ? (named ? `Waiting for ${partnerFirstName}` : 'Waiting for a reply')
+      : 'Needs your decision';
+  }
+  if (status === 'approved') return role === 'mentee' ? 'Accepted' : 'You accepted';
+  return role === 'mentee' ? 'Not accepted' : 'You declined';
+}
 
 export default function RequestCard({
   partnerFirstName,
@@ -79,7 +100,7 @@ export default function RequestCard({
             <p className="text-xs text-gray-400">{timeAgo}</p>
           </div>
         </div>
-        <Badge label={status} variant={statusVariant[status]} />
+        <Badge label={statusLabel(status, userRole, partnerFirstName)} variant={statusVariant[status]} />
       </div>
 
       {/* Mentee context — shown to mentor on pending requests */}

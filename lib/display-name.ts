@@ -2,20 +2,25 @@
  * One place that turns a profile record into something a person can read.
  *
  * The app previously fell back to the literal string "Unknown" in twelve
- * places, which reads like a bug to the user and tells them nothing.
+ * places, which reads like a bug and tells the user nothing.
  *
- * A missing profile is not ambiguous in this schema: profiles cascade-delete
- * with the auth user (migration 0019), and the SELECT policy on profiles is
- * USING (true) for authenticated readers (migration 0016), so a partner whose
- * row cannot be found has almost certainly deleted their account rather than
- * being hidden by RLS. "Former member" says that honestly.
+ * The replacement was briefly "Former member", on the reasoning that profiles
+ * cascade-delete with the auth user and the profiles SELECT policy is
+ * permissive, so a missing row must mean a deleted account. That reasoning came
+ * from reading migration 0016 rather than querying the database, and it was
+ * wrong: 0016 is not applied in production, the restrictive
+ * `auth.uid() = id` policy is still in force, and the `public_profiles` view
+ * that twelve pages read does not exist at all. A lookup therefore fails for
+ * live, active users, and the label was telling people their mentor had left.
  *
- * Deliberately NOT doing what a demo would do here: no fabricated stand-in
- * name is ever substituted for a real user record, because a fake identity
- * attached to a real mentorship is worse than an honest gap.
+ * "Name unavailable" states only what is actually known: we could not resolve
+ * the name. It does not invent a cause. See supabase/MIGRATION_RECOVERY.md.
+ *
+ * No fabricated stand-in name is ever substituted for a real user record. A
+ * fake identity attached to a real mentorship is worse than an honest gap.
  */
 
-export const FORMER_MEMBER = 'Former member';
+export const NAME_UNAVAILABLE = 'Name unavailable';
 
 export interface NameParts {
   first_name?: string | null;
@@ -24,14 +29,14 @@ export interface NameParts {
 
 /** Full display name, or an honest fallback when the profile is gone. */
 export function displayName(p: NameParts | null | undefined): string {
-  if (!p) return FORMER_MEMBER;
+  if (!p) return NAME_UNAVAILABLE;
   const name = `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim();
-  return name || FORMER_MEMBER;
+  return name || NAME_UNAVAILABLE;
 }
 
 /** First name only, for conversational copy such as "Message Peter". */
 export function firstName(p: NameParts | null | undefined): string {
-  if (!p) return FORMER_MEMBER;
+  if (!p) return NAME_UNAVAILABLE;
   return (p.first_name ?? '').trim() || displayName(p);
 }
 

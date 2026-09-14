@@ -6,7 +6,7 @@ import { Handshake } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import MentorshipCard from '@/components/mentorships/MentorshipCard';
 import Spinner from '@/components/ui/Spinner';
-import { FORMER_MEMBER } from '@/lib/display-name';
+import { NAME_UNAVAILABLE } from '@/lib/display-name';
 
 interface Mentorship {
   id: string;
@@ -100,7 +100,7 @@ export default function MentorshipsPage() {
           return {
             ...m,
             status: m.status as 'active' | 'completed' | 'cancelled',
-            partner: partnerMap.get(partnerId) ?? { id: partnerId, first_name: FORMER_MEMBER, last_name: '', avatar_url: null },
+            partner: partnerMap.get(partnerId) ?? { id: partnerId, first_name: NAME_UNAVAILABLE, last_name: '', avatar_url: null },
             nextSessionAt: nextSessionMap.get(m.id) ?? null,
             activeGoalCount: goalCountMap.get(m.id) ?? 0,
           };

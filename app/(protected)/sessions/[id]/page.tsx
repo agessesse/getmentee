@@ -14,7 +14,7 @@ import { trackEvent } from '@/lib/analytics';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import { format, formatDistanceToNow } from 'date-fns';
-import { FORMER_MEMBER } from '@/lib/display-name';
+import { NAME_UNAVAILABLE } from '@/lib/display-name';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -215,7 +215,7 @@ export default function SessionDetailPage() {
         profiles?.map((p) => [p.id, `${p.first_name} ${p.last_name}`]) ?? []
       );
       setActionItems(
-        data.map((a) => ({ ...a, assigneeName: nameMap.get(a.assigned_to) ?? FORMER_MEMBER }))
+        data.map((a) => ({ ...a, assigneeName: nameMap.get(a.assigned_to) ?? NAME_UNAVAILABLE }))
       );
     },
     [id]

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ClipboardList, CheckCircle } from 'lucide-react';
 import RequestCard from '@/components/requests/RequestCard';
 import Spinner from '@/components/ui/Spinner';
-import { FORMER_MEMBER } from '@/lib/display-name';
+import { NAME_UNAVAILABLE } from '@/lib/display-name';
 
 type Status = 'pending' | 'approved' | 'declined';
 
@@ -209,7 +209,7 @@ export default function RequestsPage() {
         const pid = r[partnerField as 'mentor_id' | 'mentee_id'];
         const partner = partnerMap.get(pid) ?? {
           id: pid,
-          first_name: FORMER_MEMBER,
+          first_name: NAME_UNAVAILABLE,
           last_name: '',
           avatar_url: null,
           headline: null,
