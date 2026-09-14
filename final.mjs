@@ -54,7 +54,7 @@ async function journey(opts,label,shot){
   console.log(`${label}: setup done +${tSetup}s · discover +${tDiscover}s · request sent +${tReq}s · ${clicks} clicks`);
   await p.close();
 }
-await journey({...devices['iPhone 13']},'mobile',true);
+await journey({viewport:{width:1440,height:900}},'desktop',true);
 console.log('PASS ('+pass.length+')'); pass.forEach(x=>console.log('  ✓ '+x));
 if(fail.length){console.log('FAIL ('+fail.length+')'); fail.forEach(x=>console.log('  ✗ '+x));}
 await b.close();

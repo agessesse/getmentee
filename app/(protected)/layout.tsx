@@ -58,11 +58,16 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
       // Redirect to profile setup if not yet complete (skip if already there)
       if (pathname !== '/profile/setup') {
         const table = profileData.role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles';
-        const { data: extProfile } = await supabase
+        // limit(1), not single(). A brand-new user has no role row yet, and
+        // single() asks PostgREST for exactly one object, so it answers 406.
+        // This gate runs on the first authenticated page load of every signup,
+        // which put a console error in front of every new student.
+        const { data: extRows } = await supabase
           .from(table)
           .select('profile_complete')
           .eq('id', session.user.id)
-          .single();
+          .limit(1);
+        const extProfile = extRows?.[0];
 
         if (!extProfile || !extProfile.profile_complete) {
           router.replace('/profile/setup');
