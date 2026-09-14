@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const b=await chromium.launch();
+const p=await b.newPage({viewport:{width:1440,height:900}});
+await p.goto('https://mentable.co/login',{waitUntil:'networkidle'});
+await p.fill('input[type="email"]',process.argv[2]); await p.fill('input[type="password"]','QaFirstRun!2026');
+await p.locator('button[type="submit"]').click(); await p.waitForTimeout(9000);
+await p.goto('https://mentable.co/discover',{waitUntil:'networkidle'}); await p.waitForTimeout(4000);
+await p.locator('a:has-text("View profile")').first().click(); await p.waitForTimeout(4000);
+console.log('url:', p.url());
+console.log('buttons:', await p.evaluate(()=>[...document.querySelectorAll('button')].map(b=>b.textContent.replace(/\s+/g,' ').trim()).filter(Boolean)));
+console.log('reviews text:', (await p.evaluate(()=>document.body.innerText)).match(/.{0,40}review.{0,40}/gi));
+console.log('rating area:', (await p.evaluate(()=>document.body.innerText)).slice(0,600).replace(/\n+/g,' | '));
+await b.close();

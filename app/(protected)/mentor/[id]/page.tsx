@@ -241,9 +241,11 @@ export default function MentorProfilePage() {
 
   const mp = mentor.mentor_profiles;
   const fullName = `${mentor.first_name} ${mentor.last_name}`;
+  // No fallback to mp.rating. That seeded column made the page print 4.9
+  // directly above "No reviews yet".
   const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)
-    : mp.rating;
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -407,17 +409,12 @@ export default function MentorProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Match card */}
-          {matchInfo && matchInfo.score > 0 && (
+          {/* Gated on reasons, not the score: is_available alone contributes
+              +10, so this read "Why you match 10%" with nothing under it. */}
+          {matchInfo && matchInfo.reasons.length > 0 && (
             <div className="bg-navy-900 text-white rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-semibold">Why you match</h2>
-                <span className="text-2xl font-bold">{matchInfo.score}%</span>
-              </div>
-              <div className="w-full h-2 bg-navy-700 rounded-full overflow-hidden mb-4">
-                <div
-                  className="h-full bg-white rounded-full"
-                  style={{ width: `${matchInfo.score}%` }}
-                />
+                <h2 className="text-base font-semibold">Why this could fit</h2>
               </div>
               {matchInfo.reasons.length > 0 && (
                 <ul className="space-y-2">
@@ -444,8 +441,8 @@ export default function MentorProfilePage() {
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <h2 className="text-base font-semibold text-navy-900 mb-5">
               Reviews
-              {mp.review_count > 0 && (
-                <span className="ml-2 text-sm font-normal text-gray-400">({mp.review_count})</span>
+              {reviews.length > 0 && (
+                <span className="ml-2 text-sm font-normal text-gray-500">({reviews.length})</span>
               )}
             </h2>
             {reviews.length === 0 ? (
