@@ -347,8 +347,8 @@ export default function DashboardPage() {
         .from(role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles')
         .select('profile_complete')
         .eq('id', uid)
-        .maybeSingle();
-      const profileComplete = completeRes.data?.profile_complete === true;
+        .limit(1);
+      const profileComplete = completeRes.data?.[0]?.profile_complete === true;
 
       // ── Mentor-specific extras ────────────────────────────────────────────
       let mentorExtra: DashboardData['mentorExtra'] | undefined;

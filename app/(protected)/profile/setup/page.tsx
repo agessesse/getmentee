@@ -239,12 +239,12 @@ export default function ProfileSetupPage() {
       if (profile?.graduation_year) setGraduationYear(String(profile.graduation_year));
       if (profile?.linkedin_url) setLinkedinUrl(profile.linkedin_url);
 
-      const { data: roleRow } = await supabase
+      const { data: roleRows } = await supabase
         .from(profile?.role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles')
         .select('profile_complete')
         .eq('id', uid)
-        .maybeSingle();
-      setAlreadyComplete(roleRow?.profile_complete === true);
+        .limit(1);
+      setAlreadyComplete(roleRows?.[0]?.profile_complete === true);
 
       setLoading(false);
     }
