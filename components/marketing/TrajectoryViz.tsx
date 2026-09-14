@@ -146,6 +146,8 @@ export default function TrajectoryViz() {
   // near-constant on-screen size from a 342px phone to a 1000px desktop.
   const k = Math.min(2.2, Math.max(0.85, 700 / svgW));
   const narrow = svgW < 480;
+  // The hint has served its purpose the moment the user touches the chart.
+  const showHint = !reduced && !coarse && lift > 0.9 && !scrubbed.current && activeNode === null;
   const mentorPt = curvePoint(MENTOR_T, lift);
   const active = activeNode !== null ? NODES[activeNode] : null;
 
@@ -176,9 +178,9 @@ export default function TrajectoryViz() {
                 className="text-navy-400 font-light text-[14px] transition-opacity duration-200"
                 style={{ opacity: active ? 0 : 1 }}
               >
-                {reduced || coarse
-                  ? 'Guidance widens the set of paths available to you.'
-                  : 'Move across the chart.'}
+                {coarse
+                  ? 'Tap each point to see what changes.'
+                  : 'Move across the path to see what changes.'}
               </p>
               <p
                 className="text-navy-200 font-light text-[14px] -mt-[21px] transition-opacity duration-200"
@@ -236,6 +238,18 @@ export default function TrajectoryViz() {
               style={{ opacity: 0.25 + lift * 0.75 }}
             />
 
+            {/* One-shot gesture hint: a dot traces the path the cursor should
+                follow. Removed permanently once the user engages. */}
+            {showHint && (
+              <circle
+                r={5 * k}
+                fill="#ffffff"
+                className="traj-hint"
+                style={{ offsetPath: `path("${curvePath(1)}")`, offsetRotate: '0deg' }}
+                aria-hidden="true"
+              />
+            )}
+
             {/* Origin — the student */}
             <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
             <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#879bd3" fontSize={11 * k} fontWeight="600">
@@ -257,14 +271,27 @@ export default function TrajectoryViz() {
               const isActive = activeNode === i;
               return (
                 <g key={node.label} style={{ opacity: reveal }}>
+                  {/* Generous transparent hit area: the visible dot is far
+                      smaller than a comfortable touch target. */}
+                  <circle
+                    cx={p.x} cy={p.y} r={22 * k}
+                    fill="transparent"
+                    style={{ cursor: 'pointer' }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${node.label}: ${node.note}`}
+                    onPointerEnter={() => setActiveNode(i)}
+                    onPointerLeave={() => setActiveNode(null)}
+                    onClick={() => setActiveNode(i)}
+                    onFocus={() => setActiveNode(i)}
+                    onBlur={() => setActiveNode(null)}
+                  />
                   <circle
                     cx={p.x}
                     cy={p.y}
                     r={(isActive ? 7 : 4.5) * k}
                     fill={isActive ? '#ffffff' : '#a4b3de'}
-                    style={{ transition: 'r 180ms ease, fill 180ms ease', cursor: 'pointer' }}
-                    onPointerEnter={() => setActiveNode(i)}
-                    onPointerLeave={() => setActiveNode(null)}
+                    style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
                   />
                   {(!narrow || i === 0 || i === NODES.length - 1) && (
                     <text

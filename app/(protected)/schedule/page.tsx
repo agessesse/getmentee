@@ -8,6 +8,7 @@ import SessionCard from '@/components/schedule/SessionCard';
 import BookingModal from '@/components/schedule/BookingModal';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
+import { FORMER_MEMBER } from '@/lib/display-name';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -259,7 +260,7 @@ export default function SchedulePage() {
 
     const enriched = rawSessions.map((s) => {
       const partnerId = s.mentor_id === uid ? s.mentee_id : s.mentor_id;
-      const partner = partnerMap.get(partnerId) ?? { first_name: 'Unknown', last_name: '', avatar_url: null };
+      const partner = partnerMap.get(partnerId) ?? { first_name: FORMER_MEMBER, last_name: '', avatar_url: null };
       return {
         ...s,
         session_type: s.session_type as 'video' | 'async',

@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import ConversationList from '@/components/messages/ConversationList';
 import ChatWindow from '@/components/messages/ChatWindow';
 import Spinner from '@/components/ui/Spinner';
+import { FORMER_MEMBER } from '@/lib/display-name';
 
 interface Conversation {
   mentorshipId: string;
@@ -87,7 +88,7 @@ export default function MessagesPage() {
           return {
             mentorshipId: m.id,
             partnerId,
-            partnerFirstName: partner?.first_name ?? 'Unknown',
+            partnerFirstName: partner?.first_name ?? FORMER_MEMBER,
             partnerLastName: partner?.last_name ?? '',
             partnerAvatarUrl: partner?.avatar_url ?? null,
             lastMessage: lastMsg?.content ?? null,

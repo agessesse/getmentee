@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireAdmin, rows } from '@/lib/supabase/admin';
 import { Panel, Empty, Tag, Th, Td, Stat } from '@/components/admin/ui';
+import { displayName } from '@/lib/display-name';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ interface Person { id: string; first_name: string | null; last_name: string | nu
 const DAY = 86_400_000;
 const name = (m: Map<string, Person>, id: string) => {
   const p = m.get(id);
-  return p ? `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || 'Unknown' : 'Unknown';
+  return displayName(p);
 };
 
 export default async function AdminMentorships({

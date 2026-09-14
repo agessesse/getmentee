@@ -7,7 +7,6 @@ import Sidebar from '@/components/layout/Sidebar';
 import TopNav from '@/components/layout/TopNav';
 import Spinner from '@/components/ui/Spinner';
 import { ProfileProvider } from '@/lib/profile-context';
-import IntroSequence from '@/components/marketing/IntroSequence';
 
 interface Profile {
   id: string;
@@ -79,9 +78,6 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      {/* IntroSequence stays mounted through auth loading so it completes before the gate triggers. */}
-      <IntroSequence />
-
       {loading ? (
         <div className="flex h-screen items-center justify-center bg-gray-50">
           <Spinner size="lg" />

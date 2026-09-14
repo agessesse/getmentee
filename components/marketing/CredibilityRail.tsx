@@ -3,28 +3,54 @@
 import { useState } from 'react';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 
-// Every entry is an employer or institution that appears on a real mentor or
-// student record in data/mentors.ts and data/people.ts. This is not an
-// endorsement claim — the heading states what it represents.
-// A long list matters: with only a handful, the marquee visibly repeats
-// itself within a single viewport and reads as filler.
+// Ordered strongest-first so the opening frames of the marquee carry the most
+// recognisable names. Every entry is traceable to a specific person already in
+// data/mentors.ts or data/people.ts; the attribution is recorded here so the
+// claim stays auditable.
+//
+//   Wells Fargo        Christopher Floyd (MD, Co-Head IG Sales & Trading),
+//                      Tiffany Lakey (Chief of Staff, CIB), Will Alston
+//                      (Head of Corporate Banking), Hugo Canseco (incoming)
+//   Bank of America    Eliphaz Getachew
+//   J.P. Morgan        Jaden Small (Fixed Income Treasury Sales),
+//                      Erick Angwenyi (Global Markets Fellow)
+//   Goldman Sachs      Teagan Fitzgerald
+//   Morgan Stanley     Christopher Floyd (prior)
+//   UNC Kenan-Flagler  Travis Melvin, Frank L. Van Buren (MBA), several students
+//   Duke               Jaden Small, Cooper Lipton
+//   Columbia           Teagan Fitzgerald
+//   UPenn              Christopher Floyd
+//   UC Berkeley        Hugo Canseco (Haas)
+//   Georgetown         Troy Keen Jr.
+//   Minnesota          Eliphaz Getachew (Carlson)
+//   New Hampshire      Erick Angwenyi
+//   SMBC               Christopher Floyd (prior)
+//   Fifth Third        Christopher Floyd (prior)
+//
+// Deliberately excluded: Bondway.ai and Envoy Capital Advisors are real
+// affiliations but carry no recognition, and a marquee of unknown names reads
+// as filler rather than proof.
 const AFFILIATIONS = [
+  // The track is duplicated and the animation starts at -50%, so the opening
+  // frame straddles the seam between the end of one copy and the start of the
+  // next. Strong names sit at BOTH ends so the first two seconds always read
+  // as serious, whatever frame a visitor happens to arrive on.
   'Wells Fargo',
-  'Morgan Stanley',
-  'Goldman Sachs',
-  'J.P. Morgan',
   'Bank of America',
-  'UNC Kenan-Flagler',
-  'SMBC',
-  'Duke University',
-  'Fifth Third Securities',
+  'J.P. Morgan',
+  'Goldman Sachs',
   'Columbia University',
   'UC Berkeley',
-  'Georgetown University',
-  'Envoy Capital Advisors',
   'University of Pennsylvania',
-  'Bondway.ai',
-];
+  'Georgetown University',
+  'SMBC',
+  'Fifth Third Securities',
+  'University of Minnesota',
+  'University of New Hampshire',
+  'Duke University',
+  'UNC Kenan-Flagler',
+  'Morgan Stanley',
+]
 
 function Affiliation({ name }: { name: string }) {
   const [failed, setFailed] = useState(false);

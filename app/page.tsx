@@ -20,15 +20,19 @@ import { trackLandingEvent } from '@/lib/landing-analytics';
 
 // Four outcomes, weighted: two carry the section, each with one supporting
 // idea. Six equally sized cards read as filler and blunted all of them.
-const LEAD_OUTCOMES = [
-  { label: 'Clarity', body: 'See what the work is really like before you commit years to it.' },
-  { label: 'Opportunity', body: 'An introduction only helps if you are ready for it.' },
+// Four peer outcomes. The previous split rendered two of them at 48px navy-900
+// and two at 24px navy-800, which implied Clarity outranked Accountability.
+// Nothing justified that, so the tiering is gone: hierarchy now comes from
+// label versus body, and the numbering gives the eye a reading order.
+// "Opportunity" was dropped because its line described a precondition
+// ("an introduction only helps if you are ready") rather than an outcome.
+const OUTCOMES = [
+  { label: 'Clarity',        body: 'See what the work is actually like before you spend years on it.' },
+  { label: 'Preparation',    body: 'Walk in knowing what matters and what does not.' },
+  { label: 'Accountability', body: 'Someone notices when you do not follow through.' },
+  { label: 'Reciprocity',    body: 'Eventually become the person you once needed.' },
 ];
 
-const SUPPORTING_OUTCOMES = [
-  { label: 'Accountability', body: 'Someone notices when you do not follow through.' },
-  { label: 'Reciprocity', body: 'Eventually become the person you once needed.' },
-];
 
 const FUND_ITEMS = [
   { icon: Shirt, label: 'Professional Attire', detail: 'Interview suit, tailoring, footwear' },
@@ -123,40 +127,27 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <h2
             id="outcomes-heading"
-            className="font-serif text-navy-900 leading-[1.05] mb-14 max-w-xl"
+            className="font-serif text-navy-900 leading-[1.05] mb-12 max-w-xl"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
             What comes out of it.
           </h2>
 
-          {/* Two rows of lead + supporting. Hiding four short sentences behind
-              hover cost more in discoverability than it saved in density, and
-              the single-word left column left a large void beneath it. */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 lg:gap-x-20 gap-y-12">
-            {LEAD_OUTCOMES.map((lead, i) => (
-              <div key={lead.label} className="contents">
-                <div>
-                  <p
-                    className="font-serif text-navy-900 leading-none mb-3"
-                    style={{ fontSize: 'clamp(2.1rem, 4.4vw, 3rem)' }}
-                  >
-                    {lead.label}
-                  </p>
-                  <p className="text-gray-500 text-[16px] leading-relaxed max-w-sm">
-                    {lead.body}
-                  </p>
-                </div>
-                <div className="md:pt-2">
-                  <p className="font-serif text-navy-800 leading-none mb-3 text-[24px]">
-                    {SUPPORTING_OUTCOMES[i].label}
-                  </p>
-                  <p className="text-gray-500 text-[16px] leading-relaxed max-w-sm">
-                    {SUPPORTING_OUTCOMES[i].body}
-                  </p>
-                </div>
-              </div>
+          <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-10 gap-y-10">
+            {OUTCOMES.map((o, i) => (
+              <li key={o.label} className="border-t border-gray-200 pt-5">
+                <span className="block text-[12px] font-semibold tabular-nums text-navy-600 mb-3">
+                  0{i + 1}
+                </span>
+                <h3 className="font-serif text-navy-900 text-[26px] leading-none mb-2.5">
+                  {o.label}
+                </h3>
+                <p className="text-gray-600 text-[15px] leading-relaxed">
+                  {o.body}
+                </p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 

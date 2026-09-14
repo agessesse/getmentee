@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { requireAdmin, rows, rowsOrError } from '@/lib/supabase/admin';
 import { Panel, Empty, Tag, Th, Td } from '@/components/admin/ui';
+import { displayName } from '@/lib/display-name';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export default async function AdminReports() {
   );
   const nm = (id: string) => {
     const p = people.get(id);
-    return p ? `${p.first_name ?? ''} ${p.last_name ?? ''}`.trim() || 'Unknown' : 'Unknown';
+    return displayName(p);
   };
 
   // Repeat subjects are the signal worth surfacing first.

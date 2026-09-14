@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const STAGES = [
   { verb: 'Learn',  line: 'Ask better questions.' },
@@ -12,6 +12,16 @@ const STAGES = [
 const R = 108;
 const C = 150;
 
+// Midpoint of the 01 -> 02 arc, with the clockwise tangent at that point.
+const ARROW = (() => {
+  const angle = -Math.PI / 2 + (Math.PI * 2) / STAGES.length / 2; // halfway to stage 2
+  return {
+    x: C + R * Math.cos(angle),
+    y: C + R * Math.sin(angle),
+    deg: (angle * 180) / Math.PI + 90, // tangent, clockwise
+  };
+})();
+
 function nodePos(i: number) {
   // Start at the top, proceed clockwise.
   const angle = (i / STAGES.length) * Math.PI * 2 - Math.PI / 2;
@@ -20,6 +30,18 @@ function nodePos(i: number) {
 
 export default function Flywheel() {
   const [active, setActive] = useState(0);
+  const [coarse, setCoarse] = useState(false);
+  const [engaged, setEngaged] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(pointer: coarse)');
+    const sync = () => setCoarse(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  const choose = (i: number) => { setActive(i); setEngaged(true); };
   const stage = STAGES[active];
   const isReturn = active === STAGES.length - 1;
 
@@ -39,6 +61,10 @@ export default function Flywheel() {
             >
               It doesn&apos;t end<br />with you.
             </h2>
+
+            <p className="text-[14px] text-gray-600 mb-5">
+              {coarse ? 'Tap each stage to follow the cycle.' : 'Hover each stage to follow the cycle.'}
+            </p>
 
             {/* Reserved height keeps the layout still as the label changes */}
             <div className="min-h-[76px] border-l-2 border-navy-200 pl-5">
@@ -80,8 +106,12 @@ export default function Flywheel() {
                 return (
                   <g
                     key={s.verb}
-                    onPointerEnter={() => setActive(i)}
-                    onClick={() => setActive(i)}
+                    onPointerEnter={() => choose(i)}
+                    onClick={() => choose(i)}
+                    onFocus={() => choose(i)}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Stage ${i + 1}: ${s.verb}. ${s.line}`}
                     style={{ cursor: 'pointer' }}
                   >
                     <circle cx={x} cy={y} r="26" fill="transparent" />
@@ -116,6 +146,34 @@ export default function Flywheel() {
                   </g>
                 );
               })}
+
+              {/* Where to begin, and which way. Both disappear on first
+                  interaction so they never become permanent decoration. */}
+              {!engaged && (
+                <g aria-hidden="true" style={{ pointerEvents: 'none' }}>
+                  {/* Inside the ring: "Start here" above the node collided
+                      with its own "Learn" label. */}
+                  <text
+                    x={nodePos(0).x} y={nodePos(0).y + 34}
+                    textAnchor="middle" fontSize="10.5" fontWeight="600" fill="#5265b0"
+                  >
+                    Start here
+                  </text>
+                  <circle
+                    cx={nodePos(0).x} cy={nodePos(0).y} r="24"
+                    fill="none" stroke="#5265b0" strokeWidth="1.5" opacity="0.5"
+                    className="motion-safe:animate-ping-slow"
+                  />
+                  {/* Arrowhead sits on the ring midway between 01 and 02,
+                      rotated to the clockwise tangent. */}
+                  <path
+                    d="M -5 -4 L 5 0 L -5 4 Z"
+                    fill="#5265b0"
+                    opacity="0.85"
+                    transform={`translate(${ARROW.x} ${ARROW.y}) rotate(${ARROW.deg})`}
+                  />
+                </g>
+              )}
 
               {/* Loop-closure cue, lit only once Return is reached */}
               <text

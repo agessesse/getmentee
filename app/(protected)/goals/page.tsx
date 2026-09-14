@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
 import { Target, Plus, CheckCircle, Circle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { FORMER_MEMBER } from '@/lib/display-name';
 
 interface Goal {
   id: string;
@@ -63,7 +64,7 @@ export default function GoalsPage() {
       const partnerMap = new Map(partnerProfiles?.map((p) => [p.id, `${p.first_name} ${p.last_name}`]) ?? []);
       const msWithNames = (msList ?? []).map((m) => ({
         id: m.id,
-        partnerName: partnerMap.get(m[partnerField]) ?? 'Unknown',
+        partnerName: partnerMap.get(m[partnerField]) ?? FORMER_MEMBER,
       }));
       setMentorships(msWithNames);
 
@@ -83,7 +84,7 @@ export default function GoalsPage() {
         setGoals((goalsData ?? []).map((g) => ({
           ...g,
           status: g.status as 'active' | 'completed' | 'cancelled',
-          partnerName: msNameMap.get(g.mentorship_id) ?? 'Unknown',
+          partnerName: msNameMap.get(g.mentorship_id) ?? FORMER_MEMBER,
         })));
       }
 
@@ -114,7 +115,7 @@ export default function GoalsPage() {
     if (error) {
       setActionError('Could not create goal. Please try again.');
     } else if (newGoal) {
-      const msName = mentorships.find((m) => m.id === form.mentorshipId)?.partnerName ?? 'Unknown';
+      const msName = mentorships.find((m) => m.id === form.mentorshipId)?.partnerName ?? FORMER_MEMBER;
       setGoals((prev) => [{
         ...newGoal,
         status: newGoal.status as 'active' | 'completed' | 'cancelled',

@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/client';
 import Avatar from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
 import SignInTransition from '@/components/auth/SignInTransition';
+import { FORMER_MEMBER, displayName } from '@/lib/display-name';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -280,9 +281,7 @@ export default function DashboardPage() {
             id: s.id,
             scheduled_at: s.scheduled_at,
             session_type: s.session_type,
-            partner_name: partner
-              ? `${partner.first_name} ${partner.last_name}`
-              : 'Unknown',
+            partner_name: displayName(partner),
           };
         })
       );
@@ -332,7 +331,7 @@ export default function DashboardPage() {
           recentMessages = validMsgs.map((m) => ({
             mentorship_id: m.mentorship_id,
             content: m.content,
-            sender_name: senderMap.get(m.sender_id) ?? 'Unknown',
+            sender_name: senderMap.get(m.sender_id) ?? FORMER_MEMBER,
             created_at: m.created_at,
           }));
         }

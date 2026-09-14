@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // ─── Streak configuration ─────────────────────────────────────────────────────
 // Identical to IntroSequence; slightly tighter overall timing (2.7s vs 3.0s)
@@ -29,32 +29,47 @@ interface Props {
 export default function SignInTransition({ onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>('pre');
 
+  /**
+   * The parent passes onComplete as an inline arrow, so its identity changes on
+   * every dashboard render. With [onComplete] in the dependency array the
+   * effect tore down and restarted the whole timer sequence each time the
+   * dashboard re-rendered while fetching, so the animation kept resetting and
+   * the intro appeared to hang. Holding the callback in a ref lets the sequence
+   * run exactly once while still calling the latest callback.
+   */
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduced) {
       setPhase('form');
-      const t1 = setTimeout(() => setPhase('hold'), 600);
-      const t2 = setTimeout(() => setPhase('wipe'), 1100);
+      // Reduced motion: show the mark briefly, then get out of the way.
+      const t1 = setTimeout(() => setPhase('hold'), 120);
+      const t2 = setTimeout(() => setPhase('wipe'), 300);
       const t3 = setTimeout(() => {
         setPhase('done');
-        onComplete?.();
-      }, 1650);
+        onCompleteRef.current?.();
+      }, 760); // 300 + 460ms wipe
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
     }
 
-    // Full animation — slightly tighter than IntroSequence (2.7s total vs 3.0s)
-    const t1 = setTimeout(() => setPhase('streaks'), 100);
-    const t2 = setTimeout(() => setPhase('form'),    700);
-    const t3 = setTimeout(() => setPhase('hold'),   1500);
-    const t4 = setTimeout(() => setPhase('wipe'),   2050);
+    // Phases overlap rather than queue. The wordmark starts forming while the
+    // streaks are still travelling, which is what made the old sequence feel
+    // like waiting: each stage politely waited for the previous one to finish.
+    const t1 = setTimeout(() => setPhase('streaks'),  60);
+    const t2 = setTimeout(() => setPhase('form'),    360);
+    const t3 = setTimeout(() => setPhase('hold'),    820);
+    const t4 = setTimeout(() => setPhase('wipe'),   1180);
     const t5 = setTimeout(() => {
       setPhase('done');
-      onComplete?.();
-    }, 2730); // 2050 + 680ms wipe duration
+      onCompleteRef.current?.();
+    }, 1640); // 1180 + 460ms wipe
 
+    // Empty deps on purpose: the sequence must survive parent re-renders.
     return () => { [t1, t2, t3, t4, t5].forEach(clearTimeout); };
-  }, [onComplete]);
+  }, []);
 
   if (phase === 'done') return null;
 
@@ -73,7 +88,7 @@ export default function SignInTransition({ onComplete }: Props) {
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         transition: phase === 'wipe'
-          ? 'transform 680ms cubic-bezier(0.76, 0, 0.24, 1)'
+          ? 'transform 460ms cubic-bezier(0.76, 0, 0.24, 1)'
           : 'none',
       }}
     >
