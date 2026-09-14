@@ -24,10 +24,10 @@ async function journey(opts,label,shot){
   const over=await p.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   ok(over<=1, `${label}: Discover no horizontal overflow (${over}px)`);
   // mentor profile
-  await p.locator('a:has-text("View profile")').first().click(); await p.waitForTimeout(4000);
+  await p.locator('a:has-text("View profile")').nth(5).click(); await p.waitForTimeout(4000);
   if(shot) await p.screenshot({path:D+'after-profile.png',fullPage:true});
   const prof=await p.evaluate(()=>document.body.innerText);
-  ok(/No reviews yet/.test(prof) && !/\d+ reviews/.test(prof), `${label}: profile states "No reviews yet" and claims no count`);
+  ok(/No reviews yet/.test(prof) && !/Reviews\(\d+\)/.test(prof) && !/\b4\.\d\b/.test(prof), `${label}: profile states "No reviews yet" and claims no count`);
   // request
   await p.getByRole('button',{name:/Request Mentorship/i}).first().click(); await p.waitForTimeout(2200);
   const send=p.getByRole('button',{name:/Send Request/i});

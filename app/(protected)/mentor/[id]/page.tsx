@@ -250,7 +250,7 @@ export default function MentorProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Back link */}
-      <Link href="/discover" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors">
+      <Link href="/discover" className="tap-target inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors">
         <ArrowLeft className="w-4 h-4" />
         Back to Discover
       </Link>
@@ -393,9 +393,9 @@ export default function MentorProfilePage() {
                   </span>
                 </div>
                 {hasRequest && (
-                  <p className="mt-2 text-xs text-gray-400">
+                  <p className="mt-2 text-xs text-gray-500">
                     Your request is pending.{' '}
-                    <Link href="/requests" className="text-navy-600 hover:text-navy-800 underline underline-offset-2 font-medium">
+                    <Link href="/requests" className="tap-target text-navy-600 hover:text-navy-800 underline underline-offset-2 font-medium">
                       Track it in Requests →
                     </Link>
                   </p>
@@ -550,7 +550,7 @@ export default function MentorProfilePage() {
         <div className="flex justify-center">
           <button
             onClick={() => setReportOpen(true)}
-            className="text-xs text-gray-300 hover:text-gray-500 transition-colors"
+            className="tap-target text-xs text-gray-500 hover:text-navy-900 transition-colors"
           >
             Report this profile
           </button>

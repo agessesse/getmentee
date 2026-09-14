@@ -1,0 +1,12 @@
+import { chromium, devices } from 'playwright';
+const b=await chromium.launch();
+const p=await b.newPage({...devices['iPhone 13']});
+const bad=[]; p.on('response',r=>{if(r.status()>=400)bad.push(r.status()+' '+r.request().method()+' '+r.url().slice(0,120));});
+await p.goto('https://mentable.co/login',{waitUntil:'networkidle'});
+await p.fill('input[type="email"]',process.argv[2]); await p.fill('input[type="password"]','QaFirstRun!2026');
+await p.locator('button[type="submit"]').click(); await p.waitForTimeout(9000);
+await p.goto('https://mentable.co/dashboard',{waitUntil:'networkidle'}); await p.waitForTimeout(5000);
+await p.goto('https://mentable.co/discover',{waitUntil:'networkidle'}); await p.waitForTimeout(4000);
+await p.locator('a:has-text("View profile")').first().click(); await p.waitForTimeout(4000);
+console.log('failed requests:', [...new Set(bad)]);
+await b.close();
