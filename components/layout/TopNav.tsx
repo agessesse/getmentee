@@ -151,7 +151,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden text-gray-400 hover:text-navy-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-lg"
+        className="lg:hidden text-gray-500 hover:text-navy-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-lg"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -167,7 +167,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setNotifDropdown((v) => !v);
               setUserDropdown(false);
             }}
-            className="relative p-2 text-gray-400 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            className="relative p-2 text-gray-500 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
@@ -182,7 +182,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
             <div className="absolute right-0 mt-1 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
               <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
                 <span className="text-sm font-semibold text-navy-900">
-                  Notifications {unreadCount > 0 && <span className="text-xs text-gray-400 font-normal">({unreadCount} new)</span>}
+                  Notifications {unreadCount > 0 && <span className="text-xs text-gray-500 font-normal">({unreadCount} new)</span>}
                 </span>
                 {unreadCount > 0 && (
                   <button
@@ -197,7 +197,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
 
               <div className="max-h-80 overflow-y-auto">
                 {notifications.length === 0 ? (
-                  <div className="px-5 py-8 text-center text-sm text-gray-400">
+                  <div className="px-5 py-8 text-center text-sm text-gray-500">
                     No notifications yet
                   </div>
                 ) : (
@@ -219,7 +219,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                           {notif.body && (
                             <p className="text-xs text-gray-500 mt-0.5 truncate">{notif.body}</p>
                           )}
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-500 mt-1">
                             {formatDistanceToNow(new Date(notif.created_at), { addSuffix: true })}
                           </p>
                         </div>
@@ -248,14 +248,14 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
             <span className="hidden md:block text-sm font-medium text-navy-900 max-w-[120px] truncate">
               {user.first_name}
             </span>
-            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
           </button>
 
           {userDropdown && (
             <div className="absolute right-0 mt-1 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-1.5 z-50 overflow-hidden">
               <div className="px-4 py-2.5 border-b border-gray-100">
                 <p className="text-sm font-semibold text-navy-900">{fullName}</p>
-                <p className="text-xs text-gray-400 truncate mt-0.5">{user.email}</p>
+                <p className="text-xs text-gray-500 truncate mt-0.5">{user.email}</p>
               </div>
               <Link
                 href="/profile/setup"

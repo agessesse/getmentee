@@ -25,7 +25,7 @@ export default function TagSelect({ options, value, onChange, label, max, classN
       {label && (
         <span className="text-sm font-medium text-navy-900">
           {label}
-          {max && <span className="text-gray-400 font-normal"> (up to {max})</span>}
+          {max && <span className="text-gray-500 font-normal"> (up to {max})</span>}
         </span>
       )}
       <div className="flex flex-wrap gap-2">

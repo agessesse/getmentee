@@ -164,7 +164,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
               </p>
             )}
           </div>
-          <span className="text-[10px] font-medium text-gray-400 bg-gray-50 border border-gray-200 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+          <span className="text-[10px] font-medium text-gray-500 bg-gray-50 border border-gray-200 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
             Preview
           </span>
         </div>
@@ -176,7 +176,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
 
         {/* Location */}
         {person.location && (
-          <div className="flex items-center gap-1 text-xs text-gray-400 mb-3">
+          <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
             <MapPin className="w-3 h-3" />
             <span>{person.location.split(',')[0]}</span>
           </div>
@@ -190,7 +190,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
             </span>
           ))}
           {person.expertiseTags.length > 4 && (
-            <span className="text-xs text-gray-400 px-1">+{person.expertiseTags.length - 4}</span>
+            <span className="text-xs text-gray-500 px-1">+{person.expertiseTags.length - 4}</span>
           )}
         </div>
       </div>
@@ -203,7 +203,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
         >
           View profile
         </Link>
-        <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-gray-50 text-xs font-medium text-gray-400 cursor-default">
+        <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-gray-50 text-xs font-medium text-gray-500 cursor-default">
           Not yet on Mentable
         </div>
       </div>
@@ -242,7 +242,7 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
         <p className="text-sm font-semibold text-navy-900 truncate">{fullName}</p>
         {person.school && <p className="text-xs text-gray-500 mt-0.5 truncate">{person.school}</p>}
         {person.expectedGraduation && (
-          <p className="text-xs text-gray-400">Class of {person.expectedGraduation}</p>
+          <p className="text-xs text-gray-500">Class of {person.expectedGraduation}</p>
         )}
         <div className="flex flex-wrap gap-1 mt-2">
           {person.interestTags.slice(0, 3).map((tag) => (
@@ -330,7 +330,7 @@ function LiveMentorCard({
           <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">{mp.bio}</p>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-3">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
           {/* The star rating and review count that used to sit here came from
               mentor_profiles.rating / review_count, which are seeded. Across
               the roster they claimed 888 reviews while the reviews table holds
@@ -365,7 +365,7 @@ function LiveMentorCard({
             </span>
           ))}
           {(mp?.expertise_tags?.length ?? 0) > 3 && (
-            <span className="text-xs text-gray-400 px-1">+{mp.expertise_tags.length - 3}</span>
+            <span className="text-xs text-gray-500 px-1">+{mp.expertise_tags.length - 3}</span>
           )}
         </div>
       </div>
@@ -382,9 +382,9 @@ function LiveMentorCard({
           disabled={hasRequest || !mp?.is_available}
           className={`flex-1 py-2 rounded-xl text-xs font-medium transition-all ${
             hasRequest
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
               : !mp?.is_available
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
               : 'bg-navy-900 text-white hover:bg-navy-800'
           }`}
         >
@@ -671,7 +671,7 @@ export default function DiscoverPage() {
       {/* Search + filter bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input
             type="text"
             placeholder="Search by name, firm, skill, or interest…"
@@ -722,7 +722,7 @@ export default function DiscoverPage() {
             <option value="rating">Top rated</option>
             <option value="experience">Most experience</option>
           </select>
-          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
         </div>
       </div>
 
@@ -783,7 +783,7 @@ export default function DiscoverPage() {
             {activeFilterCount > 0 && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-navy-900 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-navy-900 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear all
@@ -833,7 +833,7 @@ export default function DiscoverPage() {
           {filteredLiveMentors.length > 0 && (
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px flex-1 bg-gray-100" />
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Invited mentors
               </p>
               <div className="h-px flex-1 bg-gray-100" />
@@ -851,7 +851,7 @@ export default function DiscoverPage() {
       {filteredLiveMentors.length === 0 && filteredSourcedMentors.length === 0 && (
         <div className="text-center py-24 bg-white rounded-2xl border border-gray-100">
           <p className="text-lg font-medium text-navy-900 mb-2">No mentors found</p>
-          <p className="text-sm text-gray-400 mb-4">Try adjusting your search or filters.</p>
+          <p className="text-sm text-gray-500 mb-4">Try adjusting your search or filters.</p>
           <button onClick={clearFilters} className="text-sm text-navy-600 font-medium hover:underline">
             Clear all filters
           </button>
@@ -867,7 +867,7 @@ export default function DiscoverPage() {
             </div>
             <div>
               <h2 className="text-base font-semibold text-navy-900">Near-peer network</h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500">
                 Students and early-career peers shaping their paths.
               </p>
             </div>
@@ -879,7 +879,7 @@ export default function DiscoverPage() {
           </div>
           <div className="mt-4 flex items-center gap-2">
             <GraduationCap className="w-3.5 h-3.5 text-gray-300" />
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               Near-peers may both seek and offer mentorship as the platform grows.
             </p>
           </div>

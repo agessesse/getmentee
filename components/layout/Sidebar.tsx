@@ -132,7 +132,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
             if (visibleItems.length === 0) return null;
             return (
               <div key={section.label}>
-                <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-navy-500">
+                <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-navy-400">
                   {section.label}
                 </p>
                 <div className="space-y-0.5">

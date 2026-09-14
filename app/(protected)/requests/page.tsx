@@ -60,7 +60,7 @@ function EmptyRequestsState({ tab, userRole }: { tab: Status; userRole: 'mentor'
         <ClipboardList className="w-5 h-5 text-gray-300" />
       </div>
       <p className="text-sm font-medium text-navy-900 mb-1">{title}</p>
-      <p className="text-sm text-gray-400 max-w-xs leading-relaxed">{body}</p>
+      <p className="text-sm text-gray-500 max-w-xs leading-relaxed">{body}</p>
       {cta && (
         <Link
           href={cta.href}

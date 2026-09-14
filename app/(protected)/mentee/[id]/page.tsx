@@ -71,7 +71,7 @@ export default function MenteeProfilePage() {
   if (notFound || !mentee) {
     return (
       <div className="max-w-2xl mx-auto text-center py-24">
-        <p className="text-gray-400">Mentee profile not found.</p>
+        <p className="text-gray-500">Mentee profile not found.</p>
         <Link href="/requests" className="mt-4 inline-block text-sm text-navy-600 hover:underline">Back to Requests</Link>
       </div>
     );
@@ -84,7 +84,7 @@ export default function MenteeProfilePage() {
       <div>
         <Link
           href="/requests"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Requests
@@ -100,7 +100,7 @@ export default function MenteeProfilePage() {
             {mentee.headline && (
               <p className="text-sm text-gray-500 mt-0.5">{mentee.headline}</p>
             )}
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-gray-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-gray-500">
               {mentee.university && (
                 <span className="flex items-center gap-1">
                   <GraduationCap className="w-3.5 h-3.5" />

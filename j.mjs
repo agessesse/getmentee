@@ -22,9 +22,9 @@ async function run(opts,label,shot){
   const dash=await p.evaluate(()=>document.body.innerText);
   ok(!/Complete your profile/.test(dash), `${label}: dashboard does not re-ask for the profile`);
   ok(!/Upcoming Sessions|Recent Messages/.test(dash), `${label}: empty session/message cards hidden pre-request`);
-  if(shot) await p.screenshot({path:D+'p-dash.png',fullPage:true});
+  if(shot) await p.screenshot({path:D+'m-p-dash.png',fullPage:true});
   await p.goto('https://mentable.co/discover',{waitUntil:'networkidle'}); clicks++; await p.waitForTimeout(4500);
-  if(shot) await p.screenshot({path:D+'p-discover.png',fullPage:true});
+  if(shot) await p.screenshot({path:D+'m-p-discover.png',fullPage:true});
   const disc=await p.evaluate(()=>document.body.innerText);
   for(const fake of ['Sarah Chen','Marcus Johnson','Priya Sharma','Alex Rivera','David Park'])
     ok(!disc.includes(fake), `${label}: fixture "${fake}" not shown`);
@@ -48,7 +48,7 @@ async function run(opts,label,shot){
   console.log(`${label}: ${clicks} clicks, +${el()}s | GA events: ${[...new Set(evs)].join(', ')||'(none captured)'}`);
   await p.close();
 }
-await run({viewport:{width:1440,height:900}},'desktop',true);
+await run({...devices['iPhone 13']},'mobile',true);
 console.log('PASS ('+pass.length+')'); pass.forEach(x=>console.log('  ✓ '+x));
 if(fail.length){console.log('FAIL ('+fail.length+')'); fail.forEach(x=>console.log('  ✗ '+x));}
 await b.close();

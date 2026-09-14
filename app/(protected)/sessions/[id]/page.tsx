@@ -92,7 +92,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
                   <div className="min-w-0">
                     <p className="text-sm text-navy-900">{item.title}</p>
                     {item.due_date && (
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-500">
                         Due {format(new Date(item.due_date), 'MMM d')}
                       </p>
                     )}
@@ -100,7 +100,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
                 </div>
               ))}
               {brief.openActionItems.length > 4 && (
-                <p className="text-xs text-navy-500 pl-5">
+                <p className="text-xs text-navy-400 pl-5">
                   +{brief.openActionItems.length - 4} more
                 </p>
               )}
@@ -136,7 +136,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
                 })}
               </p>
               {brief.lastMessagePreview && (
-                <p className="text-xs text-gray-400 truncate max-w-xs">
+                <p className="text-xs text-gray-500 truncate max-w-xs">
                   &ldquo;{brief.lastMessagePreview}&rdquo;
                 </p>
               )}
@@ -465,7 +465,7 @@ export default function SessionDetailPage() {
     );
   if (!session)
     return (
-      <p className="text-center py-24 text-gray-400">Session not found.</p>
+      <p className="text-center py-24 text-gray-500">Session not found.</p>
     );
 
   const date = new Date(session.scheduled_at);
@@ -499,7 +499,7 @@ export default function SessionDetailPage() {
       <div>
         <Link
           href="/schedule"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Schedule
@@ -611,7 +611,7 @@ export default function SessionDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-base font-semibold text-navy-900">Session Recording</h2>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     Transcribe your session and generate a private summary.
                   </p>
                 </div>
@@ -694,7 +694,7 @@ export default function SessionDetailPage() {
             )}
 
             {actionItems.length === 0 ? (
-              <p className="text-sm text-gray-400 py-4 text-center">
+              <p className="text-sm text-gray-500 py-4 text-center">
                 No action items yet. Add tasks to follow up on after this
                 session.
               </p>
@@ -716,13 +716,13 @@ export default function SessionDetailPage() {
                       <p
                         className={`text-sm ${
                           item.is_completed
-                            ? 'line-through text-gray-400'
+                            ? 'line-through text-gray-500'
                             : 'text-navy-900'
                         }`}
                       >
                         {item.title}
                       </p>
-                      <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
                         <span>{item.assigneeName}</span>
                         {item.due_date && (
                           <span>
@@ -747,13 +747,13 @@ export default function SessionDetailPage() {
             </h3>
             <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <Clock className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 <span>
                   {format(date, 'h:mm a')} · {session.duration_minutes} min
                 </span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Video className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <Video className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 <span className="capitalize">
                   {session.session_type === 'video' ? 'Video Call' : 'Async'}
                 </span>
@@ -786,7 +786,7 @@ export default function SessionDetailPage() {
             {isScheduled && !showCancelConfirm && (
               <button
                 onClick={() => setShowCancelConfirm(true)}
-                className="mt-2 w-full text-xs text-gray-400 hover:text-red-500 transition-colors py-1.5"
+                className="mt-2 w-full text-xs text-gray-500 hover:text-red-500 transition-colors py-1.5"
               >
                 Cancel session
               </button>
@@ -833,7 +833,7 @@ export default function SessionDetailPage() {
                     <p className="text-sm font-medium text-navy-900">
                       {data?.first_name} {data?.last_name}
                     </p>
-                    <p className="text-xs text-gray-400">{label}</p>
+                    <p className="text-xs text-gray-500">{label}</p>
                   </div>
                 </div>
               ))}

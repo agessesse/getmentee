@@ -254,7 +254,7 @@ export default function MentorProfilePage() {
   };
 
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
-  if (!mentor) return <p className="text-center py-24 text-gray-400">Mentor not found.</p>;
+  if (!mentor) return <p className="text-center py-24 text-gray-500">Mentor not found.</p>;
 
   const mp = mentor.mentor_profiles;
   const fullName = `${mentor.first_name} ${mentor.last_name}`;
@@ -303,7 +303,7 @@ export default function MentorProfilePage() {
                   <button
                     onClick={handleSaveToggle}
                     className={`p-2 rounded-xl border transition-all ${
-                      isSaved ? 'border-navy-200 bg-navy-50 text-navy-700' : 'border-gray-200 text-gray-400 hover:text-navy-700'
+                      isSaved ? 'border-navy-200 bg-navy-50 text-navy-700' : 'border-gray-200 text-gray-500 hover:text-navy-700'
                     }`}
                     title={isSaved ? 'Unsave' : 'Save'}
                   >
@@ -320,25 +320,25 @@ export default function MentorProfilePage() {
             <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
               {mp.company && (
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-gray-400" />
+                  <Building2 className="w-4 h-4 text-gray-500" />
                   {mp.title ? `${mp.title} at ${mp.company}` : mp.company}
                 </span>
               )}
               {mentor.location && (
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <MapPin className="w-4 h-4 text-gray-500" />
                   {mentor.location}
                 </span>
               )}
               {mentor.university && (
                 <span className="flex items-center gap-1.5">
-                  <GraduationCap className="w-4 h-4 text-gray-400" />
+                  <GraduationCap className="w-4 h-4 text-gray-500" />
                   {mentor.university}{mentor.graduation_year ? ` '${String(mentor.graduation_year).slice(-2)}` : ''}
                 </span>
               )}
               {mp.timezone && (
                 <span className="flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-gray-400" />
+                  <Globe className="w-4 h-4 text-gray-500" />
                   {mp.timezone.replace('America/', '').replace('_', ' ')}
                 </span>
               )}
@@ -365,15 +365,15 @@ export default function MentorProfilePage() {
               </div>
               <div className="text-center">
                 <span className="text-lg font-bold text-navy-900">{mp.years_experience}</span>
-                <p className="text-xs text-gray-400 mt-0.5">years exp</p>
+                <p className="text-xs text-gray-500 mt-0.5">years exp</p>
               </div>
               <div className="text-center">
                 <span className="text-lg font-bold text-navy-900">{mp.weekly_hours}h</span>
-                <p className="text-xs text-gray-400 mt-0.5">per week</p>
+                <p className="text-xs text-gray-500 mt-0.5">per week</p>
               </div>
               <div className="text-center">
                 <span className="text-lg font-bold text-navy-900">{mp.max_mentees}</span>
-                <p className="text-xs text-gray-400 mt-0.5">max mentees</p>
+                <p className="text-xs text-gray-500 mt-0.5">max mentees</p>
               </div>
             </div>
 
@@ -386,9 +386,9 @@ export default function MentorProfilePage() {
                     disabled={hasRequest || !mp.is_available}
                     className={`px-6 py-2.5 rounded-xl font-medium text-sm transition-all ${
                       hasRequest
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                         : !mp.is_available
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                         : 'bg-navy-900 text-white hover:bg-navy-800'
                     }`}
                   >
@@ -399,13 +399,13 @@ export default function MentorProfilePage() {
                       href={mentor.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2.5 rounded-xl border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-300 transition-all"
+                      className="p-2.5 rounded-xl border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-300 transition-all"
                       title="LinkedIn"
                     >
                       <LinkIcon className="w-4 h-4" />
                     </a>
                   )}
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-500">
                     {mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}
                   </span>
                 </div>
@@ -463,7 +463,7 @@ export default function MentorProfilePage() {
               )}
             </h2>
             {reviews.length === 0 ? (
-              <p className="text-sm text-gray-400">No reviews yet. Be the first to review this mentor.</p>
+              <p className="text-sm text-gray-500">No reviews yet. Be the first to review this mentor.</p>
             ) : (
               <div className="space-y-5">
                 {reviews.map((r) => {
@@ -492,7 +492,7 @@ export default function MentorProfilePage() {
                         {r.feedback && (
                           <p className="text-sm text-gray-600 leading-relaxed">{r.feedback}</p>
                         )}
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-gray-500 mt-1">
                           {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                         </p>
                       </div>
@@ -538,22 +538,22 @@ export default function MentorProfilePage() {
             <h3 className="text-sm font-semibold text-navy-900 mb-3">Session details</h3>
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex justify-between">
-                <span className="text-gray-400">Rate</span>
+                <span className="text-gray-500">Rate</span>
                 <span className="font-medium">{mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Availability</span>
+                <span className="text-gray-500">Availability</span>
                 <span className="font-medium">{mp.weekly_hours}h/week</span>
               </div>
               {mp.communication_preference && (
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Format</span>
+                  <span className="text-gray-500">Format</span>
                   <span className="font-medium capitalize">{mp.communication_preference}</span>
                 </div>
               )}
               {mp.languages.length > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Languages</span>
+                  <span className="text-gray-500">Languages</span>
                   <span className="font-medium">{mp.languages.join(', ')}</span>
                 </div>
               )}

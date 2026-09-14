@@ -74,13 +74,13 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all flex-shrink-0 ${
-                  done ? 'bg-sage-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-400'
+                  done ? 'bg-sage-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-500'
                 }`}
                 aria-label={`Step ${step}: ${labels[i]}${done ? ' (complete)' : active ? ' (current)' : ''}`}
               >
                 {done ? <Check className="w-4 h-4" /> : step}
               </div>
-              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-navy-900' : 'text-gray-400'}`}>
+              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-navy-900' : 'text-gray-500'}`}>
                 {labels[i]}
               </span>
             </div>
@@ -102,7 +102,7 @@ function Field({ label, children, hint }: { label: string; children: React.React
     <div>
       <label className="block text-sm font-medium text-navy-900 mb-1.5">{label}</label>
       {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-gray-500 mt-1">{hint}</p>}
     </div>
   );
 }

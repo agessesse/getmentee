@@ -137,7 +137,7 @@ export default function MentorshipsPage() {
             <Handshake className="w-5 h-5 text-gray-300" />
           </div>
           <p className="text-sm font-medium text-navy-900 mb-1">No mentorships yet</p>
-          <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+          <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
             {userRole === 'mentee'
               ? 'Once a mentor accepts your request, your mentorship appears here.'
               : 'Mentorships appear here after you approve a request from the Requests page.'}

@@ -143,7 +143,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
               </div>
 
               {daySlots.length === 0 && !isAdding && (
-                <p className="text-xs text-gray-400">No availability set</p>
+                <p className="text-xs text-gray-500">No availability set</p>
               )}
 
               {daySlots.map((slot) => (
@@ -209,7 +209,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
         })}
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-gray-500">
         These are recurring weekly windows. They do not block specific dates or sync with external calendars.
       </p>
     </div>
@@ -388,11 +388,11 @@ export default function SchedulePage() {
               <Spinner size="lg" />
             </div>
           ) : sessions.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
+            <div className="text-center py-20 text-gray-500">
               <p className="text-base font-medium text-navy-900 mb-1">No {tab} sessions</p>
               {tab === 'upcoming' && canBook && (
                 <>
-                  <p className="text-sm text-gray-400 mb-4">
+                  <p className="text-sm text-gray-500 mb-4">
                     {mentorships.length === 1
                       ? `Ready to meet with ${mentorships[0].partnerName}? Book your first session.`
                       : 'Schedule time with one of your mentors.'}
@@ -403,12 +403,12 @@ export default function SchedulePage() {
                 </>
               )}
               {tab === 'upcoming' && userRole === 'mentor' && (
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-500 mt-1">
                   No upcoming sessions. Mentees can book sessions once you&apos;re connected.
                 </p>
               )}
               {tab === 'past' && (
-                <p className="text-sm text-gray-400 mt-1">Sessions you&apos;ve completed will appear here.</p>
+                <p className="text-sm text-gray-500 mt-1">Sessions you&apos;ve completed will appear here.</p>
               )}
             </div>
           ) : (

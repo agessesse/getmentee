@@ -147,7 +147,7 @@ export default function MessagesPage() {
             <MessageSquare className="w-6 h-6 text-gray-300" />
           </div>
           <p className="text-sm font-medium text-navy-900 mb-1">No conversations yet</p>
-          <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+          <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
             Messages appear here once you have an active mentorship. Find a mentor to get started.
           </p>
           <Link
@@ -192,7 +192,7 @@ export default function MessagesPage() {
               partnerAvatarUrl={activeConversation.partnerAvatarUrl}
             />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">
+            <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">
               Select a conversation to start chatting
             </div>
           )}
@@ -227,7 +227,7 @@ export default function MessagesPage() {
               onBack={handleBack}
             />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">
+            <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">
               Select a conversation to start chatting
             </div>
           )

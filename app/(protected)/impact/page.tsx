@@ -84,7 +84,7 @@ function MilestoneBadge({
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
         achieved ? 'bg-sage-100' : 'bg-gray-100'
       }`}>
-        <Icon className={`w-4 h-4 ${achieved ? 'text-sage-700' : 'text-gray-400'}`} />
+        <Icon className={`w-4 h-4 ${achieved ? 'text-sage-700' : 'text-gray-500'}`} />
       </div>
       <div className="min-w-0">
         <p className={`text-sm font-medium ${achieved ? 'text-sage-700' : 'text-gray-500'}`}>{label}</p>
@@ -260,7 +260,7 @@ export default function ImpactPage() {
   if (!stats) {
     return (
       <div className="text-center py-24">
-        <p className="text-gray-400">This page is only available to mentors.</p>
+        <p className="text-gray-500">This page is only available to mentors.</p>
         <Link href="/dashboard" className="text-sm text-navy-600 hover:underline mt-3 inline-block">
           Back to Dashboard
         </Link>
@@ -290,7 +290,7 @@ export default function ImpactPage() {
       <div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Dashboard
@@ -311,7 +311,7 @@ export default function ImpactPage() {
                 Founding Mentor
               </span>
             )}
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-500">
               Mentoring since {format(new Date(stats.joinedAt), 'MMMM yyyy')}
             </span>
           </div>
@@ -361,7 +361,7 @@ export default function ImpactPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-navy-900">Milestones</h2>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-500">
               {achievedCount}/{milestones.length} achieved
             </span>
           </div>
@@ -382,7 +382,7 @@ export default function ImpactPage() {
           <h2 className="text-base font-semibold text-navy-900 mb-4">Timeline</h2>
           {timeline.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-500">
                 Your mentoring journey will appear here as you start sessions and reach goals.
               </p>
             </div>
@@ -405,13 +405,13 @@ export default function ImpactPage() {
                     <div className="pb-5 min-w-0 flex-1">
                       <p className="text-sm font-medium text-navy-900 leading-tight">{event.label}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-500">
                           {formatDistanceToNow(new Date(event.date), { addSuffix: true })}
                         </p>
                         {event.sub && (
                           <>
                             <span className="text-gray-200">·</span>
-                            <p className="text-xs text-gray-400 capitalize">{event.sub}</p>
+                            <p className="text-xs text-gray-500 capitalize">{event.sub}</p>
                           </>
                         )}
                       </div>

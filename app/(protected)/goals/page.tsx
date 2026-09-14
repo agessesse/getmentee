@@ -255,7 +255,7 @@ export default function GoalsPage() {
             <Target className="w-6 h-6 text-navy-600" />
           </div>
           <p className="text-base font-medium text-navy-900 mb-2">No goals yet</p>
-          <p className="text-sm text-gray-400 mb-6">
+          <p className="text-sm text-gray-500 mb-6">
             {mentorships.length === 0
               ? 'Start a mentorship to create goals with your partner.'
               : 'Set goals to track your progress in this mentorship.'}
@@ -274,7 +274,7 @@ export default function GoalsPage() {
         <div className="space-y-8">
           {active.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
                 Active ({active.length})
               </h2>
               <div className="space-y-3">
@@ -292,7 +292,7 @@ export default function GoalsPage() {
                         <div className="flex items-start justify-between gap-2">
                           <p className="text-sm font-semibold text-navy-900">{g.title}</p>
                           {g.target_date && (
-                            <div className="flex items-center gap-1 text-xs text-gray-400 flex-shrink-0">
+                            <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                               <Clock className="w-3 h-3" />
                               {format(new Date(g.target_date), 'MMM d')}
                             </div>
@@ -301,7 +301,7 @@ export default function GoalsPage() {
                         {g.description && (
                           <p className="text-xs text-gray-500 mt-1">{g.description}</p>
                         )}
-                        <p className="text-xs text-gray-400 mt-2">With {g.partnerName}</p>
+                        <p className="text-xs text-gray-500 mt-2">With {g.partnerName}</p>
                       </div>
                     </div>
                   </div>
@@ -312,7 +312,7 @@ export default function GoalsPage() {
 
           {completed.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
                 Completed ({completed.length})
               </h2>
               <div className="space-y-3">
@@ -323,7 +323,7 @@ export default function GoalsPage() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-navy-900 line-through">{g.title}</p>
                         {g.completed_at && (
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-500 mt-1">
                             Completed {format(new Date(g.completed_at), 'MMM d, yyyy')}
                           </p>
                         )}

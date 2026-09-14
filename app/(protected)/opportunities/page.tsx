@@ -122,7 +122,7 @@ function CategoryCard({ cat }: { cat: typeof CATEGORIES[0] }) {
             <h3 className="font-semibold text-navy-900 text-sm">{cat.label}</h3>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="text-gray-400 hover:text-navy-700 transition-colors flex-shrink-0"
+              className="text-gray-500 hover:text-navy-700 transition-colors flex-shrink-0"
               aria-label={open ? 'Collapse' : 'Expand'}
             >
               {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -407,7 +407,7 @@ export default function OpportunitiesPage() {
         <h2 id="categories-heading" className="text-sm font-semibold text-navy-900 mb-1">
           Potential Support Categories
         </h2>
-        <p className="text-xs text-gray-400 mb-4">
+        <p className="text-xs text-gray-500 mb-4">
           These are the types of professional-development needs the fund is designed to address.
           Not every expense will qualify. Eligibility depends on the specific fund and circumstances.
         </p>
@@ -438,7 +438,7 @@ export default function OpportunitiesPage() {
             A mentor endorsing your request is not approving a financial award and does not see your financial details.
           </p>
           <div className="flex items-start gap-2 mt-2 p-3 bg-white border border-gray-100 rounded-xl">
-            <Info className="w-4 h-4 text-navy-500 flex-shrink-0 mt-0.5" />
+            <Info className="w-4 h-4 text-navy-400 flex-shrink-0 mt-0.5" />
             <p className="text-gray-500">
               All grant decisions are made by the Mentable team, not mentors or sponsors, to ensure fairness and prevent conflicts of interest.
             </p>
@@ -456,7 +456,7 @@ export default function OpportunitiesPage() {
                 <h2 id="need-profile-heading" className="text-sm font-semibold text-navy-900 mb-1">
                   Financial Need Profile
                 </h2>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed">
                   Self-reported information used for eligibility when funded programs launch.
                   {' '}Your responses are private. Mentors and other users cannot see them.
                 </p>
@@ -473,15 +473,15 @@ export default function OpportunitiesPage() {
               <div className="bg-white border border-gray-100 rounded-2xl p-5">
                 <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm mb-4">
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">Pell Grant status</dt>
+                    <dt className="text-xs text-gray-500 mb-0.5">Pell Grant status</dt>
                     <dd className="font-medium text-navy-900 capitalize">{needProfile.pell_status.replace(/_/g, ' ')}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">First-generation student</dt>
+                    <dt className="text-xs text-gray-500 mb-0.5">First-generation student</dt>
                     <dd className="font-medium text-navy-900 capitalize">{needProfile.first_gen_student.replace(/_/g, ' ')}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">Receiving need-based aid</dt>
+                    <dt className="text-xs text-gray-500 mb-0.5">Receiving need-based aid</dt>
                     <dd className="font-medium text-navy-900 capitalize">{needProfile.need_based_aid.replace(/_/g, ' ')}</dd>
                   </div>
                 </dl>
@@ -575,9 +575,9 @@ export default function OpportunitiesPage() {
 
                 <div>
                   <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                    Additional context <span className="text-gray-400 font-normal">(optional)</span>
+                    Additional context <span className="text-gray-500 font-normal">(optional)</span>
                   </label>
-                  <p className="text-[11px] text-gray-400 mb-2">
+                  <p className="text-[11px] text-gray-500 mb-2">
                     Other need-based scholarships, institutional aid designations, or relevant information.
                   </p>
                   <textarea
@@ -586,7 +586,7 @@ export default function OpportunitiesPage() {
                     rows={3}
                     maxLength={500}
                     placeholder="e.g. QuestBridge Scholar, Gates Scholarship recipient, or institutional need designation"
-                    className="w-full text-sm rounded-xl border border-gray-200 px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                    className="w-full text-sm rounded-xl border border-gray-200 px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-500"
                   />
                 </div>
 
@@ -618,7 +618,7 @@ export default function OpportunitiesPage() {
                   </button>
                 </div>
 
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-gray-500">
                   Your responses are self-reported and will be labeled as such. This information is private to you.
                   It will not be shared with your mentor, other users, or sponsors.
                 </p>
@@ -633,7 +633,7 @@ export default function OpportunitiesPage() {
                 <h2 id="interest-heading" className="text-sm font-semibold text-navy-900 mb-1">
                   Tell us what would help
                 </h2>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed">
                   Not a funding application. This helps us understand what types of support would make the biggest
                   difference so we can prioritize which programs to launch first.
                 </p>
@@ -688,14 +688,14 @@ export default function OpportunitiesPage() {
                     rows={3}
                     maxLength={500}
                     placeholder="e.g. I have a superday at Goldman next month but can't afford a suit. My mentor recommended I have professional attire for in-person interviews."
-                    className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                    className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                      Rough estimated amount <span className="text-gray-400 font-normal">(optional, in USD)</span>
+                      Rough estimated amount <span className="text-gray-500 font-normal">(optional, in USD)</span>
                     </label>
                     <input
                       type="number"
@@ -705,14 +705,14 @@ export default function OpportunitiesPage() {
                       value={interestForm.estimated_amount}
                       onChange={(e) => setInterestForm((f) => ({ ...f, estimated_amount: e.target.value }))}
                       placeholder="200"
-                      className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                      className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-500"
                     />
                   </div>
 
                   {mentorships.length > 0 && (
                     <div>
                       <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                        Related mentorship <span className="text-gray-400 font-normal">(optional)</span>
+                        Related mentorship <span className="text-gray-500 font-normal">(optional)</span>
                       </label>
                       <select
                         value={interestForm.linked_mentorship_id}
@@ -755,7 +755,7 @@ export default function OpportunitiesPage() {
             {/* Submitted interests */}
             {interests.length > 0 && (
               <div className="space-y-2">
-                <p className="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Your interest submissions</p>
+                <p className="text-[11px] text-gray-500 uppercase tracking-wider font-semibold">Your interest submissions</p>
                 {interests.map((interest) => (
                   <div
                     key={interest.id}
@@ -767,12 +767,12 @@ export default function OpportunitiesPage() {
                       </p>
                       <p className="text-xs text-gray-600 leading-relaxed">{interest.description}</p>
                       {interest.estimated_amount && (
-                        <p className="text-[11px] text-gray-400 mt-1">
+                        <p className="text-[11px] text-gray-500 mt-1">
                           Estimated: ${Number(interest.estimated_amount).toLocaleString()}
                         </p>
                       )}
                     </div>
-                    <span className="text-[10px] text-gray-400 flex-shrink-0 whitespace-nowrap">
+                    <span className="text-[10px] text-gray-500 flex-shrink-0 whitespace-nowrap">
                       {new Date(interest.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                   </div>

@@ -31,7 +31,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
           <h2 className="text-lg font-semibold text-navy-900">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-navy-900 transition-colors"
+            className="text-gray-500 hover:text-navy-900 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

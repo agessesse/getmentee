@@ -129,7 +129,7 @@ function CapacityBar({
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-gray-500">
         {active} of {max} mentee {max === 1 ? 'slot' : 'slots'} filled
       </p>
       {isFull && (
@@ -588,7 +588,7 @@ export default function DashboardPage() {
               <p className={`text-sm font-semibold ${textMap[priorityCard.color]}`}>{priorityCard.label}</p>
               <p className="text-xs text-gray-500 mt-0.5">{priorityCard.sub}</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
           </Link>
         );
       })()}
@@ -632,7 +632,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm font-semibold text-navy-900">Full impact</p>
-              <p className="text-xs text-navy-500 group-hover:text-navy-700 transition-colors">
+              <p className="text-xs text-navy-400 group-hover:text-navy-700 transition-colors">
                 View timeline →
               </p>
             </div>
@@ -704,7 +704,7 @@ export default function DashboardPage() {
           {upcomingSessions.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-5 h-5 text-gray-400" />
+                <Calendar className="w-5 h-5 text-gray-500" />
               </div>
               <p className="text-sm text-gray-500 mb-3">No upcoming sessions</p>
               <Link
@@ -726,7 +726,7 @@ export default function DashboardPage() {
                     <p className="text-sm font-medium text-navy-900">
                       {s.partner_name}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-500 mt-0.5">
                       {new Date(s.scheduled_at).toLocaleDateString('en-US', {
                         weekday: 'short',
                         month: 'short',
@@ -747,7 +747,7 @@ export default function DashboardPage() {
                       {s.session_type}
                     </span>
                     {!isMentee && (
-                      <span className="text-xs text-navy-500 font-medium">
+                      <span className="text-xs text-navy-400 font-medium">
                         Brief →
                       </span>
                     )}
@@ -774,7 +774,7 @@ export default function DashboardPage() {
           {recentMessages.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <MessageSquare className="w-5 h-5 text-gray-400" />
+                <MessageSquare className="w-5 h-5 text-gray-500" />
               </div>
               <p className="text-sm text-gray-500 mb-3">
                 {activeMentorships > 0
@@ -804,7 +804,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-medium text-navy-900">
                         {msg.sender_name}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(msg.created_at), {
                           addSuffix: true,
                         })}
@@ -842,7 +842,7 @@ export default function DashboardPage() {
               Professional-development funding for students with demonstrated financial need. Attire, travel, networking, and more.
             </p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-500 transition-colors flex-shrink-0 mt-3" />
+          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-400 transition-colors flex-shrink-0 mt-3" />
         </Link>
       )}
 
