@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { getServiceRoleKey } from '@/lib/supabase/service-key';
 
 // DELETE /api/account/delete
 // Permanently deletes the authenticated user's account and all data via ON DELETE CASCADE.
@@ -48,7 +49,8 @@ export async function DELETE(req: NextRequest) {
   }
 
   // 3. Only then does the service-role key matter.
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  const serviceKey = getServiceRoleKey();
+  if (!serviceKey) {
     return NextResponse.json(
       { error: 'Account deletion is currently unavailable.' },
       { status: 503 }
@@ -57,7 +59,7 @@ export async function DELETE(req: NextRequest) {
 
   const admin = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    serviceKey,
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 

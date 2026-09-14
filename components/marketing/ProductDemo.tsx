@@ -234,13 +234,19 @@ export default function ProductDemo() {
   const [stage, setStage] = useState<StageId>('discover');
   const [visited, setVisited] = useState<Set<StageId>>(() => new Set<StageId>(['discover']));
 
+  // Both events fire from the handler, never from render. An effect keyed on
+  // `stage` also ran on mount, so merely loading the page recorded an
+  // interaction that never happened.
   const go = (next: StageId) => {
+    // Read the set before updating. A state updater is not a safe place for a
+    // side effect: React invokes it twice under Strict Mode, which would log
+    // the event twice for one click.
+    const firstVisit = !visited.has(next);
     setStage(next);
     setVisited((v) => new Set(v).add(next));
-    trackLandingEvent('product_demo_stage_viewed', { stage: next });
+    if (firstVisit) trackLandingEvent('product_demo_stage_viewed', { stage: next });
+    trackLandingEvent('product_demo_interacted', { stage: next });
   };
-
-  useEffect(() => { trackLandingEvent('product_demo_interacted', { stage }); }, [stage]);
 
   const activeIdx = STAGES.findIndex((s) => s.id === stage);
   const activeStage = STAGES[activeIdx];

@@ -2,6 +2,7 @@ import 'server-only';
 
 import { createClient as createServiceClient, type SupabaseClient } from '@supabase/supabase-js';
 import { createClient as createServerClient } from '@/lib/supabase/server';
+import { getServiceRoleKey } from '@/lib/supabase/service-key';
 
 /**
  * Admin authorization and data access.
@@ -34,7 +35,7 @@ export type AdminGate =
 
 function serviceClient(): AdminDB | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = getServiceRoleKey();
   if (!url || !key) return null;
   return createServiceClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -90,6 +91,46 @@ export async function rows<T>(
   const { data, error } = await query;
   if (error || !data) return [];
   return data as T[];
+}
+
+/**
+ * Like `rows`, but distinguishes "the query failed" from "there is nothing".
+ *
+ * The plain `rows` helper returns [] for both, which let the admin Reports
+ * page render "No reports filed" while user_reports was in fact unreachable.
+ * A confidently wrong zero is worse than an error, so anything whose count
+ * drives a decision should use this and show the failure.
+ */
+export async function rowsOrError<T>(
+  query: PromiseLike<{ data: unknown; error: unknown }>
+): Promise<{ ok: true; data: T[] } | { ok: false; message: string }> {
+  const { data, error } = await query;
+  if (error) {
+    const e = error as { message?: string; code?: string };
+    return { ok: false, message: e.code ? `${e.code}: ${e.message ?? 'query failed'}` : (e.message ?? 'query failed') };
+  }
+  return { ok: true, data: (data ?? []) as T[] };
+}
+
+/**
+ * Exact row count, or null when the table cannot be read. Callers must render
+ * null as unavailable rather than zero.
+ *
+ * Note: PostgREST does not surface a missing-table error on a head:true count,
+ * it returns a null count with no error, so both signals are treated as
+ * unavailable here.
+ */
+export async function countOrNull(
+  db: AdminDB,
+  table: string,
+  opts: { eq?: Record<string, string>; since?: string } = {}
+): Promise<number | null> {
+  let q = db.from(table).select('*', { count: 'exact', head: true });
+  for (const [col, val] of Object.entries(opts.eq ?? {})) q = q.eq(col, val);
+  if (opts.since) q = q.gte('created_at', opts.since);
+  const { count, error } = await q;
+  if (error || count === null || count === undefined) return null;
+  return count;
 }
 
 /** Single-row variant of `rows`. */

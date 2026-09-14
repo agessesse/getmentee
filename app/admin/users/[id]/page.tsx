@@ -8,9 +8,9 @@ export const dynamic = 'force-dynamic';
 interface Profile {
   id: string; first_name: string | null; last_name: string | null;
   role: 'mentor' | 'mentee'; headline: string | null; university: string | null;
-  company: string | null; title: string | null; location: string | null;
+  location: string | null;
   linkedin_url: string | null; graduation_year: number | null;
-  created_at: string; is_demo: boolean; is_admin: boolean; is_verified: boolean | null;
+  created_at: string; is_demo: boolean; is_admin: boolean;
 }
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
@@ -30,7 +30,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
 
   const p = await row<Profile>(
     db.from('profiles')
-      .select('id, first_name, last_name, role, headline, university, company, title, location, linkedin_url, graduation_year, created_at, is_demo, is_admin, is_verified')
+      .select('id, first_name, last_name, role, headline, university, location, linkedin_url, graduation_year, created_at, is_demo, is_admin')
       .eq('id', id).single()
   );
   if (!p) notFound();
@@ -67,7 +67,6 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
           <Tag tone={isMentor ? 'blue' : 'neutral'}>{p.role}</Tag>
           {p.is_admin && <Tag tone="red">Admin</Tag>}
           {p.is_demo && <Tag>Demo</Tag>}
-          {p.is_verified && <Tag tone="green">Verified</Tag>}
           {reportsAgainst.length > 0 && <Tag tone="amber">{reportsAgainst.length} report(s)</Tag>}
         </div>
       </div>
@@ -76,8 +75,6 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
         <Panel title="Profile">
           <dl className="px-4 py-1">
             <Field label="Headline" value={p.headline} />
-            <Field label="Title" value={p.title} />
-            <Field label="Company" value={p.company} />
             <Field label="University" value={p.university} />
             <Field label="Graduation year" value={p.graduation_year} />
             <Field label="Location" value={p.location} />
@@ -96,6 +93,8 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             <dl className="px-4 py-1">
               <Field label="Profile complete" value={ext.profile_complete ? 'Yes' : 'No'} />
               <Field label="Bio" value={(ext.bio as string) || null} />
+              {isMentor && <Field label="Company" value={(ext.company as string) || null} />}
+              {isMentor && <Field label="Title" value={(ext.title as string) || null} />}
               <Field label="Timezone" value={(ext.timezone as string) || null} />
               {isMentor ? (
                 <>

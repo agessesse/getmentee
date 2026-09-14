@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { requireAdmin, rows } from '@/lib/supabase/admin';
+import { requireAdmin, rows, rowsOrError } from '@/lib/supabase/admin';
 import { Panel, Empty, Tag, Th, Td } from '@/components/admin/ui';
 
 export const dynamic = 'force-dynamic';
@@ -20,11 +20,12 @@ export default async function AdminReports() {
   if (!gate.ok) return null;
   const { db } = gate;
 
-  const reports = await rows<Report>(
+  const result = await rowsOrError<Report>(
     db.from('user_reports')
       .select('id, reporter_id, reported_id, reason, details, context, created_at')
       .order('created_at', { ascending: false }).limit(200)
   );
+  const reports = result.ok ? result.data : [];
 
   const ids = [...new Set(reports.flatMap((r) => [r.reporter_id, r.reported_id]))];
   const people = new Map(
@@ -45,28 +46,43 @@ export default async function AdminReports() {
       <div>
         <h1 className="text-[20px] font-semibold text-navy-900">Reports</h1>
         <p className="text-[14px] text-gray-600 mt-1">
-          {reports.length} filed. This queue is read-only.
+          {result.ok ? `${reports.length} filed.` : 'Count unavailable.'} This queue is read-only.
         </p>
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-        <p className="text-[13px] font-semibold text-amber-900">Schema gap: no resolution status</p>
-        <p className="text-[14px] text-amber-900 mt-1 leading-relaxed">
-          <code className="text-[13px]">user_reports</code> (migration 0011) stores
-          reporter, subject, reason, details, context and timestamp. There is no
-          status, assignee, or resolution column, so there is nowhere to record
-          that a report was actioned. Triaging here would lose that state on
-          reload, so nothing is written. Closing the gap needs a migration adding{' '}
-          <code className="text-[13px]">status</code>,{' '}
-          <code className="text-[13px]">resolved_by</code> and{' '}
-          <code className="text-[13px]">resolved_at</code>, plus an admin-only
-          UPDATE policy. That is a schema change, so it is left for you to approve.
-        </p>
-      </div>
+      {!result.ok ? (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-[13px] font-semibold text-red-900">Reports cannot be read</p>
+          <p className="text-[14px] text-red-900 mt-1 leading-relaxed">
+            The <code className="text-[13px]">user_reports</code> table did not
+            answer this query, so the count below is not a real zero. Migration{' '}
+            <code className="text-[13px]">0011_reports_blocks.sql</code> declares
+            this table; if it has not been applied to this project, reporting and
+            blocking are non-functional for users too. Apply the pending
+            migrations and reload.
+          </p>
+          <p className="text-[13px] text-red-800 mt-2 font-mono">{result.message}</p>
+        </div>
+      ) : (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <p className="text-[13px] font-semibold text-amber-900">Schema gap: no resolution status</p>
+          <p className="text-[14px] text-amber-900 mt-1 leading-relaxed">
+            <code className="text-[13px]">user_reports</code> stores reporter,
+            subject, reason, details, context and timestamp. There is no status,
+            assignee, or resolution column, so there is nowhere to record that a
+            report was actioned. Triaging here would lose that state on reload,
+            so nothing is written. Closing the gap needs a migration adding{' '}
+            <code className="text-[13px]">status</code>,{' '}
+            <code className="text-[13px]">resolved_by</code> and{' '}
+            <code className="text-[13px]">resolved_at</code>, plus an admin-only
+            UPDATE policy.
+          </p>
+        </div>
+      )}
 
       <Panel title="Queue">
         {reports.length === 0 ? (
-          <Empty>No reports filed.</Empty>
+          <Empty>{result.ok ? 'No reports filed.' : 'Cannot read the reports table, see above.'}</Empty>
         ) : (
           <>
             <div className="hidden md:block overflow-x-auto">

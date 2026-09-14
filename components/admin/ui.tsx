@@ -17,7 +17,9 @@ export function Stat({
     <>
       <p className="text-[12px] font-medium text-gray-600">{label}</p>
       <p className="text-[26px] font-semibold tabular-nums text-navy-900 leading-none mt-1.5">
-        {value === null ? <span className="text-[15px] font-normal text-gray-500">No data yet</span> : value}
+        {value === null
+          ? <span className="text-[15px] font-normal text-amber-700">Unavailable</span>
+          : value}
       </p>
       {sub && <p className="text-[12px] text-gray-600 mt-1.5">{sub}</p>}
     </>

@@ -6,13 +6,15 @@ export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 50;
 
+// company/title live on mentor_profiles (migration 0005), not on profiles.
+// Selecting profiles.company returned 42703 and rows() swallowed it, so the
+// table rendered "Showing 0" next to a "43 total" header.
 interface Row {
   id: string;
   first_name: string | null;
   last_name: string | null;
   role: 'mentor' | 'mentee';
   university: string | null;
-  company: string | null;
   headline: string | null;
   created_at: string;
   is_demo: boolean;
@@ -37,7 +39,7 @@ export default async function AdminUsers({
 
   let query = db
     .from('profiles')
-    .select('id, first_name, last_name, role, university, company, headline, created_at, is_demo, is_admin',
+    .select('id, first_name, last_name, role, university, headline, created_at, is_demo, is_admin',
             { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(from, from + PAGE_SIZE - 1);
@@ -47,7 +49,7 @@ export default async function AdminUsers({
     // Escape commas and parentheses: PostgREST `or` uses them as syntax.
     const safe = q.replace(/[,()]/g, ' ');
     query = query.or(
-      `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,university.ilike.%${safe}%,company.ilike.%${safe}%`
+      `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,university.ilike.%${safe}%`
     );
   }
 
@@ -60,13 +62,18 @@ export default async function AdminUsers({
   // Profile completion lives on the role-specific tables, so resolve it in one
   // extra pair of queries rather than per row.
   const ids = users.map((u) => u.id);
-  const [mentorDone, menteeDone] = ids.length
+  const [mentorRows, menteeDone] = ids.length
     ? await Promise.all([
-        rows<{ id: string }>(db.from('mentor_profiles').select('id').in('id', ids).eq('profile_complete', true)),
+        rows<{ id: string; company: string | null; profile_complete: boolean }>(
+          db.from('mentor_profiles').select('id, company, profile_complete').in('id', ids)),
         rows<{ id: string }>(db.from('mentee_profiles').select('id').in('id', ids).eq('profile_complete', true)),
       ])
     : [[], []];
-  const complete = new Set([...mentorDone, ...menteeDone].map((r) => r.id));
+  const complete = new Set([
+    ...mentorRows.filter((r) => r.profile_complete).map((r) => r.id),
+    ...menteeDone.map((r) => r.id),
+  ]);
+  const companyOf = new Map(mentorRows.map((r) => [r.id, r.company]));
 
   const visible = status
     ? users.filter((u) => (status === 'complete' ? complete.has(u.id) : !complete.has(u.id)))
@@ -94,7 +101,7 @@ export default async function AdminUsers({
         <div>
           <label htmlFor="q" className="block text-[12px] font-medium text-gray-700 mb-1">Search</label>
           <input
-            id="q" name="q" defaultValue={q} placeholder="Name, school, or company"
+            id="q" name="q" defaultValue={q} placeholder="Name or school"
             className="h-9 w-64 max-w-full rounded-md border border-gray-300 px-3 text-[14px] text-navy-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500"
           />
         </div>
@@ -150,7 +157,7 @@ export default async function AdminUsers({
                         {u.headline && <div className="text-[12px] text-gray-600 mt-0.5 truncate max-w-[220px]">{u.headline}</div>}
                       </Td>
                       <Td><Tag tone={u.role === 'mentor' ? 'blue' : 'neutral'}>{u.role}</Tag></Td>
-                      <Td className="text-gray-700">{u.university || u.company || 'Not set'}</Td>
+                      <Td className="text-gray-700">{u.university || companyOf.get(u.id) || 'Not set'}</Td>
                       <Td>{complete.has(u.id)
                         ? <Tag tone="green">Complete</Tag>
                         : <Tag tone="amber">Incomplete</Tag>}</Td>
@@ -177,7 +184,7 @@ export default async function AdminUsers({
                   <Link href={`/admin/users/${u.id}`} className="font-medium text-[15px] hover:underline">
                     {u.first_name} {u.last_name}
                   </Link>
-                  <p className="text-[13px] text-gray-700 mt-1">{u.university || u.company || 'Not set'}</p>
+                  <p className="text-[13px] text-gray-700 mt-1">{u.university || companyOf.get(u.id) || 'Not set'}</p>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     <Tag tone={u.role === 'mentor' ? 'blue' : 'neutral'}>{u.role}</Tag>
                     {complete.has(u.id) ? <Tag tone="green">Complete</Tag> : <Tag tone="amber">Incomplete</Tag>}
