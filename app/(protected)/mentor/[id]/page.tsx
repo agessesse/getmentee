@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Star, MapPin, Building2, GraduationCap, Globe, CheckCircle, ArrowLeft, Bookmark, BookmarkCheck, Link as LinkIcon, Award } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -10,6 +10,7 @@ import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import RequestModal from '@/components/mentor/RequestModal';
 import ReportUserModal from '@/components/user/ReportUserModal';
+import { trackGa } from '@/lib/ga';
 
 interface MentorDetail {
   id: string;
@@ -105,6 +106,7 @@ function computeMatch(mentor: MentorDetail, mentee: {
 
 export default function MentorProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const analyticsFiredRef = useRef(false);
   const [mentor, setMentor] = useState<MentorDetail | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -155,6 +157,16 @@ export default function MentorProfilePage() {
       ]);
 
       const mentorData = mentorRes.data as unknown as MentorDetail;
+
+      // Same pilot roster gate as Discover. Discover no longer links to the
+      // seeded fixtures, but the route is guessable by id, and a profile with
+      // a working "Request Mentorship" button is exactly the thing a student
+      // must not reach for a person who does not exist.
+      if (mentorData && mentorData.mentor_profiles?.is_founding_mentor !== true) {
+        router.replace('/discover');
+        return;
+      }
+
       setMentor(mentorData);
       setUserRole(profileRes.data?.role as 'mentor' | 'mentee');
       setHasRequest(!!requestRes.data);
@@ -207,10 +219,15 @@ export default function MentorProfilePage() {
       if (!analyticsFiredRef.current) {
         analyticsFiredRef.current = true;
         void trackEvent('mentor_profile_viewed', profileRes.data?.role as 'mentor' | 'mentee', { entityId: id });
+        // GA4 counterpart. No entityId: a Supabase UUID must not reach Google.
+        trackGa('mentor_profile_viewed', {
+          role: profileRes.data?.role === 'mentor' ? 'mentor' : 'mentee',
+          mentor_kind: 'founding',
+        });
       }
     }
     load();
-  }, [id]);
+  }, [id, router]);
 
   const handleRequest = async (message: string, goals: string) => {
     const supabase = createClient();
@@ -293,7 +310,7 @@ export default function MentorProfilePage() {
                     {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
                   </button>
                 )}
-                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${mp.is_available ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${mp.is_available ? 'bg-sage-50 text-sage-700' : 'bg-gray-100 text-gray-500'}`}>
                   {mp.is_available ? 'Available' : 'Not available'}
                 </span>
               </div>
@@ -420,7 +437,7 @@ export default function MentorProfilePage() {
                 <ul className="space-y-2">
                   {matchInfo.reasons.map((r) => (
                     <li key={r} className="flex items-center gap-2 text-sm text-navy-200">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-sage-300 flex-shrink-0" />
                       {r}
                     </li>
                   ))}
@@ -508,7 +525,7 @@ export default function MentorProfilePage() {
               <ul className="space-y-2">
                 {mp.goals.map((g) => (
                   <li key={g} className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+                    <CheckCircle className="w-3.5 h-3.5 text-sage-600 flex-shrink-0" />
                     {g}
                   </li>
                 ))}

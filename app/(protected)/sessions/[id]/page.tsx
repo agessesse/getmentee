@@ -55,7 +55,7 @@ interface PreBrief {
 const STATUS_STYLES: Record<string, string> = {
   scheduled:   'bg-blue-50 text-blue-700',
   in_progress: 'bg-amber-50 text-amber-700',
-  completed:   'bg-green-50 text-green-700',
+  completed:   'bg-sage-50 text-sage-700',
   cancelled:   'bg-red-50 text-red-600',
 };
 
@@ -545,7 +545,7 @@ export default function SessionDetailPage() {
               >
                 {notesSaved ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-green-500" /> Saved
+                    <Check className="w-3.5 h-3.5 text-sage-600" /> Saved
                   </>
                 ) : notesLoading ? (
                   'Saving...'
@@ -585,7 +585,7 @@ export default function SessionDetailPage() {
                   >
                     {recapSaved ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-green-500" /> Saved
+                        <Check className="w-3.5 h-3.5 text-sage-600" /> Saved
                       </>
                     ) : recapLoading ? (
                       'Saving...'
@@ -707,7 +707,7 @@ export default function SessionDetailPage() {
                       className="mt-0.5 flex-shrink-0"
                     >
                       {item.is_completed ? (
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-5 h-5 text-sage-600" />
                       ) : (
                         <Circle className="w-5 h-5 text-gray-300 hover:text-navy-400 transition-colors" />
                       )}
@@ -776,7 +776,7 @@ export default function SessionDetailPage() {
               <button
                 onClick={markSessionComplete}
                 disabled={markingComplete}
-                className="mt-3 w-full inline-flex items-center justify-center gap-2 border border-green-300 text-green-700 py-2.5 rounded-xl text-sm font-medium hover:bg-green-50 transition-colors disabled:opacity-50"
+                className="mt-3 w-full inline-flex items-center justify-center gap-2 border border-sage-200 text-sage-700 py-2.5 rounded-xl text-sm font-medium hover:bg-sage-50 transition-colors disabled:opacity-50"
               >
                 <Check className="w-4 h-4" />
                 {markingComplete ? 'Marking...' : 'Mark Complete'}
@@ -883,9 +883,9 @@ export default function SessionDetailPage() {
           )}
 
           {reviewSubmitted && (
-            <div className="bg-green-50 rounded-2xl p-4 text-center">
-              <CheckCircle className="w-6 h-6 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-green-800 mb-3">
+            <div className="bg-sage-50 rounded-2xl p-4 text-center">
+              <CheckCircle className="w-6 h-6 text-sage-600 mx-auto mb-2" />
+              <p className="text-sm font-medium text-sage-700 mb-3">
                 Review submitted!
               </p>
               <div className="flex items-center justify-center gap-3 flex-wrap">

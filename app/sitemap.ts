@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
+import { siteUrl } from '@/lib/site';
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+
 
 // /people/<slug> used to be listed here, all eighteen of them, twelve being
 // students. Those pages require authentication, so submitting them to search

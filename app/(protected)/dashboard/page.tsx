@@ -70,11 +70,11 @@ function StatCard({
   color?: string;
 }) {
   const bg =
-    color === 'green' ? 'bg-green-50'
+    color === 'green' ? 'bg-sage-50'
     : color === 'amber' ? 'bg-amber-50'
     : 'bg-navy-50';
   const iconColor =
-    color === 'green' ? 'text-green-600'
+    color === 'green' ? 'text-sage-700'
     : color === 'amber' ? 'text-amber-600'
     : 'text-navy-600';
   return (
@@ -115,7 +115,7 @@ function CapacityBar({
               ? 'bg-red-50 text-red-600'
               : pct >= 75
               ? 'bg-amber-50 text-amber-600'
-              : 'bg-green-50 text-green-700'
+              : 'bg-sage-50 text-sage-700'
           }`}
         >
           {isFull ? 'Full' : pct >= 75 ? 'Nearly full' : 'Open'}
@@ -124,7 +124,7 @@ function CapacityBar({
       <div className="w-full bg-gray-100 rounded-full h-2 mb-2">
         <div
           className={`h-2 rounded-full transition-all ${
-            isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-green-400'
+            isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-sage-600'
           }`}
           style={{ width: `${pct}%` }}
         />
@@ -682,7 +682,11 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Upcoming sessions + recent messages ──────────────────────────── */}
+      {/* Hidden for a brand-new user. Sessions and Messages only exist once a
+          mentorship does, so before the first request these were two empty
+          boxes occupying the best space on the page, one of them offering
+          "Schedule a session" with nobody to schedule it with. */}
+      {!isNewUser && (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming sessions */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -816,6 +820,7 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+      )}
 
       {/* ── Opportunity Fund entry point (mentees only) ─────────────────── */}
       {isMentee && (
@@ -841,8 +846,11 @@ export default function DashboardPage() {
         </Link>
       )}
 
-      {/* ── CTA for new users ────────────────────────────────────────────── */}
-      {activeMentorships === 0 && (
+      {/* One primary next action, not three. The first-run guide above already
+          says "Find a mentor", so for a brand-new student this banner repeated
+          it a third time alongside a duplicate "Complete profile". It now
+          appears only once the student has begun and still has no mentorship. */}
+      {activeMentorships === 0 && !isNewUser && (
         <div className="bg-navy-900 rounded-2xl p-6 text-white">
           <h2 className="text-base font-semibold mb-1">
             {isMentee ? 'Find your first mentor' : 'Start accepting mentees'}

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 import VoiceInputButton from '@/components/voice/VoiceInputButton';
+import { trackGa } from '@/lib/ga';
 
 interface RequestModalProps {
   open: boolean;
@@ -28,12 +29,18 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (open) trackGa('mentorship_request_started', { role: 'mentee', request_status: 'started' });
+  }, [open]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
       await onSubmit(message, goals);
+      // After the insert resolves. A click that throws never reaches here.
+      trackGa('mentorship_request_submitted', { role: 'mentee', request_status: 'submitted' });
       setMessage('');
       setGoals('');
       onClose();

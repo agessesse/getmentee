@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
 import { DM_Sans, Instrument_Serif } from 'next/font/google';
+import { siteUrl } from '@/lib/site';
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -20,7 +22,7 @@ const instrumentSerif = Instrument_Serif({
 // emits relative image URLs no social scraper can resolve, so the
 // summary_large_image card below rendered empty. Set NEXT_PUBLIC_APP_URL in
 // the deployment environment.
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -52,6 +54,7 @@ export default function RootLayout({
     <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
       <body className="bg-cream-50 text-navy-900 font-sans">
         <AuthProvider>{children}</AuthProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );

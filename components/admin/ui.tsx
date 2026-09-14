@@ -58,7 +58,7 @@ export function Empty({ children }: { children: React.ReactNode }) {
 
 const TONES = {
   neutral: 'bg-gray-100 text-gray-700 border-gray-200',
-  green: 'bg-green-50 text-green-800 border-green-200',
+  green: 'bg-sage-50 text-sage-700 border-sage-200',
   amber: 'bg-amber-50 text-amber-800 border-amber-200',
   red: 'bg-red-50 text-red-800 border-red-200',
   blue: 'bg-navy-50 text-navy-800 border-navy-200',

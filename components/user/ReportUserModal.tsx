@@ -80,8 +80,8 @@ export default function ReportUserModal({
     <Modal open={open} onClose={handleClose} title={`Report ${reportedName}`}>
       {submitted ? (
         <div className="py-4 text-center space-y-3">
-          <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto">
-            <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-12 h-12 rounded-full bg-sage-50 flex items-center justify-center mx-auto">
+            <svg className="w-6 h-6 text-sage-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>

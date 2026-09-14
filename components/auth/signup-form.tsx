@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
+import { trackGa } from '@/lib/ga';
 import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
 
 type Step = 'role' | 'details';
@@ -54,7 +55,14 @@ export function SignupForm() {
   const handleRoleSelect = (r: 'mentor' | 'mentee') => {
     setRole(r);
     setStep('details');
+    trackGa('sign_up_started', { role: r, cta_location: 'chooser' });
   };
+
+  // A deep link from the landing page skips the chooser, so the funnel would
+  // otherwise miss every student who arrived through the primary CTA.
+  useEffect(() => {
+    if (presetRole) trackGa('sign_up_started', { role: presetRole, cta_location: 'landing_cta' });
+  }, [presetRole]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +75,8 @@ export function SignupForm() {
       setError(friendlyAuthError(error));
       setLoading(false);
     } else {
+      // After the account actually exists, not on button click.
+      trackGa('sign_up_completed', { role });
       setSuccess(true);
       setTimeout(() => router.push('/login'), 2000);
     }
@@ -75,8 +85,8 @@ export function SignupForm() {
   if (success) {
     return (
       <div className="w-full max-w-md mx-auto text-center py-12">
-        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-          <svg className="w-7 h-7 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="w-14 h-14 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-5">
+          <svg className="w-7 h-7 text-sage-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>

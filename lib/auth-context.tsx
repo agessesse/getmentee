@@ -53,6 +53,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       password,
       options: {
+        // Without this the confirmation link uses the project's Site URL,
+        // which is deployment configuration this code cannot see. Sending it
+        // explicitly means a student who confirms lands back on the canonical
+        // domain. The URL must also be present in Supabase's redirect
+        // allowlist, otherwise Supabase ignores it and falls back to Site URL.
+        emailRedirectTo:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/login`
+            : undefined,
         data: {
           first_name: firstName,
           last_name: lastName,

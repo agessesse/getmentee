@@ -283,7 +283,7 @@ export default function GoalsPage() {
                     <div className="flex items-start gap-4">
                       <button
                         onClick={() => markComplete(g.id)}
-                        className="mt-0.5 text-gray-300 hover:text-green-500 transition-colors flex-shrink-0"
+                        className="mt-0.5 text-gray-300 hover:text-sage-600 transition-colors flex-shrink-0"
                         title="Mark as complete"
                       >
                         <Circle className="w-5 h-5" />
@@ -319,7 +319,7 @@ export default function GoalsPage() {
                 {completed.map((g) => (
                   <div key={g.id} className="bg-white rounded-2xl border border-gray-100 p-5 opacity-60">
                     <div className="flex items-start gap-4">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-sage-600 flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-navy-900 line-through">{g.title}</p>
                         {g.completed_at && (

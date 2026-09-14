@@ -14,6 +14,7 @@ import {
   ChevronDown, SlidersHorizontal, X, GraduationCap, Users,
 } from 'lucide-react';
 import { SOURCED_MENTORS, SOURCED_NEAR_PEERS, type SourcedProfile, type SourcedNearPeer } from '@/data/people';
+import { trackGa } from '@/lib/ga';
 
 // ─── Filter taxonomy ──────────────────────────────────────────────────────────
 
@@ -72,6 +73,7 @@ interface LiveMentorData {
     title: string | null;
     industry: string | null;
     is_verified: boolean;
+    is_founding_mentor: boolean;
   };
   matchScore: number;
   matchReasons: string[];
@@ -313,14 +315,14 @@ function LiveMentorCard({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs font-semibold text-navy-700">Why this could fit</span>
               {mp?.is_available && (
-                <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Available</span>
+                <span className="text-xs font-medium text-sage-700 bg-sage-50 px-2 py-0.5 rounded-full">Available</span>
               )}
             </div>
             <p className="text-xs text-navy-600">{mentor.matchReasons.join(' · ')}</p>
           </div>
         ) : mp?.is_available ? (
           <div className="mb-3">
-            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Available</span>
+            <span className="text-xs font-medium text-sage-700 bg-sage-50 px-2 py-0.5 rounded-full">Available</span>
           </div>
         ) : null}
 
@@ -403,7 +405,7 @@ export default function DiscoverPage() {
   const [savedMentors, setSavedMentors] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState('');
-  const [menteeProfile, setMenteeProfile] = useState<MenteeProfile | null>(null);
+  const [, setMenteeProfile] = useState<MenteeProfile | null>(null);
 
   const [search, setSearch] = useState('');
   const [selectedIndustry, setSelectedIndustry] = useState('');
@@ -458,7 +460,7 @@ export default function DiscoverPage() {
         mentor_profiles (
           bio, expertise_tags, years_experience, weekly_hours,
           rating, review_count, is_available, session_rate,
-          company, title, industry, is_verified
+          company, title, industry, is_verified, is_founding_mentor
         )
       `)
       .eq('role', 'mentor')
@@ -479,7 +481,33 @@ export default function DiscoverPage() {
     setSavedMentors(new Set(savedData?.map((s) => s.mentor_id) ?? []));
 
     type RawMentor = typeof data extends (infer R)[] | null ? R : never;
-    const results: LiveMentorData[] = ((data as RawMentor[]) ?? []).map((m) => {
+
+    // PILOT ROSTER GATE.
+    //
+    // Every mentor account in the database today is a seeded fixture from
+    // scripts/seed-demo.ts: invented people at Goldman, Bain, Blackstone,
+    // Sequoia and so on, created with is_demo = false and therefore
+    // indistinguishable from a real user. A student could send a genuine
+    // mentorship request to someone who does not exist.
+    //
+    // is_demo would be the natural filter, but migration 0018 deliberately
+    // withholds that column from the `authenticated` role, so a client query
+    // cannot read it — and widening the grant would mean touching RLS.
+    // is_founding_mentor is on mentor_profiles, is readable, is false for all
+    // twenty-four fixtures, and already drives the "Founding Mentor" badge.
+    // Using it as the visibility gate needs no data migration and no schema
+    // change: onboarding a real mentor means setting this one flag true.
+    //
+    // The six invited mentors (Christopher Floyd, Peter Keane, Travis Melvin,
+    // David Sheffer, Drew Nations, Zach Smith) hold no accounts at all. They
+    // are static records in data/people.ts and already render below as
+    // "Preview / Not yet on Mentable", which is honest and not requestable.
+    const roster = ((data as RawMentor[]) ?? []).filter((m) => {
+      const mp = m.mentor_profiles as unknown as LiveMentorData['mentor_profiles'] | null;
+      return mp?.is_founding_mentor === true;
+    });
+
+    const results: LiveMentorData[] = roster.map((m) => {
       const mentorBase = {
         id: m.id as string,
         first_name: m.first_name as string,
@@ -504,6 +532,15 @@ export default function DiscoverPage() {
   }, [router]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  // Fires once per mount, after the roster resolves, so result_count reflects
+  // what the student actually saw rather than a pre-fetch guess.
+  const discoveryFired = useRef(false);
+  useEffect(() => {
+    if (loading || discoveryFired.current) return;
+    discoveryFired.current = true;
+    trackGa('mentor_discovery_viewed', { role: 'mentee', result_count: liveMentors.length });
+  }, [loading, liveMentors.length]);
 
   // ── Filter sourced mentors by search ────────────────────────────────────────
   const filteredSourcedMentors = SOURCED_MENTORS.filter((m) => {
@@ -610,7 +647,6 @@ export default function DiscoverPage() {
   const activeFilterCount =
     (selectedIndustry ? 1 : 0) + selectedExpertise.length + (availableOnly ? 1 : 0) + (savedOnly ? 1 : 0);
 
-  const totalMentorCount = filteredLiveMentors.length + filteredSourcedMentors.length;
 
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
 
@@ -622,8 +658,12 @@ export default function DiscoverPage() {
         <div>
           <h1 className="text-2xl font-bold text-navy-900">Discover Mentors</h1>
           <p className="text-gray-500 mt-1 text-sm">
-            {totalMentorCount} mentor{totalMentorCount !== 1 ? 's' : ''}
-            {menteeProfile ? ' · sorted by match' : ''}
+            {filteredLiveMentors.length > 0
+              ? `${filteredLiveMentors.length} mentor${filteredLiveMentors.length !== 1 ? 's' : ''} on Mentable`
+              : 'Mentable is in pilot'}
+            {filteredSourcedMentors.length > 0
+              ? ` · ${filteredSourcedMentors.length} invited`
+              : ''}
           </p>
         </div>
       </div>
@@ -769,6 +809,21 @@ export default function DiscoverPage() {
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Says why the roster is short instead of letting it read as an error. */}
+      {filteredLiveMentors.length === 0 && filteredSourcedMentors.length > 0 && (
+        <div className="rounded-2xl border border-sage-200 bg-sage-50 p-5">
+          <p className="text-sm font-semibold text-sage-700 mb-1">
+            No mentors have joined yet
+          </p>
+          <p className="text-sm text-sage-700/85 leading-relaxed max-w-2xl">
+            Mentable is in pilot. The people below are the mentors we have
+            invited. Their profiles are real, but they have not created accounts
+            yet, so you cannot send them a request. We will email you as soon as
+            the first mentor joins.
+          </p>
         </div>
       )}
 

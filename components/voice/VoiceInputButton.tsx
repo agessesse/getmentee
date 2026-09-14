@@ -138,7 +138,7 @@ export default function VoiceInputButton({
           ? 'bg-red-50 text-red-500 ring-2 ring-red-200'
           : state === 'processing'
           ? 'bg-navy-50 text-navy-400'
-          : 'bg-green-50 text-green-500',
+          : 'bg-sage-50 text-sage-600',
         disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
         className,
       ].join(' ')}

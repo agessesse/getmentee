@@ -172,7 +172,7 @@ function FundCard({ fund }: { fund: Fund }) {
         </div>
         <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full flex-shrink-0 ${
           fund.status === 'active'
-            ? 'bg-green-100 text-green-700'
+            ? 'bg-sage-100 text-sage-700'
             : fund.status === 'pilot'
             ? 'bg-amber-100 text-amber-700'
             : 'bg-gray-100 text-gray-500'
@@ -649,7 +649,7 @@ export default function OpportunitiesPage() {
             </div>
 
             {interestSuccess && (
-              <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl flex items-center gap-2 text-sm text-green-700">
+              <div className="mb-4 p-3 bg-sage-50 border border-sage-200 rounded-xl flex items-center gap-2 text-sm text-sage-700">
                 <CheckCircle className="w-4 h-4" />
                 Thank you. We have noted what would help you.
               </div>

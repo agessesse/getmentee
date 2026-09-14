@@ -78,19 +78,19 @@ function MilestoneBadge({
   return (
     <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
       achieved
-        ? 'bg-green-50 border-green-200'
+        ? 'bg-sage-50 border-sage-200'
         : 'bg-gray-50 border-gray-100 opacity-50'
     }`}>
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        achieved ? 'bg-green-100' : 'bg-gray-100'
+        achieved ? 'bg-sage-100' : 'bg-gray-100'
       }`}>
-        <Icon className={`w-4 h-4 ${achieved ? 'text-green-600' : 'text-gray-400'}`} />
+        <Icon className={`w-4 h-4 ${achieved ? 'text-sage-700' : 'text-gray-400'}`} />
       </div>
       <div className="min-w-0">
-        <p className={`text-sm font-medium ${achieved ? 'text-green-900' : 'text-gray-500'}`}>{label}</p>
-        {achieved && <p className="text-xs text-green-600 mt-0.5">Achieved</p>}
+        <p className={`text-sm font-medium ${achieved ? 'text-sage-700' : 'text-gray-500'}`}>{label}</p>
+        {achieved && <p className="text-xs text-sage-700 mt-0.5">Achieved</p>}
       </div>
-      {achieved && <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 ml-auto" />}
+      {achieved && <CheckCircle className="w-4 h-4 text-sage-600 flex-shrink-0 ml-auto" />}
     </div>
   );
 }
@@ -100,7 +100,7 @@ function MilestoneBadge({
 const EVENT_COLOR: Record<TimelineEvent['type'], string> = {
   mentorship_started: 'bg-navy-100 text-navy-600',
   session_completed:  'bg-blue-100 text-blue-600',
-  goal_completed:     'bg-green-100 text-green-600',
+  goal_completed:     'bg-sage-100 text-sage-700',
   review_received:    'bg-amber-100 text-amber-600',
 };
 

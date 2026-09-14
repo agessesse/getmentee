@@ -211,8 +211,15 @@ export default function TrajectoryViz() {
           >
             <defs>
               <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stopColor="#5265b0" />
-                <stop offset="100%" stopColor="#dde3f5" />
+                {/* The one place the sage accent appears on the marketing
+                    page. This curve is literally the thing the accent means:
+                    the path that moves when someone has done it before. It
+                    also reads better than the old navy-on-navy gradient, which
+                    sat at low contrast against the section background.
+                    sage-400 -> sage-200 on navy-900 is 4.86:1 rising to
+                    11.07:1. Nothing else on the landing page changed. */}
+                <stop offset="0%" stopColor="#7c9470" />
+                <stop offset="100%" stopColor="#ccdac5" />
               </linearGradient>
             </defs>
 
@@ -290,7 +297,7 @@ export default function TrajectoryViz() {
                     cx={p.x}
                     cy={p.y}
                     r={(isActive ? 7 : 4.5) * k}
-                    fill={isActive ? '#ffffff' : '#a4b3de'}
+                    fill={isActive ? '#ffffff' : '#a9be9f'}
                     style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
                   />
                   {(!narrow || i === 0 || i === NODES.length - 1) && (

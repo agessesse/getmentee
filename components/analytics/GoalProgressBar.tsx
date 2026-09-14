@@ -12,7 +12,7 @@ export default function GoalProgressBar({ goal, progress, total }: GoalProgressB
     <div className="space-y-1">
       <div className="flex items-center justify-between">
         <span className="text-sm text-navy-900 flex items-center gap-1">
-          {done && <span className="text-green-500">✓</span>} {goal}
+          {done && <span className="text-sage-600">✓</span>} {goal}
         </span>
         <span className="text-xs text-gray-400">{pct}%</span>
       </div>
