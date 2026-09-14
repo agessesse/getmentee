@@ -174,6 +174,8 @@ export default function ProfileSetupPage() {
   const [role, setRole] = useState<'mentor' | 'mentee' | null>(null);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<Step>(1);
+  // False during first-run onboarding; see the Danger zone below.
+  const [alreadyComplete, setAlreadyComplete] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -236,6 +238,13 @@ export default function ProfileSetupPage() {
       if (profile?.university) setUniversity(profile.university);
       if (profile?.graduation_year) setGraduationYear(String(profile.graduation_year));
       if (profile?.linkedin_url) setLinkedinUrl(profile.linkedin_url);
+
+      const { data: roleRow } = await supabase
+        .from(profile?.role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles')
+        .select('profile_complete')
+        .eq('id', uid)
+        .maybeSingle();
+      setAlreadyComplete(roleRow?.profile_complete === true);
 
       setLoading(false);
     }
@@ -528,7 +537,10 @@ export default function ProfileSetupPage() {
         </div>
       </div>
 
-      {/* Danger zone */}
+      {/* Hidden during first-run. The final element on a new student's very
+          first screen inside Mentable was a Delete account button, below the
+          Complete Profile button they had not pressed yet. */}
+      {alreadyComplete && (
       <div className="mt-8 bg-white rounded-2xl border border-red-100 p-6">
         <h2 className="text-sm font-semibold text-red-700 mb-1">Danger zone</h2>
         <p className="text-xs text-gray-500 mb-4">
@@ -543,6 +555,7 @@ export default function ProfileSetupPage() {
           Delete account
         </button>
       </div>
+      )}
     </div>
   );
 }

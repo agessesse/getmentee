@@ -1,0 +1,34 @@
+import { chromium } from 'playwright';
+const D='/private/tmp/claude-501/-Users-abelgessesse/25b64ad0-2074-47af-9793-f5fe3a0e0e49/scratchpad/';
+const EMAIL = `qa.firstrun.${Date.now()}@mentable-qa.test`;
+const PW = 'QaFirstRun!2026';
+console.log('TEST ACCOUNT:', EMAIL);
+const b = await chromium.launch();
+const p = await b.newPage({viewport:{width:1440,height:900}});
+const errs=[]; p.on('console',m=>m.type()==='error'&&errs.push(m.text())); p.on('pageerror',e=>errs.push('pageerror: '+e.message));
+let step=0, clicks=0;
+const t0=Date.now();
+const mark = async (what)=>{ step++; const el=Date.now()-t0;
+  console.log(`\n[${String(step).padStart(2)}] +${(el/1000).toFixed(1)}s  ${what}`);
+  console.log('     url: '+p.url());
+  const h = await p.evaluate(()=>[...document.querySelectorAll('h1,h2')].map(x=>x.tagName+':'+x.textContent.replace(/\s+/g,' ').trim().slice(0,60)));
+  console.log('     headings: '+(h.join(' | ')||'(none)'));
+  const cta = await p.evaluate(()=>[...document.querySelectorAll('a,button')].map(x=>x.textContent.replace(/\s+/g,' ').trim()).filter(t=>t&&t.length<44));
+  console.log('     actions: '+[...new Set(cta)].slice(0,12).join(' · '));
+  await p.screenshot({path:`${D}fr-${String(step).padStart(2,'0')}.png`, fullPage:true});
+};
+
+await p.goto('https://mentable.co/',{waitUntil:'networkidle'}); await p.waitForTimeout(3000);
+await mark('LANDING');
+await p.locator('section[aria-labelledby="hero-heading"] a[href*="role=mentee"]').first().click(); clicks++;
+await p.waitForURL('**/signup*'); await p.waitForTimeout(1500);
+await mark('SIGNUP (after Find your mentor)');
+
+await p.fill('#firstName','Jordan'); await p.fill('#lastName','Reyes');
+await p.fill('input[type="email"]',EMAIL); await p.fill('input[type="password"]',PW);
+await p.locator('button[type="submit"]').click(); clicks++;
+await p.waitForTimeout(6000);
+await mark('AFTER SUBMIT');
+console.log('     body:', (await p.textContent('body')).replace(/\s+/g,' ').trim().slice(0,300));
+console.log('\nerrors:', errs.filter(e=>!/favicon|404/.test(e)).slice(0,3));
+await b.close();

@@ -34,6 +34,7 @@ interface DashboardData {
     created_at: string;
   }>;
   activeGoals: number;
+  profileComplete: boolean;
   // mentor-only
   mentorExtra?: {
     totalMenteesEver: number;
@@ -145,8 +146,10 @@ function CapacityBar({
 
 // ─── First-run guide (shown only when account has zero activity) ──────────────
 
-function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
-  const steps = isMentee
+function FirstRunGuide({ isMentee, profileComplete }: { isMentee: boolean; profileComplete: boolean }) {
+  // "Complete your profile" was shown unconditionally, so it kept appearing to
+  // students who had just finished all three setup steps.
+  const steps = (isMentee
     ? [
         {
           href: '/discover',
@@ -174,7 +177,8 @@ function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
           detail: 'Make sure your availability, expertise tags, and bio are current so mentees can find you.',
           primary: false,
         },
-      ];
+      ]
+  ).filter((step) => !(profileComplete && step.href === '/profile/setup'));
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -337,6 +341,15 @@ export default function DashboardPage() {
         }
       }
 
+      // Read from whichever role table this user has, so the first-run guide
+      // stops asking for a profile that is already finished.
+      const completeRes = await supabase
+        .from(role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles')
+        .select('profile_complete')
+        .eq('id', uid)
+        .maybeSingle();
+      const profileComplete = completeRes.data?.profile_complete === true;
+
       // ── Mentor-specific extras ────────────────────────────────────────────
       let mentorExtra: DashboardData['mentorExtra'] | undefined;
 
@@ -389,6 +402,7 @@ export default function DashboardPage() {
         upcomingSessions,
         recentMessages,
         activeGoals: goalsRes.count ?? 0,
+        profileComplete,
         mentorExtra,
       });
       setLoading(false);
@@ -403,6 +417,7 @@ export default function DashboardPage() {
   const isMentee = data
     ? data.profile.role === 'mentee'
     : contextProfile?.role === 'mentee';
+  const profileComplete = data?.profileComplete ?? false;
 
   // While stats are loading, show the header immediately and skeleton cards.
   if (loading) {
@@ -635,7 +650,7 @@ export default function DashboardPage() {
 
       {/* ── Stat grid or first-run guide ─────────────────────────────────── */}
       {isNewUser ? (
-        <FirstRunGuide isMentee={isMentee} />
+        <FirstRunGuide isMentee={isMentee} profileComplete={profileComplete} />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard

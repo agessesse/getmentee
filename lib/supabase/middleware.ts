@@ -1,11 +1,20 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Every first path segment under app/(protected)/ EXCEPT /people, which is
-// public by design. These had drifted: /goals, /impact, /mentee, /mentees,
-// /network and /opportunities were in the route group but missing here, so they
-// served 200 to anonymous visitors instead of redirecting.
-// scripts/check-protected-routes.ts fails the build if they diverge again.
+// Every first path segment under app/(protected)/. These had drifted: /goals,
+// /impact, /mentee, /mentees, /network and /opportunities were in the route
+// group but missing here, so they served 200 to anonymous visitors instead of
+// redirecting. scripts/check-protected-routes.ts fails the build if they
+// diverge again.
+//
+// /people was excluded as "public by design, linked from the marketing page".
+// That stopped being true: the only links to it are in /discover, which is
+// authenticated. Meanwhile the route is prerendered, so anonymous HTTP got a
+// 200 carrying each person's name, employer, bio excerpt, headshot and
+// LinkedIn URL in <title>, <meta> and the flight payload, while a browser was
+// bounced to /login by the client-side layout guard. Twelve of the eighteen
+// were students, who are not public marketing content at all. A client-side
+// redirect is not access control; this is.
 const PROTECTED_PATHS = [
   '/analytics',
   '/dashboard',
@@ -19,6 +28,7 @@ const PROTECTED_PATHS = [
   '/messages',
   '/network',
   '/opportunities',
+  '/people',
   '/profile',
   '/requests',
   '/schedule',

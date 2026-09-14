@@ -10,7 +10,7 @@ import RequestModal from '@/components/mentor/RequestModal';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import {
-  Search, Star, Clock, MapPin, Building2, Bookmark, BookmarkCheck,
+  Search, Clock, MapPin, Building2, Bookmark, BookmarkCheck,
   ChevronDown, SlidersHorizontal, X, GraduationCap, Users,
 } from 'lucide-react';
 import { SOURCED_MENTORS, SOURCED_NEAR_PEERS, type SourcedProfile, type SourcedNearPeer } from '@/data/people';
@@ -303,34 +303,39 @@ function LiveMentorCard({
           </button>
         </div>
 
-        {showMatch && mentor.matchScore > 0 && (
+        {/* Gated on a reason, not on the score. is_available alone contributes
+            +10, so a student who has not filled in interests saw "10% match" on
+            every mentor with no explanation: a number that says the whole
+            roster is a bad fit. A score with nothing behind it is worse than no
+            score, so the card shows the reasons and drops the percentage. */}
+        {showMatch && mentor.matchReasons.length > 0 ? (
           <div className="mb-3 p-2.5 bg-navy-50 rounded-xl">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold text-navy-700">{mentor.matchScore}% match</span>
+              <span className="text-xs font-semibold text-navy-700">Why this could fit</span>
               {mp?.is_available && (
                 <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Available</span>
               )}
             </div>
-            <div className="w-full h-1.5 bg-navy-100 rounded-full overflow-hidden">
-              <div className="h-full bg-navy-600 rounded-full" style={{ width: `${mentor.matchScore}%` }} />
-            </div>
-            {mentor.matchReasons.length > 0 && (
-              <p className="text-xs text-navy-600 mt-1.5">{mentor.matchReasons.join(' · ')}</p>
-            )}
+            <p className="text-xs text-navy-600">{mentor.matchReasons.join(' · ')}</p>
           </div>
-        )}
+        ) : mp?.is_available ? (
+          <div className="mb-3">
+            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Available</span>
+          </div>
+        ) : null}
 
         {mp?.bio && (
           <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">{mp.bio}</p>
         )}
 
         <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-3">
-          {mp?.rating > 0 && (
-            <span className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-              {mp.rating.toFixed(1)} ({mp.review_count})
-            </span>
-          )}
+          {/* The star rating and review count that used to sit here came from
+              mentor_profiles.rating / review_count, which are seeded. Across
+              the roster they claimed 888 reviews while the reviews table holds
+              zero rows. A card cannot show a rating it cannot substantiate, and
+              Discover loads no review rows, so it shows none. The mentor
+              profile computes an average from real rows and is the place a
+              rating can honestly appear. */}
           {mp?.years_experience > 0 && (
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />

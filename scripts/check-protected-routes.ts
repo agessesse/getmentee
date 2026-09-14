@@ -12,8 +12,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-// Public by design: prerendered and linked from the marketing page.
-const INTENTIONALLY_PUBLIC = new Set(['people']);
+// Nothing under (protected) is public. /people used to be exempt here; it was
+// prerendered and served to anonymous HTTP while browsers were redirected.
+const INTENTIONALLY_PUBLIC = new Set<string>();
 
 const groupDir = join(process.cwd(), 'app', '(protected)');
 const segments = readdirSync(groupDir, { withFileTypes: true })

@@ -108,7 +108,11 @@ export function LoginForm() {
         </p>
       </form>
 
-      {/* Demo credentials */}
+      {/* Development only. On production this block published two working
+          accounts and their shared password in plain text, so anyone who
+          reached /login could sign in as a live mentor or mentee and read
+          their messages, mentorships and sessions. */}
+      {process.env.NODE_ENV !== 'production' && (
       <div className="mt-8 p-5 bg-gray-50 rounded-2xl border border-gray-100">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Demo accounts</p>
         <div className="grid grid-cols-2 gap-2">
@@ -129,8 +133,9 @@ export function LoginForm() {
             Alex Rivera
           </button>
         </div>
-        <p className="text-xs text-gray-400 mt-3">Password for both: <span className="font-mono font-medium">Demo1234!</span></p>
+        <p className="text-xs text-gray-500 mt-3">Password for both: <span className="font-mono font-medium">Demo1234!</span></p>
       </div>
+      )}
     </div>
   );
 }

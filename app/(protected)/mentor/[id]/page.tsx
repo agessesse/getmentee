@@ -334,7 +334,15 @@ export default function MentorProfilePage() {
                     {avgRating > 0 ? avgRating.toFixed(1) : '—'}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5">{mp.review_count} reviews</p>
+                {/* reviews.length, not mp.review_count. The seeded column
+                    claims reviews that do not exist in the reviews table, so
+                    this line read "47 reviews" under a "—" average and above
+                    "No reviews yet." */}
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {reviews.length === 0
+                    ? 'No reviews yet'
+                    : `${reviews.length} review${reviews.length === 1 ? '' : 's'}`}
+                </p>
               </div>
               <div className="text-center">
                 <span className="text-lg font-bold text-navy-900">{mp.years_experience}</span>

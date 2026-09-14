@@ -8,6 +8,28 @@ import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
 
 type Step = 'role' | 'details';
 
+/**
+ * Supabase's error strings were being rendered verbatim. A student who hit the
+ * project's transactional-email cap read "email rate limit exceeded", which
+ * tells them nothing and reads like the site is broken.
+ */
+function friendlyAuthError(raw: string): string {
+  const m = raw.toLowerCase();
+  if (m.includes('rate limit')) {
+    return 'We could not send your confirmation email just now. Please try again in a few minutes.';
+  }
+  if (m.includes('already registered') || m.includes('already been registered')) {
+    return 'An account with this email already exists. Try signing in instead.';
+  }
+  if (m.includes('invalid') && m.includes('email')) {
+    return 'That email address does not look right. Please check it and try again.';
+  }
+  if (m.includes('password')) {
+    return 'Please choose a password with at least 8 characters.';
+  }
+  return 'Something went wrong creating your account. Please try again.';
+}
+
 export function SignupForm() {
   // The landing page already asks which side you are on: "Find your mentor" and
   // "Become a mentor" are different links. Asking again here threw that answer
@@ -42,7 +64,7 @@ export function SignupForm() {
 
     const { error } = await signUp(email, password, firstName, lastName, role);
     if (error) {
-      setError(error);
+      setError(friendlyAuthError(error));
       setLoading(false);
     } else {
       setSuccess(true);
