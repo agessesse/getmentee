@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { SignupForm } from '@/components/auth/signup-form';
 
 export const metadata = {
@@ -6,5 +7,11 @@ export const metadata = {
 };
 
 export default function SignupPage() {
-  return <SignupForm />;
+  // SignupForm reads ?role= to skip the chooser, so it needs a boundary for
+  // the route to keep prerendering.
+  return (
+    <Suspense fallback={null}>
+      <SignupForm />
+    </Suspense>
+  );
 }

@@ -81,7 +81,7 @@ export default function LandingPage() {
                   they stack on mobile. */}
               <div>
                 <Link
-                  href="/signup"
+                  href="/signup?role=mentee"
                   onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_find_your_mentor' })}
                   className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
                 >
@@ -94,7 +94,7 @@ export default function LandingPage() {
               <p className="text-[14px] text-gray-500 mt-7">
                 Further along in your career?{' '}
                 <Link
-                  href="/signup"
+                  href="/signup?role=mentor"
                   onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_become_a_mentor' })}
                   className="tap-target text-navy-600 font-medium underline underline-offset-2 decoration-gray-300 hover:text-navy-900 hover:decoration-navy-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
                 >
@@ -236,11 +236,11 @@ export default function LandingPage() {
                 In pilot. We&apos;re building partnerships to fund the first cohort.
               </p>
               <Link
-                href="/signup"
+                href="/signup?role=mentee"
                 onClick={() => trackLandingEvent('opportunity_fund_clicked')}
                 className="group tap-target inline-flex items-center gap-2 text-sm font-medium text-white hover:text-amber-300 transition-colors border-b border-navy-700 hover:border-amber-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm"
               >
-                Learn about the Opportunity Fund
+                Create your Mentable account
                 <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
               </Link>
             </div>
@@ -276,7 +276,7 @@ export default function LandingPage() {
           </h2>
 
           <Link
-            href="/signup"
+            href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_find_your_mentor' })}
             className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-semibold hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
           >
@@ -287,7 +287,7 @@ export default function LandingPage() {
           <p className="text-[14px] text-gray-500 mt-7">
             Further along in your career?{' '}
             <Link
-              href="/signup"
+              href="/signup?role=mentor"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_i_want_to_mentor' })}
               className="tap-target text-navy-600 font-medium underline underline-offset-2 decoration-gray-300 hover:text-navy-900 hover:decoration-navy-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
@@ -316,9 +316,10 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-navy-800">
+            {/* tap-target: these were 20px tall, under the 24px WCAG 2.5.8 minimum */}
             <div className="flex gap-7 text-sm text-navy-300">
-              <Link href="/login" className="hover:text-white transition-colors">Sign in</Link>
-              <Link href="/signup" className="hover:text-white transition-colors">Create account</Link>
+              <Link href="/login" className="tap-target hover:text-white transition-colors">Sign in</Link>
+              <Link href="/signup" className="tap-target hover:text-white transition-colors">Create account</Link>
             </div>
             <p className="text-sm text-navy-400">&copy; 2026 Mentable. All rights reserved.</p>
           </div>

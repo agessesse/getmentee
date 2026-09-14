@@ -38,11 +38,22 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     return () => document.removeEventListener('keydown', handler);
   }, [target, onClose]);
 
-  // Focus close button on open; restore focus on close
+  // Focus the close button on open, and put focus back on the card that opened
+  // the modal when it closes. The comment here used to claim it restored focus
+  // and the code never did, so a keyboard user who opened a mentor and pressed
+  // Escape was returned to the top of the document and had to tab back through
+  // the whole page.
+  const returnFocusTo = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (target) {
+      returnFocusTo.current = document.activeElement as HTMLElement | null;
       closeRef.current?.focus();
+      return;
     }
+    const el = returnFocusTo.current;
+    returnFocusTo.current = null;
+    // isConnected: the carousel can recycle a card while the modal is open.
+    if (el?.isConnected) el.focus({ preventScroll: true });
   }, [target]);
 
   // Prevent body scroll while open

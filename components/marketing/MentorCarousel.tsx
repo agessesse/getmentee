@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -110,6 +110,15 @@ function MentorCard({
 
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
+  const [coarse, setCoarse] = useState(false);
+
+  useEffect(() => {
+    const q = window.matchMedia('(pointer: coarse)');
+    const on = () => setCoarse(q.matches);
+    on();
+    q.addEventListener('change', on);
+    return () => q.removeEventListener('change', on);
+  }, []);
 
   return (
     <>
@@ -126,6 +135,9 @@ export default function MentorCarousel() {
             People who walked the path first,<br className="hidden sm:block" />{' '}
             then came back to teach.
           </h2>
+          <p className="text-gray-500 text-[15px] leading-relaxed mt-4 max-w-md">
+            {coarse ? 'Tap' : 'Click'} any mentor for their background and LinkedIn.
+          </p>
         </div></div>
 
         <CarouselShell
@@ -151,11 +163,11 @@ export default function MentorCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <Link
-            href="/signup"
+            href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
             className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >
-            Meet the mentors
+            Create an account to reach them
             <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
           </Link>
         </div></div>

@@ -66,7 +66,10 @@ function Affiliation({ name }: { name: string }) {
           width={20}
           height={20}
           loading="lazy"
-          className="h-5 w-5 object-contain opacity-70"
+          // Desaturated on purpose. In full colour the row read as a wall of
+          // partner logos; these are places the people have been, and the
+          // grayscale matches the mentor headshots directly above.
+          className="h-5 w-5 object-contain opacity-60 grayscale"
           onError={() => setFailed(true)}
         />
       ) : null}

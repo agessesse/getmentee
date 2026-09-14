@@ -12,7 +12,7 @@ const INVITE_MESSAGE = `I've been building a mentorship platform called Mentable
 
 I think you'd make an exceptional mentor. If you're open to it, you can create a profile at:
 
-https://getmentee.com/signup
+https://mentable.co/signup?role=mentor
 
 Takes under 5 minutes. You control how many mentees you take on and when you're available. No obligation. Just a chance to open a door for someone the way it was once opened for you.`;
 
@@ -44,7 +44,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
       await navigator.share({
         title: 'Join Mentable as a mentor',
         text: INVITE_MESSAGE,
-        url: 'https://getmentee.com/signup',
+        url: 'https://mentable.co/signup?role=mentor',
       }).catch(() => null);
     }
   };

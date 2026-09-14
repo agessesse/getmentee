@@ -50,12 +50,24 @@ function Discover({ onPick }: { onPick: () => void }) {
         <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
       </button>
 
+      {/* Real headshots. Empty placeholder blocks sat next to a real photo and
+          read as broken images in a section whose whole job is looking real.
+          De-emphasis is carried by opacity, which is what it was for. */}
       {[
-        { n: 'Tiffany Lakey', r: 'Chief of Staff, CIB · Wells Fargo' },
-        { n: 'Will Alston', r: 'Head of Corporate Banking · Wells Fargo' },
+        { n: 'Tiffany Lakey', r: 'Chief of Staff, CIB · Wells Fargo', src: '/people/tiffany-lakey.jpg', pos: '50% 15%' },
+        { n: 'Will Alston', r: 'Head of Corporate Banking · Wells Fargo', src: '/people/will-alston.jpg', pos: '50% 10%' },
       ].map((m) => (
         <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-100 opacity-80">
-          <div className="w-14 h-14 rounded-xl flex-none bg-navy-100" />
+          <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-none bg-gray-100">
+            <Image
+              src={m.src}
+              alt=""
+              fill
+              sizes="56px"
+              className="object-cover"
+              style={{ objectPosition: m.pos, filter: 'grayscale(1)' }}
+            />
+          </div>
           <div className="min-w-0">
             <p className="text-[14px] font-semibold text-navy-900 truncate">{m.n}</p>
             <p className="text-[11px] text-gray-500 font-light truncate">{m.r}</p>
@@ -311,7 +323,7 @@ export default function ProductDemo() {
             </ol>
 
             <Link
-              href="/signup"
+              href="/signup?role=mentee"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'start_building_your_mentorship' })}
               className="group tap-target inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
@@ -328,7 +340,7 @@ export default function ProductDemo() {
                   {[0, 1, 2].map((i) => <div key={i} className="w-2.5 h-2.5 rounded-full bg-gray-200" />)}
                 </div>
                 <div className="flex-1 bg-gray-50 rounded-lg border border-gray-200 px-3 py-1 text-[11px] text-gray-500 font-mono max-w-xs truncate">
-                  mentable.com/{activeStage.url}
+                  mentable.co/{activeStage.url}
                 </div>
               </div>
 

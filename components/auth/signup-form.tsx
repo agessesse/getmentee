@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
@@ -9,12 +9,20 @@ import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
 type Step = 'role' | 'details';
 
 export function SignupForm() {
-  const [step, setStep] = useState<Step>('role');
+  // The landing page already asks which side you are on: "Find your mentor" and
+  // "Become a mentor" are different links. Asking again here threw that answer
+  // away and put the two paths back on equal footing at the exact moment of
+  // conversion. When the intent arrives in the URL, skip straight to details.
+  const params = useSearchParams();
+  const intent = params.get('role');
+  const presetRole = intent === 'mentor' || intent === 'mentee' ? intent : null;
+
+  const [step, setStep] = useState<Step>(presetRole ? 'details' : 'role');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'mentor' | 'mentee' | null>(null);
+  const [role, setRole] = useState<'mentor' | 'mentee' | null>(presetRole);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -100,7 +108,7 @@ export function SignupForm() {
           </button>
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-8">
+        <p className="text-center text-sm text-gray-500 mt-8">
           Already have an account?{' '}
           <Link href="/login" className="text-navy-600 font-medium hover:underline">
             Sign in
@@ -115,7 +123,7 @@ export function SignupForm() {
       <div className="mb-8">
         <button
           onClick={() => setStep('role')}
-          className="text-sm text-gray-400 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1"
+          className="text-sm text-gray-500 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1"
         >
           ← Back
         </button>
@@ -123,7 +131,7 @@ export function SignupForm() {
           {role === 'mentee' ? <GraduationCap className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
           {role === 'mentee' ? 'Looking for a mentor' : 'Becoming a mentor'}
         </div>
-        <h2 className="text-2xl font-bold text-navy-900">Create your account</h2>
+        <h1 className="text-2xl font-bold text-navy-900">Create your account</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -221,7 +229,7 @@ export function SignupForm() {
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-400">
+        <p className="text-center text-sm text-gray-500">
           Already have an account?{' '}
           <Link href="/login" className="text-navy-600 font-medium hover:underline">
             Sign in
