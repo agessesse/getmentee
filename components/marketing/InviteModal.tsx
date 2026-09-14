@@ -112,7 +112,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
             )}
           </div>
 
-          <p className="text-xs text-gray-400 text-center">
+          <p className="text-xs text-gray-500 text-center">
             No account required to send the invite. Your contact signs up directly.
           </p>
         </div>

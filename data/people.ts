@@ -135,7 +135,7 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     organization: 'Keane Capital Management',
     location: 'Charlotte, North Carolina',
     linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
-    bio: "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
+    bio: "Peter has supported Mentable's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     image: '/people/peter-keane.jpg',
     expertiseTags: [
       'Career Development',

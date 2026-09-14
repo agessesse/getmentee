@@ -99,6 +99,13 @@ export default function CredibilityRail() {
         </div>
       </div>
 
+      {/* The logos are evidence about the people, not about the company. Saying
+          so only in sr-only left the ambiguity fully intact for everyone who
+          can see, which is the audience the ambiguity would have flattered. */}
+      <p className="text-[11px] text-gray-500 text-center mt-6 px-6 leading-relaxed">
+        These organizations have not endorsed Mentable.
+      </p>
+
       {/* Static, readable equivalent for screen readers and reduced motion */}
       <p className="sr-only">
         Institutions that people on Mentable have studied or worked at:

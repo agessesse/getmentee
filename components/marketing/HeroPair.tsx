@@ -36,7 +36,9 @@ export default function HeroPair() {
       id: 'student' as const,
       eyebrow: 'Ready to learn',
       name: `${STUDENT.firstName} ${STUDENT.lastName}`,
-      sub: 'UNC Kenan-Flagler',
+      // Matches STUDENT.education in data/people.ts. Kenan-Flagler was
+      // claimed here previously; the record says Economics / Pre-Business.
+      sub: 'UNC Chapel Hill',
       photo: STUDENT.image ?? '',
       pos: STUDENT.portraitPosition ?? '50% 15%',
       reveal: STUDENT.interestTags.slice(0, 2),

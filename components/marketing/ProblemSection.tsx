@@ -43,8 +43,13 @@ export default function ProblemSection() {
             return (
               <button
                 key={side.id}
-                onClick={() => setOpen(isOpen ? null : side.id)}
-                onPointerEnter={() => setOpen(side.id)}
+                // A tap fires pointerenter and then click. When click toggled,
+                // the two cancelled each other and the detail was unreachable
+                // on touch. Hover is a mouse affordance; opening is the only
+                // thing either gesture should do, and opening one closes the
+                // other.
+                onClick={() => setOpen(side.id)}
+                onPointerEnter={(e) => { if (e.pointerType === 'mouse') setOpen(side.id); }}
                 aria-expanded={isOpen}
                 className={`text-left rounded-2xl border p-6 sm:p-7 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
                   isOpen
