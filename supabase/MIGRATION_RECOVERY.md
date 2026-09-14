@@ -1,9 +1,27 @@
 # Production migration recovery
 
-**Status: not applied.** No production DDL access is available. `supabase
-projects list` returns `LegacyPlatformAuthRequiredError`, there is no database
-connection string in the environment, and PostgREST cannot execute DDL. Per
-instruction this stops at corrected SQL plus an execution sequence.
+**Status: not applied. Blocked on credentials, not on analysis.**
+
+Every avenue for executing DDL or reading the migration history was tested
+directly, not assumed:
+
+| Avenue | Result |
+|---|---|
+| `supabase projects list` | `LegacyPlatformAuthRequiredError`, no access token |
+| `SUPABASE_ACCESS_TOKEN` / `DATABASE_URL` / DB password in env | not set; env holds only URL, anon key, service key |
+| Management API `GET /v1/projects` with the service key | `401 JWT could not be decoded` |
+| Management API `POST /database/query` (the only DDL route) | `401 JWT could not be decoded` |
+| PostgREST `Accept-Profile: supabase_migrations` | `PGRST106`, only `public` is exposed |
+| `pg_graphql` `/graphql/v1` | extension not enabled |
+
+The service-role key is a PostgREST JWT. It authenticates to PostgREST as the
+`service_role` Postgres role and can read and write rows, but PostgREST issues
+no DDL and the Management API does not accept it. **There is no path from this
+environment to `CREATE`, `ALTER`, `GRANT` or `DROP`.**
+
+Unblocking requires one of: `supabase login`, a `SUPABASE_ACCESS_TOKEN`, the
+database password for a direct `psql` connection, or running the SQL by hand in
+the Supabase dashboard.
 
 Everything below was verified read-only against the live project, which
 production shares. Where a claim came from testing rather than reading, that is
@@ -59,10 +77,47 @@ Every column 0019 makes nullable is still `NOT NULL`: `reviews.reviewer_id`,
 
 ## 2. Migration history
 
-**Could not be read.** `supabase_migrations` is not in PostgREST's exposed
-schema list (`PGRST106 Invalid schema`), and there is no direct connection.
-Reading it is step 1 of the runbook because it decides whether `supabase db
-push` is usable at all.
+**Could not be read**, and this is the hard blocker. `supabase_migrations` is
+not in PostgREST's exposed schema list, so the history table is unreachable
+without a database connection. Reading it is step 1 of the runbook because it
+decides whether `supabase db push` is usable at all, and because 0014 and 0017
+cannot be classified without it.
+
+## 2b. rls_auto_enable
+
+Calling it through PostgREST returns:
+
+```
+400 {"code":"0A000","message":"cannot display a value of type event_trigger"}
+```
+
+That return type identifies it: **it is an event trigger function**, not a
+callable routine. PostgREST lists it only because it lives in the `public`
+schema. The name and shape match the common pattern of an event trigger on
+`ddl_command_end` that runs `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` on newly
+created tables.
+
+Consistent with that, every table tested is closed to `anon`, including tables
+whose migrations enable RLS explicitly, so the two mechanisms agree and nothing
+observable contradicts it.
+
+It appears in no migration file (verified by grepping the whole set), so it was
+added out of band, most likely through the dashboard or a snippet.
+
+**Do not delete it.** Two implications for the recovery:
+
+1. When 0009 to 0012 create their nine tables, RLS will very likely be enabled
+   on them automatically as each `CREATE TABLE` commits. The migrations also
+   enable it explicitly, which is harmless: enabling twice is a no-op.
+2. It is unversioned infrastructure. If the project is ever rebuilt from
+   migrations alone, this function and its event trigger will not exist, and
+   newly created tables will not get RLS automatically. That is a migration
+   management risk worth closing by adding it to a migration.
+
+What could not be determined without a database connection: its owner, its
+exact body, and whether an event trigger is currently attached to it. Query 6 of
+`R2_verify.sql` lists public functions; add `select * from pg_event_trigger` to
+confirm the trigger itself.
 
 ## 3. Why history and schema diverged
 
@@ -120,6 +175,7 @@ land together.
 |---|---|
 | `supabase/recovery/R1_make_rerunnable.sql` | Drops the 27 policies and 3 triggers that 0010 to 0013 create without a `DROP ... IF EXISTS`. Every drop is guarded by `to_regclass`, so it is a no-op on the current database. Makes those four files safe to run, and to re-run. |
 | `supabase/recovery/R2_verify.sql` | Read-only checks: history, objects, the privacy pair, delete lifecycle, duplicate policies, out-of-band functions. |
+| `supabase/recovery/R3_privacy_atomic.sql` | **Replaces 0016 and 0018.** Both inside one transaction, revoke before broaden, with verification. This is the step that must not be split. |
 | `0019_delete_lifecycle.sql` | **Patched.** The three `ALTER TABLE session_*` statements are now inside a `DO` block guarded by `to_regclass`. This is the bug that silently discarded the whole migration. |
 | `0020_hardening.sql` | **Patched.** The three `CREATE INDEX` statements are guarded the same way, and the two `ADD CONSTRAINT` statements are preceded by `DROP CONSTRAINT IF EXISTS`, since Postgres has no `ADD CONSTRAINT IF NOT EXISTS`. |
 
@@ -138,7 +194,7 @@ Back up first: Supabase dashboard, Database, Backups.
 | 2 | Run `recovery/R1_make_rerunnable.sql` | No-op on a clean database. Safe regardless. |
 | 3 | Apply `0009`, `0010`, `0011`, `0012`, `0013` in that order | Query 2 of R2 returns 10 rows. |
 | 4 | Apply `0014` if step 1 showed it pending | |
-| 5 | **Apply `0016` and `0018` in the same session** | Query 3 of R2: the policy is permissive AND `email` is absent from the granted columns. Do not stop between these two. |
+| 5 | **Run `recovery/R3_privacy_atomic.sql`** instead of 0016 and 0018 separately | It wraps both in one transaction, so no session can observe a state where rows are open and email is still granted. Its own verification queries are at the bottom of the file. |
 | 6 | Apply `0017` if step 1 showed it pending | |
 | 7 | Apply `0019` | Query 4 of R2 returns no rows for both checks. |
 | 8 | Apply `0020` | |
@@ -161,3 +217,47 @@ would re-run non-idempotent files.
 - `lib/display-name.ts` — the fallback is `Name unavailable`, which states only
   what is known. It should disappear entirely once step 5 lands. If it does not,
   something in the recovery did not take.
+
+
+---
+
+## 8. Pre-flight checks already done against the recovery SQL
+
+Two things were verified statically so they do not surprise you mid-recovery.
+
+**The view is fully covered by the grant.** `public_profiles` selects 11 columns
+and R3 grants those 11 plus `updated_at`, so the view keeps working after the
+column grant narrows. Verified by comparing the view body in 0013 against the
+grant list. 0013's definition is final; neither 0016 nor 0018 redefines it.
+
+**One query may break, and it is worth knowing which.**
+`app/(protected)/mentor/[id]/page.tsx` line 132 does:
+
+```
+.from('public_profiles')
+.select('id, ..., mentor_profiles(*)')
+```
+
+`mentor_profiles(*)` is a PostgREST embedded resource, which needs a detectable
+relationship. `public_profiles` is a view and has no foreign keys of its own.
+PostgREST 12 can often infer the relationship through the view's base column
+(`public_profiles.id` traces to `profiles.id`, and `mentor_profiles.id`
+references `profiles.id`), so this may work unchanged. It could not be tested
+because the view does not exist yet.
+
+This was deliberately **not** "pre-fixed". Rewriting a query that may be correct
+risks breaking something that would have worked. After step 5, open a mentor
+profile page. If it errors with *"Could not find a relationship between
+'public_profiles' and 'mentor_profiles'"*, split it into two queries: read the
+identity fields from `public_profiles`, and `mentor_profiles` separately by id.
+Every other `public_profiles` query in the app was checked and requests only
+columns the view exposes.
+
+---
+
+## 9. What still cannot be classified
+
+`0014` and `0017` remain **unverified**. Neither creates an object reachable
+through PostgREST, so their state cannot be determined from outside the
+database. Step 1 of the runbook resolves both. Until then, treat them as
+unknown rather than assuming either way.
