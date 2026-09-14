@@ -1,263 +1,226 @@
-# Production migration recovery
+# Production migration recovery: incident record
 
-**Status: not applied. Blocked on credentials, not on analysis.**
+**Status: COMPLETE.** Executed 2026-09-14 against project `iqplkvbpyhajpamjepfu`
+("Mentable", us-west-2), which is the database production uses.
 
-Every avenue for executing DDL or reading the migration history was tested
-directly, not assumed:
-
-| Avenue | Result |
-|---|---|
-| `supabase projects list` | `LegacyPlatformAuthRequiredError`, no access token |
-| `SUPABASE_ACCESS_TOKEN` / `DATABASE_URL` / DB password in env | not set; env holds only URL, anon key, service key |
-| Management API `GET /v1/projects` with the service key | `401 JWT could not be decoded` |
-| Management API `POST /database/query` (the only DDL route) | `401 JWT could not be decoded` |
-| PostgREST `Accept-Profile: supabase_migrations` | `PGRST106`, only `public` is exposed |
-| `pg_graphql` `/graphql/v1` | extension not enabled |
-
-The service-role key is a PostgREST JWT. It authenticates to PostgREST as the
-`service_role` Postgres role and can read and write rows, but PostgREST issues
-no DDL and the Management API does not accept it. **There is no path from this
-environment to `CREATE`, `ALTER`, `GRANT` or `DROP`.**
-
-Unblocking requires one of: `supabase login`, a `SUPABASE_ACCESS_TOKEN`, the
-database password for a direct `psql` connection, or running the SQL by hand in
-the Supabase dashboard.
-
-Everything below was verified read-only against the live project, which
-production shares. Where a claim came from testing rather than reading, that is
-stated.
+Written for someone who knows nothing about the incident.
 
 ---
 
-## 1. Verified production state
+## 1. What was wrong
 
-Relations exposed through PostgREST (15). The nine tables and one view below are
-**absent**:
+The deployed schema was roughly seven migrations behind the repository, and the
+migration history table did not reflect reality. For real users:
 
-| Missing object | From |
-|---|---|
-| `sourced_profiles` | 0009 |
-| `session_summaries`, `session_transcripts`, `session_voice_notes` | 0010 |
-| `user_reports`, `user_blocks` | 0011 |
-| `financial_need_profiles`, `opportunity_funds`, `opportunity_interests` | 0012 |
-| `public_profiles` (view) | 0013 |
+- **Nobody could see anyone's name.** Twelve authenticated pages read a
+  `public_profiles` view that did not exist. Falling back to `profiles` failed
+  too, because its SELECT policy was still own-row-only.
+- **Account deletion always failed.** Sixteen foreign keys declared no
+  `ON DELETE` action, so the cascade from `auth.users` was rejected.
+- **Reporting, blocking, the Opportunity Fund and session intelligence** did not
+  exist as tables at all.
 
-Present and correct: `profiles`, `mentor_profiles`, `mentee_profiles`,
-`mentorship_requests`, `mentorships`, `sessions`, `messages`, `reviews`,
-`notifications`, `mentorship_goals`, `action_items`, `availability_slots`,
-`saved_mentors`, `pilot_events`, `pilot_feedback`.
+## 2. Migration history found
 
-### Effective RLS, measured from real authenticated sessions
-
-Two QA accounts (one mentee, one mentor) with a complete relationship between
-them: request, mentorship, session, message, goal, action item.
-
-| Query | mentee | mentor | anon |
-|---|---|---|---|
-| own `profiles` row | 1 | 1 | 0 |
-| **the other party's `profiles` row** | **0** | **0** | 0 |
-| an unrelated user's `profiles` row | 0 | 0 | 0 |
-| `public_profiles` | PGRST205 | PGRST205 | PGRST205 |
-| `mentor_profiles` (browse) | 3 | 3 | 0 |
-| own mentorship / messages / sessions / goals / action items / request | 1 each | 1 each | 0 |
-| unscoped `messages` / `mentorships` (leak test) | own only | own only | 0 |
-
-The relationship-scoped policies are correct and anon is fully closed. The
-single defect is `profiles`: the SELECT policy is still the own-row-only
-`auth.uid() = id` from before 0016, so **no user can resolve any other user's
-name**, even their own mentor.
-
-### Column nullability
-
-Every column 0019 makes nullable is still `NOT NULL`: `reviews.reviewer_id`,
-`reviews.reviewee_id`, `mentorship_goals.created_by`, `action_items.created_by`,
-`action_items.assigned_to`. 0019 did not partially apply; it applied nothing.
-
----
-
-## 2. Migration history
-
-**Could not be read**, and this is the hard blocker. `supabase_migrations` is
-not in PostgREST's exposed schema list, so the history table is unreachable
-without a database connection. Reading it is step 1 of the runbook because it
-decides whether `supabase db push` is usable at all, and because 0014 and 0017
-cannot be classified without it.
-
-## 2b. rls_auto_enable
-
-Calling it through PostgREST returns:
+The history table recorded **only 0001 through 0007**, yet objects from 0008,
+0014 and 0015 were present.
 
 ```
-400 {"code":"0A000","message":"cannot display a value of type event_trigger"}
+0001 initial_schema .. 0007 saved_notifications   <- recorded
+0008, 0014, 0015                                  <- applied, NOT recorded
+0009-0013, 0016-0020                              <- not applied
 ```
-
-That return type identifies it: **it is an event trigger function**, not a
-callable routine. PostgREST lists it only because it lives in the `public`
-schema. The name and shape match the common pattern of an event trigger on
-`ddl_command_end` that runs `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` on newly
-created tables.
-
-Consistent with that, every table tested is closed to `anon`, including tables
-whose migrations enable RLS explicitly, so the two mechanisms agree and nothing
-observable contradicts it.
-
-It appears in no migration file (verified by grepping the whole set), so it was
-added out of band, most likely through the dashboard or a snippet.
-
-**Do not delete it.** Two implications for the recovery:
-
-1. When 0009 to 0012 create their nine tables, RLS will very likely be enabled
-   on them automatically as each `CREATE TABLE` commits. The migrations also
-   enable it explicitly, which is harmless: enabling twice is a no-op.
-2. It is unversioned infrastructure. If the project is ever rebuilt from
-   migrations alone, this function and its event trigger will not exist, and
-   newly created tables will not get RLS automatically. That is a migration
-   management risk worth closing by adding it to a migration.
-
-What could not be determined without a database connection: its owner, its
-exact body, and whether an event trigger is currently attached to it. Query 6 of
-`R2_verify.sql` lists public functions; add `select * from pg_event_trigger` to
-confirm the trigger itself.
 
 ## 3. Why history and schema diverged
 
-Two pieces of evidence:
+Migrations were applied **out of band**, by hand, without the CLI, so the
+history table was never updated. Two confirmations:
 
-1. **0015 is applied while 0013 is not.** `profiles.is_admin`, `profiles.is_demo`
-   and `pilot_events` all exist; `public_profiles` does not. Migrations were
-   applied out of file order.
-2. **`rls_auto_enable` exists in production and appears in no migration file.**
-   Confirmed by grepping the whole migration set. Something has been applied
-   out of band.
+1. 0015's objects (`profiles.is_admin`, `pilot_events`) existed while 0013's
+   view did not, which is impossible under ordered application.
+2. `rls_auto_enable` and its event trigger existed and appear in no migration.
 
-So production is not "stalled at migration N". It is a hand-edited database, and
-its history table cannot be trusted without reading it.
+This is why `supabase db push` was never used: it trusts the history table, and
+the history table was wrong. Every file was applied explicitly instead.
 
-Separately, 0019 and 0020 **aborted**. 0019 line 33 was an unguarded
-`ALTER TABLE public.session_transcripts`, a table 0010 never created. That
-raised, rolled the transaction back, and discarded the four nullability changes
-on lines 29 to 32 that had already run. Their surviving `NOT NULL` state is the
-proof. 0020 failed the same way at line 63, where `IF NOT EXISTS` guards the
-index and not the table.
+Separately, **0019 and 0020 had aborted** on earlier attempts. 0019 line 33 was
+an unguarded `ALTER TABLE public.session_transcripts`, a table 0010 never
+created; the raise rolled the transaction back, discarding the four nullability
+changes above it. 0020 failed the same way at its indexes, where
+`IF NOT EXISTS` guards the index and not the table.
 
----
+## 4. Backup
 
-## 4. What is broken for users
+The Management API reported `pitr_enabled: false` and **`backups: []`**. There
+was no restorable Supabase backup, so one was made before any mutation: a full
+logical snapshot of all 15 tables plus 43 policies, 1169 column grants and 65
+constraints, written to the working scratchpad as `pre-recovery.json`.
 
-1. **Nobody can see anyone's name.** Twelve authenticated pages read
-   `public_profiles`, which does not exist. Falling back to `profiles` fails too
-   because of the own-row policy. Observed directly: a pending request to a live
-   test mentor rendered the mentor as a fallback label, with a 404 on
-   `public_profiles` in the network log.
-2. **Account deletion fails.** Sixteen foreign keys still declare no
-   `ON DELETE` action, which Postgres treats as `NO ACTION`, so the cascade from
-   `auth.users` to `profiles` is rejected by the first referencing row.
-3. **Reporting, blocking, the Opportunity Fund and session intelligence** are
-   non-functional (0010 to 0012).
+The schema changes were additive and data-preserving throughout: no `DROP
+TABLE`, `DELETE` or `TRUNCATE` was executed at any point.
 
-### Correction to the previous report
+## 5. What was executed, in order
 
-The previous pass claimed `profiles.email` was readable by any authenticated
-user. **That was wrong.** Re-tested precisely: selecting `email` with no filter
-returns only the caller's own row. The row policy is what protects email today,
-not a column grant.
-
-This matters for sequencing. 0016 makes every profile row readable; 0018 then
-revokes table-level SELECT and re-grants a column allowlist that excludes email.
-**Applying 0016 without 0018 exposes every address on the platform.** They must
-land together.
-
----
-
-## 5. Corrected SQL in this repo
-
-| File | Purpose |
-|---|---|
-| `supabase/recovery/R1_make_rerunnable.sql` | Drops the 27 policies and 3 triggers that 0010 to 0013 create without a `DROP ... IF EXISTS`. Every drop is guarded by `to_regclass`, so it is a no-op on the current database. Makes those four files safe to run, and to re-run. |
-| `supabase/recovery/R2_verify.sql` | Read-only checks: history, objects, the privacy pair, delete lifecycle, duplicate policies, out-of-band functions. |
-| `supabase/recovery/R3_privacy_atomic.sql` | **Replaces 0016 and 0018.** Both inside one transaction, revoke before broaden, with verification. This is the step that must not be split. |
-| `0019_delete_lifecycle.sql` | **Patched.** The three `ALTER TABLE session_*` statements are now inside a `DO` block guarded by `to_regclass`. This is the bug that silently discarded the whole migration. |
-| `0020_hardening.sql` | **Patched.** The three `CREATE INDEX` statements are guarded the same way, and the two `ADD CONSTRAINT` statements are preceded by `DROP CONSTRAINT IF EXISTS`, since Postgres has no `ADD CONSTRAINT IF NOT EXISTS`. |
-
-`__retarget_fk` already returns early when no matching constraint exists, so the
-FK retargeting calls in 0019 needed no change.
-
----
-
-## 6. Execution sequence
-
-Back up first: Supabase dashboard, Database, Backups.
-
-| # | Action | Check before continuing |
+| Step | Applied | Result |
 |---|---|---|
-| 1 | Run query 1 of `R2_verify.sql` | Records what the history table believes. If it lists 0009 to 0013 as applied while the objects are absent, the history is wrong and every file must be applied by hand rather than with `db push`. |
-| 2 | Run `recovery/R1_make_rerunnable.sql` | No-op on a clean database. Safe regardless. |
-| 3 | Apply `0009`, `0010`, `0011`, `0012`, `0013` in that order | Query 2 of R2 returns 10 rows. |
-| 4 | Apply `0014` if step 1 showed it pending | |
-| 5 | **Run `recovery/R3_privacy_atomic.sql`** instead of 0016 and 0018 separately | It wraps both in one transaction, so no session can observe a state where rows are open and email is still granted. Its own verification queries are at the bottom of the file. |
-| 6 | Apply `0017` if step 1 showed it pending | |
-| 7 | Apply `0019` | Query 4 of R2 returns no rows for both checks. |
-| 8 | Apply `0020` | |
-| 9 | Run all of `R2_verify.sql` | Queries 4 and 5 return zero rows. |
-| 10 | Test deletion with a throwaway account that has a message and a review | Never against a real user. |
+| 1 | `recovery/R1_make_rerunnable.sql` | no-op, as expected on a clean database |
+| 2 | `0009`, `0010`, `0011`, `0012`, `0013` | 9 tables + `public_profiles` created, RLS on all 9 |
+| 3 | `recovery/R3_privacy_atomic.sql` | 0016 + 0018 in one transaction |
+| 4 | `0017` | write surface locked down |
+| 5 | `0019` | failed; fixed; re-applied |
+| 6 | `0020` | applied |
+| 7 | **`0021_public_profiles_lockdown.sql`** (new) | closed a hole 0013 opened |
+| 8 | **`0022_action_item_assignment_allows_null.sql`** (new) | unblocked account deletion |
+| 9 | history table backfilled | now records 0001 to 0022 |
 
-Do not run `supabase db push` until step 1 has been read. Given 0015 is applied
-while 0013 is not, the history is already inconsistent with file order, and push
-would re-run non-idempotent files.
+Nothing was skipped. 0008, 0014 and 0015 were already applied and were recorded
+rather than re-run, since their policies are not idempotent.
 
----
+## 6. Three defects found during execution
 
-## 7. Application code already prepared for this
-
-- `lib/supabase/admin.ts` — the first-pass `is_admin` read through the caller's
-  own client now tolerates its own failure. 0018's column allowlist excludes
-  `is_admin`, so after step 5 that read errors; treating the error as "not an
-  admin" would lock every admin out of `/admin`. It now falls through to the
-  service-role check, which was always the real authority.
-- `lib/display-name.ts` — the fallback is `Name unavailable`, which states only
-  what is known. It should disappear entirely once step 5 lands. If it does not,
-  something in the recovery did not take.
-
-
----
-
-## 8. Pre-flight checks already done against the recovery SQL
-
-Two things were verified statically so they do not surprise you mid-recovery.
-
-**The view is fully covered by the grant.** `public_profiles` selects 11 columns
-and R3 grants those 11 plus `updated_at`, so the view keeps working after the
-column grant narrows. Verified by comparing the view body in 0013 against the
-grant list. 0013's definition is final; neither 0016 nor 0018 redefines it.
-
-**One query may break, and it is worth knowing which.**
-`app/(protected)/mentor/[id]/page.tsx` line 132 does:
+### 6a. 0019 could never have run (fixed in place)
 
 ```
-.from('public_profiles')
-.select('id, ..., mentor_profiles(*)')
+42883: operator does not exist: name[] = text[]
 ```
 
-`mentor_profiles(*)` is a PostgREST embedded resource, which needs a detectable
-relationship. `public_profiles` is a view and has no foreign keys of its own.
-PostgREST 12 can often infer the relationship through the view's base column
-(`public_profiles.id` traces to `profiles.id`, and `mentor_profiles.id`
-references `profiles.id`), so this may work unchanged. It could not be tested
-because the view does not exist yet.
+`__retarget_fk` compared `array_agg(a.attname)` (`name[]`) against
+`ARRAY[p_column]` (`text[]`). PostgreSQL 17 has no implicit operator for that,
+so the migration aborted every time regardless of the table guards. Fixed by
+casting both sides to `text[]`.
 
-This was deliberately **not** "pre-fixed". Rewriting a query that may be correct
-risks breaking something that would have worked. After step 5, open a mentor
-profile page. If it errors with *"Could not find a relationship between
-'public_profiles' and 'mentor_profiles'"*, split it into two queries: read the
-identity fields from `public_profiles`, and `mentor_profiles` separately by id.
-Every other `public_profiles` query in the app was checked and requests only
-columns the view exposes.
+### 6b. 0013 opened an anonymous read AND write hole (migration 0021)
 
----
+Immediately after 0013 was applied, adversarial testing found that an
+**anonymous** caller could read every profile and **write to `profiles` through
+the view**. Reproduced with the publishable anon key.
 
-## 9. What still cannot be classified
+Three things combined:
 
-`0014` and `0017` remain **unverified**. Neither creates an object reachable
-through PostgREST, so their state cannot be determined from outside the
-database. Step 1 of the runbook resolves both. Until then, treat them as
-unknown rather than assuming either way.
+1. Supabase grants `ALL` on new `public` objects to `anon`, `authenticated` and
+   `service_role` by default. 0013 added `GRANT SELECT ... TO authenticated` and
+   assumed that was the only privilege in play. It was not.
+2. The view never set `security_invoker`, which defaults to false. A
+   definer-rights view executes as its owner (`postgres`) and bypasses RLS
+   entirely. 0016's comment asserts the opposite; that holds only when
+   `security_invoker` is on.
+3. `public_profiles` is a simple single-table SELECT, so it is auto-updatable.
+
+0021 revokes everything including the defaults, sets `security_invoker = true`,
+and grants back only `SELECT` to `authenticated`. Re-tested: anon now gets
+`42501 permission denied` on both read and write.
+
+### 6c. 0014 and 0019 collide, blocking deletion (migration 0022)
+
+After 0019, deleting a populated account still failed:
+
+```
+P0001: assigned_to (<NULL>) must be a party to mentorship (...)
+CONTEXT: validate_action_item_assignment() line 9
+SQL: UPDATE ONLY public.action_items SET assigned_to = NULL WHERE $1 = assigned_to
+```
+
+0019 correctly retargeted the foreign key to `ON DELETE SET NULL` so an action
+item survives its assignee's departure. 0014's validation trigger, applied out
+of band and earlier, rejects a NULL assignee. The cascade issues exactly the
+UPDATE the trigger forbids.
+
+0022 makes the trigger treat NULL as "unassigned", the state 0019 intends. Every
+non-NULL value is validated exactly as before.
+
+## 7. rls_auto_enable
+
+```
+function  public.rls_auto_enable()  owner postgres  SECURITY DEFINER
+          SET search_path TO 'pg_catalog'  RETURNS event_trigger
+trigger   ensure_rls  ON ddl_command_end  enabled ('O')
+          tags: CREATE TABLE, CREATE TABLE AS, SELECT INTO
+```
+
+It iterates `pg_event_trigger_ddl_commands()` and runs
+`alter table ... enable row level security` for new tables in `public`, with an
+exception handler that logs failures rather than aborting the DDL.
+
+**Origin:** not from any migration here. Applied by hand. The style (schema
+allowlist, `RAISE LOG` on both paths) matches a common Supabase hardening
+snippet.
+
+**Assessment:** benign and useful. It worked during this recovery: all nine new
+tables came up with RLS enabled. The migrations also enable RLS explicitly, and
+enabling twice is a no-op, so there is no conflict.
+
+**Recommendation: capture it in a migration.** It is unversioned infrastructure.
+Rebuild this project from migrations alone and it will not exist, and new tables
+will silently not get RLS. It was deliberately not deleted.
+
+## 8. Final verification
+
+All from real authenticated sessions, not by reading SQL.
+
+| Check | Result |
+|---|---|
+| mentee resolves mentor identity | Dana Okonkwo |
+| mentor resolves mentee identity | Riley Quinn |
+| any authenticated user resolves public identity (Discover) | works |
+| mentee / mentor / outsider read another's email | blocked, `42501` |
+| email selectable through `public_profiles` | blocked, `42703` (not in view) |
+| `is_admin` readable by ordinary users | blocked, `42501` |
+| outsider reads messages, mentorships, requests, sessions, goals, action items | blocked |
+| outsider unscoped sweep over 8 tables | 0 rows each |
+| anon on profiles / public_profiles | `42501` |
+| anon on mentor_profiles, messages, mentorships, sessions | 0 rows |
+| anon write through `public_profiles` | `42501` |
+| populated account deletion | **succeeded, 231 ms**, no manual pre-deletion |
+| residual personal data after deletion | none |
+
+`reviews` is readable by any authenticated user. That is **deliberate** (policy
+`USING (true)`, from 0004) so mentor profiles can show ratings. Anon is blocked.
+
+**On anonymisation:** 0019's `SET NULL` columns preserve attribution when the
+parent row outlives the user. In a two-party mentorship, deleting either party
+cascades the mentorship and everything beneath it, which is 0019's stated intent
+("CASCADE where the row is meaningless once the referent is gone"). So in the
+common case rows are removed rather than anonymised, and no orphaned personal
+data remains either way.
+
+## 9. Application smoke test
+
+Both roles, real accounts, every major route: dashboard, discover, requests,
+mentorships, goals, messages, schedule, impact, mentor profile. **No
+"Name unavailable", "Former member" or "Unknown" anywhere.** Zero console errors.
+
+Admin: the admin account loaded all six `/admin` routes; a non-admin was
+redirected to `/dashboard` on all six; anonymous was redirected to `/login` on
+all six. `is_admin` is granted to nobody, and `requireAdmin` correctly falls
+through to its service-role check.
+
+`mentor/[id]` embeds `mentor_profiles(*)` through the view. **PostgREST resolves
+it** through the view's base column, so the query was left unchanged.
+
+## 10. Data integrity
+
+Every table matches the pre-recovery snapshot exactly:
+
+```
+profiles 41  mentor_profiles 24  mentee_profiles 16  mentorship_requests 13
+mentorships 9  sessions 36  messages 38  reviews 0  notifications 15
+mentorship_goals 26  action_items 0  availability_slots 0  saved_mentors 0
+pilot_events 9  pilot_feedback 0
+```
+
+All four QA accounts and every dependent record were removed. Zero residue.
+
+## 11. Remaining technical debt
+
+- **`rls_auto_enable` is unversioned.** Capture it in a migration.
+- **No test suite.** `package.json` declares `test: jest` and
+  `test:e2e: playwright test`, but there is no config and no test files.
+  `npx jest` reports "No tests found".
+- **No PITR and no backups.** `pitr_enabled: false`, `backups: []`. Worth
+  enabling before the platform carries real users.
+- **A second project exists**, `gmfcxrqwesieyxbybyap` ("mentee-prod", us-east-2,
+  INACTIVE). Production does not use it. Decide whether to delete it, because
+  the name invites a costly mistake.
+- **`user_reports` still has no moderation lifecycle.** `/admin/reports` is
+  read-only by design and says so. Adding `status`, `resolved_by`, `resolved_at`
+  plus an admin-only UPDATE policy is the next schema change worth making.

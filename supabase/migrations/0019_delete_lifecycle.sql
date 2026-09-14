@@ -77,10 +77,14 @@ BEGIN
     AND t.relname = p_table
     AND c.contype = 'f'
     AND (
-      SELECT array_agg(a.attname ORDER BY a.attnum)
+      -- attname is type `name`, so array_agg yields name[]. Comparing that to
+      -- ARRAY[p_column] (text[]) has no operator on PostgreSQL 17 and raises
+      -- 42883, which aborted this entire migration every time it ran. Casting
+      -- to text makes both sides text[].
+      SELECT array_agg(a.attname::text ORDER BY a.attnum)
       FROM pg_attribute a
       WHERE a.attrelid = c.conrelid AND a.attnum = ANY (c.conkey)
-    ) = ARRAY[p_column];
+    ) = ARRAY[p_column]::text[];
 
   IF v_name IS NULL THEN
     RAISE NOTICE 'no single-column FK found on %.%, skipping', p_table, p_column;
