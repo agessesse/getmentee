@@ -42,11 +42,16 @@ ALTER FUNCTION public.update_mentor_rating()     SET search_path = '';
 --   ALTER TABLE public.profiles VALIDATE CONSTRAINT profiles_avatar_url_scheme;
 -- once existing data is known to conform.
 
+-- Postgres has no ADD CONSTRAINT IF NOT EXISTS, so a re-run of this file would
+-- fail here. Dropping first makes the migration safe to apply more than once,
+-- which matters because this file previously aborted partway through.
+ALTER TABLE public.profiles  DROP CONSTRAINT IF EXISTS profiles_avatar_url_scheme;
 ALTER TABLE public.profiles
   ADD CONSTRAINT profiles_avatar_url_scheme
   CHECK (avatar_url IS NULL OR avatar_url ~ '^(/|https://)')
   NOT VALID;
 
+ALTER TABLE public.messages DROP CONSTRAINT IF EXISTS messages_attachment_url_scheme;
 ALTER TABLE public.messages
   ADD CONSTRAINT messages_attachment_url_scheme
   CHECK (attachment_url IS NULL OR attachment_url ~ '^(/|https://)')
@@ -60,11 +65,21 @@ ALTER TABLE public.messages
 -- EXISTS subqueries join on. These three tables are the exception, and their
 -- SELECT policies run a subquery per row.
 
-CREATE INDEX IF NOT EXISTS idx_session_transcripts_session
-  ON public.session_transcripts(session_id);
-
-CREATE INDEX IF NOT EXISTS idx_session_summaries_session
-  ON public.session_summaries(session_id);
-
-CREATE INDEX IF NOT EXISTS idx_session_voice_notes_mentorship
-  ON public.session_voice_notes(mentorship_id);
+-- IF NOT EXISTS guards the index, not the table. These three tables come from
+-- 0010; if that has not been applied, an unguarded CREATE INDEX aborts this
+-- migration and everything above it rolls back.
+DO $$
+BEGIN
+  IF to_regclass('public.session_transcripts') IS NOT NULL THEN
+    CREATE INDEX IF NOT EXISTS idx_session_transcripts_session
+      ON public.session_transcripts(session_id);
+  END IF;
+  IF to_regclass('public.session_summaries') IS NOT NULL THEN
+    CREATE INDEX IF NOT EXISTS idx_session_summaries_session
+      ON public.session_summaries(session_id);
+  END IF;
+  IF to_regclass('public.session_voice_notes') IS NOT NULL THEN
+    CREATE INDEX IF NOT EXISTS idx_session_voice_notes_mentorship
+      ON public.session_voice_notes(mentorship_id);
+  END IF;
+END $$;

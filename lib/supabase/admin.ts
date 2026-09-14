@@ -52,17 +52,24 @@ export async function requireAdmin(): Promise<AdminGate> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { ok: false, reason: 'unauthenticated' };
 
-  // First pass through the caller's own client. RLS lets a user read their own
-  // profile row, and is_admin is not user-writable, so this is trustworthy and
-  // it fails a non-admin closed even when the service key is absent. Without
-  // this ordering a non-admin would see the misconfiguration notice instead of
-  // being turned away.
-  const { data: self } = await supabase
+  // Cheap first pass through the caller's own client, purely so a non-admin is
+  // turned away rather than shown the misconfiguration notice when the service
+  // key is absent. It is an optimisation, never the security boundary.
+  //
+  // It must tolerate its own failure. Migration 0018 revokes table-level SELECT
+  // on profiles and re-grants a column allowlist that deliberately excludes
+  // is_admin, so once that migration lands this read returns an error rather
+  // than a row. Treating that as "not an admin" would lock every admin out of
+  // /admin the moment the schema is repaired. An error therefore falls through
+  // to the service-role check below, which is the real authority.
+  const { data: self, error: selfError } = await supabase
     .from('profiles')
     .select('is_admin')
     .eq('id', user.id)
-    .single();
-  if (!self?.is_admin) return { ok: false, reason: 'forbidden' };
+    .maybeSingle();
+  if (!selfError && self && !self.is_admin) {
+    return { ok: false, reason: 'forbidden' };
+  }
 
   const db = serviceClient();
   if (!db) return { ok: false, reason: 'misconfigured' };

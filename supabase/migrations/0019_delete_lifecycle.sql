@@ -30,9 +30,29 @@ ALTER TABLE public.reviews             ALTER COLUMN reviewer_id  DROP NOT NULL;
 ALTER TABLE public.mentorship_goals    ALTER COLUMN created_by   DROP NOT NULL;
 ALTER TABLE public.action_items        ALTER COLUMN created_by   DROP NOT NULL;
 ALTER TABLE public.action_items        ALTER COLUMN assigned_to  DROP NOT NULL;
-ALTER TABLE public.session_transcripts ALTER COLUMN created_by   DROP NOT NULL;
-ALTER TABLE public.session_summaries   ALTER COLUMN created_by   DROP NOT NULL;
-ALTER TABLE public.session_voice_notes ALTER COLUMN created_by   DROP NOT NULL;
+-- The three session_* tables come from 0010. If that migration has not been
+-- applied they do not exist, and an unguarded ALTER here aborts the whole
+-- transaction, silently rolling back the four DROP NOT NULL statements above.
+-- That is exactly what happened in production: 0019 appeared to have run and
+-- had in fact applied nothing. Guarded so the rest of this file always lands.
+DO $$
+BEGIN
+  IF to_regclass('public.session_transcripts') IS NOT NULL THEN
+    ALTER TABLE public.session_transcripts ALTER COLUMN created_by DROP NOT NULL;
+  ELSE
+    RAISE NOTICE 'session_transcripts absent (0010 not applied), skipping';
+  END IF;
+  IF to_regclass('public.session_summaries') IS NOT NULL THEN
+    ALTER TABLE public.session_summaries   ALTER COLUMN created_by DROP NOT NULL;
+  ELSE
+    RAISE NOTICE 'session_summaries absent (0010 not applied), skipping';
+  END IF;
+  IF to_regclass('public.session_voice_notes') IS NOT NULL THEN
+    ALTER TABLE public.session_voice_notes ALTER COLUMN created_by DROP NOT NULL;
+  ELSE
+    RAISE NOTICE 'session_voice_notes absent (0010 not applied), skipping';
+  END IF;
+END $$;
 
 
 -- Rebuild a foreign key with a delete action, looking the constraint name up
