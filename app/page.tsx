@@ -73,23 +73,34 @@ export default function LandingPage() {
               </h1>
 
               {/*
-                The thesis. Every visitor arrives asking the same question about
-                a mentorship site: "is this just a list of names?" The answer has
-                to be the first thing after the headline, not buried at section
-                four under "The product".
+                The thesis, carrying three jobs in two sentences.
 
-                The accent is otherwise reserved for primary buttons. It carries
-                the five words that answer that question and nothing else, so the
-                emphasis still reads as meaning rather than decoration. #15803d
-                on cream is 4.87:1, which clears AA for body text.
+                It names the luck, because that is the thing Mentable actually
+                removes. It keeps "everything after the introduction", which
+                answers the question every visitor to a mentorship site arrives
+                with: "is this just a list of names?" And it ends on the payoff
+                running in both directions, because a page that forks to mentor
+                and mentee has to make both paths feel legitimate in one breath.
+
+                Note it does NOT open on luck as a statement. The Problem section
+                two blocks down already opens "Right now, mentorship mostly
+                depends on luck", and a hero that says it first turns that
+                heading into an echo of itself.
+
+                The closing clause is lifted from the footer, where the only
+                two-sided line on the site had been sitting unread.
               */}
               <p className="text-lg sm:text-xl text-halo-mist-body font-light leading-relaxed max-w-lg mb-10">
-                Mentable is{' '}
+                Mentable takes the luck out of mentorship, and handles everything
+                after the introduction. Find someone{' '}
                 <span className="font-medium text-halo-purple-d">
-                  everything after the introduction
+                  worth learning from
                 </span>
-                . Find someone who has already done the work, then set goals
-                together, meet regularly, and keep it moving.
+                , then become someone{' '}
+                <span className="font-medium text-halo-purple-d">
+                  worth mentoring
+                </span>
+                .
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">

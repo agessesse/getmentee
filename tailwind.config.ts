@@ -44,14 +44,20 @@ const config: Config = {
           100: '#fef8f3',
         },
         /**
-         * Reserved CTA accent. Primary buttons, plus ONE phrase in the hero
-         * thesis. Never headings, icons, links or general decoration — the
-         * moment it decorates something it stops meaning "act here".
+         * Reserved CTA accent (the old green, kept for the portal only).
          *
-         * The hero exception is deliberate and is the only one: the accent
-         * carries the five words that answer "is this just a list of names?"
-         * and nothing else on the page. If a second run of accent text ever
-         * appears, both stop working and this rule has been broken.
+         * The marketing accent is halo-purple below. Its text rule: primary
+         * buttons, plus the hero thesis, and nothing else. Never headings,
+         * icons, general links or decoration, because the moment it decorates
+         * something it stops meaning "act here".
+         *
+         * The hero now carries TWO accent runs, not one. That is a deliberate
+         * revision of the earlier rule, which said a second run would break it.
+         * The two are a matched pair, "worth learning from" and "worth
+         * mentoring", and the symmetry is the point being made: the same person
+         * on both ends of the exchange. A parallel construction reads as one
+         * rhetorical figure, not as two emphases competing. A third run, or two
+         * that were not mirrored, would break it for real.
          *
          * The page alternates cream (#fffbf7) and navy (#1a1f3a) grounds, so
          * the accent must clear 3:1 against BOTH while its label clears 4.5:1.
