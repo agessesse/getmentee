@@ -279,6 +279,52 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     status: 'sourced',
     is_founding_mentor: false,
   },
+  {
+    slug: 'will-varnum',
+    firstName: 'Will',
+    lastName: 'Varnum',
+    headline: 'Co-Founder & Chief Executive Officer · Alyra Technology',
+    title: 'Co-Founder & Chief Executive Officer',
+    organization: 'Alyra Technology',
+    location: 'Charlotte, North Carolina',
+    bio: 'Co-founder and CEO of Alyra Technology, an AI consulting and engineering firm that designs, builds and deploys custom AI and automation systems for mid-market companies. Will works directly with executive leadership teams on turning manual workflows into production software, covering AI strategy and advisory, team enablement, custom engineering, data platforms and AI governance. He previously spent two and a half years at Wells Fargo Advisors on its top private wealth team, and is a co-founder and investor in CLT Lifting Club in Charlotte.',
+    image: '/people/will-varnum.png',
+    expertiseTags: [
+      'AI Strategy',
+      'AI Enablement',
+      'Custom Engineering',
+      'Data Platforms',
+      'AI Governance',
+      'Private Wealth',
+      'Entrepreneurship',
+    ],
+    // Education is deliberately absent: it was not supplied and is not
+    // inferable. The field is optional and the section is conditional, so the
+    // page renders correctly without it rather than carrying a guess.
+    experience: [
+      {
+        title: 'Co-Founder & Chief Executive Officer',
+        organization: 'Alyra Technology',
+        description:
+          'AI consulting and engineering firm working with executive teams on production AI deployment, from four-week diagnostics through custom engineering and governance. July 2025 to present.',
+      },
+      {
+        title: 'Co-Founder & Investor',
+        organization: 'CLT Lifting Club',
+        description:
+          'Founding group and ownership stake in a strength-focused hybrid gym in South End Charlotte. Involvement is at ownership and board level: capital modeling, technical infrastructure and partner-level strategy. May 2025 to present.',
+      },
+      {
+        title: 'Private Client Associate',
+        organization: 'Wells Fargo Advisors',
+        description:
+          "Wells Fargo's top private wealth team, managing $3.6B for ultra-high-net-worth families. July 2023 to January 2026.",
+      },
+    ],
+    linkedInUrl: 'https://www.linkedin.com/in/willvarnum',
+    status: 'sourced',
+    is_founding_mentor: false,
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -5,6 +5,11 @@
 
 export const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   'Wells Fargo': 'wellsfargo.com',
+  // The brokerage arm is a distinct string on mentor entries. Without its own
+  // key the prior-company chip silently renders nothing, because the lookup is
+  // exact and case-sensitive.
+  'Wells Fargo Advisors': 'wellsfargo.com',
+  'Alyra Technology': 'alyratechnology.com',
   'Wells Fargo Corporate & Investment Banking': 'wellsfargo.com',
   'Morgan Stanley': 'morganstanley.com',
   'Goldman Sachs': 'goldmansachs.com',

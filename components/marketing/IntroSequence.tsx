@@ -13,6 +13,18 @@ import { BRAND, BRAND_DEFINITION } from '@/components/ui/Wordmark';
 // per lifetime.
 const SESSION_KEY = 'mentable_intro_v6';
 
+// Keys written by earlier versions. v1-v5 wrote to localStorage, so those
+// entries sit in real visitors' browsers permanently, suppressing nothing and
+// never expiring. Clear them on mount so the storage does not accumulate dead
+// keys across future renames.
+const RETIRED_KEYS = [
+  'mentee_intro_shown',
+  'mentee_intro_v2',
+  'mentee_intro_v3',
+  'mentee_intro_v4',
+  'mentable_intro_v5',
+];
+
 // ─── Streak configuration ─────────────────────────────────────────────────────
 // Each streak is a thin luminous line that races from an edge toward center,
 // creating the visual impression of kinetic energy converging into the wordmark.
@@ -55,8 +67,27 @@ export default function IntroSequence() {
   const [phase, setPhase] = useState<Phase>('pre');
 
   useEffect(() => {
+    // Retire keys left behind by earlier versions.
+    try {
+      RETIRED_KEYS.forEach((k) => localStorage.removeItem(k));
+    } catch {
+      // Private browsing and blocked site data both throw here. Nothing to do:
+      // the cleanup is housekeeping, and failing it must not stop the intro.
+    }
+
+    // Two escape hatches, because "play once per visit" is correct for real
+    // visitors but made the animation impossible for US to look at:
+    // sessionStorage survives a reload in the same tab, so once it had played
+    // in a tab you already had open, refreshing could never bring it back.
+    //
+    //   /?intro   forces a replay on any environment, any time.
+    //   dev mode  skips the guard entirely, so it plays on every load while
+    //             either of us is working on it.
+    const forced = new URLSearchParams(window.location.search).has('intro');
+    const alwaysPlay = forced || process.env.NODE_ENV === 'development';
+
     // Skip if already seen this session
-    if (sessionStorage.getItem(SESSION_KEY)) {
+    if (!alwaysPlay && sessionStorage.getItem(SESSION_KEY)) {
       setPhase('done');
       return;
     }

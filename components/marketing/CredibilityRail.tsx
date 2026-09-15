@@ -12,6 +12,7 @@ import LogoRail, { type RailItem } from '@/components/marketing/LogoRail';
  *   McColl Partners              David Sheffer (prior)
  *   MyEyeDr.                     David Sheffer (current)
  *   Engineered Land Solutions    Drew Nations (current)
+ *   Alyra Technology             Will Varnum (current)
  *
  * Filtered on logo quality, because the favicon service is the only source and
  * it varies by domain. Excluded and why:
@@ -31,6 +32,7 @@ const MENTOR_AFFILIATIONS: RailItem[] = [
   { name: 'McColl Partners', domain: 'mccollpartners.com' },
   { name: 'MyEyeDr.', domain: 'myeyedr.com' },
   { name: 'Engineered Land Solutions', domain: 'engineeredlandsolutions.com', label: 'Engineered Land' },
+  { name: 'Alyra Technology', domain: 'alyratechnology.com', label: 'Alyra' },
 ];
 
 export default function CredibilityRail() {

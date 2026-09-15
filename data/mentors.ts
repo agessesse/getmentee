@@ -247,4 +247,27 @@ export const FEATURED_MENTORS: Mentor[] = [
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },
+  {
+    name: 'Will Varnum',
+    profileSlug: 'will-varnum',
+    initials: 'WV',
+    title: 'Co-Founder & Chief Executive Officer',
+    company: 'Alyra Technology',
+    headshot: '/people/will-varnum.png',
+    accentColor: '#1a1f3a',
+    imagePosition: '50% 8%',
+    thumbnailPosition: '50% 12%',
+    linkedInUrl: 'https://www.linkedin.com/in/willvarnum',
+    priorCompanies: ['Wells Fargo Advisors'],
+    helpsWith: ['AI Strategy', 'Custom Engineering', 'Private Wealth'],
+    shortBio:
+      'Co-founder and CEO of Alyra Technology, an AI consulting and engineering firm that designs and deploys custom AI and automation systems for mid-market companies. Will works directly with executive teams on turning manual workflows into production software, and previously spent two and a half years at Wells Fargo Advisors on its top private wealth team.',
+    // Not a quotation. whyLabel is 'Founder perspective', so this is editorial
+    // copy about what he can help with, written from verifiable career facts.
+    // Swap to 'In their words' only if Will supplies a line himself.
+    whyIMentor:
+      'The gap between knowing a field exists and knowing how to enter it is mostly information, and that information usually travels through people rather than job postings.',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
 ];
