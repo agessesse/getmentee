@@ -72,6 +72,7 @@ export default function LogoRail({
   items,
   direction = 'left',
   srLabel,
+  ground = 'ivory',
 }: {
   eyebrow: string;
   items: RailItem[];
@@ -79,6 +80,11 @@ export default function LogoRail({
   direction?: 'left' | 'right';
   /** Sentence read by screen readers in place of the animation. */
   srLabel: string;
+  /**
+   * The section ground behind the rail. Only used to colour the fade edges,
+   * which have to match or they read as grey smears over the logos.
+   */
+  ground?: 'ivory' | 'veil';
 }) {
   // The animation translates the track by -50%, so it loops seamlessly only if
   // the track is exactly two identical copies. With a short list those two
@@ -98,14 +104,24 @@ export default function LogoRail({
   const track = [...oneCopy, ...oneCopy];
 
   return (
-    <div className="py-9 border-y border-halo-rule bg-halo-ivory overflow-hidden">
-      <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] text-center mb-6 px-6">
-        {eyebrow}
-      </p>
+    /*
+      No border and no background of its own. This used to be a standalone band
+      with border-y, which asserted a boundary between the rail and the heading
+      directly beneath it. They are one idea: the heading makes a claim and the
+      rail is the evidence for it, so the rule was drawing a line through the
+      middle of a single thought. Containment inside the section does the work
+      the border was faking.
+    */
+    <div className="py-7 overflow-hidden">
+      <div className="px-6 lg:px-10">
+        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] mb-5 max-w-6xl mx-auto">
+          {eyebrow}
+        </p>
+      </div>
 
       <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-halo-ivory to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-halo-ivory to-transparent" />
+        <div className={`pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r to-transparent ${ground === 'veil' ? 'from-halo-veil' : 'from-halo-ivory'}`} />
+        <div className={`pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l to-transparent ${ground === 'veil' ? 'from-halo-veil' : 'from-halo-ivory'}`} />
         <div
           className={
             direction === 'right'

@@ -9,8 +9,6 @@ import HeroReveal from '@/components/marketing/HeroReveal';
 import HeroPair from '@/components/marketing/HeroPair';
 import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
-import CredibilityRail from '@/components/marketing/CredibilityRail';
-import SchoolRail from '@/components/marketing/SchoolRail';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
@@ -121,15 +119,12 @@ export default function LandingPage() {
       {/* ── 02. Problem ──────────────────────────────────────────────────────── */}
       <ProblemSection />
 
-      {/* ── 03. Mentors ──────────────────────────────────────────────────────── */}
-      {/* Institutions first: they establish authority before the faces arrive. */}
-      <CredibilityRail />
+      {/* ── 03. The two rosters ──────────────────────────────────────────────── */}
+      {/* Willing to teach, then ready to learn. Each section now carries its own
+          proof rail inside it, under the heading it is evidence for, instead of
+          sitting in a separate bordered band above it. The two sections are told
+          apart by alternating the ground, ivory then veil, rather than by a rule. */}
       <MentorCarousel />
-
-      {/* The two rosters belong together: willing to teach, ready to learn.
-          Each is preceded by its own proof rail: employers above the mentors,
-          schools above the students. */}
-      <SchoolRail />
       <MenteeCarousel />
 
       {/* ── 04. Product ──────────────────────────────────────────────────────── */}

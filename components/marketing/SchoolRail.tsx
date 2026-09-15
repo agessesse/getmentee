@@ -24,6 +24,7 @@ export default function SchoolRail() {
       eyebrow="Our students study at"
       items={MENTEE_SCHOOLS}
       direction="left"
+      ground="veil"
       srLabel="Schools attended by students on Mentable:"
     />
   );

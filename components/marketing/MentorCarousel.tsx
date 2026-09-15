@@ -11,6 +11,7 @@ import LogoChip from '@/components/ui/LogoChip';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
+import CredibilityRail from '@/components/marketing/CredibilityRail';
 
 function MentorCard({
   mentor,
@@ -142,6 +143,12 @@ export default function MentorCarousel() {
             then came back to teach.
           </h2>
         </div></div>
+
+        {/*
+          The proof for the claim above, inside the same section rather than
+          floating in a bordered band of its own. Order is claim, proof, people.
+        */}
+        <CredibilityRail />
 
         <CarouselShell
           items={FEATURED_MENTORS}

@@ -11,6 +11,7 @@ import CarouselShell from '@/components/marketing/CarouselShell';
 import ProfileCardShell from '@/components/marketing/ProfileCardShell';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
+import SchoolRail from '@/components/marketing/SchoolRail';
 
 // Short school label for the card foot — full name lives in the profile modal.
 function shortSchool(person: SourcedNearPeer): string | null {
@@ -138,7 +139,7 @@ export default function MenteeCarousel() {
 
   return (
     <>
-      <section className="py-16 sm:py-20 bg-halo-ivory border-t border-halo-rule" aria-labelledby="mentees-heading">
+      <section className="py-16 sm:py-20 bg-halo-veil" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-4">
             Ready to learn
@@ -152,6 +153,9 @@ export default function MenteeCarousel() {
             and follow through.
           </h2>
         </div></div>
+
+        {/* Same shape as the mentor section: claim, proof, people. */}
+        <SchoolRail />
 
         <CarouselShell
           items={SOURCED_NEAR_PEERS}
