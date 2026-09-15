@@ -153,7 +153,10 @@ export default function MentorCarousel() {
         <CarouselShell
           items={FEATURED_MENTORS}
           keyOf={(m) => m.name}
-          idleDirection={-1}
+          // Rightward, matching CredibilityRail above it. The students section
+          // mirrors this and drifts left, so the two rosters read as a pair
+          // moving in opposite directions rather than an unexplained mix.
+          idleDirection={1}
           frozen={preview !== null}
           label="Mentors on Mentable"
           renderItem={(mentor, { hovered, onHoverChange, interactive }) => (
@@ -172,13 +175,19 @@ export default function MentorCarousel() {
         />
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
+          {/*
+            Was "Meet the mentors" pointing at role=mentee. The section is about
+            the people willing to teach, so the ask on it is the one that asks a
+            reader to join them. It also gives the page a mentor-facing ask
+            before the very last section, which previously carried the only one.
+          */}
           <CtaButton
-            href="/signup?role=mentee"
-            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
-            variant="secondary"
+            href="/signup?role=mentor"
+            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'become_a_mentor' })}
+            variant="outline"
             size="md"
           >
-            Meet the mentors
+            Become a mentor
           </CtaButton>
         </div></div>
       </section>

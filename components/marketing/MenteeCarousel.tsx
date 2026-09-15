@@ -182,7 +182,7 @@ export default function MenteeCarousel() {
           <CtaButton
             href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
-            variant="secondary"
+            variant="outline"
             size="md"
           >
             Create your profile

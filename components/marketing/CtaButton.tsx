@@ -19,7 +19,7 @@ import { ArrowRight } from 'lucide-react';
  *   - the icon badge on the forgot-password success screen
  */
 
-type Variant = 'primary' | 'secondary';
+type Variant = 'primary' | 'secondary' | 'outline';
 type Size = 'lg' | 'md' | 'sm';
 /** Which ground the button sits on. Selects the focus ring offset colour. */
 type Ground = 'light' | 'deep';
@@ -58,6 +58,34 @@ const SECONDARY_DEEP =
 const SECONDARY_BASE =
   'group tap-target inline-flex items-center gap-2 font-medium transition-colors border-b focus-visible:outline-none focus-visible:ring-2 rounded-sm';
 
+/*
+ * The third tier, for section-level asks.
+ *
+ * "Become a mentor" and "Create your profile" are real asks, so an underlined
+ * text link undersells them. But promoting them to filled purple would put six
+ * identical primary buttons on one page, and six primaries is the same as none:
+ * nothing leads. An outline reads as a button at a glance while still yielding
+ * to the filled ones.
+ *
+ * Contrast: purple-d label is 8.97:1 on ivory and 8.18:1 on veil; the purple
+ * border is 4.37:1 and 3.99:1 against the same grounds, both clear of the 3:1
+ * a non-text boundary needs.
+ */
+const OUTLINE_LIGHT =
+  'border border-halo-purple text-halo-purple-d hover:bg-halo-purple hover:text-white hover:border-halo-purple focus-visible:ring-halo-purple focus-visible:ring-offset-2';
+
+const OUTLINE_DEEP =
+  'border border-halo-lavender text-halo-ivory hover:bg-halo-ivory hover:text-halo-purple-d focus-visible:ring-halo-lavender focus-visible:ring-offset-halo-deep';
+
+const OUTLINE_BASE =
+  'group inline-flex items-center font-semibold transition-all rounded-xl focus-visible:outline-none focus-visible:ring-2';
+
+const OUTLINE_SIZE: Record<Size, string> = {
+  lg: 'gap-2.5 px-8 py-4 text-[15px]',
+  md: 'gap-2.5 px-6 py-3 text-[15px]',
+  sm: 'gap-2 px-5 py-2.5 text-sm',
+};
+
 const SECONDARY_SIZE: Record<Size, string> = {
   lg: 'py-4 text-[15px]',
   md: 'pb-0.5 text-[15px]',
@@ -89,7 +117,9 @@ export default function CtaButton({
   const classes =
     variant === 'primary'
       ? `${PRIMARY_BASE} ${deep ? PRIMARY_DEEP : PRIMARY_LIGHT} ${PRIMARY_SIZE[size]} ${className}`
-      : `${SECONDARY_BASE} ${deep ? SECONDARY_DEEP : SECONDARY_LIGHT} ${SECONDARY_SIZE[size]} ${className}`;
+      : variant === 'outline'
+        ? `${OUTLINE_BASE} ${deep ? OUTLINE_DEEP : OUTLINE_LIGHT} ${OUTLINE_SIZE[size]} ${className}`
+        : `${SECONDARY_BASE} ${deep ? SECONDARY_DEEP : SECONDARY_LIGHT} ${SECONDARY_SIZE[size]} ${className}`;
 
   return (
     <Link href={href} onClick={onClick} prefetch={prefetch} className={classes.trim()}>
