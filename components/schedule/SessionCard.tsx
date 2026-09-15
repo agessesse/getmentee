@@ -48,7 +48,7 @@ export default function SessionCard({
         <div className="flex items-center gap-2">
           <Avatar src={partnerAvatarUrl} name={fullName} size="sm" />
           <div>
-            <p className="text-sm font-medium text-navy-900">{fullName}</p>
+            <p className="text-sm font-medium text-purple-900">{fullName}</p>
             <p className="text-xs text-gray-400">
               {date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}{' '}
               at {date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}

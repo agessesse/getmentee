@@ -11,10 +11,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: 'bg-navy-600 text-white hover:bg-navy-700 focus:ring-navy-500',
-  secondary: 'border border-navy-600 text-navy-600 hover:bg-navy-50 focus:ring-navy-500',
+  primary: 'bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500',
+  secondary: 'border border-purple-600 text-purple-600 hover:bg-purple-50 focus:ring-purple-500',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-  ghost: 'text-navy-600 hover:bg-navy-50 focus:ring-navy-500',
+  ghost: 'text-purple-600 hover:bg-purple-50 focus:ring-purple-500',
 };
 
 const sizes = {

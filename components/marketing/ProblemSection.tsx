@@ -30,7 +30,7 @@ export default function ProblemSection() {
       <div className="max-w-4xl mx-auto">
         <h2
           id="problem-heading"
-          className="font-serif text-navy-900 leading-[1.06] text-center mb-14 mx-auto max-w-2xl"
+          className="font-serif text-purple-900 leading-[1.06] text-center mb-14 mx-auto max-w-2xl"
           style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
         >
           Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
@@ -51,16 +51,16 @@ export default function ProblemSection() {
                 onClick={() => setOpen(side.id)}
                 onPointerEnter={(e) => { if (e.pointerType === 'mouse') setOpen(side.id); }}
                 aria-expanded={isOpen}
-                className={`text-left rounded-2xl border p-6 sm:p-7 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
+                className={`text-left rounded-2xl border p-6 sm:p-7 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
                   isOpen
-                    ? 'border-navy-300 bg-navy-50/40 shadow-sm'
+                    ? 'border-purple-300 bg-purple-50/40 shadow-sm'
                     : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
-                <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em] mb-3">
+                <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-[0.18em] mb-3">
                   {side.who}
                 </p>
-                <p className="font-serif text-navy-900 text-[21px] sm:text-[24px] leading-snug">
+                <p className="font-serif text-purple-900 text-[21px] sm:text-[24px] leading-snug">
                   “{side.line}”
                 </p>
                 {/* Grid-rows trick animates height without measuring anything */}
@@ -89,10 +89,10 @@ export default function ProblemSection() {
           <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] py-2.5">
             Luck
           </p>
-          <div className="w-px h-8 bg-gradient-to-b from-gray-300 to-navy-900" />
+          <div className="w-px h-8 bg-gradient-to-b from-gray-300 to-purple-900" />
         </div>
 
-        <p className="text-center font-serif text-navy-900 text-[26px] sm:text-[30px] mt-3">
+        <p className="text-center font-serif text-purple-900 text-[26px] sm:text-[30px] mt-3">
           Mentable
         </p>
         <p className="text-center text-gray-500 font-light text-[15px] mt-2.5 max-w-sm mx-auto leading-relaxed">

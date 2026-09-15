@@ -90,7 +90,7 @@ export function SignupForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-navy-900 mb-2">Account created!</h3>
+        <h3 className="text-xl font-bold text-purple-900 mb-2">Account created!</h3>
         <p className="text-gray-500 text-sm">Check your email to confirm, then sign in.</p>
       </div>
     );
@@ -100,23 +100,23 @@ export function SignupForm() {
     return (
       <div className="w-full max-w-lg mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold text-navy-900 mb-3">Join Mentable</h1>
+          <h1 className="text-3xl font-bold text-purple-900 mb-3">Join Mentable</h1>
           <p className="text-gray-500">Are you looking for guidance, or offering it?</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
             onClick={() => handleRoleSelect('mentee')}
-            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
+            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-purple-600 hover:shadow-md transition-all text-left"
           >
-            <div className="w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-100 transition-colors">
-              <GraduationCap className="w-6 h-6 text-navy-700" />
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-purple-100 transition-colors">
+              <GraduationCap className="w-6 h-6 text-purple-700" />
             </div>
-            <h3 className="text-lg font-bold text-navy-900 mb-2">Find a Mentor</h3>
+            <h3 className="text-lg font-bold text-purple-900 mb-2">Find a Mentor</h3>
             <p className="text-sm text-gray-500 leading-relaxed">
               Connect with professionals at top firms who can guide your career.
             </p>
-            <div className="mt-5 flex items-center gap-1.5 text-navy-600 text-sm font-medium">
+            <div className="mt-5 flex items-center gap-1.5 text-purple-600 text-sm font-medium">
               <span>Get started</span>
               <ArrowRight className="w-4 h-4" />
             </div>
@@ -124,16 +124,16 @@ export function SignupForm() {
 
           <button
             onClick={() => handleRoleSelect('mentor')}
-            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
+            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-purple-600 hover:shadow-md transition-all text-left"
           >
-            <div className="w-12 h-12 bg-navy-900 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-800 transition-colors">
+            <div className="w-12 h-12 bg-purple-900 rounded-xl flex items-center justify-center mb-5 group-hover:bg-purple-800 transition-colors">
               <Briefcase className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg font-bold text-navy-900 mb-2">Become a Mentor</h3>
+            <h3 className="text-lg font-bold text-purple-900 mb-2">Become a Mentor</h3>
             <p className="text-sm text-gray-500 leading-relaxed">
               Give back to the next generation. Share your experience and open doors.
             </p>
-            <div className="mt-5 flex items-center gap-1.5 text-navy-600 text-sm font-medium">
+            <div className="mt-5 flex items-center gap-1.5 text-purple-600 text-sm font-medium">
               <span>Apply now</span>
               <ArrowRight className="w-4 h-4" />
             </div>
@@ -142,7 +142,7 @@ export function SignupForm() {
 
         <p className="text-center text-sm text-gray-500 mt-8">
           Already have an account?{' '}
-          <Link href="/login" className="text-navy-600 font-medium hover:underline">
+          <Link href="/login" className="text-purple-600 font-medium hover:underline">
             Sign in
           </Link>
         </p>
@@ -155,21 +155,21 @@ export function SignupForm() {
       <div className="mb-8">
         <button
           onClick={() => setStep('role')}
-          className="text-sm text-gray-500 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1"
+          className="text-sm text-gray-500 hover:text-purple-900 transition-colors mb-6 flex items-center gap-1"
         >
           ← Back
         </button>
-        <div className="inline-flex items-center gap-2 bg-navy-50 text-navy-700 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-navy-100">
+        <div className="inline-flex items-center gap-2 bg-purple-50 text-purple-700 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-purple-100">
           {role === 'mentee' ? <GraduationCap className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
           {role === 'mentee' ? 'Looking for a mentor' : 'Becoming a mentor'}
         </div>
-        <h1 className="text-2xl font-bold text-navy-900">Create your account</h1>
+        <h1 className="text-2xl font-bold text-purple-900">Create your account</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-navy-900 mb-1.5">
+            <label htmlFor="firstName" className="block text-sm font-medium text-purple-900 mb-1.5">
               First name
             </label>
             <input
@@ -181,11 +181,11 @@ export function SignupForm() {
               required
               placeholder="Jordan"
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
             />
           </div>
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-navy-900 mb-1.5">
+            <label htmlFor="lastName" className="block text-sm font-medium text-purple-900 mb-1.5">
               Last name
             </label>
             <input
@@ -197,13 +197,13 @@ export function SignupForm() {
               required
               placeholder="Taylor"
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-purple-900 mb-1.5">
             Email address
           </label>
           <input
@@ -215,12 +215,12 @@ export function SignupForm() {
             required
             placeholder="you@university.edu"
             disabled={loading}
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="password" className="block text-sm font-medium text-purple-900 mb-1.5">
             Password
           </label>
           <input
@@ -233,7 +233,7 @@ export function SignupForm() {
             placeholder="Min. 8 characters"
             disabled={loading}
             minLength={8}
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
           />
         </div>
 
@@ -246,7 +246,7 @@ export function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-navy-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-navy-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-purple-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-purple-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
@@ -263,7 +263,7 @@ export function SignupForm() {
 
         <p className="text-center text-sm text-gray-500">
           Already have an account?{' '}
-          <Link href="/login" className="text-navy-600 font-medium hover:underline">
+          <Link href="/login" className="text-purple-600 font-medium hover:underline">
             Sign in
           </Link>
         </p>

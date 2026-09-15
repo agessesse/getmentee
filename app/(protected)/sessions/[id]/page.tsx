@@ -70,10 +70,10 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
   if (!hasContent) return null;
 
   return (
-    <div className="bg-navy-50 border border-navy-100 rounded-2xl p-5">
+    <div className="bg-purple-50 border border-purple-100 rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-4">
-        <FileText className="w-4 h-4 text-navy-600" />
-        <h3 className="text-sm font-semibold text-navy-900">
+        <FileText className="w-4 h-4 text-purple-600" />
+        <h3 className="text-sm font-semibold text-purple-900">
           Pre-Meeting Brief: {menteeName}
         </h3>
       </div>
@@ -82,15 +82,15 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Open action items */}
         {brief.openActionItems.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-navy-600 uppercase tracking-wide mb-2">
+            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2">
               Open action items ({brief.openActionItems.length})
             </p>
             <div className="space-y-1.5">
               {brief.openActionItems.slice(0, 4).map((item) => (
                 <div key={item.id} className="flex items-start gap-2">
-                  <Circle className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+                  <Circle className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
                   <div className="min-w-0">
-                    <p className="text-sm text-navy-900">{item.title}</p>
+                    <p className="text-sm text-purple-900">{item.title}</p>
                     {item.due_date && (
                       <p className="text-xs text-gray-500">
                         Due {format(new Date(item.due_date), 'MMM d')}
@@ -100,7 +100,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
                 </div>
               ))}
               {brief.openActionItems.length > 4 && (
-                <p className="text-xs text-navy-400 pl-5">
+                <p className="text-xs text-purple-400 pl-5">
                   +{brief.openActionItems.length - 4} more
                 </p>
               )}
@@ -111,12 +111,12 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Active goals */}
         {brief.menteeGoals.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-navy-600 uppercase tracking-wide mb-2">
+            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-2">
               Active goals
             </p>
             <div className="space-y-1">
               {brief.menteeGoals.slice(0, 3).map((g) => (
-                <p key={g.id} className="text-sm text-navy-900">
+                <p key={g.id} className="text-sm text-purple-900">
                   · {g.title}
                 </p>
               ))}
@@ -127,7 +127,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Last message */}
         {brief.lastMessageAt && (
           <div className="flex items-start gap-2">
-            <MessageSquare className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+            <MessageSquare className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-xs text-gray-500">
                 Last message{' '}
@@ -499,14 +499,14 @@ export default function SessionDetailPage() {
       <div>
         <Link
           href="/schedule"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Schedule
         </Link>
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-navy-900">Session Workspace</h1>
+            <h1 className="text-2xl font-bold text-purple-900">Session Workspace</h1>
             <p className="text-gray-500 text-sm mt-1">
               with {partner.first_name} {partner.last_name} ·{' '}
               {format(date, 'EEEE, MMMM d, yyyy')}
@@ -535,13 +535,13 @@ export default function SessionDetailPage() {
           {/* Notes / Agenda */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-navy-900">
+              <h2 className="text-base font-semibold text-purple-900">
                 {isCompleted ? 'Session Notes' : 'Agenda & Notes'}
               </h2>
               <button
                 onClick={saveNotes}
                 disabled={notesLoading}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-600 hover:text-purple-900 transition-colors"
               >
                 {notesSaved ? (
                   <>
@@ -567,7 +567,7 @@ export default function SessionDetailPage() {
           {isMentor && isCompleted && (
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-semibold text-navy-900">
+                <h2 className="text-base font-semibold text-purple-900">
                   Session Recap
                 </h2>
                 <div className="flex items-center gap-3">
@@ -581,7 +581,7 @@ export default function SessionDetailPage() {
                   <button
                     onClick={saveRecap}
                     disabled={recapLoading}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-600 hover:text-purple-900 transition-colors"
                   >
                     {recapSaved ? (
                       <>
@@ -610,7 +610,7 @@ export default function SessionDetailPage() {
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-base font-semibold text-navy-900">Session Recording</h2>
+                  <h2 className="text-base font-semibold text-purple-900">Session Recording</h2>
                   <p className="text-xs text-gray-500 mt-0.5">
                     Transcribe your session and generate a private summary.
                   </p>
@@ -628,12 +628,12 @@ export default function SessionDetailPage() {
           {/* Action items */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-navy-900">
+              <h2 className="text-base font-semibold text-purple-900">
                 Action Items
               </h2>
               <button
                 onClick={() => setShowAddAction((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-600 hover:text-purple-900 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add item
@@ -647,7 +647,7 @@ export default function SessionDetailPage() {
                   value={newActionTitle}
                   onChange={(e) => setNewActionTitle(e.target.value)}
                   placeholder="What needs to be done?"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
                   onKeyDown={(e) => e.key === 'Enter' && addActionItem()}
                 />
                 {/* Assign to */}
@@ -656,14 +656,14 @@ export default function SessionDetailPage() {
                     <button
                       type="button"
                       onClick={() => setNewActionAssignedTo('self')}
-                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'self' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'self' ? 'bg-purple-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                     >
                       Me
                     </button>
                     <button
                       type="button"
                       onClick={() => setNewActionAssignedTo('partner')}
-                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'partner' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'partner' ? 'bg-purple-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
                     >
                       {partnerFirstName}
                     </button>
@@ -674,12 +674,12 @@ export default function SessionDetailPage() {
                     type="date"
                     value={newActionDueDate}
                     onChange={(e) => setNewActionDueDate(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
                   />
                   <button
                     onClick={addActionItem}
                     disabled={addingAction || !newActionTitle.trim()}
-                    className="px-4 py-2 bg-navy-900 text-white text-sm rounded-lg hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 bg-purple-900 text-white text-sm rounded-lg hover:bg-purple-800 disabled:opacity-50 transition-colors"
                   >
                     Add
                   </button>
@@ -709,7 +709,7 @@ export default function SessionDetailPage() {
                       {item.is_completed ? (
                         <CheckCircle className="w-5 h-5 text-sage-600" />
                       ) : (
-                        <Circle className="w-5 h-5 text-gray-300 hover:text-navy-400 transition-colors" />
+                        <Circle className="w-5 h-5 text-gray-300 hover:text-purple-400 transition-colors" />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
@@ -717,7 +717,7 @@ export default function SessionDetailPage() {
                         className={`text-sm ${
                           item.is_completed
                             ? 'line-through text-gray-500'
-                            : 'text-navy-900'
+                            : 'text-purple-900'
                         }`}
                       >
                         {item.title}
@@ -742,7 +742,7 @@ export default function SessionDetailPage() {
         <div className="space-y-4">
           {/* Session info */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-4">
+            <h3 className="text-sm font-semibold text-purple-900 mb-4">
               Session Info
             </h3>
             <div className="space-y-3 text-sm text-gray-600">
@@ -765,7 +765,7 @@ export default function SessionDetailPage() {
                 href={session.video_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-navy-900 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-purple-900 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
                 Join Call
@@ -815,7 +815,7 @@ export default function SessionDetailPage() {
 
           {/* Participants */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-4">
+            <h3 className="text-sm font-semibold text-purple-900 mb-4">
               Participants
             </h3>
             <div className="space-y-3">
@@ -830,7 +830,7 @@ export default function SessionDetailPage() {
                     size="sm"
                   />
                   <div>
-                    <p className="text-sm font-medium text-navy-900">
+                    <p className="text-sm font-medium text-purple-900">
                       {data?.first_name} {data?.last_name}
                     </p>
                     <p className="text-xs text-gray-500">{label}</p>
@@ -842,8 +842,8 @@ export default function SessionDetailPage() {
 
           {/* Review */}
           {canReview && (
-            <div className="bg-white rounded-2xl border border-navy-100 p-5">
-              <h3 className="text-sm font-semibold text-navy-900 mb-4">
+            <div className="bg-white rounded-2xl border border-purple-100 p-5">
+              <h3 className="text-sm font-semibold text-purple-900 mb-4">
                 Leave a Review
               </h3>
               <div className="flex gap-1 mb-4">
@@ -870,12 +870,12 @@ export default function SessionDetailPage() {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 resize-none mb-3"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 resize-none mb-3"
               />
               <button
                 onClick={submitReview}
                 disabled={reviewLoading || !rating}
-                className="w-full py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                className="w-full py-2.5 bg-purple-900 text-white text-sm font-medium rounded-xl hover:bg-purple-800 disabled:opacity-50 transition-colors"
               >
                 {reviewLoading ? 'Submitting...' : 'Submit Review'}
               </button>
@@ -892,7 +892,7 @@ export default function SessionDetailPage() {
                 {session?.mentorship_id && (
                   <Link
                     href={`/schedule?mentorshipId=${session.mentorship_id}`}
-                    className="text-xs font-medium text-navy-700 hover:text-navy-900 underline underline-offset-2"
+                    className="text-xs font-medium text-purple-700 hover:text-purple-900 underline underline-offset-2"
                   >
                     Schedule next session →
                   </Link>

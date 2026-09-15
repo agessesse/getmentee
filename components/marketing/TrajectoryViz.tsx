@@ -153,14 +153,14 @@ export default function TrajectoryViz() {
 
   return (
     <section
-      className="py-20 sm:py-24 px-6 lg:px-10 bg-navy-900 overflow-hidden"
+      className="py-20 sm:py-24 px-6 lg:px-10 bg-purple-900 overflow-hidden"
       aria-labelledby="trajectory-heading"
     >
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
 
           <div>
-            <p className="text-[11px] font-semibold text-navy-400 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-purple-400 uppercase tracking-[0.22em] mb-5">
               The difference
             </p>
             <h2
@@ -175,7 +175,7 @@ export default function TrajectoryViz() {
                 node's note, so nothing below it ever shifts. */}
             <div className="min-h-[62px]">
               <p
-                className="text-navy-400 font-light text-[14px] transition-opacity duration-200"
+                className="text-purple-400 font-light text-[14px] transition-opacity duration-200"
                 style={{ opacity: active ? 0 : 1 }}
               >
                 {coarse
@@ -183,14 +183,14 @@ export default function TrajectoryViz() {
                   : 'Move across the path to see what changes.'}
               </p>
               <p
-                className="text-navy-200 font-light text-[14px] -mt-[21px] transition-opacity duration-200"
+                className="text-purple-200 font-light text-[14px] -mt-[21px] transition-opacity duration-200"
                 style={{ opacity: active ? 1 : 0 }}
               >
                 {active?.note ?? ' '}
               </p>
             </div>
 
-            <p className="text-[11px] text-navy-300 font-light mt-6 max-w-xs leading-relaxed">
+            <p className="text-[11px] text-purple-300 font-light mt-6 max-w-xs leading-relaxed">
               Illustrative. Mentorship changes what is reachable. It does not
               guarantee an outcome.
             </p>
@@ -211,27 +211,26 @@ export default function TrajectoryViz() {
           >
             <defs>
               <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
-                {/* The one place the sage accent appears on the marketing
-                    page. This curve is literally the thing the accent means:
-                    the path that moves when someone has done it before. It
-                    also reads better than the old navy-on-navy gradient, which
-                    sat at low contrast against the section background.
-                    sage-400 -> sage-200 on navy-900 is 4.86:1 rising to
-                    11.07:1. Nothing else on the landing page changed. */}
-                <stop offset="0%" stopColor="#7c9470" />
-                <stop offset="100%" stopColor="#ccdac5" />
+                {/* The rising path is the brand's own two purples: it starts
+                    at the mentee tone and resolves into the lavender, which is
+                    the same journey the logo draws. Sage is deliberately absent
+                    here — it means "completed" inside the product and is not a
+                    marketing colour.
+                    purple-400 on purple-900 is 5.25:1, rising to 11.12:1. */}
+                <stop offset="0%" stopColor="#9580f9" />
+                <stop offset="100%" stopColor="#D9CFFB" />
               </linearGradient>
             </defs>
 
             {/* Unmentored baseline — always visible, deliberately inert */}
             <path
               d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
-              stroke="#2d3668"
+              stroke="#6f6790"  /* desaturated, subordinate to the rising path: 3.13:1 */
               strokeWidth={1.5 * k}
               strokeDasharray="5 6"
               fill="none"
             />
-            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#879bd3" fontSize={11 * k} fontWeight="500">
+            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#9580f9" fontSize={11 * k} fontWeight="500">
               without mentorship
             </text>
 
@@ -259,13 +258,13 @@ export default function TrajectoryViz() {
 
             {/* Origin — the student */}
             <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
-            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#879bd3" fontSize={11 * k} fontWeight="600">
+            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#9580f9" fontSize={11 * k} fontWeight="600">
               You
             </text>
 
             {/* The mentor enters as the curve lifts */}
             <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
-              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#1a1f3a" stroke="#ffffff" strokeWidth={2 * k} />
+              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#24193e" stroke="#ffffff" strokeWidth={2 * k} />
               <text x={mentorPt.x} y={mentorPt.y - 16 * k} textAnchor="middle" fill="#ffffff" fontSize={11 * k} fontWeight="600">
                 Mentor
               </text>
@@ -297,7 +296,7 @@ export default function TrajectoryViz() {
                     cx={p.x}
                     cy={p.y}
                     r={(isActive ? 7 : 4.5) * k}
-                    fill={isActive ? '#ffffff' : '#a9be9f'}
+                    fill={isActive ? '#ffffff' : '#b3a2fb'}
                     style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
                   />
                   {(!narrow || i === 0 || i === NODES.length - 1) && (
@@ -305,7 +304,7 @@ export default function TrajectoryViz() {
                       x={p.x}
                       y={p.y - 16 * k}
                       textAnchor={narrow && i === NODES.length - 1 ? 'end' : 'middle'}
-                      fill={isActive ? '#ffffff' : '#879bd3'}
+                      fill={isActive ? '#ffffff' : '#9580f9'}
                       fontSize={10.5 * k}
                       fontWeight="600"
                       style={{ pointerEvents: 'none' }}

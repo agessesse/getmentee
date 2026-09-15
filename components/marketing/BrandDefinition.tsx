@@ -72,7 +72,7 @@ export default function BrandDefinition() {
     <div ref={ref} className="max-w-lg">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
         <span
-          className="font-serif text-navy-900 text-[26px] sm:text-[30px] leading-none motion-safe:transition-all motion-safe:duration-500"
+          className="font-serif text-purple-900 text-[26px] sm:text-[30px] leading-none motion-safe:transition-all motion-safe:duration-500"
           style={{ opacity: shown(1) ? 1 : 0, transform: shown(1) ? 'none' : 'translateY(4px)' }}
         >
           Mentable
@@ -91,7 +91,7 @@ export default function BrandDefinition() {
         </span>
       </div>
 
-      <p className="text-navy-700 text-[15px] font-light flex flex-wrap gap-x-1.5">
+      <p className="text-purple-700 text-[15px] font-light flex flex-wrap gap-x-1.5">
         {TRAITS.map((trait, i) => (
           <span
             key={trait}

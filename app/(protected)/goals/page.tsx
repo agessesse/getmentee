@@ -163,13 +163,13 @@ export default function GoalsPage() {
       )}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Goals</h1>
+          <h1 className="text-2xl font-bold text-purple-900">Goals</h1>
           <p className="text-gray-500 mt-1 text-sm">Track what you&apos;re working toward in each mentorship.</p>
         </div>
         {mentorships.length > 0 && (
           <button
             onClick={() => setShowForm((v) => !v)}
-            className="inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-800 transition-colors"
+            className="inline-flex items-center gap-2 bg-purple-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-purple-800 transition-colors"
           >
             <Plus className="w-4 h-4" />
             New goal
@@ -179,8 +179,8 @@ export default function GoalsPage() {
 
       {/* New goal form */}
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-white rounded-2xl border border-navy-200 p-6 space-y-4 shadow-sm">
-          <h3 className="text-sm font-semibold text-navy-900">Create a new goal</h3>
+        <form onSubmit={handleCreate} className="bg-white rounded-2xl border border-purple-200 p-6 space-y-4 shadow-sm">
+          <h3 className="text-sm font-semibold text-purple-900">Create a new goal</h3>
 
           {mentorships.length > 1 && (
             <div>
@@ -188,7 +188,7 @@ export default function GoalsPage() {
               <select
                 value={form.mentorshipId}
                 onChange={(e) => setForm((f) => ({ ...f, mentorshipId: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
               >
                 {mentorships.map((m) => (
                   <option key={m.id} value={m.id}>With {m.partnerName}</option>
@@ -205,7 +205,7 @@ export default function GoalsPage() {
               placeholder="e.g. Land an investment banking internship"
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
 
@@ -216,7 +216,7 @@ export default function GoalsPage() {
               placeholder="What does success look like?"
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 resize-none"
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 resize-none"
             />
           </div>
 
@@ -226,7 +226,7 @@ export default function GoalsPage() {
               type="date"
               value={form.targetDate}
               onChange={(e) => setForm((f) => ({ ...f, targetDate: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
 
@@ -234,7 +234,7 @@ export default function GoalsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-navy-900 text-white py-2 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors disabled:opacity-50"
+              className="flex-1 bg-purple-900 text-white py-2 rounded-xl text-sm font-medium hover:bg-purple-800 transition-colors disabled:opacity-50"
             >
               {saving ? 'Creating...' : 'Create goal'}
             </button>
@@ -251,10 +251,10 @@ export default function GoalsPage() {
 
       {goals.length === 0 ? (
         <div className="text-center py-24 bg-white rounded-2xl border border-gray-100">
-          <div className="w-12 h-12 bg-navy-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Target className="w-6 h-6 text-navy-600" />
+          <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Target className="w-6 h-6 text-purple-600" />
           </div>
-          <p className="text-base font-medium text-navy-900 mb-2">No goals yet</p>
+          <p className="text-base font-medium text-purple-900 mb-2">No goals yet</p>
           <p className="text-sm text-gray-500 mb-6">
             {mentorships.length === 0
               ? 'Start a mentorship to create goals with your partner.'
@@ -263,7 +263,7 @@ export default function GoalsPage() {
           {mentorships.length > 0 && (
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 bg-navy-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+              className="inline-flex items-center gap-2 bg-purple-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add first goal
@@ -279,7 +279,7 @@ export default function GoalsPage() {
               </h2>
               <div className="space-y-3">
                 {active.map((g) => (
-                  <div key={g.id} className="bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all">
+                  <div key={g.id} className="bg-white rounded-2xl border border-gray-100 p-5 hover:border-purple-200 hover:shadow-sm transition-all">
                     <div className="flex items-start gap-4">
                       <button
                         onClick={() => markComplete(g.id)}
@@ -290,7 +290,7 @@ export default function GoalsPage() {
                       </button>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
-                          <p className="text-sm font-semibold text-navy-900">{g.title}</p>
+                          <p className="text-sm font-semibold text-purple-900">{g.title}</p>
                           {g.target_date && (
                             <div className="flex items-center gap-1 text-xs text-gray-500 flex-shrink-0">
                               <Clock className="w-3 h-3" />
@@ -321,7 +321,7 @@ export default function GoalsPage() {
                     <div className="flex items-start gap-4">
                       <CheckCircle className="w-5 h-5 text-sage-600 flex-shrink-0 mt-0.5" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-navy-900 line-through">{g.title}</p>
+                        <p className="text-sm font-medium text-purple-900 line-through">{g.title}</p>
                         {g.completed_at && (
                           <p className="text-xs text-gray-500 mt-1">
                             Completed {format(new Date(g.completed_at), 'MMM d, yyyy')}

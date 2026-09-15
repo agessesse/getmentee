@@ -2,13 +2,13 @@ import { clsx } from 'clsx';
 
 interface BadgeProps {
   label: string;
-  variant?: 'navy' | 'green' | 'red' | 'blue' | 'gray' | 'yellow';
+  variant?: 'purple' | 'green' | 'red' | 'blue' | 'gray' | 'yellow';
   size?: 'sm' | 'md';
   className?: string;
 }
 
 const variants = {
-  navy: 'bg-navy-100 text-navy-700',
+  purple: 'bg-purple-100 text-purple-700',
   green: 'bg-sage-100 text-sage-700',
   red: 'bg-red-100 text-red-700',
   blue: 'bg-blue-100 text-blue-700',
@@ -21,7 +21,7 @@ const sizes = {
   md: 'px-2.5 py-1 text-xs',
 };
 
-export default function Badge({ label, variant = 'navy', size = 'md', className }: BadgeProps) {
+export default function Badge({ label, variant = 'purple', size = 'md', className }: BadgeProps) {
   return (
     <span
       className={clsx(

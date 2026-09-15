@@ -63,7 +63,7 @@ export default async function AdminAnalytics() {
   return (
     <div className="max-w-5xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Analytics</h1>
+        <h1 className="text-[20px] font-semibold text-purple-900">Analytics</h1>
         <p className="text-[14px] text-gray-600 mt-1">
           {events.length === 5000 ? 'Most recent 5,000 events.' : `${events.length} events recorded.`}
         </p>
@@ -93,14 +93,14 @@ export default async function AdminAnalytics() {
               return (
                 <li key={f.key} className="px-4 py-3">
                   <div className="flex items-baseline gap-3">
-                    <span className="text-[14px] font-medium text-navy-900">{f.label}</span>
-                    <span className="ml-auto text-[14px] tabular-nums text-navy-900">
+                    <span className="text-[14px] font-medium text-purple-900">{f.label}</span>
+                    <span className="ml-auto text-[14px] tabular-nums text-purple-900">
                       {u} user{u === 1 ? '' : 's'}
                     </span>
                     <span className="text-[13px] tabular-nums text-gray-600 w-12 text-right">{pct}%</span>
                   </div>
                   <div className="mt-1.5 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-navy-700 rounded-full" style={{ width: `${pct}%` }} />
+                    <div className="h-full bg-purple-700 rounded-full" style={{ width: `${pct}%` }} />
                   </div>
                   <p className="text-[12px] text-gray-600 mt-1 tabular-nums">
                     {rec?.total ?? 0} total event{(rec?.total ?? 0) === 1 ? '' : 's'}
@@ -121,7 +121,7 @@ export default async function AdminAnalytics() {
                  aria-label={`Daily event counts: ${last14.map((d) => `${d.label}: ${d.n}`).join(', ')}`}>
               {last14.map((d) => (
                 <div key={d.label} className="flex-1 flex flex-col items-center gap-1 min-w-0">
-                  <div className="w-full bg-navy-700 rounded-t" style={{ height: `${Math.round((d.n / peak) * 100)}%` }} />
+                  <div className="w-full bg-purple-700 rounded-t" style={{ height: `${Math.round((d.n / peak) * 100)}%` }} />
                   <span className="text-[10px] text-gray-600 tabular-nums truncate w-full text-center">{d.label}</span>
                 </div>
               ))}

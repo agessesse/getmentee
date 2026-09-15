@@ -23,7 +23,7 @@ export default function TagSelect({ options, value, onChange, label, max, classN
   return (
     <div className={clsx('flex flex-col gap-2', className)}>
       {label && (
-        <span className="text-sm font-medium text-navy-900">
+        <span className="text-sm font-medium text-purple-900">
           {label}
           {max && <span className="text-gray-500 font-normal"> (up to {max})</span>}
         </span>
@@ -41,8 +41,8 @@ export default function TagSelect({ options, value, onChange, label, max, classN
               className={clsx(
                 'px-3 py-1 rounded-full text-sm font-medium border transition-colors',
                 selected
-                  ? 'bg-navy-600 text-white border-navy-600'
-                  : 'bg-white text-navy-700 border-gray-300 hover:border-navy-400',
+                  ? 'bg-purple-600 text-white border-purple-600'
+                  : 'bg-white text-purple-700 border-gray-300 hover:border-purple-400',
                 disabled && 'opacity-40 cursor-not-allowed'
               )}
             >

@@ -11,7 +11,7 @@ export default function GoalProgressBar({ goal, progress, total }: GoalProgressB
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-navy-900 flex items-center gap-1">
+        <span className="text-sm text-purple-900 flex items-center gap-1">
           {done && <span className="text-sage-600">✓</span>} {goal}
         </span>
         <span className="text-xs text-gray-400">{pct}%</span>
@@ -21,7 +21,7 @@ export default function GoalProgressBar({ goal, progress, total }: GoalProgressB
           className="h-full rounded-full transition-all duration-500"
           style={{
             width: `${pct}%`,
-            backgroundColor: done ? '#16a34a' : '#5265b0',
+            backgroundColor: done ? '#16a34a' : '#5f3ee1',
           }}
         />
       </div>

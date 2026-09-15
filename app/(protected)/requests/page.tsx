@@ -59,12 +59,12 @@ function EmptyRequestsState({ tab, userRole }: { tab: Status; userRole: 'mentor'
       <div className="w-11 h-11 bg-gray-50 rounded-xl flex items-center justify-center mb-4">
         <ClipboardList className="w-5 h-5 text-gray-300" />
       </div>
-      <p className="text-sm font-medium text-navy-900 mb-1">{title}</p>
+      <p className="text-sm font-medium text-purple-900 mb-1">{title}</p>
       <p className="text-sm text-gray-500 max-w-xs leading-relaxed">{body}</p>
       {cta && (
         <Link
           href={cta.href}
-          className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+          className="mt-6 inline-flex items-center gap-2 bg-purple-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-purple-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
         >
           {cta.label}
         </Link>
@@ -327,7 +327,7 @@ export default function RequestsPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-navy-900">
+        <h1 className="text-2xl font-bold text-purple-900">
           {userRole === 'mentor' ? 'Mentorship Requests' : 'My Requests'}
         </h1>
         <p className="text-gray-500 mt-1 text-sm">
@@ -371,7 +371,7 @@ export default function RequestsPage() {
       {capacity && (
         <div className="mb-6 bg-white rounded-xl border border-gray-100 px-5 py-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-navy-900">
+            <p className="text-sm font-medium text-purple-900">
               Capacity: {capacity.activeMentees}/{capacity.maxMentees} mentees
             </p>
             <span
@@ -411,8 +411,8 @@ export default function RequestsPage() {
             onClick={() => handleTabChange(status)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               tab === status
-                ? 'border-navy-600 text-navy-600'
-                : 'border-transparent text-gray-500 hover:text-navy-900'
+                ? 'border-purple-600 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-purple-900'
             }`}
           >
             {label}

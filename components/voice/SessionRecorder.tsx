@@ -141,7 +141,7 @@ export default function SessionRecorder({
           type="button"
           disabled={disabled}
           onClick={() => setRecorderState('consent')}
-          className="inline-flex items-center gap-2 text-xs font-medium text-navy-600 hover:text-navy-900 border border-navy-200 hover:border-navy-400 px-3 py-1.5 rounded-full transition-colors disabled:opacity-40"
+          className="inline-flex items-center gap-2 text-xs font-medium text-purple-600 hover:text-purple-900 border border-purple-200 hover:border-purple-400 px-3 py-1.5 rounded-full transition-colors disabled:opacity-40"
         >
           <Mic className="w-3.5 h-3.5" />
           Enable Session Notes
@@ -193,9 +193,9 @@ export default function SessionRecorder({
   // ── Processing ─────────────────────────────────────────────────────────────
   if (recorderState === 'processing') {
     return (
-      <div className="flex items-center gap-3 p-3 bg-navy-50 border border-navy-100 rounded-xl">
-        <Loader2 className="w-4 h-4 text-navy-500 animate-spin flex-shrink-0" />
-        <span className="text-sm text-navy-700">Transcribing and generating summary…</span>
+      <div className="flex items-center gap-3 p-3 bg-purple-50 border border-purple-100 rounded-xl">
+        <Loader2 className="w-4 h-4 text-purple-500 animate-spin flex-shrink-0" />
+        <span className="text-sm text-purple-700">Transcribing and generating summary…</span>
       </div>
     );
   }
@@ -210,7 +210,7 @@ export default function SessionRecorder({
         <button
           type="button"
           onClick={() => { setRecorderState('idle'); setError(''); }}
-          className="text-xs text-navy-600 hover:text-navy-900 underline"
+          className="text-xs text-purple-600 hover:text-purple-900 underline"
         >
           Try again
         </button>
@@ -223,41 +223,41 @@ export default function SessionRecorder({
     <div className="space-y-4">
       {/* Summary */}
       {summary && (
-        <div className="bg-navy-50 border border-navy-100 rounded-2xl overflow-hidden">
+        <div className="bg-purple-50 border border-purple-100 rounded-2xl overflow-hidden">
           <button
             type="button"
             onClick={() => setSummaryExpanded((p) => !p)}
             className="w-full flex items-center justify-between px-5 py-4 text-left"
           >
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-navy-600" />
-              <span className="text-sm font-semibold text-navy-900">Session Summary</span>
-              <span className="text-[10px] text-navy-400 border border-navy-200 rounded-full px-2 py-0.5 font-medium">
+              <FileText className="w-4 h-4 text-purple-600" />
+              <span className="text-sm font-semibold text-purple-900">Session Summary</span>
+              <span className="text-[10px] text-purple-400 border border-purple-200 rounded-full px-2 py-0.5 font-medium">
                 AI-generated · review before sharing
               </span>
             </div>
             {summaryExpanded ? (
-              <ChevronUp className="w-4 h-4 text-navy-400" />
+              <ChevronUp className="w-4 h-4 text-purple-400" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-navy-400" />
+              <ChevronDown className="w-4 h-4 text-purple-400" />
             )}
           </button>
 
           {summaryExpanded && (
-            <div className="px-5 pb-5 space-y-4 border-t border-navy-100">
+            <div className="px-5 pb-5 space-y-4 border-t border-purple-100">
               {summary.summary && (
                 <p className="text-sm text-gray-700 leading-relaxed pt-4">{summary.summary}</p>
               )}
 
               {summary.keyTakeaways?.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wide mb-2">
+                  <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wide mb-2">
                     Key Takeaways
                   </p>
                   <ul className="space-y-1.5">
                     {summary.keyTakeaways.map((t, i) => (
                       <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
-                        <span className="text-navy-400 font-medium flex-shrink-0">·</span>
+                        <span className="text-purple-400 font-medium flex-shrink-0">·</span>
                         {t}
                       </li>
                     ))}
@@ -267,13 +267,13 @@ export default function SessionRecorder({
 
               {summary.actionItems?.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wide mb-2">
+                  <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wide mb-2">
                     Action Items
                   </p>
                   <div className="space-y-1.5">
                     {summary.actionItems.map((a, i) => (
                       <div key={i} className="flex items-start gap-2">
-                        <span className="text-[10px] font-semibold text-navy-500 bg-navy-100 px-1.5 py-0.5 rounded flex-shrink-0 mt-0.5">
+                        <span className="text-[10px] font-semibold text-purple-500 bg-purple-100 px-1.5 py-0.5 rounded flex-shrink-0 mt-0.5">
                           {a.assignee}
                         </span>
                         <span className="text-sm text-gray-700">{a.item}</span>
@@ -285,14 +285,14 @@ export default function SessionRecorder({
 
               {summary.topicsDiscussed?.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wide mb-2">
+                  <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wide mb-2">
                     Topics
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {summary.topicsDiscussed.map((t, i) => (
                       <span
                         key={i}
-                        className="text-xs bg-white border border-navy-100 text-navy-700 px-2.5 py-0.5 rounded-full"
+                        className="text-xs bg-white border border-purple-100 text-purple-700 px-2.5 py-0.5 rounded-full"
                       >
                         {t}
                       </span>
@@ -302,7 +302,7 @@ export default function SessionRecorder({
               )}
 
               {summary.followUp && (
-                <p className="text-xs text-gray-400 italic border-t border-navy-100 pt-3">
+                <p className="text-xs text-gray-400 italic border-t border-purple-100 pt-3">
                   Suggested next focus: {summary.followUp}
                 </p>
               )}
@@ -340,7 +340,7 @@ export default function SessionRecorder({
       <button
         type="button"
         onClick={() => { setRecorderState('consent'); setTranscript(''); setSummary(null); }}
-        className="text-xs text-gray-400 hover:text-navy-600 transition-colors"
+        className="text-xs text-gray-400 hover:text-purple-600 transition-colors"
       >
         Record a new clip
       </button>

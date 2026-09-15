@@ -172,10 +172,10 @@ export default function BookingModal({
 
         {/* Availability hint */}
         {slots.length > 0 && (
-          <div className="bg-navy-50 rounded-xl px-4 py-3">
+          <div className="bg-purple-50 rounded-xl px-4 py-3">
             <div className="flex items-center gap-1.5 mb-2">
-              <Clock className="w-3.5 h-3.5 text-navy-500" />
-              <p className="text-xs font-semibold text-navy-700">Mentor&apos;s available days</p>
+              <Clock className="w-3.5 h-3.5 text-purple-500" />
+              <p className="text-xs font-semibold text-purple-700">Mentor&apos;s available days</p>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {availableDays.map((dow) => (
@@ -183,8 +183,8 @@ export default function BookingModal({
                   key={dow}
                   className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     selectedDow === dow
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-white text-navy-700 border border-navy-200'
+                      ? 'bg-purple-700 text-white'
+                      : 'bg-white text-purple-700 border border-purple-200'
                   }`}
                 >
                   {DAYS[dow]}
@@ -230,8 +230,8 @@ export default function BookingModal({
                     onClick={() => set('time', start)}
                     className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
                       active
-                        ? 'bg-navy-900 text-white border-navy-900'
-                        : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
+                        ? 'bg-purple-900 text-white border-purple-900'
+                        : 'bg-white text-purple-700 border-purple-200 hover:bg-purple-50'
                     }`}
                   >
                     {fmt12(start)}–{fmt12(end)}

@@ -267,7 +267,7 @@ export default function MentorProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Back link */}
-      <Link href="/discover" className="tap-target inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors">
+      <Link href="/discover" className="tap-target inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors">
         <ArrowLeft className="w-4 h-4" />
         Back to Discover
       </Link>
@@ -283,7 +283,7 @@ export default function MentorProfilePage() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl font-bold text-navy-900">{fullName}</h1>
+                  <h1 className="text-2xl font-bold text-purple-900">{fullName}</h1>
                   {mp.is_verified && (
                     <CheckCircle className="w-5 h-5 text-blue-500" />
                   )}
@@ -303,7 +303,7 @@ export default function MentorProfilePage() {
                   <button
                     onClick={handleSaveToggle}
                     className={`p-2 rounded-xl border transition-all ${
-                      isSaved ? 'border-navy-200 bg-navy-50 text-navy-700' : 'border-gray-200 text-gray-500 hover:text-navy-700'
+                      isSaved ? 'border-purple-200 bg-purple-50 text-purple-700' : 'border-gray-200 text-gray-500 hover:text-purple-700'
                     }`}
                     title={isSaved ? 'Unsave' : 'Save'}
                   >
@@ -349,7 +349,7 @@ export default function MentorProfilePage() {
               <div className="text-center">
                 <div className="flex items-center gap-1 justify-center">
                   <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span className="text-lg font-bold text-navy-900">
+                  <span className="text-lg font-bold text-purple-900">
                     {avgRating > 0 ? avgRating.toFixed(1) : '—'}
                   </span>
                 </div>
@@ -364,15 +364,15 @@ export default function MentorProfilePage() {
                 </p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.years_experience}</span>
+                <span className="text-lg font-bold text-purple-900">{mp.years_experience}</span>
                 <p className="text-xs text-gray-500 mt-0.5">years exp</p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.weekly_hours}h</span>
+                <span className="text-lg font-bold text-purple-900">{mp.weekly_hours}h</span>
                 <p className="text-xs text-gray-500 mt-0.5">per week</p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.max_mentees}</span>
+                <span className="text-lg font-bold text-purple-900">{mp.max_mentees}</span>
                 <p className="text-xs text-gray-500 mt-0.5">max mentees</p>
               </div>
             </div>
@@ -389,7 +389,7 @@ export default function MentorProfilePage() {
                         ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                         : !mp.is_available
                         ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : 'bg-navy-900 text-white hover:bg-navy-800'
+                        : 'bg-purple-900 text-white hover:bg-purple-800'
                     }`}
                   >
                     {hasRequest ? '✓ Request Sent' : 'Request Mentorship'}
@@ -412,7 +412,7 @@ export default function MentorProfilePage() {
                 {hasRequest && (
                   <p className="mt-2 text-xs text-gray-500">
                     Your request is pending.{' '}
-                    <Link href="/requests" className="tap-target text-navy-600 hover:text-navy-800 underline underline-offset-2 font-medium">
+                    <Link href="/requests" className="tap-target text-purple-600 hover:text-purple-800 underline underline-offset-2 font-medium">
                       Track it in Requests →
                     </Link>
                   </p>
@@ -429,14 +429,14 @@ export default function MentorProfilePage() {
           {/* Gated on reasons, not the score: is_available alone contributes
               +10, so this read "Why you match 10%" with nothing under it. */}
           {matchInfo && matchInfo.reasons.length > 0 && (
-            <div className="bg-navy-900 text-white rounded-2xl p-5">
+            <div className="bg-purple-900 text-white rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-semibold">Why this could fit</h2>
               </div>
               {matchInfo.reasons.length > 0 && (
                 <ul className="space-y-2">
                   {matchInfo.reasons.map((r) => (
-                    <li key={r} className="flex items-center gap-2 text-sm text-navy-200">
+                    <li key={r} className="flex items-center gap-2 text-sm text-purple-200">
                       <CheckCircle className="w-4 h-4 text-sage-300 flex-shrink-0" />
                       {r}
                     </li>
@@ -449,14 +449,14 @@ export default function MentorProfilePage() {
           {/* Bio */}
           {mp.bio && (
             <div className="bg-white rounded-2xl border border-gray-100 p-6">
-              <h2 className="text-base font-semibold text-navy-900 mb-3">About</h2>
+              <h2 className="text-base font-semibold text-purple-900 mb-3">About</h2>
               <p className="text-sm text-gray-600 leading-relaxed">{mp.bio}</p>
             </div>
           )}
 
           {/* Reviews */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-navy-900 mb-5">
+            <h2 className="text-base font-semibold text-purple-900 mb-5">
               Reviews
               {reviews.length > 0 && (
                 <span className="ml-2 text-sm font-normal text-gray-500">({reviews.length})</span>
@@ -477,7 +477,7 @@ export default function MentorProfilePage() {
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-navy-900">
+                          <span className="text-sm font-medium text-purple-900">
                             {reviewer ? `${reviewer.first_name} ${reviewer.last_name}` : 'Anonymous'}
                           </span>
                           <div className="flex">
@@ -508,10 +508,10 @@ export default function MentorProfilePage() {
         <div className="space-y-4">
           {/* Expertise */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-3">Expertise</h3>
+            <h3 className="text-sm font-semibold text-purple-900 mb-3">Expertise</h3>
             <div className="flex flex-wrap gap-1.5">
               {mp.expertise_tags.map((tag) => (
-                <span key={tag} className="text-xs bg-navy-50 text-navy-700 px-2.5 py-1 rounded-full font-medium">
+                <span key={tag} className="text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full font-medium">
                   {tag}
                 </span>
               ))}
@@ -521,7 +521,7 @@ export default function MentorProfilePage() {
           {/* Goals they help with */}
           {mp.goals.length > 0 && (
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
-              <h3 className="text-sm font-semibold text-navy-900 mb-3">Goals I help with</h3>
+              <h3 className="text-sm font-semibold text-purple-900 mb-3">Goals I help with</h3>
               <ul className="space-y-2">
                 {mp.goals.map((g) => (
                   <li key={g} className="flex items-center gap-2 text-sm text-gray-600">
@@ -535,7 +535,7 @@ export default function MentorProfilePage() {
 
           {/* Session details */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-3">Session details</h3>
+            <h3 className="text-sm font-semibold text-purple-900 mb-3">Session details</h3>
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex justify-between">
                 <span className="text-gray-500">Rate</span>
@@ -567,7 +567,7 @@ export default function MentorProfilePage() {
         <div className="flex justify-center">
           <button
             onClick={() => setReportOpen(true)}
-            className="tap-target text-xs text-gray-500 hover:text-navy-900 transition-colors"
+            className="tap-target text-xs text-gray-500 hover:text-purple-900 transition-colors"
           >
             Report this profile
           </button>

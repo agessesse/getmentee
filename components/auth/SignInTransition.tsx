@@ -84,7 +84,7 @@ export default function SignInTransition({ onComplete }: Props) {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        backgroundColor: '#1a1f3a',
+        backgroundColor: '#24193e',
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         transition: phase === 'wipe'

@@ -132,11 +132,11 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all flex flex-col">
+    <div className="bg-white rounded-2xl border border-gray-100 hover:border-purple-200 hover:shadow-sm transition-all flex flex-col">
       <div className="p-5 flex-1">
         {/* Header */}
         <div className="flex items-start gap-3 mb-3">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-navy-100">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-purple-100">
             {person.image ? (
               <Image
                 src={person.image}
@@ -146,7 +146,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
                 sizes="40px"
               />
             ) : (
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-navy-600">
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-purple-600">
                 {initials}
               </span>
             )}
@@ -154,7 +154,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
           <div className="min-w-0 flex-1">
             <Link
               href={`/people/${person.slug}`}
-              className="text-sm font-semibold text-navy-900 hover:text-navy-600 transition-colors block truncate"
+              className="text-sm font-semibold text-purple-900 hover:text-purple-600 transition-colors block truncate"
             >
               {fullName}
             </Link>
@@ -199,7 +199,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
       <div className="px-5 py-4 border-t border-gray-50 flex gap-2">
         <Link
           href={`/people/${person.slug}`}
-          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-navy-300 hover:text-navy-900 transition-all"
+          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-purple-300 hover:text-purple-900 transition-all"
         >
           View profile
         </Link>
@@ -220,9 +220,9 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
   return (
     <Link
       href={`/people/${person.slug}`}
-      className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all p-5 flex items-start gap-4"
+      className="bg-white rounded-2xl border border-gray-100 hover:border-purple-200 hover:shadow-sm transition-all p-5 flex items-start gap-4"
     >
-      <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-navy-100">
+      <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-purple-100">
         {person.image ? (
           <Image
             src={person.image}
@@ -232,21 +232,21 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
             sizes="44px"
           />
         ) : (
-          <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-navy-600">
+          <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-purple-600">
             {initials}
           </span>
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-navy-900 truncate">{fullName}</p>
+        <p className="text-sm font-semibold text-purple-900 truncate">{fullName}</p>
         {person.school && <p className="text-xs text-gray-500 mt-0.5 truncate">{person.school}</p>}
         {person.expectedGraduation && (
           <p className="text-xs text-gray-500">Class of {person.expectedGraduation}</p>
         )}
         <div className="flex flex-wrap gap-1 mt-2">
           {person.interestTags.slice(0, 3).map((tag) => (
-            <span key={tag} className="text-[10px] bg-navy-50 text-navy-600 px-2 py-0.5 rounded-full font-medium">
+            <span key={tag} className="text-[10px] bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full font-medium">
               {tag}
             </span>
           ))}
@@ -277,7 +277,7 @@ function LiveMentorCard({
   const fullName = `${mentor.first_name} ${mentor.last_name}`;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all flex flex-col">
+    <div className="bg-white rounded-2xl border border-gray-100 hover:border-purple-200 hover:shadow-sm transition-all flex flex-col">
       <div className="p-5 flex-1">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
@@ -285,7 +285,7 @@ function LiveMentorCard({
             <div className="min-w-0">
               <Link
                 href={`/mentor/${mentor.id}`}
-                className="text-sm font-semibold text-navy-900 hover:text-navy-600 transition-colors block truncate"
+                className="text-sm font-semibold text-purple-900 hover:text-purple-600 transition-colors block truncate"
               >
                 {fullName}
               </Link>
@@ -298,7 +298,7 @@ function LiveMentorCard({
           </div>
           <button
             onClick={onSaveToggle}
-            className={`p-1.5 rounded-lg transition-colors ${isSaved ? 'text-navy-600' : 'text-gray-300 hover:text-gray-500'}`}
+            className={`p-1.5 rounded-lg transition-colors ${isSaved ? 'text-purple-600' : 'text-gray-300 hover:text-gray-500'}`}
             title={isSaved ? 'Unsave' : 'Save'}
           >
             {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
@@ -311,14 +311,14 @@ function LiveMentorCard({
             roster is a bad fit. A score with nothing behind it is worse than no
             score, so the card shows the reasons and drops the percentage. */}
         {showMatch && mentor.matchReasons.length > 0 ? (
-          <div className="mb-3 p-2.5 bg-navy-50 rounded-xl">
+          <div className="mb-3 p-2.5 bg-purple-50 rounded-xl">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold text-navy-700">Why this could fit</span>
+              <span className="text-xs font-semibold text-purple-700">Why this could fit</span>
               {mp?.is_available && (
                 <span className="text-xs font-medium text-sage-700 bg-sage-50 px-2 py-0.5 rounded-full">Available</span>
               )}
             </div>
-            <p className="text-xs text-navy-600">{mentor.matchReasons.join(' · ')}</p>
+            <p className="text-xs text-purple-600">{mentor.matchReasons.join(' · ')}</p>
           </div>
         ) : mp?.is_available ? (
           <div className="mb-3">
@@ -373,7 +373,7 @@ function LiveMentorCard({
       <div className="px-5 py-4 border-t border-gray-50 flex gap-2">
         <Link
           href={`/mentor/${mentor.id}`}
-          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-navy-300 hover:text-navy-900 transition-all"
+          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-purple-300 hover:text-purple-900 transition-all"
         >
           View profile
         </Link>
@@ -385,7 +385,7 @@ function LiveMentorCard({
               ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
               : !mp?.is_available
               ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-              : 'bg-navy-900 text-white hover:bg-navy-800'
+              : 'bg-purple-900 text-white hover:bg-purple-800'
           }`}
         >
           {hasRequest ? 'Requested' : !mp?.is_available ? 'Unavailable' : 'Request'}
@@ -656,7 +656,7 @@ export default function DiscoverPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Discover Mentors</h1>
+          <h1 className="text-2xl font-bold text-purple-900">Discover Mentors</h1>
           <p className="text-gray-500 mt-1 text-sm">
             {filteredLiveMentors.length > 0
               ? `${filteredLiveMentors.length} mentor${filteredLiveMentors.length !== 1 ? 's' : ''} on Mentable`
@@ -677,7 +677,7 @@ export default function DiscoverPage() {
             placeholder="Search by name, firm, skill, or interest…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
           />
         </div>
 
@@ -686,7 +686,7 @@ export default function DiscoverPage() {
             onClick={() => setSavedOnly((v) => !v)}
             className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
               savedOnly
-                ? 'border-navy-600 bg-navy-50 text-navy-700'
+                ? 'border-purple-600 bg-purple-50 text-purple-700'
                 : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
             }`}
           >
@@ -699,14 +699,14 @@ export default function DiscoverPage() {
           onClick={() => setShowFilters((v) => !v)}
           className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
             showFilters || activeFilterCount > 0
-              ? 'border-navy-600 bg-navy-50 text-navy-700'
+              ? 'border-purple-600 bg-purple-50 text-purple-700'
               : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
           Filters
           {activeFilterCount > 0 && (
-            <span className="w-5 h-5 bg-navy-600 text-white text-xs rounded-full flex items-center justify-center">
+            <span className="w-5 h-5 bg-purple-600 text-white text-xs rounded-full flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
@@ -716,7 +716,7 @@ export default function DiscoverPage() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as typeof sort)}
-            className="appearance-none pl-3 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy-600 cursor-pointer"
+            className="appearance-none pl-3 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600 cursor-pointer"
           >
             <option value="match">Best match</option>
             <option value="rating">Top rated</option>
@@ -737,7 +737,7 @@ export default function DiscoverPage() {
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
               >
                 <option value="">All industries</option>
                 {INDUSTRIES.map((ind) => (
@@ -759,8 +759,8 @@ export default function DiscoverPage() {
                     )}
                     className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all ${
                       selectedExpertise.includes(exp)
-                        ? 'bg-navy-900 border-navy-900 text-white'
-                        : 'bg-white border-gray-200 text-gray-600 hover:border-navy-300'
+                        ? 'bg-purple-900 border-purple-900 text-white'
+                        : 'bg-white border-gray-200 text-gray-600 hover:border-purple-300'
                     }`}
                   >
                     {exp}
@@ -776,14 +776,14 @@ export default function DiscoverPage() {
                 type="checkbox"
                 checked={availableOnly}
                 onChange={(e) => setAvailableOnly(e.target.checked)}
-                className="rounded border-gray-300 text-navy-600 focus:ring-navy-600"
+                className="rounded border-gray-300 text-purple-600 focus:ring-purple-600"
               />
               <span className="text-sm text-gray-700">Active members only</span>
             </label>
             {activeFilterCount > 0 && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 text-sm text-gray-500 hover:text-navy-900 transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-purple-900 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear all
@@ -850,9 +850,9 @@ export default function DiscoverPage() {
       {/* Empty state */}
       {filteredLiveMentors.length === 0 && filteredSourcedMentors.length === 0 && (
         <div className="text-center py-24 bg-white rounded-2xl border border-gray-100">
-          <p className="text-lg font-medium text-navy-900 mb-2">No mentors found</p>
+          <p className="text-lg font-medium text-purple-900 mb-2">No mentors found</p>
           <p className="text-sm text-gray-500 mb-4">Try adjusting your search or filters.</p>
-          <button onClick={clearFilters} className="text-sm text-navy-600 font-medium hover:underline">
+          <button onClick={clearFilters} className="text-sm text-purple-600 font-medium hover:underline">
             Clear all filters
           </button>
         </div>
@@ -862,11 +862,11 @@ export default function DiscoverPage() {
       {filteredNearPeers.length > 0 && (
         <div className="pt-4">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-8 h-8 bg-navy-50 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-navy-600" />
+            <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
+              <Users className="w-4 h-4 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-navy-900">Near-peer network</h2>
+              <h2 className="text-base font-semibold text-purple-900">Near-peer network</h2>
               <p className="text-xs text-gray-500">
                 Students and early-career peers shaping their paths.
               </p>

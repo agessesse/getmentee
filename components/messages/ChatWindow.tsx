@@ -166,18 +166,18 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
             <button
               onClick={onBack}
               aria-label="Back to conversations"
-              className="md:hidden -ml-1 p-1.5 text-gray-400 hover:text-navy-900 rounded-lg hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+              className="md:hidden -ml-1 p-1.5 text-gray-400 hover:text-purple-900 rounded-lg hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
           )}
           <Avatar src={partnerAvatarUrl} name={partnerName} size="sm" />
-          <span className="text-sm font-semibold text-navy-900">{partnerName}</span>
+          <span className="text-sm font-semibold text-purple-900">{partnerName}</span>
         </div>
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="p-1.5 text-gray-400 hover:text-navy-900 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-1.5 text-gray-400 hover:text-purple-900 rounded-lg hover:bg-gray-100 transition-colors"
             aria-label="More options"
           >
             <MoreVertical className="w-4 h-4" />
@@ -238,7 +238,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type or speak a message…"
-          className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-navy-500 bg-white"
+          className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) sendMessage(e as unknown as React.FormEvent);
           }}
@@ -246,7 +246,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
         <button
           type="submit"
           disabled={!input.trim() || sending}
-          className="bg-navy-600 text-white rounded-full p-2 hover:bg-navy-700 transition-colors disabled:opacity-40"
+          className="bg-purple-600 text-white rounded-full p-2 hover:bg-purple-700 transition-colors disabled:opacity-40"
         >
           <Send className="h-4 w-4" />
         </button>

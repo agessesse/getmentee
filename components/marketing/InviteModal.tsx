@@ -60,12 +60,12 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <h2 id="invite-modal-title" className="text-base font-semibold text-navy-900">
+          <h2 id="invite-modal-title" className="text-base font-semibold text-purple-900">
             Invite a mentor
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-navy-900 transition-colors p-1 rounded-lg hover:bg-gray-100"
+            className="text-gray-400 hover:text-purple-900 transition-colors p-1 rounded-lg hover:bg-gray-100"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
           <div className="flex gap-3">
             <button
               onClick={handleCopy}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:border-navy-300 hover:text-navy-900 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:border-purple-300 hover:text-purple-900 transition-all"
             >
               {copied ? (
                 <>
@@ -104,7 +104,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
             {typeof navigator !== 'undefined' && 'share' in navigator && (
               <button
                 onClick={handleNativeShare}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-navy-900 text-white text-sm font-medium hover:bg-navy-800 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-purple-900 text-white text-sm font-medium hover:bg-purple-800 transition-colors"
               >
                 <Share2 className="w-4 h-4" />
                 Share

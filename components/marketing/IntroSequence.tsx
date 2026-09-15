@@ -60,7 +60,7 @@ const STREAKS = [
 // streaks → energy lines race toward center
 // form    → wordmark materialises from blur
 // hold    → wordmark fully resolved, brief pause
-// wipe    → navy curtain pulls upward, revealing the page
+// wipe    → brand curtain pulls upward, revealing the page
 // done    → component unmounted
 type Phase = 'pre' | 'streaks' | 'form' | 'hold' | 'wipe' | 'done';
 
@@ -130,7 +130,7 @@ export default function IntroSequence() {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        backgroundColor: '#1a1f3a', // navy-900 — canonical brand dark
+        backgroundColor: '#24193e', // purple-900 — canonical brand dark
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         // 330ms; both paths' 'done' timers are set to land after this finishes.
@@ -222,7 +222,7 @@ export default function IntroSequence() {
         <span
           style={{
             marginTop: 'clamp(12px, 2vw, 20px)',
-            color: '#a4b3de',
+            color: '#b3a2fb',
             fontSize: 'clamp(0.72rem, 2.1vw, 0.95rem)',
             fontWeight: 300,
             letterSpacing: '0.16em',

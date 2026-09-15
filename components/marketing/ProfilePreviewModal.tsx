@@ -100,7 +100,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     name = `${p.firstName} ${p.lastName}`;
     headshot = p.image;
     imagePosition = p.portraitPosition ?? '50% 20%';
-    accentColor = '#1a1f3a';
+    accentColor = '#24193e';
     initials = `${p.firstName[0]}${p.lastName[0]}`;
     titleLine = p.title ?? '';
     subLine = p.school ?? '';
@@ -121,7 +121,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-navy-900/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-purple-900/60 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -136,7 +136,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
           ref={closeRef}
           onClick={onClose}
           aria-label="Close profile preview"
-          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-500 hover:text-navy-900 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-1"
+          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-500 hover:text-purple-900 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-1"
         >
           <X className="w-4 h-4" />
         </button>
@@ -191,7 +191,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11px] font-medium text-navy-700 bg-navy-50 rounded-full px-2.5 py-0.5"
+                    className="text-[11px] font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-0.5"
                   >
                     {tag}
                   </span>
@@ -206,7 +206,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
             {statement && statementSectionLabel && (
               <div className="mt-5 pt-5 border-t border-gray-100">
                 <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                  <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
+                  <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-[0.18em]">
                     {statementSectionLabel}
                   </p>
                   {statementLabel && (

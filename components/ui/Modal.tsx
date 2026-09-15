@@ -23,15 +23,15 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-navy-900/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-purple-900/50 backdrop-blur-sm"
         onClick={onClose}
       />
       <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md p-6 z-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-navy-900">{title}</h2>
+          <h2 className="text-lg font-semibold text-purple-900">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-navy-900 transition-colors"
+            className="text-gray-500 hover:text-purple-900 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>

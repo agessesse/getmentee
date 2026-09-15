@@ -93,7 +93,7 @@ export default function RequestCard({
           <div>
             <Link
               href={`/mentor/${partnerId}`}
-              className="font-medium text-navy-900 hover:text-navy-600"
+              className="font-medium text-purple-900 hover:text-purple-600"
             >
               {fullName}
             </Link>
@@ -133,8 +133,8 @@ export default function RequestCard({
 
       {/* Goals */}
       {goals && (
-        <div className="text-sm text-gray-600 bg-navy-50 rounded-lg px-3 py-2">
-          <span className="font-medium text-navy-700">Their goals: </span>
+        <div className="text-sm text-gray-600 bg-purple-50 rounded-lg px-3 py-2">
+          <span className="font-medium text-purple-700">Their goals: </span>
           {goals}
         </div>
       )}

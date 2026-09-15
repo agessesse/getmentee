@@ -85,7 +85,7 @@ export default function ReportUserModal({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-sm font-medium text-navy-900">Report submitted</p>
+          <p className="text-sm font-medium text-purple-900">Report submitted</p>
           <p className="text-xs text-gray-500">
             Thank you. Our team will review this report and take appropriate action.
           </p>
@@ -94,7 +94,7 @@ export default function ReportUserModal({
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-sm text-gray-500">
-            What is the issue with <span className="font-medium text-navy-900">{reportedName}</span>?
+            What is the issue with <span className="font-medium text-purple-900">{reportedName}</span>?
           </p>
 
           <div className="space-y-2">
@@ -103,7 +103,7 @@ export default function ReportUserModal({
                 key={r.value}
                 className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   reason === r.value
-                    ? 'border-navy-300 bg-navy-50'
+                    ? 'border-purple-300 bg-purple-50'
                     : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -113,10 +113,10 @@ export default function ReportUserModal({
                   value={r.value}
                   checked={reason === r.value}
                   onChange={() => setReason(r.value)}
-                  className="mt-0.5 accent-navy-700 flex-shrink-0"
+                  className="mt-0.5 accent-purple-700 flex-shrink-0"
                 />
                 <div>
-                  <p className="text-sm font-medium text-navy-900">{r.label}</p>
+                  <p className="text-sm font-medium text-purple-900">{r.label}</p>
                   <p className="text-xs text-gray-500">{r.description}</p>
                 </div>
               </label>
@@ -133,7 +133,7 @@ export default function ReportUserModal({
               rows={3}
               maxLength={500}
               placeholder="Share any additional context that might help us review this report…"
-              className="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent placeholder:text-gray-400"
+              className="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder:text-gray-400"
             />
           </div>
 

@@ -17,7 +17,7 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="py-2.5 border-b border-gray-100 last:border-0">
       <dt className="text-[12px] font-medium text-gray-600">{label}</dt>
-      <dd className="text-[14px] text-navy-900 mt-0.5">{value || <span className="text-gray-500">Not set</span>}</dd>
+      <dd className="text-[14px] text-purple-900 mt-0.5">{value || <span className="text-gray-500">Not set</span>}</dd>
     </div>
   );
 }
@@ -59,8 +59,8 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
   return (
     <div className="max-w-5xl mx-auto space-y-5">
       <div>
-        <Link href="/admin/users" className="text-[13px] text-gray-600 hover:text-navy-900">← Users</Link>
-        <h1 className="text-[20px] font-semibold text-navy-900 mt-2">
+        <Link href="/admin/users" className="text-[13px] text-gray-600 hover:text-purple-900">← Users</Link>
+        <h1 className="text-[20px] font-semibold text-purple-900 mt-2">
           {p.first_name} {p.last_name}
         </h1>
         <div className="flex flex-wrap gap-1.5 mt-2">
@@ -80,7 +80,7 @@ export default async function AdminUserDetail({ params }: { params: Promise<{ id
             <Field label="Location" value={p.location} />
             <Field label="LinkedIn" value={
               p.linkedin_url
-                ? <a href={p.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-navy-700 underline">Profile</a>
+                ? <a href={p.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-purple-700 underline">Profile</a>
                 : null} />
             <Field label="Joined" value={new Date(p.created_at).toLocaleString('en-US', { dateStyle: 'medium' })} />
           </dl>

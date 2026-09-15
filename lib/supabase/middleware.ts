@@ -15,6 +15,13 @@ import { NextResponse, type NextRequest } from 'next/server';
 // bounced to /login by the client-side layout guard. Twelve of the eighteen
 // were students, who are not public marketing content at all. A client-side
 // redirect is not access control; this is.
+// /mentee and /mentor are the two public marketing pages, but the route group
+// also owns /mentee/[id] and /mentor/[id], which are private. So these two
+// segments are protected BELOW the segment only: /mentee/<id> needs a session,
+// /mentee itself does not. Everything else in PROTECTED_PATHS is protected at
+// the segment and below.
+const PROTECTED_SUBPATHS_ONLY = ['/mentee', '/mentor'];
+
 const PROTECTED_PATHS = [
   '/analytics',
   '/dashboard',
@@ -43,8 +50,10 @@ export async function updateSession(request: NextRequest) {
   // the marketing page and /people/* each paid for a round trip whose result
   // was then discarded.
   const pathname = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + '/')
+  const isProtected = PROTECTED_PATHS.some((p) =>
+    PROTECTED_SUBPATHS_ONLY.includes(p)
+      ? pathname.startsWith(p + '/')
+      : pathname === p || pathname.startsWith(p + '/')
   );
 
   if (!isProtected) {

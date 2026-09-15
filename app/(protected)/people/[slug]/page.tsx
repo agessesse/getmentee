@@ -34,7 +34,7 @@ function TagList({ tags }: { tags: string[] }) {
       {tags.map((tag) => (
         <span
           key={tag}
-          className="text-xs bg-navy-50 text-navy-700 px-3 py-1.5 rounded-full font-medium"
+          className="text-xs bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full font-medium"
         >
           {tag}
         </span>
@@ -67,8 +67,8 @@ function ProfileHeadshot({
     );
   }
   return (
-    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 bg-navy-100 flex items-center justify-center">
-      <span className="text-3xl font-bold text-navy-600">{initials}</span>
+    <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 bg-purple-100 flex items-center justify-center">
+      <span className="text-3xl font-bold text-purple-600">{initials}</span>
     </div>
   );
 }
@@ -84,7 +84,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
       {/* Back */}
       <Link
         href="/discover"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Discover
@@ -98,7 +98,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div>
-                <h1 className="text-2xl font-bold text-navy-900 leading-tight">{fullName}</h1>
+                <h1 className="text-2xl font-bold text-purple-900 leading-tight">{fullName}</h1>
                 {(person.title || person.organization) && (
                   <p className="text-gray-600 mt-1 text-sm font-medium">
                     {[person.title, person.organization].filter(Boolean).join(' · ')}
@@ -131,7 +131,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
                 href={person.linkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 mt-4 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 mt-4 text-xs font-medium text-purple-600 hover:text-purple-900 transition-colors"
               >
                 <LinkIcon className="w-3.5 h-3.5" />
                 LinkedIn
@@ -165,9 +165,9 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
                 </div>
                 <div>
                   {exp.title && (
-                    <p className="text-sm font-semibold text-navy-900">{exp.title}</p>
+                    <p className="text-sm font-semibold text-purple-900">{exp.title}</p>
                   )}
-                  <p className={`text-sm ${exp.title ? 'text-gray-500' : 'font-semibold text-navy-900'}`}>
+                  <p className={`text-sm ${exp.title ? 'text-gray-500' : 'font-semibold text-purple-900'}`}>
                     {exp.organization}
                   </p>
                   {exp.description && (
@@ -190,7 +190,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
                   <GraduationCap className="w-3.5 h-3.5 text-gray-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-navy-900">{edu.institution}</p>
+                  <p className="text-sm font-semibold text-purple-900">{edu.institution}</p>
                   {edu.degree && (
                     <p className="text-xs text-gray-500">
                       {edu.degree}{edu.field ? `: ${edu.field}` : ''}
@@ -213,7 +213,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
           <div className="space-y-2">
             {person.distinctions.map((d, i) => (
               <div key={i} className="flex items-start gap-2">
-                <Award className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+                <Award className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-gray-700">{d}</p>
               </div>
             ))}
@@ -222,8 +222,8 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
       )}
 
       {/* Invitation note */}
-      <div className="bg-navy-50 rounded-2xl border border-navy-100 p-5 text-center">
-        <p className="text-sm text-navy-700 font-light">
+      <div className="bg-purple-50 rounded-2xl border border-purple-100 p-5 text-center">
+        <p className="text-sm text-purple-700 font-light">
           {person.firstName} has been invited to join Mentable. Once active, you&apos;ll be able to
           connect directly through the platform.
         </p>
@@ -243,7 +243,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
       {/* Back */}
       <Link
         href="/discover"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Discover
@@ -257,7 +257,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div>
-                <h1 className="text-2xl font-bold text-navy-900 leading-tight">{fullName}</h1>
+                <h1 className="text-2xl font-bold text-purple-900 leading-tight">{fullName}</h1>
                 {person.school && (
                   <p className="text-gray-600 mt-1 text-sm font-medium">{person.school}</p>
                 )}
@@ -265,7 +265,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
                   <p className="text-xs text-gray-500 mt-0.5">Class of {person.expectedGraduation}</p>
                 )}
               </div>
-              <span className="inline-flex items-center text-xs font-medium text-navy-600 bg-navy-50 border border-navy-100 px-3 py-1.5 rounded-full flex-shrink-0">
+              <span className="inline-flex items-center text-xs font-medium text-purple-600 bg-purple-50 border border-purple-100 px-3 py-1.5 rounded-full flex-shrink-0">
                 Near-peer
               </span>
             </div>
@@ -284,7 +284,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
                 href={person.linkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 mt-4 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 mt-4 text-xs font-medium text-purple-600 hover:text-purple-900 transition-colors"
               >
                 <LinkIcon className="w-3.5 h-3.5" />
                 LinkedIn
@@ -318,9 +318,9 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
                 </div>
                 <div>
                   {exp.title && (
-                    <p className="text-sm font-semibold text-navy-900">{exp.title}</p>
+                    <p className="text-sm font-semibold text-purple-900">{exp.title}</p>
                   )}
-                  <p className={`text-sm ${exp.title ? 'text-gray-500' : 'font-semibold text-navy-900'}`}>
+                  <p className={`text-sm ${exp.title ? 'text-gray-500' : 'font-semibold text-purple-900'}`}>
                     {exp.organization}
                   </p>
                   {exp.description && (
@@ -343,7 +343,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
                   <GraduationCap className="w-3.5 h-3.5 text-gray-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-navy-900">{edu.institution}</p>
+                  <p className="text-sm font-semibold text-purple-900">{edu.institution}</p>
                   {edu.field && <p className="text-xs text-gray-500">{edu.field}</p>}
                   {edu.years && <p className="text-xs text-gray-500">{edu.years}</p>}
                 </div>
@@ -359,7 +359,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
           <div className="space-y-2">
             {person.distinctions.map((d, i) => (
               <div key={i} className="flex items-start gap-2">
-                <Award className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+                <Award className="w-3.5 h-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-gray-700">{d}</p>
               </div>
             ))}

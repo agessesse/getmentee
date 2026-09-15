@@ -60,7 +60,7 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
           size="md"
         />
         <div>
-          <p className="font-medium text-navy-900">
+          <p className="font-medium text-purple-900">
             {mentor.firstName} {mentor.lastName}
           </p>
           <p className="text-xs text-gray-500">Your request will be sent to this mentor</p>

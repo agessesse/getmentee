@@ -14,6 +14,11 @@ import { join } from 'node:path';
 
 // Nothing under (protected) is public. /people used to be exempt here; it was
 // prerendered and served to anonymous HTTP while browsers were redirected.
+//
+// /mentee and /mentor stay in PROTECTED_PATHS and stay listed here as guarded,
+// because their [id] pages are private. The middleware narrows those two to
+// sub-paths only so the public marketing pages at /mentee and /mentor resolve;
+// see PROTECTED_SUBPATHS_ONLY there.
 const INTENTIONALLY_PUBLIC = new Set<string>();
 
 const groupDir = join(process.cwd(), 'app', '(protected)');

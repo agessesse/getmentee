@@ -18,7 +18,7 @@ export default function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '96px',
-          backgroundColor: '#1a1f3a',
+          backgroundColor: '#24193e',
         }}
       >
         <div

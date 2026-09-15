@@ -37,13 +37,13 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-navy-900 mb-1.5">Welcome back</h2>
+        <h2 className="text-2xl font-bold text-purple-900 mb-1.5">Welcome back</h2>
         <p className="text-gray-500 text-sm">Sign in to your Mentable account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-purple-900 mb-1.5">
             Email address
           </label>
           <input
@@ -55,12 +55,12 @@ export function LoginForm() {
             placeholder="you@example.com"
             disabled={loading}
             autoComplete="email"
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="password" className="block text-sm font-medium text-purple-900 mb-1.5">
             Password
           </label>
           <input
@@ -72,7 +72,7 @@ export function LoginForm() {
             placeholder="••••••••"
             disabled={loading}
             autoComplete="current-password"
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition bg-white placeholder-gray-400"
           />
         </div>
 
@@ -85,7 +85,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-navy-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-navy-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-purple-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-purple-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
@@ -102,7 +102,7 @@ export function LoginForm() {
 
         <p className="text-center text-sm text-gray-400">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-navy-600 font-medium hover:underline">
+          <Link href="/signup" className="text-purple-600 font-medium hover:underline">
             Sign up
           </Link>
         </p>
@@ -119,7 +119,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => fillDemo('mentee')}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left"
+            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-purple-700 font-medium hover:border-purple-300 hover:shadow-sm transition-all text-left"
           >
             <div className="text-xs text-gray-400 mb-0.5">Mentee view</div>
             Jordan Taylor
@@ -127,7 +127,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => fillDemo('mentor')}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left"
+            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-purple-700 font-medium hover:border-purple-300 hover:shadow-sm transition-all text-left"
           >
             <div className="text-xs text-gray-400 mb-0.5">Mentor view</div>
             Alex Rivera

@@ -39,7 +39,7 @@ function MentorCard({
         tabIndex={interactive ? 0 : -1}
         onFocus={() => interactive && onHoverChange(true)}
         onBlur={() => interactive && onHoverChange(false)}
-        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
+        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
         style={{ transform: hovered ? 'translateY(-6px) scale(1.025)' : 'none' }}
         aria-label={`View ${mentor.name}'s mentor profile`}
       >
@@ -71,7 +71,7 @@ function MentorCard({
 
           {/* Reveal: the reason to talk to this person, not their résumé */}
           <div
-            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/95 via-navy-900/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
+            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-purple-900/95 via-purple-900/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
             style={{
               opacity: hovered ? 1 : 0,
               transform: hovered ? 'translateY(0)' : 'translateY(8px)',
@@ -94,12 +94,12 @@ function MentorCard({
 
         {/* Fixed height keeps every card's baseline aligned regardless of title length */}
         <div className="px-0.5 h-[52px]">
-          <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
+          <p className="font-semibold text-purple-900 text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
           {(showTitle || showCompany) && (
             <p className="text-[11px] text-gray-500 mt-1 leading-snug font-light line-clamp-2">
               {showTitle && mentor.title}
               {showTitle && showCompany && ' · '}
-              {showCompany && <span className="text-navy-600 font-medium">{mentor.company}</span>}
+              {showCompany && <span className="text-purple-600 font-medium">{mentor.company}</span>}
             </p>
           )}
         </div>
@@ -124,12 +124,12 @@ export default function MentorCarousel() {
     <>
       <section className="py-16 sm:py-20 bg-cream-50" aria-labelledby="mentor-carousel-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-4">
+          <p className="text-[11px] font-semibold text-purple-600 uppercase tracking-[0.22em] mb-4">
             Willing to teach
           </p>
           <h2
             id="mentor-carousel-heading"
-            className="font-serif text-navy-900 leading-[1.05]"
+            className="font-serif text-purple-900 leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
             People who walked the path first,<br className="hidden sm:block" />{' '}
@@ -165,7 +165,7 @@ export default function MentorCarousel() {
           <Link
             href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
-            className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+            className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-purple-700 hover:text-purple-900 transition-colors border-b border-gray-200 hover:border-purple-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-sm"
           >
             Create an account to reach them
             <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />

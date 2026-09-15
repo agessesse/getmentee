@@ -82,7 +82,7 @@ export default async function AdminMentorships({
   return (
     <div className="max-w-7xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Mentorship operations</h1>
+        <h1 className="text-[20px] font-semibold text-purple-900">Mentorship operations</h1>
         <p className="text-[14px] text-gray-600 mt-1">
           Requested, accepted, active, completed. Most recent 200 of each.
         </p>
@@ -117,7 +117,7 @@ export default async function AdminMentorships({
           <Link key={t} href={`/admin/mentorships${t === 'requests' ? '?tab=requests' : ''}`}
             role="tab" aria-selected={tab === t}
             className={`px-3 py-2 text-[13px] font-medium rounded-md border ${
-              tab === t ? 'bg-navy-900 text-white border-navy-900' : 'bg-white text-gray-700 border-gray-300 hover:border-navy-300'}`}>
+              tab === t ? 'bg-purple-900 text-white border-purple-900' : 'bg-white text-gray-700 border-gray-300 hover:border-purple-300'}`}>
             {t === 'active' ? 'Active mentorships' : 'All requests'}
           </Link>
         ))}

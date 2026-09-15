@@ -27,27 +27,27 @@ const MENTOR = {
 function Discover({ onPick }: { onPick: () => void }) {
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
+      <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-[0.18em]">
         Mentors matching fixed income
       </p>
 
       <button
         onClick={onPick}
-        className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-200 hover:border-navy-300 hover:shadow-md transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+        className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
       >
         <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-none bg-gray-100">
           <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="56px" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[14px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
+          <p className="text-[14px] font-semibold text-purple-900 truncate">{MENTOR.name}</p>
           <p className="text-[11px] text-gray-500 font-light truncate">{MENTOR.role}</p>
           <div className="flex flex-wrap gap-1 mt-1.5">
             {MENTOR.helps.map((t) => (
-              <span key={t} className="text-[10px] font-medium text-navy-700 bg-navy-50 rounded-full px-2 py-0.5">{t}</span>
+              <span key={t} className="text-[10px] font-medium text-purple-700 bg-purple-50 rounded-full px-2 py-0.5">{t}</span>
             ))}
           </div>
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
+        <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
       </button>
 
       {/* Real headshots. Empty placeholder blocks sat next to a real photo and
@@ -69,13 +69,13 @@ function Discover({ onPick }: { onPick: () => void }) {
             />
           </div>
           <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-navy-900 truncate">{m.n}</p>
+            <p className="text-[14px] font-semibold text-purple-900 truncate">{m.n}</p>
             <p className="text-[11px] text-gray-500 font-light truncate">{m.r}</p>
           </div>
         </div>
       ))}
 
-      <p className="text-[10px] text-navy-600 font-medium pt-1">↑ Pick Christopher to continue</p>
+      <p className="text-[10px] text-purple-600 font-medium pt-1">↑ Pick Christopher to continue</p>
     </div>
   );
 }
@@ -98,25 +98,25 @@ function Request({ onSend }: { onSend: () => void }) {
           <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="36px" />
         </div>
         <div className="min-w-0">
-          <p className="text-[12px] font-semibold text-navy-900 truncate">{MENTOR.name}</p>
+          <p className="text-[12px] font-semibold text-purple-900 truncate">{MENTOR.name}</p>
           <p className="text-[10px] text-gray-500 font-light">Requesting mentorship</p>
         </div>
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-1.5">
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider mb-1.5">
           What are you hoping to learn?
         </p>
-        <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100">
+        <div className="text-[12px] text-purple-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100">
           Fixed-income strategy and how markets desks actually work
         </div>
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-1.5">
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider mb-1.5">
           Why Christopher?
         </p>
-        <div className="text-[12px] text-navy-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100 leading-relaxed">
+        <div className="text-[12px] text-purple-800 bg-gray-50 rounded-xl px-3.5 py-2.5 border border-gray-100 leading-relaxed">
           Three decades in institutional fixed income. That is the path I am trying to understand.
         </div>
       </div>
@@ -124,8 +124,8 @@ function Request({ onSend }: { onSend: () => void }) {
       <button
         onClick={() => setSent(true)}
         disabled={sent}
-        className={`w-full rounded-xl py-2.5 text-[12px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
-          sent ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-navy-900 text-white hover:bg-navy-800'
+        className={`w-full rounded-xl py-2.5 text-[12px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+          sent ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-purple-900 text-white hover:bg-purple-800'
         }`}
       >
         {sent ? 'Request sent. Christopher accepted.' : 'Request mentorship'}
@@ -143,19 +143,19 @@ function Goals({ onNext }: { onNext: () => void }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-[12px] font-semibold text-navy-900">Shared goal</p>
+        <p className="text-[12px] font-semibold text-purple-900">Shared goal</p>
         <span className="text-[10px] font-semibold text-green-700 bg-green-50 rounded-full px-2 py-0.5">Active</span>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[14px] font-semibold text-navy-900 leading-snug">
+        <p className="text-[14px] font-semibold text-purple-900 leading-snug">
           Understand fixed-income career paths
         </p>
         <p className="text-[10px] text-gray-500 mt-1">Target: June 2027 · with Christopher</p>
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2">Next steps</p>
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider mb-2">Next steps</p>
         <div className="space-y-1.5">
           {[
             { k: 'a', t: 'Read up on how a rates desk is structured' },
@@ -164,13 +164,13 @@ function Goals({ onNext }: { onNext: () => void }) {
             <button
               key={item.k}
               onClick={() => setDone((d) => ({ ...d, [item.k]: !d[item.k] }))}
-              className="w-full flex items-center gap-2.5 text-left p-2 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+              className="w-full flex items-center gap-2.5 text-left p-2 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
               aria-pressed={done[item.k]}
             >
               {done[item.k]
                 ? <CheckCircle2 className="w-4 h-4 text-green-500 flex-none" aria-hidden="true" />
                 : <Circle className="w-4 h-4 text-gray-500 flex-none" aria-hidden="true" />}
-              <span className={`text-[12px] ${done[item.k] ? 'text-gray-500 line-through font-light' : 'text-navy-800'}`}>
+              <span className={`text-[12px] ${done[item.k] ? 'text-gray-500 line-through font-light' : 'text-purple-800'}`}>
                 {item.t}
               </span>
             </button>
@@ -181,7 +181,7 @@ function Goals({ onNext }: { onNext: () => void }) {
 
       <button
         onClick={onNext}
-        className="w-full rounded-xl py-2.5 text-[12px] font-semibold bg-navy-900 text-white hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+        className="w-full rounded-xl py-2.5 text-[12px] font-semibold bg-purple-900 text-white hover:bg-purple-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
       >
         See the upcoming session
       </button>
@@ -194,29 +194,29 @@ function Goals({ onNext }: { onNext: () => void }) {
 function Session() {
   return (
     <div className="space-y-3.5">
-      <div className="bg-navy-900 rounded-xl p-4">
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
+      <div className="bg-purple-900 rounded-xl p-4">
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-[0.18em] mb-3">Upcoming session</p>
         <div className="flex items-center gap-3">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-navy-700">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-purple-700">
             <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
           </div>
           <div className="min-w-0">
             <p className="text-[12px] font-semibold text-white truncate">{MENTOR.name}</p>
-            <p className="text-[11px] text-navy-300 font-light">Thursday · 4:00 PM · 45 min</p>
+            <p className="text-[11px] text-purple-300 font-light">Thursday · 4:00 PM · 45 min</p>
           </div>
         </div>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2.5">Prep</p>
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider mb-2.5">Prep</p>
         <ul className="space-y-1.5">
           {[
             'Questions on desk structure and day-to-day',
             'Progress against the shared goal',
             'What to read before the next session',
           ].map((t) => (
-            <li key={t} className="flex items-start gap-2 text-[12px] text-navy-800 font-light">
-              <span className="w-1 h-1 rounded-full bg-navy-400 mt-1.5 flex-none" aria-hidden="true" />
+            <li key={t} className="flex items-start gap-2 text-[12px] text-purple-800 font-light">
+              <span className="w-1 h-1 rounded-full bg-purple-400 mt-1.5 flex-none" aria-hidden="true" />
               {t}
             </li>
           ))}
@@ -224,7 +224,7 @@ function Session() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-wider mb-2.5">
+        <p className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider mb-2.5">
           Carried over from last session
         </p>
         <div className="flex items-center gap-2.5">
@@ -233,7 +233,7 @@ function Session() {
         </div>
       </div>
 
-      <p className="text-[11px] text-navy-600 font-medium text-center pt-1">
+      <p className="text-[11px] text-purple-600 font-medium text-center pt-1">
         That loop is the product.
       </p>
     </div>
@@ -270,12 +270,12 @@ export default function ProductDemo() {
 
           {/* Left: framing + stage nav */}
           <div className="lg:sticky lg:top-24">
-            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-purple-600 uppercase tracking-[0.22em] mb-5">
               The product
             </p>
             <h2
               id="product-demo-heading"
-              className="font-serif text-navy-900 leading-[1.05] mb-5"
+              className="font-serif text-purple-900 leading-[1.05] mb-5"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
               Everything after<br />the introduction.
@@ -296,21 +296,21 @@ export default function ProductDemo() {
                       aria-selected={isActive}
                       aria-controls="demo-panel"
                       onClick={() => go(s.id)}
-                      className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 ${
-                        isActive ? 'bg-navy-900' : 'hover:bg-gray-50'
+                      className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+                        isActive ? 'bg-purple-900' : 'hover:bg-gray-50'
                       }`}
                     >
                       <span
                         className={`w-7 h-7 rounded-lg flex-none flex items-center justify-center transition-colors ${
-                          isActive ? 'bg-white/15' : seen ? 'bg-navy-50' : 'bg-gray-100'
+                          isActive ? 'bg-white/15' : seen ? 'bg-purple-50' : 'bg-gray-100'
                         }`}
                       >
                         <Icon
-                          className={`w-3.5 h-3.5 ${isActive ? 'text-white' : seen ? 'text-navy-600' : 'text-gray-500'}`}
+                          className={`w-3.5 h-3.5 ${isActive ? 'text-white' : seen ? 'text-purple-600' : 'text-gray-500'}`}
                           aria-hidden="true"
                         />
                       </span>
-                      <span className={`text-[14px] font-medium ${isActive ? 'text-white' : 'text-navy-800'}`}>
+                      <span className={`text-[14px] font-medium ${isActive ? 'text-white' : 'text-purple-800'}`}>
                         {s.label}
                       </span>
                       <span className={`ml-auto text-[10px] tabular-nums ${isActive ? 'text-white/70' : 'text-gray-500'}`}>
@@ -325,7 +325,7 @@ export default function ProductDemo() {
             <Link
               href="/signup?role=mentee"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'start_building_your_mentorship' })}
-              className="group tap-target inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+              className="group tap-target inline-flex items-center gap-2 mt-7 text-[15px] font-medium text-purple-700 hover:text-purple-900 transition-colors border-b border-gray-200 hover:border-purple-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-sm"
             >
               Start building your mentorship
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />

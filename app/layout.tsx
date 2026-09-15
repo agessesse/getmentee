@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
 import { DM_Sans, Instrument_Serif } from 'next/font/google';
@@ -27,6 +27,17 @@ const instrumentSerif = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: '/' },
+  manifest: '/manifest.webmanifest',
+  // favicon.svg carries its own dark-mode switch, so it leads; the PNGs are
+  // the legacy fallback for browsers that ignore SVG favicons.
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
   title: 'Mentable: find someone worth learning from',
   description:
     'Mentable connects ambitious students with experienced professionals who have walked the path ahead. Find a mentor, set goals, and follow through.',
@@ -45,6 +56,11 @@ export const metadata: Metadata = {
   },
 };
 
+// Tints the browser chrome on mobile with the brand primary.
+export const viewport: Viewport = {
+  themeColor: '#4717CA',
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -52,7 +68,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
-      <body className="bg-cream-50 text-navy-900 font-sans">
+      <body className="bg-cream-50 text-purple-900 font-sans">
         <AuthProvider>{children}</AuthProvider>
         <GoogleAnalytics />
       </body>

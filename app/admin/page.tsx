@@ -65,7 +65,7 @@ export default async function AdminOverview() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Overview</h1>
+        <h1 className="text-[20px] font-semibold text-purple-900">Overview</h1>
         <p className="text-[14px] text-gray-600 mt-1">
           Live counts from the database. Windows are rolling from today.
         </p>

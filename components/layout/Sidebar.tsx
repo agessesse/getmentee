@@ -103,7 +103,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
       {/* Sidebar panel */}
       <aside
         className={clsx(
-          'fixed top-0 left-0 z-30 h-full w-60 bg-navy-900 flex flex-col transition-transform duration-200 flex-shrink-0',
+          'fixed top-0 left-0 z-30 h-full w-60 bg-purple-900 flex flex-col transition-transform duration-200 flex-shrink-0',
           'lg:translate-x-0 lg:static lg:z-auto',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
@@ -119,7 +119,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
           </Link>
           <button
             onClick={onClose}
-            className="lg:hidden text-navy-400 hover:text-white transition-colors p-1"
+            className="lg:hidden text-purple-400 hover:text-white transition-colors p-1"
           >
             <X className="h-5 w-5" />
           </button>
@@ -132,7 +132,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
             if (visibleItems.length === 0) return null;
             return (
               <div key={section.label}>
-                <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-navy-400">
+                <p className="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-purple-400">
                   {section.label}
                 </p>
                 <div className="space-y-0.5">
@@ -147,10 +147,10 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
                           'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
                           active
                             ? 'bg-white/10 text-white'
-                            : 'text-navy-300 hover:bg-white/5 hover:text-white'
+                            : 'text-purple-300 hover:bg-white/5 hover:text-white'
                         )}
                       >
-                        <Icon className={clsx('h-4 w-4 flex-shrink-0', active ? 'text-white' : 'text-navy-400')} />
+                        <Icon className={clsx('h-4 w-4 flex-shrink-0', active ? 'text-white' : 'text-purple-400')} />
                         {label}
                       </Link>
                     );
@@ -166,18 +166,18 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
           <div className="px-3 pb-3">
             <button
               onClick={() => setInviteOpen(true)}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-navy-300 hover:bg-white/5 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-purple-300 hover:bg-white/5 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
-              <UserPlus className="h-4 w-4 flex-shrink-0 text-navy-400" />
+              <UserPlus className="h-4 w-4 flex-shrink-0 text-purple-400" />
               Invite a mentor
             </button>
           </div>
         )}
 
         {/* User footer */}
-        <div className="px-3 py-4 border-t border-navy-800">
+        <div className="px-3 py-4 border-t border-purple-800">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-navy-700 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-purple-700 flex items-center justify-center flex-shrink-0">
               <span className="text-xs font-bold text-white">
                 {firstName?.[0] ?? ''}{lastName?.[0] ?? ''}
               </span>
@@ -186,7 +186,7 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
               <p className="text-sm font-medium text-white truncate">
                 {firstName} {lastName}
               </p>
-              <p className="text-xs text-navy-400 capitalize">{role}</p>
+              <p className="text-xs text-purple-400 capitalize">{role}</p>
             </div>
           </div>
         </div>

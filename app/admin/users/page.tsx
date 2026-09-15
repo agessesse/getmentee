@@ -90,7 +90,7 @@ export default async function AdminUsers({
   return (
     <div className="max-w-7xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Users</h1>
+        <h1 className="text-[20px] font-semibold text-purple-900">Users</h1>
         <p className="text-[14px] text-gray-600 mt-1">
           {count ?? 0} total. Email is deliberately not shown here; migration 0018
           revoked read access to it to keep addresses out of the app surface.
@@ -102,13 +102,13 @@ export default async function AdminUsers({
           <label htmlFor="q" className="block text-[12px] font-medium text-gray-700 mb-1">Search</label>
           <input
             id="q" name="q" defaultValue={q} placeholder="Name or school"
-            className="h-9 w-64 max-w-full rounded-md border border-gray-300 px-3 text-[14px] text-navy-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500"
+            className="h-9 w-64 max-w-full rounded-md border border-gray-300 px-3 text-[14px] text-purple-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
         <div>
           <label htmlFor="role" className="block text-[12px] font-medium text-gray-700 mb-1">Role</label>
           <select id="role" name="role" defaultValue={role ?? ''}
-            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-navy-900 focus:outline-none focus:ring-2 focus:ring-navy-500">
+            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option value="">All</option>
             <option value="mentor">Mentor</option>
             <option value="mentee">Mentee</option>
@@ -117,18 +117,18 @@ export default async function AdminUsers({
         <div>
           <label htmlFor="status" className="block text-[12px] font-medium text-gray-700 mb-1">Profile</label>
           <select id="status" name="status" defaultValue={status ?? ''}
-            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-navy-900 focus:outline-none focus:ring-2 focus:ring-navy-500">
+            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option value="">Any</option>
             <option value="complete">Complete</option>
             <option value="incomplete">Incomplete</option>
           </select>
         </div>
         <button type="submit"
-          className="h-9 px-4 rounded-md bg-navy-900 text-white text-[14px] font-medium hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-500">
+          className="h-9 px-4 rounded-md bg-purple-900 text-white text-[14px] font-medium hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500">
           Apply
         </button>
         {(q || role || status) && (
-          <Link href="/admin/users" className="h-9 inline-flex items-center px-3 text-[14px] text-gray-700 hover:text-navy-900">
+          <Link href="/admin/users" className="h-9 inline-flex items-center px-3 text-[14px] text-gray-700 hover:text-purple-900">
             Clear
           </Link>
         )}
@@ -201,13 +201,13 @@ export default async function AdminUsers({
       <div className="flex items-center gap-3">
         {page > 1 && (
           <Link href={qs({ page: String(page - 1) })}
-            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-navy-300">
+            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-purple-300">
             Previous
           </Link>
         )}
         {users.length === PAGE_SIZE && (
           <Link href={qs({ page: String(page + 1) })}
-            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-navy-300">
+            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-purple-300">
             Next
           </Link>
         )}

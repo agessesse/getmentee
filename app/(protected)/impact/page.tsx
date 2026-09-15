@@ -54,12 +54,12 @@ function ImpactStat({
   accent?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border p-6 ${accent ? 'bg-navy-900 border-navy-900' : 'bg-white border-gray-100'}`}>
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${accent ? 'bg-white/10' : 'bg-navy-50'}`}>
-        <Icon className={`w-4.5 h-4.5 ${accent ? 'text-white' : 'text-navy-600'}`} />
+    <div className={`rounded-2xl border p-6 ${accent ? 'bg-purple-900 border-purple-900' : 'bg-white border-gray-100'}`}>
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${accent ? 'bg-white/10' : 'bg-purple-50'}`}>
+        <Icon className={`w-4.5 h-4.5 ${accent ? 'text-white' : 'text-purple-600'}`} />
       </div>
-      <p className={`text-3xl font-bold mb-1 ${accent ? 'text-white' : 'text-navy-900'}`}>{value}</p>
-      <p className={`text-sm ${accent ? 'text-navy-300' : 'text-gray-500'}`}>{label}</p>
+      <p className={`text-3xl font-bold mb-1 ${accent ? 'text-white' : 'text-purple-900'}`}>{value}</p>
+      <p className={`text-sm ${accent ? 'text-purple-300' : 'text-gray-500'}`}>{label}</p>
     </div>
   );
 }
@@ -98,7 +98,7 @@ function MilestoneBadge({
 // ─── Timeline event ───────────────────────────────────────────────────────────
 
 const EVENT_COLOR: Record<TimelineEvent['type'], string> = {
-  mentorship_started: 'bg-navy-100 text-navy-600',
+  mentorship_started: 'bg-purple-100 text-purple-600',
   session_completed:  'bg-blue-100 text-blue-600',
   goal_completed:     'bg-sage-100 text-sage-700',
   review_received:    'bg-amber-100 text-amber-600',
@@ -261,7 +261,7 @@ export default function ImpactPage() {
     return (
       <div className="text-center py-24">
         <p className="text-gray-500">This page is only available to mentors.</p>
-        <Link href="/dashboard" className="text-sm text-navy-600 hover:underline mt-3 inline-block">
+        <Link href="/dashboard" className="text-sm text-purple-600 hover:underline mt-3 inline-block">
           Back to Dashboard
         </Link>
       </div>
@@ -290,7 +290,7 @@ export default function ImpactPage() {
       <div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Dashboard
@@ -298,7 +298,7 @@ export default function ImpactPage() {
 
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-navy-900">My Impact</h1>
+            <h1 className="text-2xl font-bold text-purple-900">My Impact</h1>
             <p className="text-gray-500 mt-1 text-sm">
               Your mentoring history and the difference you&apos;ve made.
             </p>
@@ -360,7 +360,7 @@ export default function ImpactPage() {
         {/* Recognition milestones */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-navy-900">Milestones</h2>
+            <h2 className="text-base font-semibold text-purple-900">Milestones</h2>
             <span className="text-xs text-gray-500">
               {achievedCount}/{milestones.length} achieved
             </span>
@@ -379,7 +379,7 @@ export default function ImpactPage() {
 
         {/* Timeline */}
         <div>
-          <h2 className="text-base font-semibold text-navy-900 mb-4">Timeline</h2>
+          <h2 className="text-base font-semibold text-purple-900 mb-4">Timeline</h2>
           {timeline.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
               <p className="text-sm text-gray-500">
@@ -403,7 +403,7 @@ export default function ImpactPage() {
                     </div>
                     {/* Content */}
                     <div className="pb-5 min-w-0 flex-1">
-                      <p className="text-sm font-medium text-navy-900 leading-tight">{event.label}</p>
+                      <p className="text-sm font-medium text-purple-900 leading-tight">{event.label}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         <p className="text-xs text-gray-500">
                           {formatDistanceToNow(new Date(event.date), { addSuffix: true })}

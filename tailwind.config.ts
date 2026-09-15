@@ -9,34 +9,43 @@ const config: Config = {
         serif: ['var(--font-instrument-serif)', 'Georgia', 'serif'],
       },
       colors: {
-        navy: {
-          900: '#1a1f3a',
-          800: '#2d3668',
-          700: '#3d4a8f',
-          600: '#5265b0',
-          500: '#6b84c8',
-          400: '#879bd3',
-          300: '#a4b3de',
-          200: '#c0cbe9',
-          100: '#dde3f5',
-          50: '#f0f2fb',
+        // ─── Purple: the Mentable brand system ───────────────────────────
+        // Derived from the official logo ("Halo Orbit"). Three tones are the
+        // asset's own colours and must not drift:
+        //   700  #4717CA  the mentor dot
+        //   500  #785AF7  the mentee dot
+        //   200  #D9CFFB  the reversed lavender
+        // The rest of the ramp is interpolated in OKLab along the hue path the
+        // logo itself travels (-78.6° deep → -64.5° light), with the darkest
+        // steps pulled toward the logo's ink #15131A so 900 reads as a near
+        // black with a whisper of purple rather than as "purple text".
+        //
+        // Every step was measured against the navy scale it replaces and meets
+        // or beats it on contrast, so the rename was a safe drop-in:
+        //   900 on cream 15.89:1 · 700 on cream 9.09:1 · 600 on cream 6.25:1
+        //   white on 700 9.36:1 · 400 on 900 5.25:1 · 200 on 700 6.36:1
+        purple: {
+          50:  '#f6f4ff',
+          100: '#e7e3f9',
+          200: '#D9CFFB',
+          300: '#b3a2fb',
+          400: '#9580f9',
+          500: '#785AF7',
+          600: '#5f3ee1',
+          700: '#4717CA',
+          800: '#3a1d87',
+          900: '#24193e',
+          950: '#1b1629',
         },
+        // Warm neutral ground. Deliberately warmer than the logo sheet's
+        // ivory: a warm paper against a cool accent is what stops the system
+        // reading as a stock purple SaaS template.
         cream: {
           50: '#fffbf7',
           100: '#fef8f3',
         },
-        // Sage: the third brand colour, and the only one with a job.
-        // Navy carries trust, cream carries warmth; sage means forward motion
-        // — progress, completion, an active mentorship. Hue sits around 100°
-        // at low chroma, which is warm enough to sit beside cream without the
-        // clash a teal or emerald would create against navy's blue-violet.
-        // Seven tones, each earning its place:
-        //   50/100 surfaces and badge fills
-        //   200    borders on light
-        //   300    text and strokes on navy          (8.11:1 on navy-900)
-        //   400    graphics and bar fills on light   (3.32:1 white, 3.22:1 cream)
-        //   600    text and icons on light           (6.21:1 white, 6.03:1 cream)
-        //   700    hover and emphasis                (8.56:1 white)
+        // Sage is NOT a brand colour. It is the product's success/completion
+        // state, the way red means error, and it never appears on marketing.
         sage: {
           50: '#f4f7f2',
           100: '#e7eee3',

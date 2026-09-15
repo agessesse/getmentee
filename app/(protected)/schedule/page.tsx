@@ -117,7 +117,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h2 className="text-base font-semibold text-navy-900">Weekly Availability</h2>
+        <h2 className="text-base font-semibold text-purple-900">Weekly Availability</h2>
         <p className="text-sm text-gray-500 mt-1">
           Set recurring windows when you&apos;re generally available for sessions. Mentees will see these when booking.
         </p>
@@ -130,11 +130,11 @@ function AvailabilityEditor({ userId }: { userId: string }) {
           return (
             <div key={day} className="bg-white rounded-2xl border border-gray-100 p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-navy-900">{day}</span>
+                <span className="text-sm font-medium text-purple-900">{day}</span>
                 {!isAdding && (
                   <button
                     onClick={() => setAddingDay(dayIndex)}
-                    className="flex items-center gap-1 text-xs text-navy-600 hover:text-navy-900 transition-colors"
+                    className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-900 transition-colors"
                   >
                     <PlusIcon className="w-3.5 h-3.5" />
                     Add window
@@ -149,7 +149,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
               {daySlots.map((slot) => (
                 <div key={slot.id} className="flex items-center justify-between py-1.5">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-navy-400" />
+                    <Clock className="w-3.5 h-3.5 text-purple-400" />
                     <span className="text-sm text-gray-700">
                       {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
                     </span>
@@ -173,7 +173,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
                         type="time"
                         value={newStart}
                         onChange={(e) => setNewStart(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
                       />
                     </div>
                     <div>
@@ -182,7 +182,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
                         type="time"
                         value={newEnd}
                         onChange={(e) => setNewEnd(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
                       />
                     </div>
                   </div>
@@ -191,7 +191,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
                     <button
                       onClick={addSlot}
                       disabled={saving}
-                      className="flex-1 py-1.5 bg-navy-900 text-white text-xs font-medium rounded-lg hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                      className="flex-1 py-1.5 bg-purple-900 text-white text-xs font-medium rounded-lg hover:bg-purple-800 disabled:opacity-50 transition-colors"
                     >
                       {saving ? 'Saving…' : 'Save window'}
                     </button>
@@ -344,7 +344,7 @@ export default function SchedulePage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Schedule</h1>
+          <h1 className="text-2xl font-bold text-purple-900">Schedule</h1>
           <p className="text-gray-500 mt-1 text-sm">
             {userRole === 'mentor'
               ? 'Manage sessions and set your weekly availability.'
@@ -366,8 +366,8 @@ export default function SchedulePage() {
           <button
             key={key}
             onClick={() => handleTabChange(key)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 ${
-              tab === key ? 'border-navy-600 text-navy-600' : 'border-transparent text-gray-500 hover:text-navy-900'
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 ${
+              tab === key ? 'border-purple-600 text-purple-600' : 'border-transparent text-gray-500 hover:text-purple-900'
             }`}
           >
             {label}
@@ -389,7 +389,7 @@ export default function SchedulePage() {
             </div>
           ) : sessions.length === 0 ? (
             <div className="text-center py-20 text-gray-500">
-              <p className="text-base font-medium text-navy-900 mb-1">No {tab} sessions</p>
+              <p className="text-base font-medium text-purple-900 mb-1">No {tab} sessions</p>
               {tab === 'upcoming' && canBook && (
                 <>
                   <p className="text-sm text-gray-500 mb-4">

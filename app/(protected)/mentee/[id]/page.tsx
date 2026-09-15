@@ -72,7 +72,7 @@ export default function MenteeProfilePage() {
     return (
       <div className="max-w-2xl mx-auto text-center py-24">
         <p className="text-gray-500">Mentee profile not found.</p>
-        <Link href="/requests" className="mt-4 inline-block text-sm text-navy-600 hover:underline">Back to Requests</Link>
+        <Link href="/requests" className="mt-4 inline-block text-sm text-purple-600 hover:underline">Back to Requests</Link>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function MenteeProfilePage() {
       <div>
         <Link
           href="/requests"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-purple-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Requests
@@ -96,7 +96,7 @@ export default function MenteeProfilePage() {
         <div className="flex items-start gap-5">
           <Avatar src={mentee.avatar_url} name={fullName} size="lg" />
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-navy-900">{fullName}</h1>
+            <h1 className="text-xl font-bold text-purple-900">{fullName}</h1>
             {mentee.headline && (
               <p className="text-sm text-gray-500 mt-0.5">{mentee.headline}</p>
             )}
@@ -124,7 +124,7 @@ export default function MenteeProfilePage() {
                   href={mentee.linkedin_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-navy-600 hover:text-navy-900"
+                  className="flex items-center gap-1 text-purple-600 hover:text-purple-900"
                 >
                   <Globe className="w-3.5 h-3.5" />
                   LinkedIn
@@ -144,11 +144,11 @@ export default function MenteeProfilePage() {
       {/* Goals */}
       {mentee.goals.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-navy-900 mb-3">Their goals</h2>
+          <h2 className="text-sm font-semibold text-purple-900 mb-3">Their goals</h2>
           <ul className="space-y-2">
             {mentee.goals.map((goal, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                <span className="w-1.5 h-1.5 rounded-full bg-navy-400 flex-shrink-0 mt-2" />
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0 mt-2" />
                 {goal}
               </li>
             ))}
@@ -159,10 +159,10 @@ export default function MenteeProfilePage() {
       {/* Interest tags */}
       {mentee.interest_tags.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-navy-900 mb-3">Interests</h2>
+          <h2 className="text-sm font-semibold text-purple-900 mb-3">Interests</h2>
           <div className="flex flex-wrap gap-2">
             {mentee.interest_tags.map((tag) => (
-              <span key={tag} className="text-xs bg-navy-50 text-navy-700 px-3 py-1 rounded-full font-medium">
+              <span key={tag} className="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full font-medium">
                 {tag}
               </span>
             ))}

@@ -74,13 +74,13 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all flex-shrink-0 ${
-                  done ? 'bg-sage-600 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-600'
+                  done ? 'bg-sage-600 text-white' : active ? 'bg-purple-900 text-white' : 'bg-gray-100 text-gray-600'
                 }`}
                 aria-label={`Step ${step}: ${labels[i]}${done ? ' (complete)' : active ? ' (current)' : ''}`}
               >
                 {done ? <Check className="w-4 h-4" /> : step}
               </div>
-              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-navy-900' : 'text-gray-500'}`}>
+              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-purple-900' : 'text-gray-500'}`}>
                 {labels[i]}
               </span>
             </div>
@@ -100,7 +100,7 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-navy-900 mb-1.5">{label}</label>
+      <label className="block text-sm font-medium text-purple-900 mb-1.5">{label}</label>
       {children}
       {hint && <p className="text-xs text-gray-500 mt-1">{hint}</p>}
     </div>
@@ -111,7 +111,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white placeholder-gray-400"
+      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white placeholder-gray-400"
     />
   );
 }
@@ -120,7 +120,7 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white placeholder-gray-400 resize-none"
+      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white placeholder-gray-400 resize-none"
     />
   );
 }
@@ -129,7 +129,7 @@ function SelectInput(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white"
+      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white"
     />
   );
 }
@@ -154,8 +154,8 @@ function TagPicker({ options, value, onChange, max = 8 }: {
             }}
             className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all ${
               selected
-                ? 'bg-navy-900 border-navy-900 text-white'
-                : 'bg-white border-gray-200 text-gray-600 hover:border-navy-300'
+                ? 'bg-purple-900 border-purple-900 text-white'
+                : 'bg-white border-gray-200 text-gray-600 hover:border-purple-300'
             }`}
           >
             {opt}
@@ -341,7 +341,7 @@ export default function ProfileSetupPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-navy-900">Complete your profile</h1>
+        <h1 className="text-2xl font-bold text-purple-900">Complete your profile</h1>
         <p className="text-gray-500 mt-1 text-sm">
           {role === 'mentor'
             ? 'Help mentees understand your background and what you offer.'
@@ -503,7 +503,7 @@ export default function ProfileSetupPage() {
             type="button"
             onClick={() => step > 1 && setStep((s) => (s - 1) as Step)}
             disabled={step === 1}
-            className="px-4 py-2.5 text-sm text-gray-500 hover:text-navy-900 disabled:opacity-0 transition-colors"
+            className="px-4 py-2.5 text-sm text-gray-500 hover:text-purple-900 disabled:opacity-0 transition-colors"
           >
             ← Back
           </button>
@@ -516,7 +516,7 @@ export default function ProfileSetupPage() {
                 setError('');
                 setStep((s) => (s + 1) as Step);
               }}
-              className="px-6 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 transition-colors"
+              className="px-6 py-2.5 bg-purple-900 text-white text-sm font-medium rounded-xl hover:bg-purple-800 transition-colors"
             >
               Continue →
             </button>
@@ -525,7 +525,7 @@ export default function ProfileSetupPage() {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="px-6 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors flex items-center gap-2"
+              className="px-6 py-2.5 bg-purple-900 text-white text-sm font-medium rounded-xl hover:bg-purple-800 disabled:opacity-50 transition-colors flex items-center gap-2"
             >
               {saving ? (
                 <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving...</>

@@ -130,3 +130,73 @@ button:hover .arrow-slide {
 @media (prefers-reduced-motion: reduce) {
   .motion-safe\:animate-ping-slow { animation: none; opacity: 0.5; }
 }
+
+/* ── Branded route transition (public marketing pages only) ──
+   Two panels sweep in from the left, the deeper one trailing the lighter by
+   100ms, the reversed lockup fades up between them, then both sweep off to the
+   right. The two panel colours are the logo's own two dots: the mentee purple
+   leads, the mentor purple follows.
+
+   Only transform and opacity are animated. The overlay is inert and hidden
+   while idle, sits above the sticky nav (z-60) and below the mobile menu
+   (z-90), and never runs inside the authenticated product. */
+.rt {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  visibility: hidden;
+}
+.rt[data-phase='cover'],
+.rt[data-phase='reveal'] { visibility: visible; }
+
+.rt__panel {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  will-change: transform;
+}
+.rt__panel--lead   { background: #785AF7; } /* purple-500, the mentee dot */
+.rt__panel--follow { background: #4717CA; } /* purple-700, the mentor dot */
+
+.rt__logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* COVER */
+.rt[data-phase='cover'] .rt__panel--lead {
+  transform: translateX(0);
+  transition: transform 320ms cubic-bezier(.65, 0, .35, 1);
+}
+.rt[data-phase='cover'] .rt__panel--follow {
+  transform: translateX(0);
+  transition: transform 320ms cubic-bezier(.65, 0, .35, 1) 100ms;
+}
+.rt[data-phase='cover'] .rt__logo {
+  opacity: 1;
+  transition: opacity 200ms ease-out 240ms;
+}
+
+/* REVEAL */
+.rt[data-phase='reveal'] .rt__panel--follow {
+  transform: translateX(100%);
+  transition: transform 360ms cubic-bezier(.65, 0, .35, 1);
+}
+.rt[data-phase='reveal'] .rt__panel--lead {
+  transform: translateX(100%);
+  transition: transform 360ms cubic-bezier(.65, 0, .35, 1) 80ms;
+}
+.rt[data-phase='reveal'] .rt__logo {
+  opacity: 0;
+  transition: opacity 160ms ease-in;
+}
+
+/* Reduced motion: the overlay never shows and navigation stays ordinary. */
+@media (prefers-reduced-motion: reduce) {
+  .rt { display: none; }
+}

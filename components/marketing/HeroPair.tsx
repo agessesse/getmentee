@@ -62,7 +62,7 @@ export default function HeroPair() {
         >
           <line
             x1="150" y1="176" x2="238" y2="248"
-            stroke={hover ? '#5265b0' : '#c0cbe9'}
+            stroke={hover ? '#5f3ee1' : '#D9CFFB'}
             strokeWidth={hover ? 1.8 : 1}
             strokeDasharray="4 5"
             style={{ transition: 'stroke 300ms ease, stroke-width 300ms ease' }}
@@ -80,7 +80,7 @@ export default function HeroPair() {
               onFocus={() => setHover(card.id)}
               onBlur={() => setHover(null)}
               aria-label={`View ${card.name}'s profile`}
-              className={`${card.box} rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2`}
+              className={`${card.box} rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2`}
               style={{ transform: active ? 'scale(1.04) rotate(0deg)' : undefined, zIndex: active ? 20 : 10 }}
             >
               {card.photo && (

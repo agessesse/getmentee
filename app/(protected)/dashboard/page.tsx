@@ -61,7 +61,7 @@ function StatCard({
   label,
   icon: Icon,
   href,
-  color = 'navy',
+  color = 'purple',
 }: {
   value: number | string;
   label: string;
@@ -72,23 +72,23 @@ function StatCard({
   const bg =
     color === 'green' ? 'bg-sage-50'
     : color === 'amber' ? 'bg-amber-50'
-    : 'bg-navy-50';
+    : 'bg-purple-50';
   const iconColor =
     color === 'green' ? 'text-sage-700'
     : color === 'amber' ? 'text-amber-600'
-    : 'text-navy-600';
+    : 'text-purple-600';
   return (
     <Link
       href={href}
-      className="group block bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all"
+      className="group block bg-white rounded-2xl border border-gray-100 p-5 hover:border-purple-200 hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between mb-4">
         <div className={`w-9 h-9 ${bg} rounded-xl flex items-center justify-center`}>
           <Icon className={`w-4.5 h-4.5 ${iconColor}`} />
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all" />
+        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all" />
       </div>
-      <p className="text-3xl font-bold text-navy-900 mb-1">{value}</p>
+      <p className="text-3xl font-bold text-purple-900 mb-1">{value}</p>
       <p className="text-sm text-gray-500">{label}</p>
     </Link>
   );
@@ -108,7 +108,7 @@ function CapacityBar({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-semibold text-navy-900">Mentee Capacity</p>
+        <p className="text-sm font-semibold text-purple-900">Mentee Capacity</p>
         <span
           className={`text-xs font-medium px-2.5 py-1 rounded-full ${
             isFull
@@ -188,17 +188,17 @@ function FirstRunGuide({ isMentee, profileComplete }: { isMentee: boolean; profi
           href={step.href}
           className={`group flex flex-col gap-3 rounded-2xl border p-5 transition-all hover:shadow-sm ${
             step.primary
-              ? 'bg-navy-900 border-navy-900 hover:bg-navy-800'
-              : 'bg-white border-gray-100 hover:border-navy-200'
+              ? 'bg-purple-900 border-purple-900 hover:bg-purple-800'
+              : 'bg-white border-gray-100 hover:border-purple-200'
           }`}
         >
-          <p className={`text-base font-semibold leading-snug ${step.primary ? 'text-white' : 'text-navy-900'}`}>
+          <p className={`text-base font-semibold leading-snug ${step.primary ? 'text-white' : 'text-purple-900'}`}>
             {step.label}
           </p>
-          <p className={`text-sm font-light leading-relaxed flex-1 ${step.primary ? 'text-navy-300' : 'text-gray-500'}`}>
+          <p className={`text-sm font-light leading-relaxed flex-1 ${step.primary ? 'text-purple-300' : 'text-gray-500'}`}>
             {step.detail}
           </p>
-          <span className={`text-sm font-medium ${step.primary ? 'text-navy-400 group-hover:text-navy-200' : 'text-navy-600 group-hover:text-navy-900'} transition-colors`}>
+          <span className={`text-sm font-medium ${step.primary ? 'text-purple-400 group-hover:text-purple-200' : 'text-purple-600 group-hover:text-purple-900'} transition-colors`}>
             {step.primary ? 'Get started →' : 'Go →'}
           </span>
         </Link>
@@ -429,7 +429,7 @@ export default function DashboardPage() {
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-navy-900">
+              <h1 className="text-2xl font-bold text-purple-900">
                 {greeting(firstName)}
               </h1>
               <p className="text-gray-500 mt-1 text-sm">
@@ -516,7 +516,7 @@ export default function DashboardPage() {
         sub: 'Browse mentors and send a request to get started',
         href: '/discover',
         icon: Search,
-        color: 'navy',
+        color: 'purple',
       };
     }
     return null;
@@ -533,7 +533,7 @@ export default function DashboardPage() {
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold text-navy-900">
+            <h1 className="text-2xl font-bold text-purple-900">
               {greeting(profile.first_name)}
             </h1>
             {mentorExtra?.isFoundingMentor && (
@@ -553,7 +553,7 @@ export default function DashboardPage() {
         {isMentee && (
           <Link
             href="/discover"
-            className="hidden sm:inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-800 transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 bg-purple-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-purple-800 transition-colors"
           >
             <Search className="w-4 h-4" />
             Find mentors
@@ -562,7 +562,7 @@ export default function DashboardPage() {
         {!isMentee && pendingRequests > 0 && (
           <Link
             href="/requests"
-            className="hidden sm:inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-800 transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 bg-purple-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-purple-800 transition-colors"
           >
             <ClipboardList className="w-4 h-4" />
             {pendingRequests} pending {pendingRequests === 1 ? 'request' : 'requests'}
@@ -573,9 +573,9 @@ export default function DashboardPage() {
       {/* ── Today's priority card ────────────────────────────────────────── */}
       {priorityCard && (() => {
         const Icon = priorityCard.icon;
-        const bgMap: Record<string, string> = { blue: 'bg-blue-50 border-blue-100', amber: 'bg-amber-50 border-amber-100', navy: 'bg-navy-50 border-navy-100' };
-        const iconMap: Record<string, string> = { blue: 'text-blue-600 bg-blue-100', amber: 'text-amber-600 bg-amber-100', navy: 'text-navy-600 bg-navy-100' };
-        const textMap: Record<string, string> = { blue: 'text-blue-800', amber: 'text-amber-800', navy: 'text-navy-800' };
+        const bgMap: Record<string, string> = { blue: 'bg-blue-50 border-blue-100', amber: 'bg-amber-50 border-amber-100', purple: 'bg-purple-50 border-purple-100' };
+        const iconMap: Record<string, string> = { blue: 'text-blue-600 bg-blue-100', amber: 'text-amber-600 bg-amber-100', purple: 'text-purple-600 bg-purple-100' };
+        const textMap: Record<string, string> = { blue: 'text-blue-800', amber: 'text-amber-800', purple: 'text-purple-800' };
         return (
           <Link
             href={priorityCard.href}
@@ -596,27 +596,27 @@ export default function DashboardPage() {
       {/* ── Mentor impact strip ──────────────────────────────────────────── */}
       {!isMentee && mentorExtra && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-navy-900 rounded-2xl p-4 col-span-1">
+          <div className="bg-purple-900 rounded-2xl p-4 col-span-1">
             <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center mb-3">
               <Users className="w-3.5 h-3.5 text-white" />
             </div>
             <p className="text-2xl font-bold text-white">{mentorExtra.totalMenteesEver}</p>
-            <p className="text-xs text-navy-300 mt-0.5">
+            <p className="text-xs text-purple-300 mt-0.5">
               {mentorExtra.totalMenteesEver === 1 ? 'Mentee' : 'Mentees'} mentored
             </p>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <div className="w-7 h-7 bg-navy-50 rounded-lg flex items-center justify-center mb-3">
-              <Clock className="w-3.5 h-3.5 text-navy-600" />
+            <div className="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center mb-3">
+              <Clock className="w-3.5 h-3.5 text-purple-600" />
             </div>
-            <p className="text-2xl font-bold text-navy-900">{mentorExtra.totalHours}h</p>
+            <p className="text-2xl font-bold text-purple-900">{mentorExtra.totalHours}h</p>
             <p className="text-xs text-gray-500 mt-0.5">Hours invested</p>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-4">
             <div className="w-7 h-7 bg-amber-50 rounded-lg flex items-center justify-center mb-3">
               <Star className="w-3.5 h-3.5 text-amber-500" />
             </div>
-            <p className="text-2xl font-bold text-navy-900">
+            <p className="text-2xl font-bold text-purple-900">
               {mentorExtra.avgRating ? mentorExtra.avgRating.toFixed(1) : '—'}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
@@ -625,14 +625,14 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/impact"
-            className="group bg-white rounded-2xl border border-gray-100 p-4 flex flex-col justify-between hover:border-navy-200 hover:shadow-sm transition-all"
+            className="group bg-white rounded-2xl border border-gray-100 p-4 flex flex-col justify-between hover:border-purple-200 hover:shadow-sm transition-all"
           >
-            <div className="w-7 h-7 bg-navy-50 rounded-lg flex items-center justify-center mb-3">
-              <BarChart2 className="w-3.5 h-3.5 text-navy-600" />
+            <div className="w-7 h-7 bg-purple-50 rounded-lg flex items-center justify-center mb-3">
+              <BarChart2 className="w-3.5 h-3.5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-navy-900">Full impact</p>
-              <p className="text-xs text-navy-400 group-hover:text-navy-700 transition-colors">
+              <p className="text-sm font-semibold text-purple-900">Full impact</p>
+              <p className="text-xs text-purple-400 group-hover:text-purple-700 transition-colors">
                 View timeline →
               </p>
             </div>
@@ -691,12 +691,12 @@ export default function DashboardPage() {
         {/* Upcoming sessions */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-semibold text-navy-900">
+            <h2 className="text-base font-semibold text-purple-900">
               Upcoming Sessions
             </h2>
             <Link
               href="/schedule"
-              className="text-sm text-navy-600 hover:text-navy-900 font-medium"
+              className="text-sm text-purple-600 hover:text-purple-900 font-medium"
             >
               View all
             </Link>
@@ -709,7 +709,7 @@ export default function DashboardPage() {
               <p className="text-sm text-gray-500 mb-3">No upcoming sessions</p>
               <Link
                 href="/schedule"
-                className="text-sm text-navy-600 font-medium hover:underline"
+                className="text-sm text-purple-600 font-medium hover:underline"
               >
                 Schedule a session →
               </Link>
@@ -723,7 +723,7 @@ export default function DashboardPage() {
                   className="flex items-center justify-between py-3 border-b border-gray-50 last:border-0 hover:opacity-80 transition-opacity"
                 >
                   <div>
-                    <p className="text-sm font-medium text-navy-900">
+                    <p className="text-sm font-medium text-purple-900">
                       {s.partner_name}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5">
@@ -747,7 +747,7 @@ export default function DashboardPage() {
                       {s.session_type}
                     </span>
                     {!isMentee && (
-                      <span className="text-xs text-navy-400 font-medium">
+                      <span className="text-xs text-purple-400 font-medium">
                         Brief →
                       </span>
                     )}
@@ -761,12 +761,12 @@ export default function DashboardPage() {
         {/* Recent messages */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-semibold text-navy-900">
+            <h2 className="text-base font-semibold text-purple-900">
               Recent Messages
             </h2>
             <Link
               href="/messages"
-              className="text-sm text-navy-600 hover:text-navy-900 font-medium"
+              className="text-sm text-purple-600 hover:text-purple-900 font-medium"
             >
               View all
             </Link>
@@ -784,7 +784,7 @@ export default function DashboardPage() {
               {isMentee && activeMentorships === 0 && (
                 <Link
                   href="/discover"
-                  className="text-sm text-navy-600 font-medium hover:underline"
+                  className="text-sm text-purple-600 font-medium hover:underline"
                 >
                   Find a mentor →
                 </Link>
@@ -801,7 +801,7 @@ export default function DashboardPage() {
                   <Avatar name={msg.sender_name} size="sm" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-navy-900">
+                      <p className="text-sm font-medium text-purple-900">
                         {msg.sender_name}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -826,14 +826,14 @@ export default function DashboardPage() {
       {isMentee && (
         <Link
           href="/opportunities"
-          className="group flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all"
+          className="group flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:border-purple-200 hover:shadow-sm transition-all"
         >
           <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
             <Lightbulb className="w-5 h-5 text-amber-600" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-navy-900">Opportunity Fund</p>
+              <p className="text-sm font-semibold text-purple-900">Opportunity Fund</p>
               <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
                 Pilot
               </span>
@@ -842,7 +842,7 @@ export default function DashboardPage() {
               Professional-development funding for students with demonstrated financial need. Attire, travel, networking, and more.
             </p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-400 transition-colors flex-shrink-0 mt-3" />
+          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-purple-400 transition-colors flex-shrink-0 mt-3" />
         </Link>
       )}
 
@@ -851,11 +851,11 @@ export default function DashboardPage() {
           it a third time alongside a duplicate "Complete profile". It now
           appears only once the student has begun and still has no mentorship. */}
       {activeMentorships === 0 && !isNewUser && (
-        <div className="bg-navy-900 rounded-2xl p-6 text-white">
+        <div className="bg-purple-900 rounded-2xl p-6 text-white">
           <h2 className="text-base font-semibold mb-1">
             {isMentee ? 'Find your first mentor' : 'Start accepting mentees'}
           </h2>
-          <p className="text-navy-300 text-sm mb-5 font-light">
+          <p className="text-purple-300 text-sm mb-5 font-light">
             {isMentee
               ? 'Browse mentors at leading firms. Professionals ready to help you build your path.'
               : 'Your profile is live. Set your availability and start accepting requests.'}
@@ -865,14 +865,14 @@ export default function DashboardPage() {
               <>
                 <Link
                   href="/discover"
-                  className="inline-flex items-center gap-2 bg-white text-navy-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-white text-purple-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
                 >
                   <Search className="w-4 h-4" />
                   Browse mentors
                 </Link>
                 <Link
                   href="/profile/setup"
-                  className="inline-flex items-center gap-2 border border-navy-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                  className="inline-flex items-center gap-2 border border-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition-colors"
                 >
                   Complete profile
                 </Link>
@@ -881,14 +881,14 @@ export default function DashboardPage() {
               <>
                 <Link
                   href="/requests"
-                  className="inline-flex items-center gap-2 bg-white text-navy-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-white text-purple-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
                 >
                   <ClipboardList className="w-4 h-4" />
                   View requests
                 </Link>
                 <Link
                   href="/schedule"
-                  className="inline-flex items-center gap-2 border border-navy-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                  className="inline-flex items-center gap-2 border border-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition-colors"
                 >
                   Set availability
                 </Link>

@@ -51,12 +51,12 @@ export default function Flywheel() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
           <div>
-            <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-5">
+            <p className="text-[11px] font-semibold text-purple-600 uppercase tracking-[0.22em] mb-5">
               How it compounds
             </p>
             <h2
               id="flywheel-heading"
-              className="font-serif text-navy-900 leading-[1.05] mb-5"
+              className="font-serif text-purple-900 leading-[1.05] mb-5"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
               It doesn&apos;t end<br />with you.
@@ -67,15 +67,15 @@ export default function Flywheel() {
             </p>
 
             {/* Reserved height keeps the layout still as the label changes */}
-            <div className="min-h-[76px] border-l-2 border-navy-200 pl-5">
-              <p className="font-serif text-navy-900 text-[24px] leading-none mb-1.5">
+            <div className="min-h-[76px] border-l-2 border-purple-200 pl-5">
+              <p className="font-serif text-purple-900 text-[24px] leading-none mb-1.5">
                 {stage.verb}
               </p>
               <p className="text-gray-500 font-light text-[15px]">{stage.line}</p>
             </div>
 
             <p
-              className="text-[14px] text-navy-600 font-medium mt-6 transition-opacity duration-500"
+              className="text-[14px] text-purple-600 font-medium mt-6 transition-opacity duration-500"
               style={{ opacity: isReturn ? 1 : 0.35 }}
             >
               …and the cycle starts again, one person further along.
@@ -85,13 +85,13 @@ export default function Flywheel() {
           {/* The wheel */}
           <div className="flex justify-center">
             <svg viewBox="0 0 300 300" className="w-full max-w-[300px] h-auto" role="img" aria-label="A four-stage cycle: Learn, Apply, Grow, Return, which loops back to Learn.">
-              <circle cx={C} cy={C} r={R} fill="none" stroke="#dde3f5" strokeWidth="1.5" />
+              <circle cx={C} cy={C} r={R} fill="none" stroke="#e7e3f9" strokeWidth="1.5" />
 
               {/* Progress arc grows as the user moves through the cycle */}
               <circle
                 cx={C} cy={C} r={R}
                 fill="none"
-                stroke="#2d3668"
+                stroke="#3a1d87"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeDasharray={2 * Math.PI * R}
@@ -118,8 +118,8 @@ export default function Flywheel() {
                     <circle
                       cx={x} cy={y}
                       r={isActive ? 17 : 13}
-                      fill={isActive ? '#1a1f3a' : '#ffffff'}
-                      stroke={isActive ? '#1a1f3a' : '#c0cbe9'}
+                      fill={isActive ? '#24193e' : '#ffffff'}
+                      stroke={isActive ? '#24193e' : '#D9CFFB'}
                       strokeWidth="1.5"
                       style={{ transition: 'r 240ms cubic-bezier(0.16,1,0.3,1), fill 240ms ease' }}
                     />
@@ -128,7 +128,7 @@ export default function Flywheel() {
                       textAnchor="middle"
                       fontSize="10"
                       fontWeight="700"
-                      fill={isActive ? '#ffffff' : '#5265b0'}
+                      fill={isActive ? '#ffffff' : '#5f3ee1'}
                       style={{ pointerEvents: 'none' }}
                     >
                       0{i + 1}
@@ -138,7 +138,7 @@ export default function Flywheel() {
                       textAnchor="middle"
                       fontSize="12.5"
                       fontWeight="600"
-                      fill={isActive ? '#1a1f3a' : '#5265b0'}
+                      fill={isActive ? '#24193e' : '#5f3ee1'}
                       style={{ pointerEvents: 'none', transition: 'fill 240ms ease' }}
                     >
                       {s.verb}
@@ -155,20 +155,20 @@ export default function Flywheel() {
                       with its own "Learn" label. */}
                   <text
                     x={nodePos(0).x} y={nodePos(0).y + 34}
-                    textAnchor="middle" fontSize="10.5" fontWeight="600" fill="#5265b0"
+                    textAnchor="middle" fontSize="10.5" fontWeight="600" fill="#5f3ee1"
                   >
                     Start here
                   </text>
                   <circle
                     cx={nodePos(0).x} cy={nodePos(0).y} r="24"
-                    fill="none" stroke="#5265b0" strokeWidth="1.5" opacity="0.5"
+                    fill="none" stroke="#5f3ee1" strokeWidth="1.5" opacity="0.5"
                     className="motion-safe:animate-ping-slow"
                   />
                   {/* Arrowhead sits on the ring midway between 01 and 02,
                       rotated to the clockwise tangent. */}
                   <path
                     d="M -5 -4 L 5 0 L -5 4 Z"
-                    fill="#5265b0"
+                    fill="#5f3ee1"
                     opacity="0.85"
                     transform={`translate(${ARROW.x} ${ARROW.y}) rotate(${ARROW.deg})`}
                   />
@@ -181,7 +181,7 @@ export default function Flywheel() {
                 textAnchor="middle"
                 fontSize="11"
                 fontWeight="600"
-                fill="#5265b0"
+                fill="#5f3ee1"
                 style={{ opacity: isReturn ? 1 : 0, transition: 'opacity 400ms ease' }}
               >
                 ↻ begins again

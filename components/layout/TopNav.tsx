@@ -151,7 +151,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden text-gray-500 hover:text-navy-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-lg"
+        className="lg:hidden text-gray-500 hover:text-purple-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-lg"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -167,7 +167,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setNotifDropdown((v) => !v);
               setUserDropdown(false);
             }}
-            className="relative p-2 text-gray-500 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            className="relative p-2 text-gray-500 hover:text-purple-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
@@ -181,13 +181,13 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
           {notifDropdown && (
             <div className="absolute right-0 mt-1 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
               <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
-                <span className="text-sm font-semibold text-navy-900">
+                <span className="text-sm font-semibold text-purple-900">
                   Notifications {unreadCount > 0 && <span className="text-xs text-gray-500 font-normal">({unreadCount} new)</span>}
                 </span>
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-xs text-navy-600 hover:text-navy-900 font-medium flex items-center gap-1"
+                    className="text-xs text-purple-600 hover:text-purple-900 font-medium flex items-center gap-1"
                   >
                     <Check className="w-3 h-3" />
                     Mark all read
@@ -207,13 +207,13 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                       <button
                         key={notif.id}
                         onClick={() => handleNotifClick(notif)}
-                        className={`w-full flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left ${!notif.is_read ? 'bg-navy-50/40' : ''}`}
+                        className={`w-full flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left ${!notif.is_read ? 'bg-purple-50/40' : ''}`}
                       >
-                        <div className="w-8 h-8 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Icon className="w-4 h-4 text-navy-600" />
+                        <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Icon className="w-4 h-4 text-purple-600" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className={`text-sm ${!notif.is_read ? 'font-semibold text-navy-900' : 'font-medium text-gray-700'}`}>
+                          <p className={`text-sm ${!notif.is_read ? 'font-semibold text-purple-900' : 'font-medium text-gray-700'}`}>
                             {notif.title}
                           </p>
                           {notif.body && (
@@ -224,7 +224,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                           </p>
                         </div>
                         {!notif.is_read && (
-                          <span className="w-2 h-2 bg-navy-600 rounded-full mt-2 flex-shrink-0" />
+                          <span className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0" />
                         )}
                       </button>
                     );
@@ -242,10 +242,10 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setUserDropdown((v) => !v);
               setNotifDropdown(false);
             }}
-            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
             <Avatar src={user.avatar_url} name={fullName} size="sm" />
-            <span className="hidden md:block text-sm font-medium text-navy-900 max-w-[120px] truncate">
+            <span className="hidden md:block text-sm font-medium text-purple-900 max-w-[120px] truncate">
               {user.first_name}
             </span>
             <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
@@ -254,7 +254,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
           {userDropdown && (
             <div className="absolute right-0 mt-1 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-1.5 z-50 overflow-hidden">
               <div className="px-4 py-2.5 border-b border-gray-100">
-                <p className="text-sm font-semibold text-navy-900">{fullName}</p>
+                <p className="text-sm font-semibold text-purple-900">{fullName}</p>
                 <p className="text-xs text-gray-500 truncate mt-0.5">{user.email}</p>
               </div>
               <Link

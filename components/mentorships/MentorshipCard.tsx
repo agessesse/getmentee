@@ -45,7 +45,7 @@ export default function MentorshipCard({
             <Avatar src={partnerAvatarUrl} name={fullName} size="lg" />
           </Link>
           <div>
-            <Link href={profileHref} className="font-semibold text-navy-900 hover:text-navy-600 transition-colors">
+            <Link href={profileHref} className="font-semibold text-purple-900 hover:text-purple-600 transition-colors">
               {fullName}
             </Link>
             <p className="text-xs text-gray-400">Mentoring for {duration}</p>
@@ -65,19 +65,19 @@ export default function MentorshipCard({
         </span>
         {activeGoalCount > 0 && (
           <span className="flex items-center gap-1">
-            <Target className="h-4 w-4 text-navy-400" />
-            <span className="text-navy-600 font-medium">{activeGoalCount}</span> active goal{activeGoalCount !== 1 ? 's' : ''}
+            <Target className="h-4 w-4 text-purple-400" />
+            <span className="text-purple-600 font-medium">{activeGoalCount}</span> active goal{activeGoalCount !== 1 ? 's' : ''}
           </span>
         )}
       </div>
 
       {/* Next session callout */}
       {nextSessionAt && (
-        <div className="flex items-center gap-2 bg-navy-50 rounded-xl px-3 py-2.5 text-sm">
-          <Calendar className="h-4 w-4 text-navy-500 flex-shrink-0" />
+        <div className="flex items-center gap-2 bg-purple-50 rounded-xl px-3 py-2.5 text-sm">
+          <Calendar className="h-4 w-4 text-purple-500 flex-shrink-0" />
           <div>
-            <span className="text-xs text-navy-500 font-medium">Next session</span>
-            <p className="text-sm font-semibold text-navy-900">
+            <span className="text-xs text-purple-500 font-medium">Next session</span>
+            <p className="text-sm font-semibold text-purple-900">
               {format(new Date(nextSessionAt), 'EEE MMM d, h:mm a')}
             </p>
           </div>

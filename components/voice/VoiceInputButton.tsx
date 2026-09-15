@@ -130,14 +130,14 @@ export default function VoiceInputButton({
       aria-label={label}
       title={label}
       className={[
-        'relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500',
+        'relative flex items-center justify-center rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500',
         'w-8 h-8 flex-shrink-0',
         state === 'idle'
-          ? 'text-gray-400 hover:text-navy-600 hover:bg-navy-50'
+          ? 'text-gray-400 hover:text-purple-600 hover:bg-purple-50'
           : state === 'listening'
           ? 'bg-red-50 text-red-500 ring-2 ring-red-200'
           : state === 'processing'
-          ? 'bg-navy-50 text-navy-400'
+          ? 'bg-purple-50 text-purple-400'
           : 'bg-sage-50 text-sage-600',
         disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
         className,

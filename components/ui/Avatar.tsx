@@ -30,7 +30,7 @@ export default function Avatar({ src, name, size = 'md', className }: AvatarProp
       className={clsx(
         'rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden',
         sizes[size],
-        !src && 'bg-navy-600 text-white font-semibold',
+        !src && 'bg-purple-600 text-white font-semibold',
         className
       )}
     >

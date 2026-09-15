@@ -46,7 +46,7 @@ export default function MentorCard({
         <div className="flex-1 min-w-0">
           <Link
             href={`/mentor/${id}`}
-            className="font-semibold text-navy-900 hover:text-navy-600 transition-colors"
+            className="font-semibold text-purple-900 hover:text-purple-600 transition-colors"
           >
             {fullName}
           </Link>
@@ -76,7 +76,7 @@ export default function MentorCard({
       {/* Tags */}
       <div className="flex flex-wrap gap-1.5">
         {expertiseTags.slice(0, 5).map((tag) => (
-          <Badge key={tag} label={tag} variant="navy" size="sm" />
+          <Badge key={tag} label={tag} variant="purple" size="sm" />
         ))}
         {expertiseTags.length > 5 && (
           <Badge label={`+${expertiseTags.length - 5}`} variant="gray" size="sm" />

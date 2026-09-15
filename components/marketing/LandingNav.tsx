@@ -36,8 +36,8 @@ export default function LandingNav() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-10 h-full flex items-center justify-between">
-        <Link href="/" className="py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded">
-          <Wordmark size={condensed ? 'sm' : 'md'} className="text-navy-900 transition-all duration-300" />
+        <Link href="/" className="py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded">
+          <Wordmark size={condensed ? 'sm' : 'md'} className="text-purple-900 transition-all duration-300" />
         </Link>
 
         <div className="flex items-center gap-6 lg:gap-7">
@@ -51,7 +51,7 @@ export default function LandingNav() {
                 key={l.href}
                 href={l.href}
                 tabIndex={condensed ? 0 : -1}
-                className="text-[14px] text-gray-500 hover:text-navy-900 transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded"
+                className="text-[14px] text-gray-500 hover:text-purple-900 transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded"
               >
                 {l.label}
               </a>
@@ -60,14 +60,14 @@ export default function LandingNav() {
 
           <Link
             href="/login"
-            className="text-sm text-gray-500 hover:text-navy-900 transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded"
+            className="text-sm text-gray-500 hover:text-purple-900 transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded"
           >
             Sign in
           </Link>
           <Link
             href="/signup"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'nav_get_started' })}
-            className="bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+            className="bg-purple-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-purple-800 active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
           >
             Get started
           </Link>

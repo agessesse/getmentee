@@ -45,7 +45,7 @@ export default async function AdminReports() {
   return (
     <div className="max-w-6xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Reports</h1>
+        <h1 className="text-[20px] font-semibold text-purple-900">Reports</h1>
         <p className="text-[14px] text-gray-600 mt-1">
           {result.ok ? `${reports.length} filed.` : 'Count unavailable.'} This queue is read-only.
         </p>

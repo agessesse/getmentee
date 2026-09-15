@@ -107,7 +107,7 @@ export default function CarouselShell<T>({
           style={{ opacity: driveDirection === 0 ? 0 : 0.65 }}
           aria-hidden="true"
         >
-          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-navy-600">
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-purple-600">
             {driveDirection > 0 ? 'more →' : '← more'}
           </span>
         </div>
