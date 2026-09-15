@@ -5,6 +5,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /*
+     * The nav is fixed at 56-64px, and every in-page link targets an <h2> id.
+     * Without this, jumping to a section parks the heading directly underneath
+     * the nav bar, so the reader lands mid-paragraph with no heading in view.
+     * Set once here rather than per-target so future anchors inherit it.
+     */
+    scroll-padding-top: 6rem;
   }
 
   body {
@@ -25,6 +32,16 @@
   animation: rail-right 66s linear infinite;
 }
 
+/* Mirror, so the companies rail and the schools rail drift opposite ways. */
+@keyframes rail-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-rail-left {
+  animation: rail-left 66s linear infinite;
+}
+
 /* Intro streaks — thin energy lines racing toward center */
 @keyframes streak-l {
   0%   { transform: translateX(-100%); opacity: 0; }
@@ -41,7 +58,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-rail-right { animation: none; }
+  .animate-rail-right,
+  .animate-rail-left { animation: none; }
 }
 
 /* ── Editorial scroll-reveal ── */

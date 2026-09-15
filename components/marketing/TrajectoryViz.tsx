@@ -206,7 +206,13 @@ export default function TrajectoryViz() {
             ref={svgRef}
             viewBox={narrow ? `0 -10 ${W} ${H + 40}` : `0 14 ${W} ${H - 32}`}
             className="w-full h-auto block"
-            role="img"
+            /*
+              Was role="img". An image is a single leaf node to assistive tech,
+              so the four focusable stage markers inside it were unreachable
+              nested interactives. role="group" keeps the description and lets
+              a screen reader navigate into the markers.
+            */
+            role="group"
             aria-label="A chart comparing an unmentored path, which stays flat, against a mentored path that bends upward through clarity, preparation, introduction, and opportunity."
           >
             <defs>
@@ -272,9 +278,11 @@ export default function TrajectoryViz() {
               return (
                 <g key={node.label} style={{ opacity: reveal }}>
                   {/* Generous transparent hit area: the visible dot is far
-                      smaller than a comfortable touch target. */}
+                      smaller than a comfortable touch target. r=23 rather than
+                      22 because the viewBox-to-CSS scale puts 22 at 42.8px
+                      rendered, just under the 44px minimum. */}
                   <circle
-                    cx={p.x} cy={p.y} r={22 * k}
+                    cx={p.x} cy={p.y} r={23 * k}
                     fill="transparent"
                     style={{ cursor: 'pointer' }}
                     tabIndex={0}

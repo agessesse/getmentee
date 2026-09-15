@@ -16,6 +16,11 @@ interface AuthContextType {
   ) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  /**
+   * Sends the Supabase recovery email. There was no route back into an account
+   * from a forgotten password, so anyone locked out had to be reset by hand.
+   */
+  resetPassword: (email: string) => Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -75,6 +80,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login`,
+    });
+    return { error: error?.message };
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -83,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUp,
         signIn,
         signOut,
+        resetPassword,
       }}
     >
       {children}

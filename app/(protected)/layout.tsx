@@ -97,7 +97,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 user={profile}
                 onMenuClick={() => setSidebarOpen(true)}
               />
-              <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+              <main id="main-content" className="flex-1 overflow-y-auto p-4 lg:p-8">
                 {children}
               </main>
             </div>

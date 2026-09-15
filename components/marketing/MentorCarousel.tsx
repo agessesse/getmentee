@@ -7,6 +7,9 @@ import { ArrowRight } from 'lucide-react';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import CarouselShell from '@/components/marketing/CarouselShell';
+import ProfileCardShell from '@/components/marketing/ProfileCardShell';
+import LogoChip from '@/components/ui/LogoChip';
+import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 
 function MentorCard({
@@ -27,6 +30,14 @@ function MentorCard({
   const [imgError, setImgError] = useState(false);
   const showTitle = mentor.title !== '—';
   const showCompany = mentor.company !== '—';
+  // Mirrors the mentee card, which carries school and employer chips under
+  // the name. Mentors had the company as text only.
+  // Some mentors' "company" is an institution rather than a firm — Travis
+  // Melvin's is UNC Kenan-Flagler Business School — and those live in the
+  // school map, not the company map. Fall back rather than showing nothing.
+  const companyLogo = showCompany
+    ? companyFaviconUrl(mentor.company) ?? schoolFaviconUrl(mentor.company)
+    : null;
 
   return (
     <div
@@ -34,14 +45,13 @@ function MentorCard({
       onPointerEnter={() => onHoverChange(true)}
       onPointerLeave={() => onHoverChange(false)}
     >
-      <button
-        onClick={onPreview}
-        tabIndex={interactive ? 0 : -1}
-        onFocus={() => interactive && onHoverChange(true)}
-        onBlur={() => interactive && onHoverChange(false)}
-        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
-        style={{ transform: hovered ? 'translateY(-6px) scale(1.025)' : 'none' }}
-        aria-label={`View ${mentor.name}'s mentor profile`}
+      <ProfileCardShell
+        profileSlug={mentor.profileSlug}
+        onPreview={onPreview}
+        interactive={interactive}
+        onHoverChange={onHoverChange}
+        hovered={hovered}
+        label={`View ${mentor.name}'s mentor profile`}
       >
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
           {!imgError ? (
@@ -93,7 +103,7 @@ function MentorCard({
         </div>
 
         {/* Fixed height keeps every card's baseline aligned regardless of title length */}
-        <div className="px-0.5 h-[52px]">
+        <div className="px-0.5 h-[76px]">
           <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
           {(showTitle || showCompany) && (
             <p className="text-[11px] text-gray-500 mt-1 leading-snug font-light line-clamp-2">
@@ -102,8 +112,13 @@ function MentorCard({
               {showCompany && <span className="text-navy-600 font-medium">{mentor.company}</span>}
             </p>
           )}
+          {companyLogo && (
+            <div className="flex items-center gap-1.5 mt-2">
+              <LogoChip url={companyLogo} name={mentor.company} />
+            </div>
+          )}
         </div>
-      </button>
+      </ProfileCardShell>
     </div>
   );
 }
@@ -151,7 +166,7 @@ export default function MentorCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <Link
-            href="/signup"
+            href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
             className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >

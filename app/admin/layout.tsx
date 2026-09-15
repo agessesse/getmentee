@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     if (gate.reason === 'unauthenticated') redirect('/login');
     if (gate.reason === 'misconfigured') {
       return (
-        <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+        <main id="main-content" className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
           <div className="max-w-md text-center">
             <h1 className="text-lg font-semibold text-navy-900 mb-2">Admin is not configured</h1>
             <p className="text-[15px] text-gray-600 leading-relaxed">

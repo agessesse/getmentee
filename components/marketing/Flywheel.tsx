@@ -74,9 +74,15 @@ export default function Flywheel() {
               <p className="text-gray-500 font-light text-[15px]">{stage.line}</p>
             </div>
 
+            {/*
+              The resting state was opacity 0.35, which left readable text
+              sitting permanently at about 1.9:1 for anyone who never reached
+              the return stage. A reveal should be hidden or shown, not parked
+              half-legible in between.
+            */}
             <p
-              className="text-[14px] text-navy-600 font-medium mt-6 transition-opacity duration-500"
-              style={{ opacity: isReturn ? 1 : 0.35 }}
+              className="text-[14px] text-navy-700 font-medium mt-6 transition-opacity duration-500"
+              style={{ opacity: isReturn ? 1 : 0 }}
             >
               …and the cycle starts again, one person further along.
             </p>
@@ -84,7 +90,17 @@ export default function Flywheel() {
 
           {/* The wheel */}
           <div className="flex justify-center">
-            <svg viewBox="0 0 300 300" className="w-full max-w-[300px] h-auto" role="img" aria-label="A four-stage cycle: Learn, Apply, Grow, Return, which loops back to Learn.">
+            {/*
+              Same trap as TrajectoryViz: role="img" makes the whole subtree a
+              single leaf, so the four focusable stage markers inside were
+              nested interactives that assistive tech could never reach.
+            */}
+            <svg
+              viewBox="0 0 300 300"
+              className="w-full max-w-[300px] h-auto"
+              role="group"
+              aria-label="A four-stage cycle: Learn, Apply, Grow, Return, which loops back to Learn."
+            >
               <circle cx={C} cy={C} r={R} fill="none" stroke="#dde3f5" strokeWidth="1.5" />
 
               {/* Progress arc grows as the user moves through the cycle */}

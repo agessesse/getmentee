@@ -4,11 +4,20 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+
+/**
+ * Demo credentials used to render unconditionally on the public login page,
+ * password included. Useful while showing the product to people, but it is a
+ * public URL. Set NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS=true in preview environments
+ * only.
+ */
+const SHOW_DEMO = process.env.NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS === 'true';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
@@ -34,11 +43,22 @@ export function LoginForm() {
     setPassword('Demo1234!');
   };
 
+  const field =
+    'w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500';
+
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-navy-900 mb-1.5">Welcome back</h2>
-        <p className="text-gray-500 text-sm">Sign in to your Mentable account.</p>
+        {/*
+          Was an <h2>, so the page had no top-level heading at all. The serif is
+          the brand's display face and the landing page is built on it; the auth
+          pages were set entirely in the sans, which made them read as a
+          different product. One serif element per page is enough to connect them.
+        */}
+        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-1.5">
+          Welcome back
+        </h1>
+        <p className="text-gray-600 text-sm">Sign in to your Mentable account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -55,29 +75,64 @@ export function LoginForm() {
             placeholder="you@example.com"
             disabled={loading}
             autoComplete="email"
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className={field}
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-navy-900 mb-1.5">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="••••••••"
-            disabled={loading}
-            autoComplete="current-password"
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
-          />
+          <div className="flex items-baseline justify-between mb-1.5">
+            <label htmlFor="password" className="block text-sm font-medium text-navy-900">
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="tap-target text-[13px] text-navy-700 hover:text-navy-900 hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              disabled={loading}
+              autoComplete="current-password"
+              className={`${field} pr-12`}
+            />
+            {/*
+              Typing a password blind is the single most common cause of a failed
+              sign-in, and the failure is indistinguishable from a wrong password.
+            */}
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              aria-pressed={showPassword}
+              className="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-500 hover:text-navy-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded-r-xl"
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" aria-hidden="true" />
+              ) : (
+                <Eye className="w-4 h-4" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
 
+        {/*
+          role="alert" so a failed sign-in is announced. Without it the only
+          signal was the red box appearing, which a screen reader never reaches
+          because focus stays on the submit button.
+        */}
         {error && (
-          <div className="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700">
+          <div
+            role="alert"
+            className="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700"
+          >
             {error}
           </div>
         )}
@@ -85,7 +140,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-navy-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-navy-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-accent text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-accent-hover disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           {loading ? (
             <>
@@ -95,42 +150,50 @@ export function LoginForm() {
           ) : (
             <>
               Sign in
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </>
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-400">
+        <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-navy-600 font-medium hover:underline">
+          <Link
+            href="/signup"
+            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+          >
             Sign up
           </Link>
         </p>
       </form>
 
-      {/* Demo credentials */}
-      <div className="mt-8 p-5 bg-gray-50 rounded-2xl border border-gray-100">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Demo accounts</p>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => fillDemo('mentee')}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left"
-          >
-            <div className="text-xs text-gray-400 mb-0.5">Mentee view</div>
-            Jordan Taylor
-          </button>
-          <button
-            type="button"
-            onClick={() => fillDemo('mentor')}
-            className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left"
-          >
-            <div className="text-xs text-gray-400 mb-0.5">Mentor view</div>
-            Alex Rivera
-          </button>
+      {SHOW_DEMO && (
+        <div className="mt-8 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+            Demo accounts
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => fillDemo('mentee')}
+              className="px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600"
+            >
+              <div className="text-xs text-gray-600 mb-0.5">Mentee view</div>
+              Jordan Taylor
+            </button>
+            <button
+              type="button"
+              onClick={() => fillDemo('mentor')}
+              className="px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600"
+            >
+              <div className="text-xs text-gray-600 mb-0.5">Mentor view</div>
+              Alex Rivera
+            </button>
+          </div>
+          <p className="text-xs text-gray-600 mt-3">
+            Password for both: <span className="font-mono font-medium">Demo1234!</span>
+          </p>
         </div>
-        <p className="text-xs text-gray-400 mt-3">Password for both: <span className="font-mono font-medium">Demo1234!</span></p>
-      </div>
+      )}
     </div>
   );
 }

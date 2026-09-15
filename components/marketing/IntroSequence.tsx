@@ -5,7 +5,13 @@ import { BRAND, BRAND_DEFINITION } from '@/components/ui/Wordmark';
 
 // Bump this key when the animation changes substantially — returning users
 // will see it fresh once then be skipped for the rest of the session.
-const SESSION_KEY = 'mentable_intro_v5';
+//
+// This is sessionStorage, not localStorage. It used to be localStorage, which
+// meant the intro played exactly once per browser and then never again: anyone
+// who had already visited could not see it at all, and neither could we. Per
+// session is what the line above always intended — once per visit, not once
+// per lifetime.
+const SESSION_KEY = 'mentable_intro_v6';
 
 // ─── Streak configuration ─────────────────────────────────────────────────────
 // Each streak is a thin luminous line that races from an edge toward center,
@@ -50,7 +56,7 @@ export default function IntroSequence() {
 
   useEffect(() => {
     // Skip if already seen this session
-    if (localStorage.getItem(SESSION_KEY)) {
+    if (sessionStorage.getItem(SESSION_KEY)) {
       setPhase('done');
       return;
     }
@@ -63,7 +69,7 @@ export default function IntroSequence() {
       const t1 = setTimeout(() => setPhase('hold'), 650);
       const t2 = setTimeout(() => setPhase('wipe'), 1750);
       const t3 = setTimeout(() => {
-        localStorage.setItem(SESSION_KEY, '1');
+        sessionStorage.setItem(SESSION_KEY, '1');
         setPhase('done');
       }, 2300);
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
@@ -75,7 +81,7 @@ export default function IntroSequence() {
     const t3 = setTimeout(() => setPhase('hold'),   1650);  // resolved; definition lands
     const t4 = setTimeout(() => setPhase('wipe'),   2750);  // curtain rises
     const t5 = setTimeout(() => {
-      localStorage.setItem(SESSION_KEY, '1');
+      sessionStorage.setItem(SESSION_KEY, '1');
       setPhase('done');
     }, 3450);
 

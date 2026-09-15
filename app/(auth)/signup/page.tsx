@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { SignupForm } from '@/components/auth/signup-form';
 
 export const metadata = {
@@ -6,5 +7,12 @@ export const metadata = {
 };
 
 export default function SignupPage() {
-  return <SignupForm />;
+  // SignupForm reads ?role= with useSearchParams so the landing page CTAs can
+  // carry the visitor's choice through. Next requires that read to sit inside a
+  // Suspense boundary or the whole route opts out of static rendering.
+  return (
+    <Suspense fallback={<div className="w-full max-w-lg mx-auto min-h-[420px]" />}>
+      <SignupForm />
+    </Suspense>
+  );
 }

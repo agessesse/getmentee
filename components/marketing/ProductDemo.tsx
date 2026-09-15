@@ -54,11 +54,15 @@ function Discover({ onPick }: { onPick: () => void }) {
         { n: 'Tiffany Lakey', r: 'Chief of Staff, CIB · Wells Fargo' },
         { n: 'Will Alston', r: 'Head of Corporate Banking · Wells Fargo' },
       ].map((m) => (
-        <div key={m.n} className="flex items-center gap-4 p-3.5 bg-white rounded-xl border border-gray-100 opacity-80">
+        // opacity-80 on the wrapper pulled the role line under 4.5:1 even
+        // though text-gray-500 passes on its own. These rows are meant to read
+        // as secondary options, so the de-emphasis moves to the surface — a
+        // recessed background instead of dimmed text.
+        <div key={m.n} className="flex items-center gap-4 p-3.5 bg-gray-50/70 rounded-xl border border-gray-100">
           <div className="w-14 h-14 rounded-xl flex-none bg-navy-100" />
           <div className="min-w-0">
             <p className="text-[14px] font-semibold text-navy-900 truncate">{m.n}</p>
-            <p className="text-[11px] text-gray-500 font-light truncate">{m.r}</p>
+            <p className="text-[11px] text-gray-600 font-light truncate">{m.r}</p>
           </div>
         </div>
       ))}
@@ -272,15 +276,24 @@ export default function ProductDemo() {
               Requests, goals, sessions, and follow-up in one place. Click through the four steps.
             </p>
 
+            {/*
+              role="tablist" on the <ol> overrides the element's own list
+              semantics, which orphaned all four <li> children and left each
+              role="tab" without the tablist parent it requires. The list markup
+              is what carries the "four ordered stages" meaning, so keep the
+              <ol> and mark the <li> wrappers presentational — the tabs then sit
+              directly under the tablist as far as assistive tech is concerned.
+            */}
             <ol className="space-y-1" role="tablist" aria-label="Product stages">
               {STAGES.map((s, i) => {
                 const isActive = s.id === stage;
                 const seen = visited.has(s.id);
                 const Icon = s.icon;
                 return (
-                  <li key={s.id}>
+                  <li key={s.id} role="presentation">
                     <button
                       role="tab"
+                      id={`demo-tab-${s.id}`}
                       aria-selected={isActive}
                       aria-controls="demo-panel"
                       onClick={() => go(s.id)}
@@ -332,7 +345,13 @@ export default function ProductDemo() {
                 </div>
               </div>
 
-              <div id="demo-panel" role="tabpanel" className="p-5 sm:p-6 min-h-[430px]">
+              <div
+                id="demo-panel"
+                role="tabpanel"
+                aria-labelledby={`demo-tab-${stage}`}
+                tabIndex={0}
+                className="p-5 sm:p-6 min-h-[430px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+              >
                 {stage === 'discover' && <Discover onPick={() => go('request')} />}
                 {stage === 'request'  && <Request onSend={() => go('goals')} />}
                 {stage === 'goals'    && <Goals onNext={() => go('session')} />}

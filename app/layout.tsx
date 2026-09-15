@@ -51,6 +51,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
       <body className="bg-cream-50 text-navy-900 font-sans">
+        {/*
+          Keyboard and screen-reader users had to tab through the entire nav on
+          every page before reaching content. Every <main> in the app carries
+          id="main-content" so this one link works site-wide. It is off-screen
+          until focused, which is the standard pattern.
+        */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-3 focus:bg-navy-900 focus:text-white focus:rounded-xl focus:text-sm focus:font-medium"
+        >
+          Skip to content
+        </a>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

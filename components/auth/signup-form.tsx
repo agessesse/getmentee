@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
@@ -9,12 +9,20 @@ import { GraduationCap, Briefcase, ArrowRight } from 'lucide-react';
 type Step = 'role' | 'details';
 
 export function SignupForm() {
-  const [step, setStep] = useState<Step>('role');
+  // Every call to action on the landing page used to point at a bare /signup,
+  // so someone who clicked "Become a mentor" arrived here and was asked the
+  // question they had just answered. The links now carry ?role=, and this
+  // honours it by opening straight on the details step.
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get('role');
+  const presetRole = roleParam === 'mentor' || roleParam === 'mentee' ? roleParam : null;
+
+  const [step, setStep] = useState<Step>(presetRole ? 'details' : 'role');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'mentor' | 'mentee' | null>(null);
+  const [role, setRole] = useState<'mentor' | 'mentee' | null>(presetRole);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -50,8 +58,8 @@ export function SignupForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-navy-900 mb-2">Account created!</h3>
-        <p className="text-gray-500 text-sm">Check your email to confirm, then sign in.</p>
+        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-2">Account created!</h1>
+        <p className="text-gray-600 text-sm">Check your email to confirm, then sign in.</p>
       </div>
     );
   }
@@ -60,8 +68,8 @@ export function SignupForm() {
     return (
       <div className="w-full max-w-lg mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold text-navy-900 mb-3">Join Mentable</h1>
-          <p className="text-gray-500">Are you looking for guidance, or offering it?</p>
+          <h1 className="font-serif text-navy-900 text-[2.4rem] leading-tight mb-3">Join Mentable</h1>
+          <p className="text-gray-600">Are you looking for guidance, or offering it?</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -70,39 +78,42 @@ export function SignupForm() {
             className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
           >
             <div className="w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-100 transition-colors">
-              <GraduationCap className="w-6 h-6 text-navy-700" />
+              <GraduationCap className="w-6 h-6 text-navy-700" aria-hidden="true" />
             </div>
-            <h3 className="text-lg font-bold text-navy-900 mb-2">Find a Mentor</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-lg font-bold text-navy-900 mb-2">Find a Mentor</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Connect with professionals at top firms who can guide your career.
             </p>
-            <div className="mt-5 flex items-center gap-1.5 text-navy-600 text-sm font-medium">
-              <span>Get started</span>
-              <ArrowRight className="w-4 h-4" />
-            </div>
+            <span className="mt-5 inline-flex items-center gap-1.5 bg-accent text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-accent-hover transition-colors">
+              Get started
+              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+            </span>
           </button>
 
           <button
             onClick={() => handleRoleSelect('mentor')}
             className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
           >
-            <div className="w-12 h-12 bg-navy-900 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-800 transition-colors">
-              <Briefcase className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-100 transition-colors">
+              <Briefcase className="w-6 h-6 text-navy-700" aria-hidden="true" />
             </div>
-            <h3 className="text-lg font-bold text-navy-900 mb-2">Become a Mentor</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <h2 className="text-lg font-bold text-navy-900 mb-2">Become a Mentor</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Give back to the next generation. Share your experience and open doors.
             </p>
-            <div className="mt-5 flex items-center gap-1.5 text-navy-600 text-sm font-medium">
-              <span>Apply now</span>
-              <ArrowRight className="w-4 h-4" />
-            </div>
+            <span className="mt-5 inline-flex items-center gap-1.5 bg-accent text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-accent-hover transition-colors">
+              Apply now
+              <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+            </span>
           </button>
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-8">
+        <p className="text-center text-sm text-gray-600 mt-8">
           Already have an account?{' '}
-          <Link href="/login" className="text-navy-600 font-medium hover:underline">
+          <Link
+            href="/login"
+            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+          >
             Sign in
           </Link>
         </p>
@@ -115,7 +126,7 @@ export function SignupForm() {
       <div className="mb-8">
         <button
           onClick={() => setStep('role')}
-          className="text-sm text-gray-400 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1"
+          className="text-sm text-gray-600 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
         >
           ← Back
         </button>
@@ -123,7 +134,7 @@ export function SignupForm() {
           {role === 'mentee' ? <GraduationCap className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
           {role === 'mentee' ? 'Looking for a mentor' : 'Becoming a mentor'}
         </div>
-        <h2 className="text-2xl font-bold text-navy-900">Create your account</h2>
+        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight">Create your account</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -141,7 +152,7 @@ export function SignupForm() {
               required
               placeholder="Jordan"
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
             />
           </div>
           <div>
@@ -157,7 +168,7 @@ export function SignupForm() {
               required
               placeholder="Taylor"
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
             />
           </div>
         </div>
@@ -175,7 +186,7 @@ export function SignupForm() {
             required
             placeholder="you@university.edu"
             disabled={loading}
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
           />
         </div>
 
@@ -193,12 +204,12 @@ export function SignupForm() {
             placeholder="Min. 8 characters"
             disabled={loading}
             minLength={8}
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
           />
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700">
+          <div role="alert" className="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700">
             {error}
           </div>
         )}
@@ -206,7 +217,7 @@ export function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-navy-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-navy-800 disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-accent text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-accent-hover disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
         >
           {loading ? (
             <>
@@ -221,9 +232,12 @@ export function SignupForm() {
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-400">
+        <p className="text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link href="/login" className="text-navy-600 font-medium hover:underline">
+          <Link
+            href="/login"
+            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+          >
             Sign in
           </Link>
         </p>

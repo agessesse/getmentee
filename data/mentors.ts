@@ -24,6 +24,12 @@ export interface Mentor {
   company: string;
   /** Path to portrait relative to /public/ */
   headshot: string;
+  /**
+   * Slug of this mentor's public profile page at /people/<slug>, when one
+   * exists in data/people.ts. Omit for mentors with no profile page yet:
+   * the carousel renders them as a preview-only card rather than a dead link.
+   */
+  profileSlug?: string;
   /** Hex colour used for initials fallback avatar background */
   accentColor: string;
   /** 1–2 sentences describing the mentor's background */
@@ -74,6 +80,7 @@ export interface Mentor {
 export const FEATURED_MENTORS: Mentor[] = [
   {
     name: 'Christopher Floyd, CFA',
+    profileSlug: 'christopher-floyd',
     initials: 'CF',
     title: 'Head of Institutional Sales',
     company: 'Bondway.ai',
@@ -93,6 +100,7 @@ export const FEATURED_MENTORS: Mentor[] = [
   },
   {
     name: 'Peter Keane',
+    profileSlug: 'peter-keane',
     initials: 'PK',
     title: 'President',
     company: 'Keane Capital Management',
@@ -165,6 +173,7 @@ export const FEATURED_MENTORS: Mentor[] = [
   },
   {
     name: 'Travis Melvin',
+    profileSlug: 'travis-melvin',
     initials: 'TM',
     title: '—',
     company: 'UNC Kenan-Flagler Business School',
@@ -183,6 +192,7 @@ export const FEATURED_MENTORS: Mentor[] = [
   },
   {
     name: 'David Sheffer',
+    profileSlug: 'david-sheffer',
     initials: 'DS',
     title: 'Senior Advisor',
     company: 'MyEyeDr.',
@@ -201,6 +211,7 @@ export const FEATURED_MENTORS: Mentor[] = [
   },
   {
     name: 'Drew Nations',
+    profileSlug: 'drew-nations',
     initials: 'DN',
     title: 'Founder & CEO',
     company: 'Engineered Land Solutions',
@@ -219,6 +230,7 @@ export const FEATURED_MENTORS: Mentor[] = [
   },
   {
     name: 'Zach Smith',
+    profileSlug: 'zach-smith',
     initials: 'ZS',
     title: 'Executive Director',
     company: 'Beds for Kids',

@@ -25,13 +25,18 @@ export const COMPANY_LOGO_DOMAINS: Record<string, string> = {
   'Bondway.ai': 'bondway.ai',
   'MyEyeDr.': 'myeyedr.com',
   'Beds for Kids': 'bedsforkids.org',
-  'Keane Capital Management': 'keane.com',
+  // 'Keane Capital Management' is deliberately absent. keane.com returns a hard
+  // 404 from the favicon service, so every visitor made a failing third-party
+  // request and the card rendered a broken logo slot anyway. The firm's real
+  // domain is not something to guess at — attaching the wrong company's mark to
+  // a named person is worse than showing no mark. The card falls back cleanly.
   'Engineered Land Solutions': 'engineeredlandsolutions.com',
   'Wall Street Oasis': 'wallstreetoasis.com',
   'Envoy Capital Advisors': 'envoycapitaladvisors.com',
   'PlugVerse': 'plugverse.com',
   'Columbia Youth Adventurers': 'columbia.edu',
   'BlackGen Capital': 'blackgencapital.com',
+  'McColl Partners': 'mccollpartners.com',
 };
 
 export const SCHOOL_LOGO_DOMAINS: Record<string, string> = {

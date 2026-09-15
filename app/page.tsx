@@ -10,6 +10,7 @@ import HeroPair from '@/components/marketing/HeroPair';
 import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import CredibilityRail from '@/components/marketing/CredibilityRail';
+import SchoolRail from '@/components/marketing/SchoolRail';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
@@ -50,6 +51,8 @@ export default function LandingPage() {
       <IntroSequence />
       <LandingNav />
 
+      <main id="main-content">
+
       {/* Nav watches this to know when the hero has scrolled away */}
       <div id="nav-sentinel" className="absolute top-0 h-20 w-px" aria-hidden="true" />
 
@@ -65,28 +68,42 @@ export default function LandingPage() {
                 className="font-serif text-navy-900 leading-[0.98] tracking-tight mb-7 max-w-3xl"
                 style={{ fontSize: 'clamp(2.6rem, 7vw, 5.2rem)' }}
               >
-                The right mentor<br />
-                can change your<br />
-                trajectory.
+                The Right Mentor<br />
+                Can Change Your<br />
+                Trajectory
               </h1>
 
+              {/*
+                The thesis. Every visitor arrives asking the same question about
+                a mentorship site: "is this just a list of names?" The answer has
+                to be the first thing after the headline, not buried at section
+                four under "The product".
+
+                The accent is otherwise reserved for primary buttons. It carries
+                the five words that answer that question and nothing else, so the
+                emphasis still reads as meaning rather than decoration. #15803d
+                on cream is 4.87:1, which clears AA for body text.
+              */}
               <p className="text-lg sm:text-xl text-gray-500 font-light leading-relaxed max-w-lg mb-10">
-                Find someone who has already done the work you want to do.
-                Mentable helps you set goals together, meet regularly, and keep
-                the relationship moving.
+                Mentable is{' '}
+                <span className="font-medium text-accent">
+                  everything after the introduction
+                </span>
+                . Find someone who has already done the work, then set goals
+                together, meet regularly, and keep it moving.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <Link
-                  href="/signup"
+                  href="/signup?role=mentee"
                   onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_find_your_mentor' })}
-                  className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-medium hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+                  className="group inline-flex items-center gap-2.5 bg-accent text-white px-8 py-4 text-[15px] font-semibold hover:bg-accent-hover hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 >
                   Find your mentor
                   <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/signup"
+                  href="/signup?role=mentor"
                   onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_become_a_mentor' })}
                   className="group tap-target inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
                 >
@@ -107,14 +124,18 @@ export default function LandingPage() {
       <ProblemSection />
 
       {/* ── 03. Mentors ──────────────────────────────────────────────────────── */}
-      <MentorCarousel />
+      {/* Institutions first: they establish authority before the faces arrive. */}
       <CredibilityRail />
+      <MentorCarousel />
+
+      {/* The two rosters belong together: willing to teach, ready to learn.
+          Each is preceded by its own proof rail: employers above the mentors,
+          schools above the students. */}
+      <SchoolRail />
+      <MenteeCarousel />
 
       {/* ── 04. Product ──────────────────────────────────────────────────────── */}
       <ProductDemo />
-
-      {/* ── 05. Students ─────────────────────────────────────────────────────── */}
-      <MenteeCarousel />
 
       {/* ── 06. Trajectory ───────────────────────────────────────────────────── */}
       <TrajectoryViz />
@@ -176,14 +197,33 @@ export default function LandingPage() {
               <p className="text-navy-300 text-[14px] leading-relaxed mb-7">
                 In pilot. We&apos;re building partnerships to fund the first cohort.
               </p>
-              <Link
-                href="/signup"
-                onClick={() => trackLandingEvent('opportunity_fund_clicked')}
-                className="group tap-target inline-flex items-center gap-2 text-sm font-medium text-white hover:text-amber-300 transition-colors border-b border-navy-700 hover:border-amber-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm"
-              >
-                Learn about the Opportunity Fund
-                <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-              </Link>
+              {/*
+                The student's closing ask. The final CTA below is mentor-facing
+                ("Someone helped them get there. Now they're here for you."), so
+                without this the page qualifies a student through nine sections
+                and then spends its last words talking to someone else.
+
+                Ordered ask-then-read: the button is the commitment, the fund
+                link is the lower-commitment alternative for anyone not ready.
+              */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                <Link
+                  href="/signup?role=mentee"
+                  onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'fund_find_your_mentor' })}
+                  className="group inline-flex items-center gap-2.5 bg-accent text-white px-7 py-3.5 text-[15px] font-semibold hover:bg-accent-hover hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
+                >
+                  Find your mentor
+                  <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/signup?role=mentee"
+                  onClick={() => trackLandingEvent('opportunity_fund_clicked')}
+                  className="group tap-target inline-flex items-center gap-2 text-sm font-medium text-white hover:text-amber-300 transition-colors border-b border-navy-700 hover:border-amber-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-sm"
+                >
+                  Learn about the Opportunity Fund
+                  <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
+                </Link>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -217,15 +257,15 @@ export default function LandingPage() {
           </h2>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <Link
-              href="/signup"
+              href="/signup?role=mentee"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_find_your_mentor' })}
-              className="group inline-flex items-center gap-2.5 bg-navy-900 text-white px-8 py-4 text-[15px] font-semibold hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+              className="group inline-flex items-center gap-2.5 bg-accent text-white px-8 py-4 text-[15px] font-semibold hover:bg-accent-hover hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all rounded-xl shadow-sm hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               Find your mentor
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </Link>
             <Link
-              href="/signup"
+              href="/signup?role=mentor"
               onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_i_want_to_mentor' })}
               className="group tap-target inline-flex items-center gap-2 text-navy-700 font-medium hover:text-navy-900 transition-colors py-4 text-[15px] border-b border-gray-200 hover:border-navy-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
             >
@@ -245,6 +285,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </main>
+
       {/* ── Footer ──────────────────────────────────────────────────────────── */}
       <footer className="py-14 px-6 lg:px-10 bg-navy-900">
         <div className="max-w-6xl mx-auto">
@@ -256,8 +298,8 @@ export default function LandingPage() {
           </div>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-navy-800">
             <div className="flex gap-7 text-sm text-navy-300">
-              <Link href="/login" className="hover:text-white transition-colors">Sign in</Link>
-              <Link href="/signup" className="hover:text-white transition-colors">Create account</Link>
+              <Link href="/login" className="tap-target hover:text-white transition-colors">Sign in</Link>
+              <Link href="/signup" className="tap-target hover:text-white transition-colors">Create account</Link>
             </div>
             <p className="text-sm text-navy-400">&copy; 2026 Mentable. All rights reserved.</p>
           </div>

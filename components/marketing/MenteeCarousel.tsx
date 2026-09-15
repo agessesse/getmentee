@@ -9,6 +9,7 @@ import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import CarouselShell from '@/components/marketing/CarouselShell';
+import ProfileCardShell from '@/components/marketing/ProfileCardShell';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 
 // Short school label for the card foot — full name lives in the profile modal.
@@ -58,14 +59,13 @@ function MenteeCard({
       onPointerEnter={() => onHoverChange(true)}
       onPointerLeave={() => onHoverChange(false)}
     >
-      <button
-        onClick={onPreview}
-        tabIndex={interactive ? 0 : -1}
-        onFocus={() => interactive && onHoverChange(true)}
-        onBlur={() => interactive && onHoverChange(false)}
-        className="block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300"
-        style={{ transform: hovered ? 'translateY(-6px) scale(1.025)' : 'none' }}
-        aria-label={`View ${fullName}'s profile`}
+      <ProfileCardShell
+        profileSlug={person.slug}
+        onPreview={onPreview}
+        interactive={interactive}
+        onHoverChange={onHoverChange}
+        hovered={hovered}
+        label={`View ${fullName}'s profile`}
       >
         <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
           {person.image && !imgError ? (
@@ -128,7 +128,7 @@ function MenteeCard({
             </div>
           )}
         </div>
-      </button>
+      </ProfileCardShell>
     </div>
   );
 }
@@ -176,7 +176,7 @@ export default function MenteeCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <Link
-            href="/signup"
+            href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
             className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
           >
