@@ -72,6 +72,7 @@ interface LiveMentorData {
     title: string | null;
     industry: string | null;
     is_verified: boolean;
+    is_founding_mentor: boolean;
   };
   matchScore: number;
   matchReasons: string[];
@@ -453,7 +454,7 @@ export default function DiscoverPage() {
         mentor_profiles (
           bio, expertise_tags, years_experience, weekly_hours,
           rating, review_count, is_available, session_rate,
-          company, title, industry, is_verified
+          company, title, industry, is_verified, is_founding_mentor
         )
       `)
       .eq('role', 'mentor')
@@ -474,7 +475,25 @@ export default function DiscoverPage() {
     setSavedMentors(new Set(savedData?.map((s) => s.mentor_id) ?? []));
 
     type RawMentor = typeof data extends (infer R)[] | null ? R : never;
-    const results: LiveMentorData[] = ((data as RawMentor[]) ?? []).map((m) => {
+
+    // Roster gate. Every mentor row in the database today is a seeded fixture
+    // from scripts/seed-demo.ts — invented people at Goldman, Bain, Blackstone
+    // and so on, written with is_demo = false, which makes them indistinguishable
+    // from a real user. Without this filter a student can send a genuine
+    // mentorship request to someone who does not exist.
+    //
+    // is_demo would be the natural column to filter on, but migration 0018
+    // withholds it from the `authenticated` role, so a client query cannot read
+    // it and widening that grant would mean touching RLS. is_founding_mentor
+    // lives on mentor_profiles, is readable, and is false for every fixture, so
+    // it gates correctly with no data migration and no schema change.
+    // Onboarding a real mentor is one flag.
+    const roster = ((data as RawMentor[]) ?? []).filter((m) => {
+      const mp = m.mentor_profiles as unknown as LiveMentorData['mentor_profiles'] | null;
+      return mp?.is_founding_mentor === true;
+    });
+
+    const results: LiveMentorData[] = roster.map((m) => {
       const mentorBase = {
         id: m.id as string,
         first_name: m.first_name as string,
