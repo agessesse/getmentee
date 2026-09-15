@@ -6,6 +6,14 @@ import { NextResponse, type NextRequest } from 'next/server';
 // /network and /opportunities were in the route group but missing here, so they
 // served 200 to anonymous visitors instead of redirecting.
 // scripts/check-protected-routes.ts fails the build if they diverge again.
+// /mentee and /mentor are public marketing pages, but the protected route
+// group also owns /mentee/[id] and /mentor/[id]. So those two segments are
+// guarded BELOW the segment only: /mentee/<id> needs a session, /mentee itself
+// does not. Verified that neither segment has a bare page under (protected),
+// so opening them exposes nothing. Every other entry below is guarded at the
+// segment and everything under it, unchanged.
+const PROTECTED_SUBPATHS_ONLY = new Set(['/mentee', '/mentor']);
+
 const PROTECTED_PATHS = [
   '/analytics',
   '/dashboard',
@@ -33,8 +41,10 @@ export async function updateSession(request: NextRequest) {
   // the marketing page and /people/* each paid for a round trip whose result
   // was then discarded.
   const pathname = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + '/')
+  const isProtected = PROTECTED_PATHS.some((p) =>
+    PROTECTED_SUBPATHS_ONLY.has(p)
+      ? pathname.startsWith(p + '/')
+      : pathname === p || pathname.startsWith(p + '/')
   );
 
   if (!isProtected) {

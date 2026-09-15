@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import Wordmark from '@/components/ui/Wordmark';
+import { MARKETING_PAGES } from '@/components/marketing/marketing-links';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 
 // Mirrors the page spine: who teaches, who learns, how it works, what you get,
@@ -18,6 +20,7 @@ const LINKS = [
 ];
 
 export default function LandingNav() {
+  const pathname = usePathname();
   const [condensed, setCondensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -71,7 +74,30 @@ export default function LandingNav() {
             width; `condensed` still drives the height and wordmark shrink,
             which is what it is actually good at.
           */}
+          {/*
+            Two link groups, which is why they break at different widths.
+
+            MARKETING_PAGES are destinations and appear from md up. LINKS are
+            anchors into this page's own sections and return at xl, where the
+            row has the width for both. Between 768 and 1279 the section
+            anchors stand down rather than the page nav, because a link that
+            leaves the page is worth more to a stranger than a link that scrolls
+            it. Below md both live in the sheet.
+          */}
           <div className="hidden md:flex items-center gap-5 lg:gap-6">
+            {MARKETING_PAGES.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={pathname === l.href ? 'page' : undefined}
+                className="text-[14px] text-halo-heather hover:text-halo-ink transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="hidden xl:flex items-center gap-5 lg:gap-6">
             {LINKS.map((l) => (
               <a
                 key={l.href}
@@ -123,6 +149,20 @@ export default function LandingNav() {
           className="md:hidden border-t border-halo-rule/70 bg-halo-ivory shadow-lg"
         >
           <ul className="max-w-6xl mx-auto px-6 py-2">
+            {MARKETING_PAGES.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={pathname === l.href ? 'page' : undefined}
+                  className="block py-3 text-[15px] font-medium text-halo-ink border-b border-halo-rule focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+            {/* Divider: destinations above, this page's own sections below. */}
+            <li aria-hidden="true" className="h-2" />
             {LINKS.map((l) => (
               <li key={l.href}>
                 <a
