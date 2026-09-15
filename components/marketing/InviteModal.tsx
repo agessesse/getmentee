@@ -57,15 +57,15 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
       aria-labelledby="invite-modal-title"
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <h2 id="invite-modal-title" className="text-base font-semibold text-navy-900">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-halo-rule">
+          <h2 id="invite-modal-title" className="text-base font-semibold text-halo-ink">
             Invite a mentor
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-navy-900 transition-colors p-1 rounded-lg hover:bg-gray-100"
+            className="text-halo-mist-body hover:text-halo-ink transition-colors p-1 rounded-xl hover:bg-halo-bone"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -73,12 +73,12 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
         </div>
 
         <div className="px-6 py-5 space-y-4">
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-halo-heather leading-relaxed">
             Who helped shape your trajectory? Share this message with someone who would make a great mentor.
           </p>
 
           {/* Preview message */}
-          <div className="bg-gray-50 rounded-xl p-4 text-xs text-gray-700 leading-relaxed whitespace-pre-line font-mono border border-gray-100 max-h-48 overflow-y-auto">
+          <div className="bg-halo-veil rounded-xl p-4 text-xs text-halo-heather leading-relaxed whitespace-pre-line font-mono border border-halo-rule max-h-48 overflow-y-auto">
             {INVITE_MESSAGE}
           </div>
 
@@ -86,7 +86,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
           <div className="flex gap-3">
             <button
               onClick={handleCopy}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:border-navy-300 hover:text-navy-900 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-halo-rule text-sm font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
             >
               {copied ? (
                 <>
@@ -104,7 +104,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
             {typeof navigator !== 'undefined' && 'share' in navigator && (
               <button
                 onClick={handleNativeShare}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-navy-900 text-white text-sm font-medium hover:bg-navy-800 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-halo-purple text-white text-sm font-medium hover:bg-halo-purple-d transition-colors"
               >
                 <Share2 className="w-4 h-4" />
                 Share
@@ -112,7 +112,7 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
             )}
           </div>
 
-          <p className="text-xs text-gray-400 text-center">
+          <p className="text-xs text-halo-mist-body text-center">
             No account required to send the invite. Your contact signs up directly.
           </p>
         </div>

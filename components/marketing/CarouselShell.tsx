@@ -55,8 +55,8 @@ export default function CarouselShell<T>({
       {/* Edge masks — hide the loop seam and imply the row continues past view */}
       {!nativeScroll && (
         <>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 z-10 bg-gradient-to-r from-cream-50 to-transparent" aria-hidden="true" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 z-10 bg-gradient-to-l from-cream-50 to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 z-10 bg-gradient-to-r from-halo-ivory to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 z-10 bg-gradient-to-l from-halo-ivory to-transparent" aria-hidden="true" />
         </>
       )}
 
@@ -107,14 +107,14 @@ export default function CarouselShell<T>({
           style={{ opacity: driveDirection === 0 ? 0 : 0.65 }}
           aria-hidden="true"
         >
-          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-navy-600">
+          <span className="font-ui text-[10px] font-medium uppercase tracking-[0.2em] text-halo-purple-d">
             {driveDirection > 0 ? 'more →' : '← more'}
           </span>
         </div>
       )}
 
       {nativeScroll && (
-        <p className="text-center text-[11px] text-gray-500 font-light mt-1">
+        <p className="text-center text-[11px] text-halo-mist-body font-light mt-1">
           Swipe to explore
         </p>
       )}

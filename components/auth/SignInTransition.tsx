@@ -84,7 +84,7 @@ export default function SignInTransition({ onComplete }: Props) {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        backgroundColor: '#1a1f3a',
+        backgroundColor: '#0A0A0F',
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         transition: phase === 'wipe'
@@ -98,7 +98,7 @@ export default function SignInTransition({ onComplete }: Props) {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, #242b52 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, #2A1160 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -117,8 +117,8 @@ export default function SignInTransition({ onComplete }: Props) {
                 : { left: '50%',  width: '48vw' }),
               height: `${s.h}px`,
               background: isLeft
-                ? 'linear-gradient(to right, transparent 0%, rgba(100,122,196,0.55) 55%, rgba(210,220,255,0.45) 100%)'
-                : 'linear-gradient(to left,  transparent 0%, rgba(100,122,196,0.55) 55%, rgba(210,220,255,0.45) 100%)',
+                ? 'linear-gradient(to right, transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)'
+                : 'linear-gradient(to left,  transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)',
               animationName: isLeft ? 'streak-l' : 'streak-r',
               animationDuration: s.dur,
               animationDelay: s.delay,

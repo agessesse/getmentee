@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="font-body min-h-screen bg-halo-ivory flex flex-col">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-halo-ivory border-b border-halo-rule">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="text-xl font-bold text-navy-900 tracking-tight py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded"
+            className="text-xl font-bold text-halo-ink tracking-tight py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
             Mentable
           </Link>

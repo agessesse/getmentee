@@ -110,7 +110,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-navy-900/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-halo-ink/60 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -118,14 +118,14 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative bg-white w-full sm:max-w-lg sm:rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[92vh] sm:max-h-[88vh] flex flex-col rounded-t-2xl"
+        className="relative bg-white w-full sm:max-w-lg sm:rounded-xl shadow-2xl overflow-hidden z-10 max-h-[92vh] sm:max-h-[88vh] flex flex-col rounded-t-xl"
       >
         {/* Close button */}
         <button
           ref={closeRef}
           onClick={onClose}
           aria-label="Close profile preview"
-          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-500 hover:text-navy-900 transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-1"
+          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-halo-mist-body hover:text-halo-ink transition-colors shadow-sm focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-1"
         >
           <X className="w-4 h-4" />
         </button>
@@ -134,7 +134,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
         <div className="overflow-y-auto">
 
           {/* Headshot with gradient name overlay */}
-          <div className="relative w-full aspect-[4/3] bg-gray-100 flex-none">
+          <div className="relative w-full aspect-[4/3] bg-halo-bone flex-none">
             {headshot ? (
               <Image
                 src={headshot}
@@ -180,7 +180,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11px] font-medium text-navy-700 bg-navy-50 rounded-full px-2.5 py-0.5"
+                    className="text-[11px] font-medium text-halo-heather bg-halo-lav-wash rounded-full px-2.5 py-0.5"
                   >
                     {tag}
                   </span>
@@ -189,22 +189,22 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
             )}
 
             {/* Bio */}
-            <p className="text-gray-600 text-sm leading-relaxed">{bio}</p>
+            <p className="text-halo-heather text-sm leading-relaxed">{bio}</p>
 
             {/* Statement section */}
             {statement && statementSectionLabel && (
-              <div className="mt-5 pt-5 border-t border-gray-100">
+              <div className="mt-5 pt-5 border-t border-halo-rule">
                 <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                  <p className="text-[10px] font-semibold text-navy-600 uppercase tracking-[0.18em]">
+                  <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
                     {statementSectionLabel}
                   </p>
                   {statementLabel && (
-                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.08em] border border-gray-200 rounded-full px-1.5 py-0.5">
+                    <span className="font-ui text-[10px] font-medium text-halo-mist-body uppercase tracking-[0.08em] border border-halo-rule rounded-full px-1.5 py-0.5">
                       {statementLabel}
                     </span>
                   )}
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed italic">
+                <p className="text-halo-heather text-sm leading-relaxed italic">
                   &ldquo;{statement}&rdquo;
                 </p>
               </div>
@@ -216,7 +216,7 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                 href={linkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-5 text-sm font-medium text-gray-500 hover:text-[#0A66C2] transition-colors"
+                className="inline-flex items-center gap-2 mt-5 text-sm font-medium text-halo-mist-body hover:text-[#0A66C2] transition-colors"
               >
                 <LinkedInIcon className="w-4 h-4 flex-none" />
                 View on LinkedIn

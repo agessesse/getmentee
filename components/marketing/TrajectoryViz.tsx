@@ -153,19 +153,19 @@ export default function TrajectoryViz() {
 
   return (
     <section
-      className="py-20 sm:py-24 px-6 lg:px-10 bg-navy-900 overflow-hidden"
+      className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep overflow-hidden"
       aria-labelledby="trajectory-heading"
     >
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
 
           <div>
-            <p className="text-[11px] font-semibold text-navy-400 uppercase tracking-[0.22em] mb-5">
+            <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.22em] mb-5">
               The difference
             </p>
             <h2
               id="trajectory-heading"
-              className="font-serif text-white leading-[1.05] mb-4"
+              className="font-display text-white leading-[1.05] mb-4"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
               What changes when<br />someone has done it before.
@@ -175,7 +175,7 @@ export default function TrajectoryViz() {
                 node's note, so nothing below it ever shifts. */}
             <div className="min-h-[62px]">
               <p
-                className="text-navy-400 font-light text-[14px] transition-opacity duration-200"
+                className="text-halo-lavender font-light text-[14px] transition-opacity duration-200"
                 style={{ opacity: active ? 0 : 1 }}
               >
                 {coarse
@@ -183,14 +183,14 @@ export default function TrajectoryViz() {
                   : 'Move across the path to see what changes.'}
               </p>
               <p
-                className="text-navy-200 font-light text-[14px] -mt-[21px] transition-opacity duration-200"
+                className="text-halo-lavender font-light text-[14px] -mt-[21px] transition-opacity duration-200"
                 style={{ opacity: active ? 1 : 0 }}
               >
                 {active?.note ?? ' '}
               </p>
             </div>
 
-            <p className="text-[11px] text-navy-300 font-light mt-6 max-w-xs leading-relaxed">
+            <p className="text-[11px] text-halo-lavender font-light mt-6 max-w-xs leading-relaxed">
               Illustrative. Mentorship changes what is reachable. It does not
               guarantee an outcome.
             </p>
@@ -217,20 +217,20 @@ export default function TrajectoryViz() {
           >
             <defs>
               <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stopColor="#5265b0" />
-                <stop offset="100%" stopColor="#dde3f5" />
+                <stop offset="0%" stopColor="#D9CFFB" />
+                <stop offset="100%" stopColor="#FBFAF8" />
               </linearGradient>
             </defs>
 
             {/* Unmentored baseline — always visible, deliberately inert */}
             <path
               d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
-              stroke="#2d3668"
+              stroke="#5B2BD6"
               strokeWidth={1.5 * k}
               strokeDasharray="5 6"
               fill="none"
             />
-            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#879bd3" fontSize={11 * k} fontWeight="500">
+            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#D9CFFB" fontSize={11 * k} fontWeight="500">
               without mentorship
             </text>
 
@@ -258,13 +258,13 @@ export default function TrajectoryViz() {
 
             {/* Origin — the student */}
             <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
-            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#879bd3" fontSize={11 * k} fontWeight="600">
+            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#D9CFFB" fontSize={11 * k} fontWeight="600">
               You
             </text>
 
             {/* The mentor enters as the curve lifts */}
             <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
-              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#1a1f3a" stroke="#ffffff" strokeWidth={2 * k} />
+              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#4717CA" stroke="#ffffff" strokeWidth={2 * k} />
               <text x={mentorPt.x} y={mentorPt.y - 16 * k} textAnchor="middle" fill="#ffffff" fontSize={11 * k} fontWeight="600">
                 Mentor
               </text>
@@ -298,7 +298,7 @@ export default function TrajectoryViz() {
                     cx={p.x}
                     cy={p.y}
                     r={(isActive ? 7 : 4.5) * k}
-                    fill={isActive ? '#ffffff' : '#a4b3de'}
+                    fill={isActive ? '#ffffff' : '#D9CFFB'}
                     style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
                   />
                   {(!narrow || i === 0 || i === NODES.length - 1) && (
@@ -306,7 +306,7 @@ export default function TrajectoryViz() {
                       x={p.x}
                       y={p.y - 16 * k}
                       textAnchor={narrow && i === NODES.length - 1 ? 'end' : 'middle'}
-                      fill={isActive ? '#ffffff' : '#879bd3'}
+                      fill={isActive ? '#ffffff' : '#D9CFFB'}
                       fontSize={10.5 * k}
                       fontWeight="600"
                       style={{ pointerEvents: 'none' }}

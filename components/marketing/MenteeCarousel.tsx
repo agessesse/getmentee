@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
@@ -11,6 +10,7 @@ import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/
 import CarouselShell from '@/components/marketing/CarouselShell';
 import ProfileCardShell from '@/components/marketing/ProfileCardShell';
 import { trackLandingEvent } from '@/lib/landing-analytics';
+import CtaButton from '@/components/marketing/CtaButton';
 
 // Short school label for the card foot — full name lives in the profile modal.
 function shortSchool(person: SourcedNearPeer): string | null {
@@ -67,7 +67,7 @@ function MenteeCard({
         hovered={hovered}
         label={`View ${fullName}'s profile`}
       >
-        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
+        <div className="relative w-full aspect-[3/4] bg-halo-bone overflow-hidden rounded-xl mb-3 shadow-sm">
           {person.image && !imgError ? (
             <Image
               src={person.image}
@@ -85,20 +85,20 @@ function MenteeCard({
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-navy-800">
+            <div className="w-full h-full flex items-center justify-center bg-halo-black">
               <span className="text-3xl font-bold text-white select-none">{initials}</span>
             </div>
           )}
 
           {/* Mirror of the mentor card: what they want to learn, not what they've done */}
           <div
-            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/95 via-navy-900/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
+            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-halo-black/95 via-halo-black/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
             style={{
               opacity: hovered ? 1 : 0,
               transform: hovered ? 'translateY(0)' : 'translateY(8px)',
             }}
           >
-            <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
+            <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
               Learning about
             </p>
             {person.interestTags.slice(0, 2).map((tag) => (
@@ -115,8 +115,8 @@ function MenteeCard({
 
         {/* Fixed height keeps every card's baseline aligned regardless of name length */}
         <div className="px-0.5 h-[52px]">
-          <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{fullName}</p>
-          <p className="text-[11px] text-gray-500 mt-1 font-light">
+          <p className="font-semibold text-halo-ink text-[14px] leading-tight line-clamp-1">{fullName}</p>
+          <p className="text-[11px] text-halo-mist-body mt-1 font-light">
             {school}
             {school && gradYear && ' · '}
             {gradYear}
@@ -138,14 +138,14 @@ export default function MenteeCarousel() {
 
   return (
     <>
-      <section className="py-16 sm:py-20 bg-cream-50 border-t border-gray-100" aria-labelledby="mentees-heading">
+      <section className="py-16 sm:py-20 bg-halo-ivory border-t border-halo-rule" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-4">
+          <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-4">
             Ready to learn
           </p>
           <h2
             id="mentees-heading"
-            className="font-serif text-navy-900 leading-[1.05]"
+            className="font-display text-halo-ink leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
             Students who come prepared<br className="hidden sm:block" />{' '}
@@ -175,14 +175,14 @@ export default function MenteeCarousel() {
         />
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
-          <Link
+          <CtaButton
             href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
-            className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+            variant="secondary"
+            size="md"
           >
             Create your profile
-            <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-          </Link>
+          </CtaButton>
         </div></div>
       </section>
 

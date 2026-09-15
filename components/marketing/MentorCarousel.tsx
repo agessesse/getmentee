@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
@@ -11,6 +10,7 @@ import ProfileCardShell from '@/components/marketing/ProfileCardShell';
 import LogoChip from '@/components/ui/LogoChip';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import { trackLandingEvent } from '@/lib/landing-analytics';
+import CtaButton from '@/components/marketing/CtaButton';
 
 function MentorCard({
   mentor,
@@ -53,7 +53,7 @@ function MentorCard({
         hovered={hovered}
         label={`View ${mentor.name}'s mentor profile`}
       >
-        <div className="relative w-full aspect-[3/4] bg-gray-100 overflow-hidden rounded-2xl mb-3 shadow-sm">
+        <div className="relative w-full aspect-[3/4] bg-halo-bone overflow-hidden rounded-xl mb-3 shadow-sm">
           {!imgError ? (
             <Image
               src={mentor.headshot}
@@ -81,13 +81,13 @@ function MentorCard({
 
           {/* Reveal: the reason to talk to this person, not their résumé */}
           <div
-            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/95 via-navy-900/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
+            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-halo-black/95 via-halo-black/80 to-transparent px-3.5 pb-3.5 pt-9 motion-safe:transition-all motion-safe:duration-300"
             style={{
               opacity: hovered ? 1 : 0,
               transform: hovered ? 'translateY(0)' : 'translateY(8px)',
             }}
           >
-            <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
+            <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
               Can help with
             </p>
             {(mentor.helpsWith ?? []).slice(0, 2).map((tag) => (
@@ -104,12 +104,12 @@ function MentorCard({
 
         {/* Fixed height keeps every card's baseline aligned regardless of title length */}
         <div className="px-0.5 h-[76px]">
-          <p className="font-semibold text-navy-900 text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
+          <p className="font-semibold text-halo-ink text-[14px] leading-tight line-clamp-1">{mentor.name}</p>
           {(showTitle || showCompany) && (
-            <p className="text-[11px] text-gray-500 mt-1 leading-snug font-light line-clamp-2">
+            <p className="text-[11px] text-halo-mist-body mt-1 leading-snug font-light line-clamp-2">
               {showTitle && mentor.title}
               {showTitle && showCompany && ' · '}
-              {showCompany && <span className="text-navy-600 font-medium">{mentor.company}</span>}
+              {showCompany && <span className="text-halo-purple-d font-medium">{mentor.company}</span>}
             </p>
           )}
           {companyLogo && (
@@ -128,14 +128,14 @@ export default function MentorCarousel() {
 
   return (
     <>
-      <section className="py-16 sm:py-20 bg-cream-50" aria-labelledby="mentor-carousel-heading">
+      <section className="py-16 sm:py-20 bg-halo-ivory" aria-labelledby="mentor-carousel-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="text-[11px] font-semibold text-navy-600 uppercase tracking-[0.22em] mb-4">
+          <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-4">
             Willing to teach
           </p>
           <h2
             id="mentor-carousel-heading"
-            className="font-serif text-navy-900 leading-[1.05]"
+            className="font-display text-halo-ink leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
             People who walked the path first,<br className="hidden sm:block" />{' '}
@@ -165,14 +165,14 @@ export default function MentorCarousel() {
         />
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
-          <Link
+          <CtaButton
             href="/signup?role=mentee"
             onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'meet_the_mentors' })}
-            className="group tap-target inline-flex items-center gap-2 text-[15px] font-medium text-navy-700 hover:text-navy-900 transition-colors border-b border-gray-200 hover:border-navy-400 pb-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-sm"
+            variant="secondary"
+            size="md"
           >
             Meet the mentors
-            <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
-          </Link>
+          </CtaButton>
         </div></div>
       </section>
 

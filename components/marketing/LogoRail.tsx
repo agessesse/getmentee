@@ -47,7 +47,7 @@ function Logo({ item }: { item: RailItem }) {
         does, which is how logo walls normally handle mixed sources.
       */}
       {!failed && (
-        <span className="flex-none h-10 w-10 flex items-center justify-center rounded-md border border-gray-200 bg-white p-1">
+        <span className="flex-none h-10 w-10 flex items-center justify-center rounded-xl border border-halo-rule bg-white p-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://www.google.com/s2/favicons?domain=${item.domain}&sz=128`}
@@ -60,7 +60,7 @@ function Logo({ item }: { item: RailItem }) {
           />
         </span>
       )}
-      <span className="text-[14px] font-medium text-navy-900 whitespace-nowrap leading-none">
+      <span className="text-[14px] font-medium text-halo-ink whitespace-nowrap leading-none">
         {label}
       </span>
     </span>
@@ -98,14 +98,14 @@ export default function LogoRail({
   const track = [...oneCopy, ...oneCopy];
 
   return (
-    <div className="py-9 border-y border-gray-100 bg-white overflow-hidden">
-      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.18em] text-center mb-6 px-6">
+    <div className="py-9 border-y border-halo-rule bg-halo-ivory overflow-hidden">
+      <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] text-center mb-6 px-6">
         {eyebrow}
       </p>
 
       <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-white to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-20 z-10 bg-gradient-to-r from-halo-ivory to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-20 z-10 bg-gradient-to-l from-halo-ivory to-transparent" />
         <div
           className={
             direction === 'right'

@@ -58,7 +58,7 @@ const STREAKS = [
 // streaks → energy lines race toward center
 // form    → wordmark materialises from blur
 // hold    → wordmark fully resolved, brief pause
-// wipe    → navy curtain pulls upward, revealing the page
+// wipe    → the curtain pulls upward, revealing the page
 // done    → component unmounted
 type Phase = 'pre' | 'streaks' | 'form' | 'hold' | 'wipe' | 'done';
 
@@ -128,7 +128,7 @@ export default function IntroSequence() {
   const definitionShown = phase === 'hold' || phase === 'wipe';
 
   return (
-    // Navy curtain — translateY(-100%) wipes it upward on 'wipe' phase
+    // The curtain — translateY(-100%) wipes it upward on 'wipe' phase
     <div
       aria-hidden="true"
       role="presentation"
@@ -136,7 +136,7 @@ export default function IntroSequence() {
         position: 'fixed',
         inset: 0,
         zIndex: 200,
-        backgroundColor: '#1a1f3a', // navy-900 — canonical brand dark
+        backgroundColor: '#0A0A0F', // halo.black — the structural dark surface
         overflow: 'hidden',
         transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
         transition: phase === 'wipe'
@@ -150,7 +150,7 @@ export default function IntroSequence() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, #242b52 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, #2A1160 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -171,8 +171,8 @@ export default function IntroSequence() {
                 : { left: '50%',  width: '48vw' }),
               height: `${s.h}px`,
               background: isLeft
-                ? 'linear-gradient(to right, transparent 0%, rgba(100,122,196,0.55) 55%, rgba(210,220,255,0.45) 100%)'
-                : 'linear-gradient(to left,  transparent 0%, rgba(100,122,196,0.55) 55%, rgba(210,220,255,0.45) 100%)',
+                ? 'linear-gradient(to right, transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)'
+                : 'linear-gradient(to left,  transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)',
               animationName: isLeft ? 'streak-l' : 'streak-r',
               animationDuration: s.dur,
               animationDelay: s.delay,
@@ -225,7 +225,7 @@ export default function IntroSequence() {
         <span
           style={{
             marginTop: 'clamp(12px, 2vw, 20px)',
-            color: '#a4b3de',
+            color: '#D9CFFB',
             fontSize: 'clamp(0.72rem, 2.1vw, 0.95rem)',
             fontWeight: 300,
             letterSpacing: '0.16em',

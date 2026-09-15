@@ -44,7 +44,7 @@ export function LoginForm() {
   };
 
   const field =
-    'w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500';
+    'w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body';
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -55,15 +55,15 @@ export function LoginForm() {
           pages were set entirely in the sans, which made them read as a
           different product. One serif element per page is enough to connect them.
         */}
-        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-1.5">
+        <h1 className="font-display text-halo-ink text-[2rem] leading-tight mb-1.5">
           Welcome back
         </h1>
-        <p className="text-gray-600 text-sm">Sign in to your Mentable account.</p>
+        <p className="text-halo-heather text-sm">Sign in to your Mentable account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-halo-ink mb-1.5">
             Email address
           </label>
           <input
@@ -81,12 +81,12 @@ export function LoginForm() {
 
         <div>
           <div className="flex items-baseline justify-between mb-1.5">
-            <label htmlFor="password" className="block text-sm font-medium text-navy-900">
+            <label htmlFor="password" className="block text-sm font-medium text-halo-ink">
               Password
             </label>
             <Link
               href="/forgot-password"
-              className="tap-target text-[13px] text-navy-700 hover:text-navy-900 hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+              className="tap-target text-[13px] text-halo-heather hover:text-halo-ink hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
             >
               Forgot password?
             </Link>
@@ -112,7 +112,7 @@ export function LoginForm() {
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-pressed={showPassword}
-              className="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-500 hover:text-navy-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded-r-xl"
+              className="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-halo-mist-body hover:text-halo-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded-r-xl"
             >
               {showPassword ? (
                 <EyeOff className="w-4 h-4" aria-hidden="true" />
@@ -140,7 +140,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-accent text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-accent-hover disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="w-full bg-halo-purple text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-halo-purple-d disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
         >
           {loading ? (
             <>
@@ -155,11 +155,11 @@ export function LoginForm() {
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-halo-heather">
           Don&apos;t have an account?{' '}
           <Link
             href="/signup"
-            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+            className="tap-target inline-block text-halo-heather font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
             Sign up
           </Link>
@@ -167,29 +167,29 @@ export function LoginForm() {
       </form>
 
       {SHOW_DEMO && (
-        <div className="mt-8 p-5 bg-gray-50 rounded-2xl border border-gray-100">
-          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+        <div className="mt-8 p-5 bg-halo-veil rounded-xl border border-halo-rule">
+          <p className="text-xs font-semibold text-halo-heather uppercase tracking-wider mb-3">
             Demo accounts
           </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => fillDemo('mentee')}
-              className="px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600"
+              className="px-4 py-3 rounded-xl border border-halo-rule bg-white text-sm text-halo-heather font-medium hover:border-halo-purple hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             >
-              <div className="text-xs text-gray-600 mb-0.5">Mentee view</div>
+              <div className="text-xs text-halo-heather mb-0.5">Mentee view</div>
               Jordan Taylor
             </button>
             <button
               type="button"
               onClick={() => fillDemo('mentor')}
-              className="px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-navy-700 font-medium hover:border-navy-300 hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600"
+              className="px-4 py-3 rounded-xl border border-halo-rule bg-white text-sm text-halo-heather font-medium hover:border-halo-purple hover:shadow-sm transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             >
-              <div className="text-xs text-gray-600 mb-0.5">Mentor view</div>
+              <div className="text-xs text-halo-heather mb-0.5">Mentor view</div>
               Alex Rivera
             </button>
           </div>
-          <p className="text-xs text-gray-600 mt-3">
+          <p className="text-xs text-halo-heather mt-3">
             Password for both: <span className="font-mono font-medium">Demo1234!</span>
           </p>
         </div>

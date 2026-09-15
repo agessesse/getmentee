@@ -60,7 +60,7 @@ export default function HeroPair() {
         >
           <line
             x1="150" y1="176" x2="238" y2="248"
-            stroke={hover ? '#5265b0' : '#c0cbe9'}
+            stroke={hover ? '#785AF7' : '#D9CFFB'}
             strokeWidth={hover ? 1.8 : 1}
             strokeDasharray="4 5"
             style={{ transition: 'stroke 300ms ease, stroke-width 300ms ease' }}
@@ -78,7 +78,7 @@ export default function HeroPair() {
               onFocus={() => setHover(card.id)}
               onBlur={() => setHover(null)}
               aria-label={`View ${card.name}'s profile`}
-              className={`${card.box} rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2`}
+              className={`${card.box} rounded-xl overflow-hidden shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2`}
               style={{ transform: active ? 'scale(1.04) rotate(0deg)' : undefined, zIndex: active ? 20 : 10 }}
             >
               {card.photo && (
@@ -93,7 +93,7 @@ export default function HeroPair() {
                 />
               )}
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/85 to-transparent px-3 pb-3 pt-14">
-                <p className="text-[10px] font-semibold text-white uppercase tracking-[0.18em]">
+                <p className="font-ui text-[10px] font-semibold text-white uppercase tracking-[0.18em]">
                   {card.eyebrow}
                 </p>
                 <p className="text-[12px] font-bold text-white leading-tight mt-0.5">{card.name}</p>
@@ -103,7 +103,7 @@ export default function HeroPair() {
                   className="motion-safe:transition-all motion-safe:duration-300 overflow-hidden"
                   style={{ maxHeight: active ? 56 : 0, opacity: active ? 1 : 0, marginTop: active ? 8 : 0 }}
                 >
-                  <p className="text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1">
+                  <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1">
                     {card.revealLabel}
                   </p>
                   {card.reveal.map((t) => (

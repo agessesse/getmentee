@@ -11,16 +11,16 @@ import Wordmark from '@/components/ui/Wordmark';
  */
 export default function SiteFooter() {
   return (
-    <footer className="py-14 px-6 lg:px-10 bg-navy-900">
+    <footer className="py-14 px-6 lg:px-10 bg-halo-black">
       <div className="max-w-6xl mx-auto">
         <div className="mb-9">
           <Wordmark size="lg" className="text-white" />
-          <p className="text-navy-300 font-light mt-2 max-w-xs text-sm leading-relaxed">
+          <p className="text-halo-lavender font-light mt-2 max-w-xs text-sm leading-relaxed">
             Find someone worth learning from. Become someone worth mentoring.
           </p>
         </div>
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-navy-800">
-          <div className="flex gap-7 text-sm text-navy-300">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-halo-deep-rule">
+          <div className="flex gap-7 text-sm text-halo-lavender">
             <Link href="/login" className="tap-target hover:text-white transition-colors">
               Sign in
             </Link>
@@ -28,7 +28,7 @@ export default function SiteFooter() {
               Create account
             </Link>
           </div>
-          <p className="text-sm text-navy-400">&copy; 2026 Mentable. All rights reserved.</p>
+          <p className="text-sm text-halo-lavender">&copy; 2026 Mentable. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -58,8 +58,8 @@ export function SignupForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-2">Account created!</h1>
-        <p className="text-gray-600 text-sm">Check your email to confirm, then sign in.</p>
+        <h1 className="font-display text-halo-ink text-[2rem] leading-tight mb-2">Account created!</h1>
+        <p className="text-halo-heather text-sm">Check your email to confirm, then sign in.</p>
       </div>
     );
   }
@@ -68,23 +68,23 @@ export function SignupForm() {
     return (
       <div className="w-full max-w-lg mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="font-serif text-navy-900 text-[2.4rem] leading-tight mb-3">Join Mentable</h1>
-          <p className="text-gray-600">Are you looking for guidance, or offering it?</p>
+          <h1 className="font-display text-halo-ink text-[2.4rem] leading-tight mb-3">Join Mentable</h1>
+          <p className="text-halo-heather">Are you looking for guidance, or offering it?</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
             onClick={() => handleRoleSelect('mentee')}
-            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
+            className="group relative p-7 rounded-xl border-2 border-halo-rule hover:border-halo-purple hover:shadow-md transition-all text-left"
           >
-            <div className="w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-100 transition-colors">
-              <GraduationCap className="w-6 h-6 text-navy-700" aria-hidden="true" />
+            <div className="w-12 h-12 bg-halo-lav-wash rounded-xl flex items-center justify-center mb-5 group-hover:bg-halo-lav-wash transition-colors">
+              <GraduationCap className="w-6 h-6 text-halo-heather" aria-hidden="true" />
             </div>
-            <h2 className="text-lg font-bold text-navy-900 mb-2">Find a Mentor</h2>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <h2 className="text-lg font-bold text-halo-ink mb-2">Find a Mentor</h2>
+            <p className="text-sm text-halo-heather leading-relaxed">
               Connect with professionals at top firms who can guide your career.
             </p>
-            <span className="mt-5 inline-flex items-center gap-1.5 bg-accent text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-accent-hover transition-colors">
+            <span className="mt-5 inline-flex items-center gap-1.5 bg-halo-purple text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-halo-purple-d transition-colors">
               Get started
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </span>
@@ -92,27 +92,27 @@ export function SignupForm() {
 
           <button
             onClick={() => handleRoleSelect('mentor')}
-            className="group relative p-7 rounded-2xl border-2 border-gray-200 hover:border-navy-600 hover:shadow-md transition-all text-left"
+            className="group relative p-7 rounded-xl border-2 border-halo-rule hover:border-halo-purple hover:shadow-md transition-all text-left"
           >
-            <div className="w-12 h-12 bg-navy-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-navy-100 transition-colors">
-              <Briefcase className="w-6 h-6 text-navy-700" aria-hidden="true" />
+            <div className="w-12 h-12 bg-halo-lav-wash rounded-xl flex items-center justify-center mb-5 group-hover:bg-halo-lav-wash transition-colors">
+              <Briefcase className="w-6 h-6 text-halo-heather" aria-hidden="true" />
             </div>
-            <h2 className="text-lg font-bold text-navy-900 mb-2">Become a Mentor</h2>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <h2 className="text-lg font-bold text-halo-ink mb-2">Become a Mentor</h2>
+            <p className="text-sm text-halo-heather leading-relaxed">
               Give back to the next generation. Share your experience and open doors.
             </p>
-            <span className="mt-5 inline-flex items-center gap-1.5 bg-accent text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-accent-hover transition-colors">
+            <span className="mt-5 inline-flex items-center gap-1.5 bg-halo-purple text-white text-sm font-semibold px-4 py-2.5 rounded-xl group-hover:bg-halo-purple-d transition-colors">
               Apply now
               <ArrowRight className="w-4 h-4 arrow-slide" aria-hidden="true" />
             </span>
           </button>
         </div>
 
-        <p className="text-center text-sm text-gray-600 mt-8">
+        <p className="text-center text-sm text-halo-heather mt-8">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+            className="tap-target inline-block text-halo-heather font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
             Sign in
           </Link>
@@ -126,21 +126,21 @@ export function SignupForm() {
       <div className="mb-8">
         <button
           onClick={() => setStep('role')}
-          className="text-sm text-gray-600 hover:text-navy-900 transition-colors mb-6 flex items-center gap-1 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+          className="text-sm text-halo-heather hover:text-halo-ink transition-colors mb-6 flex items-center gap-1 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
         >
           ← Back
         </button>
-        <div className="inline-flex items-center gap-2 bg-navy-50 text-navy-700 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-navy-100">
+        <div className="inline-flex items-center gap-2 bg-halo-lav-wash text-halo-heather text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-halo-rule">
           {role === 'mentee' ? <GraduationCap className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
           {role === 'mentee' ? 'Looking for a mentor' : 'Becoming a mentor'}
         </div>
-        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight">Create your account</h1>
+        <h1 className="font-display text-halo-ink text-[2rem] leading-tight">Create your account</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-navy-900 mb-1.5">
+            <label htmlFor="firstName" className="block text-sm font-medium text-halo-ink mb-1.5">
               First name
             </label>
             <input
@@ -152,11 +152,11 @@ export function SignupForm() {
               required
               placeholder="Jordan"
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
+              className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
             />
           </div>
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-navy-900 mb-1.5">
+            <label htmlFor="lastName" className="block text-sm font-medium text-halo-ink mb-1.5">
               Last name
             </label>
             <input
@@ -168,13 +168,13 @@ export function SignupForm() {
               required
               placeholder="Taylor"
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
+              className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-halo-ink mb-1.5">
             Email address
           </label>
           <input
@@ -186,12 +186,12 @@ export function SignupForm() {
             required
             placeholder="you@university.edu"
             disabled={loading}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
+            className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="password" className="block text-sm font-medium text-halo-ink mb-1.5">
             Password
           </label>
           <input
@@ -204,7 +204,7 @@ export function SignupForm() {
             placeholder="Min. 8 characters"
             disabled={loading}
             minLength={8}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
+            className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
           />
         </div>
 
@@ -217,7 +217,7 @@ export function SignupForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-accent text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-accent-hover disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="w-full bg-halo-purple text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-halo-purple-d disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
         >
           {loading ? (
             <>
@@ -232,11 +232,11 @@ export function SignupForm() {
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-halo-heather">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+            className="tap-target inline-block text-halo-heather font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
             Sign in
           </Link>

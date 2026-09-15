@@ -34,17 +34,17 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="w-full max-w-md mx-auto text-center">
-        <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 mb-5">
-          <MailCheck className="w-5 h-5 text-accent" aria-hidden="true" />
+        <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-halo-lav-wash mb-5">
+          <MailCheck className="w-5 h-5 text-halo-purple-d" aria-hidden="true" />
         </span>
-        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-3">Check your email</h1>
-        <p className="text-gray-600 text-sm leading-relaxed mb-8">
-          If an account exists for <span className="font-medium text-navy-900">{email}</span>,
+        <h1 className="font-display text-halo-ink text-[2rem] leading-tight mb-3">Check your email</h1>
+        <p className="text-halo-heather text-sm leading-relaxed mb-8">
+          If an account exists for <span className="font-medium text-halo-ink">{email}</span>,
           we&apos;ve sent a link to reset the password. It expires in an hour.
         </p>
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-sm font-medium text-navy-700 hover:text-navy-900 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+          className="inline-flex items-center gap-2 text-sm font-medium text-halo-heather hover:text-halo-ink py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           Back to sign in
@@ -56,17 +56,17 @@ export function ForgotPasswordForm() {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="mb-8">
-        <h1 className="font-serif text-navy-900 text-[2rem] leading-tight mb-1.5">
+        <h1 className="font-display text-halo-ink text-[2rem] leading-tight mb-1.5">
           Reset your password
         </h1>
-        <p className="text-gray-600 text-sm">
+        <p className="text-halo-heather text-sm">
           Enter the address you signed up with and we&apos;ll send you a link.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="reset-email" className="block text-sm font-medium text-navy-900 mb-1.5">
+          <label htmlFor="reset-email" className="block text-sm font-medium text-halo-ink mb-1.5">
             Email address
           </label>
           <input
@@ -78,7 +78,7 @@ export function ForgotPasswordForm() {
             placeholder="you@example.com"
             disabled={loading}
             autoComplete="email"
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent transition bg-white placeholder-gray-500"
+            className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
           />
         </div>
 
@@ -94,7 +94,7 @@ export function ForgotPasswordForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-accent text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-accent-hover disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="w-full bg-halo-purple text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-halo-purple-d disabled:bg-gray-300 transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
         >
           {loading ? (
             <>
@@ -109,11 +109,11 @@ export function ForgotPasswordForm() {
           )}
         </button>
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-halo-heather">
           Remembered it?{' '}
           <Link
             href="/login"
-            className="tap-target inline-block text-navy-700 font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-600 rounded"
+            className="tap-target inline-block text-halo-heather font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
             Sign in
           </Link>

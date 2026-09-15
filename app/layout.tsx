@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
-import { DM_Sans, Instrument_Serif } from 'next/font/google';
+import {
+  DM_Sans,
+  Instrument_Serif,
+  Newsreader,
+  IBM_Plex_Sans,
+  Space_Grotesk,
+} from 'next/font/google';
 
+// ── The old system. Still loaded because the signed-in portal renders in it:
+// the <body> below carries `font-sans`, which every protected route inherits.
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
@@ -14,6 +22,35 @@ const instrumentSerif = Instrument_Serif({
   weight: '400',
   variable: '--font-instrument-serif',
   display: 'swap',
+});
+
+// ── Halo, for the marketing pages. preload is off on all three: the portal is
+// the larger surface and never renders any of them, so preloading would cost
+// every signed-in page three font fetches it has no use for. Marketing picks
+// them up through font-display / font-body / font-ui.
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal'], // the italic is not part of the system
+  variable: '--font-newsreader',
+  display: 'swap',
+  preload: false,
+});
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex',
+  display: 'swap',
+  preload: false,
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-grotesk',
+  display: 'swap',
+  preload: false,
 });
 
 // Absolute-URL base for canonicals and OG/Twitter images. Without it Next
@@ -49,7 +86,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable}`}>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${plexSans.variable} ${spaceGrotesk.variable}`}
+    >
       <body className="bg-cream-50 text-navy-900 font-sans">
         {/*
           Keyboard and screen-reader users had to tab through the entire nav on

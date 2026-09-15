@@ -41,7 +41,7 @@ export default function ProfileCardShell({
     onFocus: () => interactive && onHoverChange(true),
     onBlur: () => interactive && onHoverChange(false),
     className:
-      'block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 rounded-2xl motion-safe:transition-transform motion-safe:duration-300',
+      'block w-full text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2 rounded-xl motion-safe:transition-transform motion-safe:duration-300',
     style: { transform: hovered ? 'translateY(-6px) scale(1.025)' : 'none' },
   };
 

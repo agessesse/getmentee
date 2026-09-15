@@ -27,29 +27,29 @@ export default function HeroReveal() {
   const shown = (n: number) => step >= n;
 
   return (
-    <div className="mb-9 pb-7 border-b border-gray-200/80 max-w-lg">
+    <div className="mb-9 pb-7 border-b border-halo-rule/80 max-w-lg">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
         <span
-          className="font-serif text-navy-900 text-[26px] sm:text-[30px] leading-none motion-safe:transition-all motion-safe:duration-500"
+          className="font-display text-halo-ink text-[26px] sm:text-[30px] leading-none motion-safe:transition-all motion-safe:duration-500"
           style={{ opacity: shown(1) ? 1 : 0, transform: shown(1) ? 'none' : 'translateY(4px)' }}
         >
           Mentable
         </span>
         <span
-          className="text-gray-500 text-sm font-light motion-safe:transition-opacity motion-safe:duration-500"
+          className="text-halo-mist-body text-sm font-light motion-safe:transition-opacity motion-safe:duration-500"
           style={{ opacity: shown(2) ? 1 : 0 }}
         >
           {BRAND_PRONUNCIATION}
         </span>
         <span
-          className="text-gray-500 text-sm italic font-light motion-safe:transition-opacity motion-safe:duration-500"
+          className="text-halo-mist-body text-sm italic font-light motion-safe:transition-opacity motion-safe:duration-500"
           style={{ opacity: shown(2) ? 1 : 0 }}
         >
           adjective
         </span>
       </div>
 
-      <p className="text-navy-700 text-[15px] font-light flex flex-wrap gap-x-1.5">
+      <p className="text-halo-heather text-[15px] font-light flex flex-wrap gap-x-1.5">
         {TRAITS.map((trait, i) => (
           <span
             key={trait}
