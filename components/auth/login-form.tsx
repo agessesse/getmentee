@@ -168,7 +168,7 @@ export function LoginForm() {
 
       {SHOW_DEMO && (
         <div className="mt-8 p-5 bg-halo-veil rounded-xl border border-halo-rule">
-          <p className="text-xs font-semibold text-halo-heather uppercase tracking-wider mb-3">
+          <p className="font-ui text-[10px] font-semibold text-halo-heather uppercase tracking-[0.12em] mb-3">
             Demo accounts
           </p>
           <div className="grid grid-cols-2 gap-2">

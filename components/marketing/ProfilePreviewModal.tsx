@@ -91,8 +91,21 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     // quotation. The quotes and the first person are now reserved for the
     // 'In their words' case, which is the only one a mentor has approved.
     const inTheirWords = m.whyLabel === 'In their words';
-    statementSectionLabel = inTheirWords ? 'Why I mentor' : 'Why they mentor';
-    statementLabel = inTheirWords ? null : 'Mentable\u2019s words, not theirs';
+    // "Why they mentor" was the previous heading and is still wrong, one step
+    // further down than the quotation marks were. Every 'Founder perspective'
+    // entry is a general proposition about mentorship, not a motive: "corporate
+    // banking is a relationship business", "access has historically depended on
+    // who you know". None of them says why the named person mentors, and
+    // Mentable does not know why. Putting a general claim under a heading that
+    // promises a motive asserts one by juxtaposition, which the badge
+    // underneath softens but does not undo.
+    //
+    // The heading now says whose note this is and claims nothing about the
+    // person. The badge stays, because "not theirs" is the fact that matters.
+    // 'In their words' is unaffected: that heading is accurate precisely
+    // because the mentor approved the sentence under it.
+    statementSectionLabel = inTheirWords ? 'Why I mentor' : 'Mentable\u2019s note';
+    statementLabel = inTheirWords ? null : 'Our words, not theirs';
     statementIsQuote = inTheirWords;
     statement = m.whyIMentor;
     linkedInUrl = m.linkedInUrl;

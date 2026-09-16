@@ -66,8 +66,9 @@ export default function PrivacyPage() {
         <p>
           Mentable writes product events to its own database so we can see which parts of
           the product are used. An event stores your user id, your role, the name of the
-          thing that happened, and the id of the record involved. There is no third-party
-          analytics service, no tag manager and no advertising technology on this site.
+          thing that happened, the id of the record involved, and a small set of details
+          about it such as which button was pressed. There is no third-party analytics
+          service, no tag manager and no advertising technology on this site.
         </p>
         <p>
           The site uses a cookie to keep you signed in, and browser session storage to
@@ -99,9 +100,11 @@ export default function PrivacyPage() {
           student who has written to them.
         </p>
         <p>
-          Some profiles are published on public pages. Those pages carry only information
-          provided for that purpose, and never your email address, your messages or
-          anything inside a mentorship.
+          Creating an account does not publish anything about you. The public profile
+          pages on this site are a separate editorial roster of people we have written
+          about, maintained by hand and not generated from anyone&rsquo;s account. Your
+          profile, your email address, your messages and everything inside a mentorship
+          stay behind sign-in.
         </p>
       </LegalSection>
 

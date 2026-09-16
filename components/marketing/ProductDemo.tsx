@@ -96,7 +96,7 @@ function Request({ onSend }: { onSend: () => void }) {
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-halo-purple-d uppercase tracking-wider mb-1.5">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-1.5">
           What are you hoping to learn?
         </p>
         <div className="text-[12px] text-halo-heather bg-halo-veil rounded-xl px-3.5 py-2.5 border border-halo-rule">
@@ -105,7 +105,7 @@ function Request({ onSend }: { onSend: () => void }) {
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-halo-purple-d uppercase tracking-wider mb-1.5">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-1.5">
           Why Christopher?
         </p>
         <div className="text-[12px] text-halo-heather bg-halo-veil rounded-xl px-3.5 py-2.5 border border-halo-rule leading-relaxed">
@@ -147,7 +147,7 @@ function Goals({ onNext }: { onNext: () => void }) {
       </div>
 
       <div>
-        <p className="text-[10px] font-semibold text-halo-purple-d uppercase tracking-wider mb-2">Next steps</p>
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2">Next steps</p>
         <div className="space-y-1.5">
           {[
             { k: 'a', t: 'Read up on how a rates desk is structured' },
@@ -200,7 +200,7 @@ function Session() {
       </div>
 
       <div className="bg-white rounded-xl border border-halo-rule p-4">
-        <p className="text-[10px] font-semibold text-halo-purple-d uppercase tracking-wider mb-2.5">Prep</p>
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">Prep</p>
         <ul className="space-y-1.5">
           {[
             'Questions on desk structure and day-to-day',
@@ -216,7 +216,7 @@ function Session() {
       </div>
 
       <div className="bg-white rounded-xl border border-halo-rule p-4">
-        <p className="text-[10px] font-semibold text-halo-purple-d uppercase tracking-wider mb-2.5">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
           Carried over from last session
         </p>
         <div className="flex items-center gap-2.5">

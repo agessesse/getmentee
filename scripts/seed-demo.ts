@@ -1,5 +1,5 @@
 /**
- * Demo seed script for Mentee platform.
+ * Demo seed script for the Mentable platform.
  * Run: npm run seed:demo
  *
  * Creates ~25 mentors, ~15 mentees, realistic mentorship relationships,
