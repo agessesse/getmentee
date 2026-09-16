@@ -86,7 +86,25 @@ export default function LandingPage() {
                 The closing clause is lifted from the footer, where the only
                 two-sided line on the site had been sitting unread.
               */}
-              <p className="text-lg sm:text-xl text-halo-mist-body font-light leading-relaxed max-w-lg mb-10">
+              {/*
+                The standfirst, not body copy.
+
+                It was set in Plex at font-light, the same face and weight as
+                every paragraph further down the page, which made the most
+                important sentence on the site look like the least important
+                one. It is now Newsreader at 400, the face the headline above it
+                uses, one step down in size with a wider measure and looser
+                leading. Serif headline into serif standfirst into sans body is
+                the ordinary editorial order, and it is the order the rest of
+                this page already follows; the hero was the exception.
+
+                No font was added. Newsreader is already loaded for every
+                heading on the site.
+              */}
+              <p
+                className="font-display text-halo-heather leading-[1.45] max-w-xl mb-10"
+                style={{ fontSize: 'clamp(1.2rem, 1.9vw, 1.5rem)' }}
+              >
                 Mentable takes the luck out of mentorship, and handles everything
                 after the introduction. Find someone{' '}
                 <span className="font-medium text-halo-purple-d">

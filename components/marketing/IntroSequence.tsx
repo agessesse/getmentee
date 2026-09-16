@@ -14,8 +14,16 @@ import {
  * solid fill wipes across it right to left. It then becomes a few thousand
  * particles, which lift off their letter positions and travel along a fan of
  * dashed ellipses, turning from ivory to Mentable purple as they go. They
- * collapse into the vertical centre line. Then the whole surface sweeps off to
- * the right, which is the same gesture every page-to-page transition uses.
+ * collapse into the vertical centre line. Then the whole surface lifts and
+ * leaves through the top of the screen.
+ *
+ * WHY THE EXIT IS VERTICAL WHERE PAGE NAVIGATION IS HORIZONTAL. It reads as two
+ * different jobs, which they are. Rising out through the top is arriving: the
+ * site is underneath the whole time and the curtain lifts off it. The
+ * horizontal wipe between Mentee, Mentor and About is travelling sideways
+ * through a site you are already inside. Same curve, same panel pair, same
+ * 80ms lag between them; only the axis changes, and it changes with the
+ * meaning.
  *
  * WHAT CARRIED OVER. The concept is unchanged: the name resolves, and
  * TEACHABLE. COACHABLE. READY TO GROW. answers it. Session behaviour, the
@@ -51,7 +59,7 @@ const T = {
   travelEnd: 2280,
   collapseStart: 2280,
   collapseEnd: 2540,
-  /** The sweep, shared with the page transition. */
+  /** The lift. Same curve and lag as the page wipe, rotated to vertical. */
   sweepAt: 2560,
   skipDuration: 200,
   get end() {
@@ -555,7 +563,7 @@ export default function IntroSequence() {
   if (mode === 'pending' || mode === 'off') return null;
 
   const sweep = (delay: number): React.CSSProperties => ({
-    transform: swept ? 'translateX(100%)' : 'translateX(0%)',
+    transform: swept ? 'translateY(-100%)' : 'translateY(0%)',
     transition: swept ? `transform ${REVEAL_PANEL_MS}ms ${EASE} ${delay}ms` : 'none',
     willChange: 'transform',
   });
@@ -563,8 +571,8 @@ export default function IntroSequence() {
   return (
     <>
       {/* The trailing panel, mounted at rest so it has a value to animate from.
-          Page navigation sweeps deep purple out first and lavender 80ms behind;
-          the entrance repeats that, with this dark surface leading. */}
+          The dark surface lifts first and this lavender one follows 80ms behind,
+          the same pairing the page wipe uses, travelling up instead of across. */}
       <div
         aria-hidden="true"
         className={`fixed inset-0 ${LEAD_BG}`}

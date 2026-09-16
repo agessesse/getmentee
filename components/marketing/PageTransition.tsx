@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BRAND } from '@/components/ui/Wordmark';
+import { WORDMARK } from '@/components/marketing/intro-wordmark';
 import { isMarketingRoute } from '@/components/marketing/marketing-links';
 import {
   EASE, LEAD_BG, FOLLOW_BG,
-  COVER_PANEL_MS, COVER_FOLLOW_DELAY_MS, WORDMARK_IN_MS, WORDMARK_IN_DELAY_MS,
+  COVER_PANEL_MS, COVER_FOLLOW_DELAY_MS,
+  WORDMARK_DRAW_MS, WORDMARK_DRAW_DELAY_MS, WORDMARK_FILL_MS, WORDMARK_FILL_DELAY_MS,
+  WORDMARK_STAGGER_MS,
   REVEAL_PANEL_MS, REVEAL_LEAD_DELAY_MS, WORDMARK_OUT_MS,
   COVER_MS, MIN_HOLD_MS, REVEAL_MS, MAX_WAIT_MS,
   prefersReducedMotion,
@@ -14,6 +16,14 @@ import {
 
 /**
  * The branded wipe between the four marketing pages.
+ *
+ * WHAT IT LOOKS LIKE. A lavender panel slides in from the left, the deep purple
+ * follows a beat behind carrying a soft centre glow, and the wordmark writes
+ * itself on: outlines draw first, then the solid letterforms arrive behind
+ * them. It leaves the way it came, to the right. The wordmark used to simply
+ * fade in, which was the dull part. Drawing it is the entrance's own opening
+ * beat, compressed from 800ms to 220ms, so the two animations are recognisably
+ * the same hand without the wipe getting slower.
  *
  * WHY A CLICK INTERCEPT AND NOT A PATHNAME WATCHER. A watcher cannot cover the
  * page it is leaving: by the time the pathname changes the old page is already
@@ -36,10 +46,21 @@ import {
 
 type Phase = 'idle' | 'cover' | 'hold' | 'reveal';
 
+/**
+ * The wordmark's outlines, flattened so each counter is its own stroke and each
+ * has a stable index to stagger by. Twelve of them for "Mentable".
+ */
+const SUBPATHS: string[] = WORDMARK.letters.flatMap((l) =>
+  l.d.split(/(?=M)/g).filter((d) => d.trim().length > 1),
+);
+
 export default function PageTransition() {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>('idle');
+  /** Flipped two painted frames after the outlines mount, so the browser has a
+   *  start value to animate from. See the effect below. */
+  const [drawn, setDrawn] = useState(false);
 
   // Refs, not state: the click handler is bound once and must read current
   // values without being torn down and rebound on every phase change.
@@ -64,6 +85,7 @@ export default function PageTransition() {
   const run = useCallback((href: string) => {
     clearTimers();
     targetRef.current = href;
+    setDrawn(false);
     setPhase('cover');
 
     // Push only once the panels have the viewport covered.
@@ -136,6 +158,29 @@ export default function PageTransition() {
     return () => document.removeEventListener('click', onClick, true);
   }, [run]);
 
+  /*
+    Release the outlines one painted frame after they mount.
+
+    Two details matter here and both were wrong on the first attempt. The paths
+    declare pathLength="1", which normalises every subpath to a length of one
+    regardless of its real geometry, so a dasharray of 1 and an offset of 1 mean
+    "completely undrawn" for the stem of the l and the bowl of the b alike. No
+    getTotalLength, no measuring, no layout read.
+
+    And the flip is deferred by two frames, not one. A single rAF can still land
+    in the same paint as the parked state, in which case the browser never sees
+    a start value and the offset snaps to zero instead of animating. That is
+    exactly what it did.
+  */
+  useEffect(() => {
+    if (phase !== 'cover') return;
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setDrawn(true));
+    });
+    return () => { cancelAnimationFrame(outer); cancelAnimationFrame(inner); };
+  }, [phase]);
+
   if (phase === 'idle') return null;
 
   const covered = phase === 'cover' || phase === 'hold';
@@ -169,23 +214,64 @@ export default function PageTransition() {
         className={`absolute inset-0 ${FOLLOW_BG} flex items-center justify-center`}
         style={{ transform: 'translateX(-100%)', willChange: 'transform', ...followStyle }}
       >
-        {/*
-          The existing wordmark treatment, white on the deep purple. Not a new
-          mark and not an image: the same bold, tight-tracked brand text the
-          header and the entrance use, sized for a full viewport.
-        */}
-        <span
-          className="font-bold tracking-tight text-white select-none"
+        {/* The entrance's ambient centre glow, so the panel has depth rather
+            than reading as a flat rectangle of purple. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
           style={{
-            fontSize: 'clamp(2rem, 7vw, 4.5rem)',
+            background:
+              'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(120,90,247,0.55) 0%, transparent 70%)',
+          }}
+        />
+        {/*
+          The same outline data the entrance draws, so this is the wordmark
+          rather than a picture of it. Outlines write on, the solid fill arrives
+          behind them, and on the way out the whole group just fades.
+        */}
+        <svg
+          viewBox={`${WORDMARK.bbox.minX} ${WORDMARK.bbox.minY} ${WORDMARK.bbox.maxX - WORDMARK.bbox.minX} ${WORDMARK.bbox.maxY - WORDMARK.bbox.minY}`}
+          style={{
+            // The glow behind is absolutely positioned and this svg is a static
+            // flex item, so without a position of its own the glow paints on
+            // top and tints the ivory letterforms lavender.
+            position: 'relative',
+            width: 'min(46vw, 620px)',
+            height: 'auto',
             opacity: covered ? 1 : 0,
-            transition: covered
-              ? `opacity ${WORDMARK_IN_MS}ms ease-out ${WORDMARK_IN_DELAY_MS}ms`
-              : `opacity ${WORDMARK_OUT_MS}ms ease-in`,
+            transition: covered ? 'opacity 1ms' : `opacity ${WORDMARK_OUT_MS}ms ease-in`,
+            overflow: 'visible',
           }}
         >
-          {BRAND}
-        </span>
+          <g
+            fill="none"
+            stroke="#FBFAF8"
+            strokeWidth={14}
+          >
+            {SUBPATHS.map((d, i) => (
+              <path
+                key={i}
+                d={d}
+                pathLength={1}
+                strokeDasharray={1}
+                style={{
+                  strokeDashoffset: drawn ? 0 : 1,
+                  transition: `stroke-dashoffset ${WORDMARK_DRAW_MS}ms ${EASE} ${WORDMARK_DRAW_DELAY_MS + i * WORDMARK_STAGGER_MS}ms`,
+                }}
+              />
+            ))}
+          </g>
+
+          <g
+            fill="#FBFAF8"
+            style={{
+              opacity: drawn ? 1 : 0,
+              transition: `opacity ${WORDMARK_FILL_MS}ms ease-out ${WORDMARK_FILL_DELAY_MS}ms`,
+            }}
+          >
+            {WORDMARK.letters.map((letter, i) => <path key={i} d={letter.d} />)}
+          </g>
+        </svg>
       </div>
     </div>
   );

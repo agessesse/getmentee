@@ -18,9 +18,27 @@ export const EASE = 'cubic-bezier(.65,0,.35,1)';
 export const COVER_PANEL_MS = 320;
 /** How far behind the lead the follow panel runs, on the way in. */
 export const COVER_FOLLOW_DELAY_MS = 100;
-/** Wordmark fade in. */
-export const WORDMARK_IN_MS = 200;
-export const WORDMARK_IN_DELAY_MS = 240;
+/**
+ * Wordmark. It does not fade in any more, it writes itself on: the outlines
+ * draw, then the solid fill arrives behind them. That is the entrance's opening
+ * beat, compressed from 800ms to 220ms so the whole wipe still lands near one
+ * second. A flat fade was the dull part.
+ */
+/*
+ * These delays are measured from the moment the overlay mounts, which is about
+ * 170ms after the click: React has to render, and the draw is released two
+ * painted frames later so the browser has a start value to animate from. The
+ * numbers below are therefore smaller than the beats they produce. Measured on
+ * the running build, the word is solid ivory around 460ms after the click and
+ * the reveal begins at 620ms, which leaves the finished wordmark on screen for
+ * roughly 160ms. Raise these and it washes out; the reveal catches it mid-fade.
+ */
+export const WORDMARK_DRAW_MS = 170;
+export const WORDMARK_DRAW_DELAY_MS = 20;
+export const WORDMARK_FILL_MS = 140;
+export const WORDMARK_FILL_DELAY_MS = 150;
+/** Per-subpath stagger. Twelve subpaths, so this is the tail of the draw. */
+export const WORDMARK_STAGGER_MS = 6;
 
 /** Reveal panel travel. */
 export const REVEAL_PANEL_MS = 360;
