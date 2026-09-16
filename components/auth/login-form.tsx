@@ -101,7 +101,10 @@ export function LoginForm() {
               placeholder="••••••••"
               disabled={loading}
               autoComplete="current-password"
-              className={`${field} pr-12`}
+              // The placeholder dots look exactly like a typed password, so they
+              // clear the moment the field is focused rather than on the first
+              // keystroke.
+              className={`${field} pr-12 focus:placeholder:text-transparent`}
             />
             {/*
               Typing a password blind is the single most common cause of a failed
