@@ -15,6 +15,9 @@ import Flywheel from '@/components/marketing/Flywheel';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import ScrollHandoff from '@/components/marketing/ScrollHandoff';
+import HeroPin from '@/components/marketing/HeroPin';
+import Rise from '@/components/marketing/Rise';
+import ScrollCue from '@/components/marketing/ScrollCue';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
 
@@ -54,20 +57,32 @@ export default function LandingPage() {
 
       {/*
         ── 01. Hero ──────────────────────────────────────────────────────────
-        The hero holds, then recedes as the Problem section climbs over it. It
-        is the first thing the page does after the entrance, and it establishes
-        that scrolling here is directed rather than just long.
+        Pinned to the viewport while the rest of the page slides up over it.
+
+        This replaced a version where the hero scaled and faded as the next
+        section climbed past. That read well mid-transition and badly at the
+        end: once the hero's own content had scrolled behind the header, all
+        that remained visible above the incoming section was a strip of its
+        empty bottom padding, which looked like a layout gap rather than depth.
+
+        Pinning fixes it by construction. The hero holds still at full size, the
+        content below is opaque and simply covers it, and there is never a gap
+        because there is never anything receding. It also costs nothing: the pin
+        is one sticky container, no scroll listener and no measurement.
       */}
-      <ScrollHandoff>
-      <section className="py-16 sm:py-20 lg:py-24 px-6 lg:px-10 bg-halo-ivory" aria-labelledby="hero-heading">
+      <HeroPin>
+      <section className="w-full py-16 sm:py-20 lg:py-24 px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
-            <div>
+            {/* Outer block rises 20px, the headline inside it a further 30px,
+                both on load rather than on scroll: this is the first thing on
+                screen, so there is nothing to scroll into view. */}
+            <div className="hero-rise-outer">
               <HeroReveal />
 
               <h1
                 id="hero-heading"
-                className="font-display text-halo-ink leading-[0.98] tracking-tight mb-7 max-w-3xl"
+                className="hero-rise-inner font-display text-halo-ink leading-[0.98] tracking-tight mb-7 max-w-3xl"
                 style={{ fontSize: 'clamp(2.6rem, 7vw, 5.2rem)' }}
               >
                 The Right Mentor<br />
@@ -148,14 +163,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      </ScrollHandoff>
+        <ScrollCue />
+      </HeroPin>
+
+      {/*
+        Everything from here down is one opaque layer that travels over the
+        pinned hero. `relative` plus a z-index above the hero's is what puts it
+        on top; the background is what stops the hero showing through the gaps
+        between sections.
+      */}
+      <div className="relative z-[1] bg-halo-ivory">
 
       {/* ── 02. Problem ──────────────────────────────────────────────────────── */}
-      {/* Sits above the receding hero. `relative` gives it a stacking context so
-          it paints over the sticky section rather than under it. */}
-      <div className="relative">
-        <ProblemSection />
-      </div>
+      <ProblemSection />
 
       {/* ── 03. The two rosters ──────────────────────────────────────────────── */}
       {/* Willing to teach, then ready to learn. Each section now carries its own
@@ -177,17 +197,20 @@ export default function LandingPage() {
       {/* ── 08. Outcomes ─────────────────────────────────────────────────────── */}
       <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-veil border-t border-halo-rule" aria-labelledby="outcomes-heading">
         <div className="max-w-6xl mx-auto">
-          <h2
-            id="outcomes-heading"
-            className="font-display text-halo-ink leading-[1.05] mb-12 max-w-xl"
-            style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
-          >
-            What comes out of it.
-          </h2>
+          <Rise kind="heading" as="h2">
+            <span
+              id="outcomes-heading"
+              className="block font-display text-halo-ink leading-[1.05] mb-12 max-w-xl"
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
+            >
+              What comes out of it.
+            </span>
+          </Rise>
 
+          {/* 0.12s apart, the reference's card stagger. */}
           <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-10 gap-y-10">
             {OUTCOMES.map((o, i) => (
-              <li key={o.label} className="border-t border-halo-rule pt-5">
+              <Rise key={o.label} kind="heading" delay={i * 0.12} as="li" className="border-t border-halo-rule pt-5">
                 <span className="block text-[12px] font-semibold tabular-nums text-halo-purple-d mb-3">
                   0{i + 1}
                 </span>
@@ -197,7 +220,7 @@ export default function LandingPage() {
                 <p className="text-halo-heather text-[15px] leading-relaxed">
                   {o.body}
                 </p>
-              </li>
+              </Rise>
             ))}
           </ol>
         </div>
@@ -216,16 +239,18 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div>
-              <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
+              <Rise kind="heading" as="p" className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
                 A Mentable initiative
-              </p>
-              <h2
-                id="fund-heading"
-                className="font-display text-white leading-[1.08] mb-5"
-                style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
-              >
-                Preparation shouldn&apos;t<br />depend on a budget.
-              </h2>
+              </Rise>
+              <Rise kind="heading" delay={0.1}>
+                <h2
+                  id="fund-heading"
+                  className="font-display text-white leading-[1.08] mb-5"
+                  style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
+                >
+                  Preparation shouldn&apos;t<br />depend on a budget.
+                </h2>
+              </Rise>
               <p className="text-halo-lavender leading-relaxed mb-4 font-light text-[15px] max-w-md">
                 For students with demonstrated financial need, we&apos;re building a
                 fund to remove the practical barriers between guidance and action.
@@ -264,17 +289,19 @@ export default function LandingPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              {FUND_ITEMS.map((item) => {
+              {FUND_ITEMS.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <Rise
                     key={item.label}
+                    kind="row"
+                    delay={(i % 3) * 0.08}
                     className="bg-halo-deep-panel border border-halo-deep-rule rounded-xl p-4 hover:border-halo-lavender/50 hover:bg-white/[0.14] transition-colors"
                   >
                     <Icon className="w-5 h-5 text-halo-lavender mb-3" aria-hidden="true" />
                     <p className="text-[14px] font-semibold text-white leading-tight">{item.label}</p>
                     <p className="text-[12px] text-halo-lavender mt-1 leading-snug">{item.detail}</p>
-                  </div>
+                  </Rise>
                 );
               })}
             </div>
@@ -288,13 +315,16 @@ export default function LandingPage() {
       <div className="relative">
       <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-ivory" aria-labelledby="cta-heading">
         <div className="max-w-6xl mx-auto">
-          <h2
-            id="cta-heading"
-            className="font-display text-halo-ink leading-[1.03] mb-8 max-w-2xl"
-            style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)' }}
-          >
-            Someone helped them get there.<br />Now they&apos;re here for you.
-          </h2>
+          {/* The page's closing claim, on the slowest curve of the set. */}
+          <Rise kind="statement">
+            <h2
+              id="cta-heading"
+              className="font-display text-halo-ink leading-[1.03] mb-8 max-w-2xl"
+              style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)' }}
+            >
+              Someone helped them get there.<br />Now they&apos;re here for you.
+            </h2>
+          </Rise>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
               href="/signup?role=mentee"
@@ -323,6 +353,7 @@ export default function LandingPage() {
       </section>
       </div>
 
+      </div>
       </main>
 
       {/*

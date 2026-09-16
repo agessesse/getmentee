@@ -148,3 +148,35 @@ button:hover .arrow-slide {
 @media (prefers-reduced-motion: reduce) {
   .motion-safe\:animate-ping-slow { animation: none; opacity: 0.5; }
 }
+
+/* ── Home entrance and scroll cue ──
+   Three additive blocks. Nothing above this point is modified.
+
+   The two hero rises play on load rather than on scroll, because the hero is
+   already on screen when the page arrives and has nothing to scroll into. Note
+   that neither touches opacity: the block is fully visible the whole time and
+   only its position settles, which reads as the layout arriving rather than as
+   content fading in. Distances, durations and delays are the reference's. */
+@keyframes heroRiseOuter { from { transform: translateY(20px); } to { transform: none; } }
+@keyframes heroRiseInner { from { transform: translateY(30px); } to { transform: none; } }
+
+.hero-rise-outer { animation: heroRiseOuter 0.8s 0.1s both; }
+.hero-rise-inner { animation: heroRiseInner 0.5s ease-out 0.15s both; }
+
+/* The cue under the pinned hero: fade in once, then drift 8px on a loop. */
+@keyframes scrollCueIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scrollCueBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+.scroll-cue {
+  animation: scrollCueIn 0.5s ease-out 0.6s both;
+}
+.scroll-cue > * {
+  animation: scrollCueBob 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise-outer,
+  .hero-rise-inner { animation: none; transform: none; }
+  .scroll-cue,
+  .scroll-cue > * { animation: none; }
+}

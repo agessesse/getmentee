@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Circle, CheckCircle2, ArrowRight, ArrowLeft, Calendar, Target, Send, Search } from 'lucide-react';
+import { Circle, CheckCircle2, ArrowRight, ArrowLeft, Calendar, Target, Send, Search, MousePointerClick } from 'lucide-react';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
 
@@ -22,6 +22,24 @@ const MENTOR = {
   helps: ['Fixed Income', 'Capital Markets'],
 };
 
+/**
+ * The prompt inside a panel, pointing at the thing to click.
+ *
+ * These used to be 10px purple text on their own line, which is roughly the
+ * size of a footnote and was read as one: people took the whole panel for a
+ * picture of a product rather than the product. It is now 12px semibold with an
+ * icon, on its own tinted row, so it reads as an instruction at a glance
+ * without turning into a tooltip or a tutorial step.
+ */
+function PanelCue({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="flex items-center gap-2 text-[12px] font-semibold text-halo-purple-d bg-halo-lav-wash border border-halo-purple/25 rounded-xl px-3 py-2">
+      <MousePointerClick className="w-3.5 h-3.5 flex-none" aria-hidden="true" />
+      {children}
+    </p>
+  );
+}
+
 // ─── Stage 1: Discover ────────────────────────────────────────────────────────
 
 function Discover({ onPick }: { onPick: () => void }) {
@@ -31,9 +49,15 @@ function Discover({ onPick }: { onPick: () => void }) {
         Mentors matching fixed income
       </p>
 
+      {/*
+        The live row. It used to carry the same grey border as the two static
+        rows beneath it and only turned purple on hover, so on a touch screen
+        nothing distinguished it at all and on a desktop you had to find it with
+        the cursor first. It now reads as the interactive one while at rest.
+      */}
       <button
         onClick={onPick}
-        className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-halo-rule hover:border-halo-purple hover:shadow-md transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
+        className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-halo-purple/45 ring-1 ring-halo-purple/10 shadow-sm hover:border-halo-purple hover:ring-halo-purple/30 hover:shadow-md active:scale-[0.99] transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
       >
         <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-none bg-halo-bone">
           <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="56px" />
@@ -47,7 +71,12 @@ function Discover({ onPick }: { onPick: () => void }) {
             ))}
           </div>
         </div>
-        <ArrowRight className="w-4 h-4 text-halo-mist-body group-hover:text-halo-purple-d group-hover:translate-x-0.5 transition-all flex-none" aria-hidden="true" />
+        <span
+          aria-hidden="true"
+          className="flex-none w-8 h-8 rounded-full bg-halo-lav-wash text-halo-purple-d flex items-center justify-center transition-all group-hover:bg-halo-purple group-hover:text-white"
+        >
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
       </button>
 
       {[
@@ -67,7 +96,7 @@ function Discover({ onPick }: { onPick: () => void }) {
         </div>
       ))}
 
-      <p className="text-[10px] text-halo-purple-d font-medium pt-1">↑ Pick Christopher to continue</p>
+      <PanelCue>Click Christopher to continue</PanelCue>
     </div>
   );
 }
@@ -168,7 +197,7 @@ function Goals({ onNext }: { onNext: () => void }) {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-halo-mist-body mt-2 pl-2">Try checking one off.</p>
+        <div className="mt-3"><PanelCue>Tick one off to see it update</PanelCue></div>
       </div>
 
       <button
