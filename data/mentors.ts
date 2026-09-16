@@ -92,7 +92,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     priorCompanies: ['Wells Fargo', 'Morgan Stanley', 'SMBC', 'Fifth Third Securities'],
     helpsWith: ['Fixed Income', 'Capital Markets', 'Career Development'],
     shortBio:
-      "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai after a senior career at Wells Fargo — where he served as Managing Director and Co-Head of Investment Grade Sales & Trading — and earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
+      "CFA charterholder and fixed-income markets leader with roughly three decades of experience. Christopher leads institutional sales at Bondway.ai. Before that he spent a senior career at Wells Fargo, where he served as Managing Director and Co-Head of Investment Grade Sales & Trading, following earlier roles at Morgan Stanley, SMBC and Fifth Third Securities.",
     whyIMentor:
       'Mentorship is most powerful when it becomes a long-term investment in someone\'s trajectory.',
     whyLabel: 'Founder perspective',
@@ -131,7 +131,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     shortBio:
       'Senior Wells Fargo executive with more than two decades in institutional banking. Tiffany serves as Chief of Staff in the Corporate & Investment Bank, having previously served as Managing Director and Head of Strategy & Innovation and COO of Strategy & Client Engagement. She began her career at Wachovia Securities in leveraged finance, covering TMT and healthcare.',
     whyIMentor:
-      'Corporate banking is a relationship business at every level. The ability to connect authentically — not just transact — is the skill that matters most and takes the longest to develop.',
+      'Corporate banking is a relationship business at every level. The skill that matters most is the ability to connect authentically rather than simply transact, and it is the one that takes longest to develop.',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },
@@ -205,7 +205,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     shortBio:
       'UNC Kenan-Flagler alumnus with a career spanning investment banking, private equity, M&A and growth strategy. David previously served as Chief Growth Officer at MyEyeDr. and remains engaged as a Senior Advisor.',
     whyIMentor:
-      'The most useful thing an experienced person can do is give someone an honest view of how decisions actually play out — not how they look on paper.',
+      'The most useful thing an experienced person can do is give someone an honest view of how decisions actually play out, rather than how they look on paper.',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },

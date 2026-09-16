@@ -403,7 +403,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     education: [
       {
         institution: 'University of North Carolina at Chapel Hill',
-        field: 'Interdisciplinary Studies — Innovation in Global Development and Public Policy; Data Science minor',
+        field: 'Interdisciplinary Studies: Innovation in Global Development and Public Policy; Data Science minor',
         years: '2024–2028',
       },
     ],
@@ -445,7 +445,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     experience: [
-      { title: 'Incoming Markets Summer Analyst — Fixed Income Strategy & Portfolio Management', organization: 'Wells Fargo' },
+      { title: 'Incoming Markets Summer Analyst, Fixed Income Strategy & Portfolio Management', organization: 'Wells Fargo' },
       { title: 'Investment Banking Summer Analyst', organization: 'Envoy Capital Advisors' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/abelgessesse/',
@@ -583,7 +583,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     interestTags: ['Finance', 'Georgetown', 'Swimming & Diving', 'Career Development', 'Leadership'],
     distinctions: [
       'NCAA Division I, Georgetown Swimming & Diving',
-      'North Carolina State Record — Butterfly',
+      'North Carolina State Record, Butterfly',
       'All-American Swimmer',
     ],
     linkedInUrl: 'https://www.linkedin.com/in/troy-keen-jr-829717337/',
@@ -640,7 +640,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     portraitPosition: '50% 28%',
     interestTags: ['Finance', 'Carlson', 'Banking', 'University of Minnesota', 'Career Development'],
     education: [
-      { institution: 'University of Minnesota — Carlson School of Management' },
+      { institution: 'University of Minnesota, Carlson School of Management' },
     ],
     experience: [
       { organization: 'Bank of America' },
@@ -660,10 +660,10 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     portraitPosition: '50% 18%',
     interestTags: ['Markets', 'Fixed Income', 'Berkeley Haas', 'Wells Fargo', 'Finance'],
     education: [
-      { institution: 'UC Berkeley — Haas School of Business' },
+      { institution: 'UC Berkeley, Haas School of Business' },
     ],
     experience: [
-      { title: 'Incoming Markets Summer Intern — Fixed Income', organization: 'Wells Fargo Corporate & Investment Banking' },
+      { title: 'Incoming Markets Summer Intern, Fixed Income', organization: 'Wells Fargo Corporate & Investment Banking' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/hugo-canseco/',
     prototype_scenario:

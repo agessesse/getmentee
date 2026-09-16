@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Shirt, Users, Plane, GraduationCap } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
-import LandingNav from '@/components/marketing/LandingNav';
+import SiteHeader from '@/components/marketing/SiteHeader';
 import HeroReveal from '@/components/marketing/HeroReveal';
 import HeroPair from '@/components/marketing/HeroPair';
 import MentorCarousel from '@/components/marketing/MentorCarousel';
@@ -47,15 +47,12 @@ export default function LandingPage() {
     <div className="font-body min-h-screen bg-halo-ivory overflow-x-clip">
       <InviteModal open={inviteOpen} onClose={() => setInviteOpen(false)} />
       <IntroSequence />
-      <LandingNav />
+      <SiteHeader />
 
       <main id="main-content">
 
-      {/* Nav watches this to know when the hero has scrolled away */}
-      <div id="nav-sentinel" className="absolute top-0 h-20 w-px" aria-hidden="true" />
-
       {/* ── 01. Hero ─────────────────────────────────────────────────────────── */}
-      <section className="pt-32 sm:pt-36 pb-16 sm:pb-20 px-6 lg:px-10" aria-labelledby="hero-heading">
+      <section className="py-16 sm:py-20 lg:py-24 px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
             <div>

@@ -55,10 +55,10 @@ export const SCHOOL_LOGO_DOMAINS: Record<string, string> = {
   'Queens University of Charlotte': 'queens.edu',
   'UC Berkeley': 'berkeley.edu',
   'UC Berkeley · Haas': 'berkeley.edu',
-  'UC Berkeley — Haas School of Business': 'berkeley.edu',
+  'UC Berkeley, Haas School of Business': 'berkeley.edu',
   'University of New Hampshire': 'unh.edu',
   'University of Minnesota': 'umn.edu',
-  'University of Minnesota — Carlson School of Management': 'umn.edu',
+  'University of Minnesota, Carlson School of Management': 'umn.edu',
   'University of Pennsylvania': 'upenn.edu',
 };
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
+import PageTransition from '@/components/marketing/PageTransition';
 import {
   DM_Sans,
   Instrument_Serif,
@@ -94,7 +95,15 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          {/*
+            Mounted once, above everything. The component guards on both the
+            current route and the destination, so it does nothing at all on
+            auth, legal, profile and product pages.
+          */}
+          <PageTransition />
+        </AuthProvider>
       </body>
     </html>
   );

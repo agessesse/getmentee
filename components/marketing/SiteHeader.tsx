@@ -8,27 +8,35 @@ import Wordmark from '@/components/ui/Wordmark';
 import { MARKETING_PAGES } from '@/components/marketing/marketing-links';
 
 /**
- * Header for public pages that are not the landing page.
+ * The one public header. Every public page now renders this and only this.
  *
- * LandingNav is not reusable here: its links are in-page anchors
- * (#mentor-carousel-heading and friends) which resolve to nothing anywhere
- * else, so a visitor would get a nav bar whose every item silently did nothing.
- * This keeps the two things a stranger on a profile page or a 404 actually
- * needs — a way home and a way in.
+ * WHAT WAS WRONG. There were two headers. The home page used LandingNav, which
+ * was `fixed`, condensed from 64px to 56px once you scrolled past a sentinel,
+ * and carried five in-page section anchors that appeared only from 1280px up.
+ * Every other public page used a second component that was `sticky`, always
+ * 64px, and carried three page links from 768px up. Neither named Home. So the
+ * header changed height, changed position, changed contents and changed
+ * breakpoint behaviour depending on which page you were reading, and links
+ * genuinely did disappear. That is the whole of the reported problem.
  *
- * It now also carries the marketing pages, which do resolve everywhere, so
- * /mentee, /mentor and /about are reachable from any public page rather than
- * from the home page alone. That required a client component and a disclosure:
- * three links plus the wordmark plus both auth actions do not fit on a 375px
- * row, and dropping them below md would leave phones with no page navigation
- * at all, which is the failure LandingNav's own comment describes.
+ * WHAT IT IS NOW. One height, one container, one position, one set of four
+ * destinations, one mobile disclosure, on every public route. Nothing is
+ * conditional on the page except which destination is marked current.
+ *
+ * HIERARCHY, in reading order. The wordmark anchors the product. The four
+ * destinations explain the site and share one quiet weight. Sign in and Get
+ * started are actions and sit past a wider gap, the second of them filled,
+ * so six links do not read as six equal things.
+ *
+ * The five home-page section anchors are gone from the header. They were a
+ * table of contents for one page living in the site's navigation, and they are
+ * what made the header look different on Home.
  */
 export default function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Escape closes the menu and returns focus to the trigger, matching LandingNav.
   useEffect(() => {
     if (!menuOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -41,12 +49,13 @@ export default function SiteHeader() {
     return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  // A route change while the sheet is open would otherwise leave it covering
-  // the new page.
+  // A route change while the sheet is open would leave it covering the new page.
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
+  const isCurrent = (href: string) => pathname === href;
+
   return (
-    <header className="sticky top-0 z-50 bg-halo-ivory/95 backdrop-blur-sm border-b border-halo-rule">
+    <header className="sticky top-0 z-40 bg-halo-ivory/95 backdrop-blur-sm border-b border-halo-rule">
       <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
         <Link
           href="/"
@@ -55,19 +64,38 @@ export default function SiteHeader() {
           <Wordmark size="md" className="text-halo-ink" />
         </Link>
 
-        <div className="flex items-center gap-3 sm:gap-5">
-          <div className="hidden md:flex items-center gap-5 lg:gap-6">
-            {MARKETING_PAGES.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                aria-current={pathname === l.href ? 'page' : undefined}
-                className="text-[14px] text-halo-heather hover:text-halo-ink transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </div>
+        <div className="flex items-center gap-4 sm:gap-7">
+          {/*
+            Destinations. The active one is darker plus a two-pixel rule sitting
+            on the header's own bottom border, so "where am I" is answered
+            without a pill, a fill, or six things that look like buttons.
+          */}
+          <nav aria-label="Main" className="hidden md:block">
+            <ul className="flex items-center gap-5 lg:gap-7">
+              {MARKETING_PAGES.map((l) => {
+                const current = isCurrent(l.href);
+                return (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      aria-current={current ? 'page' : undefined}
+                      className={`relative inline-block text-[14px] font-medium py-[21px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded ${
+                        current ? 'text-halo-ink' : 'text-halo-heather hover:text-halo-ink'
+                      }`}
+                    >
+                      {l.label}
+                      {current && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-0 right-0 -bottom-px h-[2px] bg-halo-purple rounded-full"
+                        />
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
           <button
             ref={menuButtonRef}
@@ -81,39 +109,57 @@ export default function SiteHeader() {
             {menuOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
           </button>
 
-          <Link
-            href="/login"
-            className="text-sm text-halo-heather hover:text-halo-ink transition-colors font-medium py-3 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="bg-halo-purple text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-halo-purple-d active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
-          >
-            Get started
-          </Link>
+          {/* Actions, past a wider gap than the destinations use. */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              href="/login"
+              className="hidden sm:inline-block text-sm text-halo-heather hover:text-halo-ink transition-colors font-medium py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-halo-purple text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-halo-purple-d active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
+            >
+              Get started
+            </Link>
+          </div>
         </div>
       </div>
 
+      {/* Same four destinations and the same actions, on every route. */}
       {menuOpen && (
-        <div
-          id="site-header-menu"
-          className="md:hidden border-t border-halo-rule/70 bg-halo-ivory shadow-lg"
-        >
+        <div id="site-header-menu" className="md:hidden border-t border-halo-rule/70 bg-halo-ivory shadow-lg">
           <ul className="max-w-6xl mx-auto px-6 py-2">
-            {MARKETING_PAGES.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  onClick={() => setMenuOpen(false)}
-                  aria-current={pathname === l.href ? 'page' : undefined}
-                  className="block py-3 text-[15px] font-medium text-halo-ink border-b border-halo-rule last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {MARKETING_PAGES.map((l) => {
+              const current = isCurrent(l.href);
+              return (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={current ? 'page' : undefined}
+                    className={`flex items-center gap-2.5 py-3 text-[15px] font-medium border-b border-halo-rule focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded ${
+                      current ? 'text-halo-ink' : 'text-halo-heather'
+                    }`}
+                  >
+                    {current && (
+                      <span aria-hidden="true" className="w-[3px] h-4 rounded-full bg-halo-purple" />
+                    )}
+                    <span className={current ? '' : 'pl-[13px]'}>{l.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+            <li>
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="block py-3 text-[15px] font-medium text-halo-heather pl-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
+              >
+                Sign in
+              </Link>
+            </li>
           </ul>
         </div>
       )}

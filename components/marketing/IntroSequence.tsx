@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { BRAND, BRAND_DEFINITION } from '@/components/ui/Wordmark';
+import {
+  EASE, LEAD_BG, REVEAL_PANEL_MS, REVEAL_LEAD_DELAY_MS,
+} from '@/components/marketing/motion';
 
 // Bump this key when the animation changes substantially — returning users
 // will see it fresh once then be skipped for the rest of the session.
@@ -110,11 +113,11 @@ export default function IntroSequence() {
     const t1 = setTimeout(() => setPhase('streaks'), 150);  // streaks enter
     const t2 = setTimeout(() => setPhase('form'),    820);  // wordmark begins forming
     const t3 = setTimeout(() => setPhase('hold'),   1650);  // resolved; definition lands
-    const t4 = setTimeout(() => setPhase('wipe'),   2750);  // curtain rises
+    const t4 = setTimeout(() => setPhase('wipe'),   2750);  // the sweep begins
     const t5 = setTimeout(() => {
       sessionStorage.setItem(SESSION_KEY, '1');
       setPhase('done');
-    }, 3450);
+    }, 2750 + REVEAL_PANEL_MS + REVEAL_LEAD_DELAY_MS + 60);
 
     return () => { [t1, t2, t3, t4, t5].forEach(clearTimeout); };
   }, []);
@@ -128,7 +131,29 @@ export default function IntroSequence() {
   const definitionShown = phase === 'hold' || phase === 'wipe';
 
   return (
-    // The curtain — translateY(-100%) wipes it upward on 'wipe' phase
+    <>
+      {/*
+        The trailing panel. In the page transition the deep purple leaves first
+        and the lavender follows 80ms behind; the entrance repeats that exactly,
+        with the dark curtain playing the leading part. It sits one layer under
+        the curtain and only exists during the sweep.
+      */}
+      {/* Mounted before the sweep, at rest, so the transition has a value to
+          animate FROM. It is invisible until then: the opaque curtain is one
+          layer above it. */}
+      <div
+        aria-hidden="true"
+        className={`fixed inset-0 ${LEAD_BG}`}
+        style={{
+          zIndex: 199,
+          transform: phase === 'wipe' ? 'translateX(100%)' : 'translateX(0%)',
+          transition: phase === 'wipe'
+            ? `transform ${REVEAL_PANEL_MS}ms ${EASE} ${REVEAL_LEAD_DELAY_MS}ms`
+            : 'none',
+          willChange: 'transform',
+        }}
+      />
+
     <div
       aria-hidden="true"
       role="presentation"
@@ -138,9 +163,15 @@ export default function IntroSequence() {
         zIndex: 200,
         backgroundColor: '#0A0A0F', // halo.black — the structural dark surface
         overflow: 'hidden',
-        transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
+        // Was translateY(-100%) on its own curve, which made the entrance and
+        // page navigation look like two unrelated animations. It now leaves the
+        // way every marketing transition leaves: horizontally, to the right, on
+        // the shared easing, with a lavender panel trailing it. Same gesture,
+        // so the first thing a visitor sees the site do is the thing it keeps
+        // doing.
+        transform: phase === 'wipe' ? 'translateX(100%)' : 'translateX(0%)',
         transition: phase === 'wipe'
-          ? 'transform 680ms cubic-bezier(0.76, 0, 0.24, 1)'
+          ? `transform ${REVEAL_PANEL_MS}ms ${EASE}`
           : 'none',
       }}
     >
@@ -241,5 +272,6 @@ export default function IntroSequence() {
         </span>
       </div>
     </div>
+    </>
   );
 }

@@ -1,16 +1,24 @@
 /**
- * The public marketing pages, in nav order.
+ * The public destinations, in reading order.
  *
- * Shared by LandingNav (the home page) and SiteHeader (every other public
- * page) so the two cannot drift. Home is reachable from the wordmark, which is
- * why it is not repeated as a text link.
+ * Home is in this list now. It was not before, which is part of why the
+ * navigation felt unstable: the site had four public pages and the header only
+ * ever named three of them, so arriving on Mentee left no visible way back
+ * except the wordmark.
  *
- * Deliberately separate from LandingNav's LINKS, which are in-page anchors to
- * Home's sections. Those two lists answer different questions: "which page"
- * and "where on this page".
+ * Four is the whole list. Sign in and Get started are actions, not
+ * destinations, and they live separately in the header for that reason.
  */
 export const MARKETING_PAGES = [
+  { href: '/', label: 'Home' },
   { href: '/mentee', label: 'Mentee' },
   { href: '/mentor', label: 'Mentor' },
   { href: '/about', label: 'About' },
 ] as const;
+
+/** Routes that participate in the branded marketing wipe. */
+export const MARKETING_ROUTES: readonly string[] = MARKETING_PAGES.map((p) => p.href);
+
+export function isMarketingRoute(pathname: string | null | undefined): boolean {
+  return !!pathname && MARKETING_ROUTES.includes(pathname);
+}
