@@ -22,7 +22,7 @@ export default function PreMeetingBrief() {
     <div className="max-w-xl mx-auto">
       <div className="bg-white rounded-xl border border-halo-rule shadow-sm overflow-hidden text-left">
         <div className="flex items-center justify-between gap-3 px-5 py-3 bg-halo-lav-wash border-b border-halo-rule">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
             <FileText className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
             Pre-meeting brief: Ethan Robinson
           </p>
@@ -31,7 +31,7 @@ export default function PreMeetingBrief() {
 
         <div className="p-5 sm:p-6 space-y-5">
           <div>
-            <p className="font-ui text-[10px] font-semibold text-halo-heather uppercase tracking-[0.18em] mb-2.5">
+            <p className="font-ui text-[10px] font-semibold text-halo-heather uppercase tracking-[0.12em] mb-2.5">
               Open action items (2)
             </p>
             <ul className="space-y-2">
@@ -51,7 +51,7 @@ export default function PreMeetingBrief() {
           </div>
 
           <div>
-            <p className="font-ui text-[10px] font-semibold text-halo-heather uppercase tracking-[0.18em] mb-2.5">
+            <p className="font-ui text-[10px] font-semibold text-halo-heather uppercase tracking-[0.12em] mb-2.5">
               Active goals
             </p>
             <ul className="space-y-1.5">

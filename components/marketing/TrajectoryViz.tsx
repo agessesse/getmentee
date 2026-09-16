@@ -160,7 +160,7 @@ export default function TrajectoryViz() {
         <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
 
           <div>
-            <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.22em] mb-5">
+            <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
               The difference
             </p>
             <h2

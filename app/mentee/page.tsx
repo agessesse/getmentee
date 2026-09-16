@@ -51,7 +51,7 @@ export default function MenteePage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
               <div>
-                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-5">
+                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-5">
                   For students
                 </p>
 
@@ -316,7 +316,7 @@ export default function MenteePage() {
               </div>
 
               <div>
-                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-6">
+                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-6">
                   What that looks like
                 </p>
                 <ul>

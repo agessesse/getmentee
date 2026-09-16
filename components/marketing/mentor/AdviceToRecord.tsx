@@ -20,7 +20,7 @@ export default function AdviceToRecord() {
     <div className="max-w-xl">
       {/* What you actually said */}
       <div className="rounded-xl border border-halo-rule bg-white p-5 sm:p-6">
-        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] mb-3">
+        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.12em] mb-3">
           What you said
         </p>
         <p className="text-[17px] sm:text-[18px] text-halo-ink font-light leading-relaxed">
@@ -32,14 +32,14 @@ export default function AdviceToRecord() {
       <div className="flex items-center gap-2.5 pl-5 py-3" aria-hidden="true">
         <span className="w-px h-7 bg-halo-rule" />
         <ArrowDown className="w-3.5 h-3.5 text-halo-mist-strong -ml-[7px]" />
-        <span className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+        <span className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
           Becomes
         </span>
       </div>
 
       {/* What it becomes */}
       <div className="rounded-xl border border-halo-purple/40 bg-white p-5 sm:p-6 shadow-sm">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">
           An action item on the mentorship
         </p>
         <div className="flex items-start gap-2.5">

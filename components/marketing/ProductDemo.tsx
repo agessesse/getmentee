@@ -27,7 +27,7 @@ const MENTOR = {
 function Discover({ onPick }: { onPick: () => void }) {
   return (
     <div className="space-y-3">
-      <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+      <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
         Mentors matching fixed income
       </p>
 
@@ -187,7 +187,7 @@ function Session() {
   return (
     <div className="space-y-3.5">
       <div className="bg-halo-deep rounded-xl p-4">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">Upcoming session</p>
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">Upcoming session</p>
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-halo-deep-rule">
             <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
@@ -262,7 +262,7 @@ export default function ProductDemo() {
 
           {/* Left: framing + stage nav */}
           <div className="lg:sticky lg:top-24">
-            <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-5">
+            <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-5">
               The product
             </p>
             <h2

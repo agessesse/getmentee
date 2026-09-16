@@ -52,7 +52,7 @@ export const SCHOOL_LOGO_DOMAINS: Record<string, string> = {
   'Columbia University': 'columbia.edu',
   'Duke University': 'duke.edu',
   'Georgetown University': 'georgetown.edu',
-  'Queens University': 'queensu.ca',
+  'Queens University of Charlotte': 'queens.edu',
   'UC Berkeley': 'berkeley.edu',
   'UC Berkeley · Haas': 'berkeley.edu',
   'UC Berkeley — Haas School of Business': 'berkeley.edu',

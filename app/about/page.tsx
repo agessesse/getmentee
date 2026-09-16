@@ -53,7 +53,7 @@ export default function AboutPage() {
             asks are all waiting at the bottom. */}
         <section className="py-20 sm:py-24 lg:py-28 px-6 lg:px-10" aria-labelledby="about-heading">
           <div className="max-w-6xl mx-auto">
-            <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-6">
+            <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-6">
               Why Mentable exists
             </p>
 
@@ -127,7 +127,7 @@ export default function AboutPage() {
             <div className="max-w-2xl">
               <h2
                 id="founder-heading"
-                className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-8"
+                className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-8"
               >
                 A note from the founder
               </h2>
@@ -177,7 +177,7 @@ export default function AboutPage() {
             one-line filter. This is the only place that says what it is not. */}
         <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep" aria-labelledby="name-heading">
           <div className="max-w-6xl mx-auto">
-            <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.22em] mb-8">
+            <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-8">
               The name
             </p>
 
@@ -223,7 +223,7 @@ export default function AboutPage() {
               </div>
 
               <div className="lg:border-l lg:border-halo-deep-rule lg:pl-10">
-                <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.22em] mb-5">
+                <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
                   What it does not mean
                 </p>
                 <p className="text-white text-[16px] leading-relaxed mb-5">

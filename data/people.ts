@@ -81,9 +81,19 @@ export interface SourcedNearPeer {
   linkedInUrl?: string;
   status: ProfileStatus;
   /**
-   * Editorial impact copy shown in the profile preview modal.
-   * DEMO COPY — NOT a verified quote from this person.
-   * Always render with a "demo_impact_story" label in the UI.
+   * Invented first-person copy. NOT a quote, NOT verified, NOT this person's
+   * words, and NOT rendered anywhere on the public site.
+   *
+   * It used to appear in the profile preview modal, in quotation marks, under a
+   * heading reading "Their experience", beside a small "Demo copy" badge. Every
+   * person on this roster is real, named and findable, so that arrangement told
+   * visitors a real student had said something they never said. The badge did
+   * not fix it and a bigger badge would not have either.
+   *
+   * The field is kept because it may be legitimate against a demo identity one
+   * day. It must never be rendered against a real one. If you need illustrative
+   * mentorship copy on a public surface, use a demo account from
+   * scripts/seed-demo.ts, the way the mentee and mentor pages do.
    */
   demo_impact_story?: string;
 }
@@ -135,7 +145,7 @@ export const SOURCED_MENTORS: SourcedProfile[] = [
     organization: 'Keane Capital Management',
     location: 'Charlotte, North Carolina',
     linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
-    bio: "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
+    bio: "Peter has supported Mentable's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     image: '/people/peter-keane.jpg',
     expertiseTags: [
       'Career Development',
@@ -663,7 +673,7 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     firstName: 'Pablo',
     lastName: 'N.',
     // Full last name not yet verified — placeholder until confirmed
-    school: 'Queens University',
+    school: 'Queens University of Charlotte',
     bio: 'Student building a path in finance and career development.',
     image: '/people/pablo-n.jpg',
     portraitPosition: '50% 30%',

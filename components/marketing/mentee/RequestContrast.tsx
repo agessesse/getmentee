@@ -34,7 +34,7 @@ export default function RequestContrast() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6 items-start">
       {/* The usual */}
       <div className="rounded-xl border border-halo-rule bg-halo-bone/50 p-5 sm:p-6">
-        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] mb-4">
+        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.12em] mb-4">
           The usual
         </p>
         <p className="text-[17px] sm:text-[18px] text-halo-heather font-light leading-relaxed">
@@ -48,7 +48,7 @@ export default function RequestContrast() {
 
       {/* On Mentable */}
       <div className="rounded-xl border border-halo-purple/40 bg-white p-5 sm:p-6 shadow-sm">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-4">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-4">
           A request on Mentable
         </p>
         <dl className="space-y-4">

@@ -99,7 +99,7 @@ function MenteeCard({
               transform: hovered ? 'translateY(0)' : 'translateY(8px)',
             }}
           >
-            <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.18em] mb-1.5">
+            <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.12em] mb-1.5">
               Learning about
             </p>
             {person.interestTags.slice(0, 2).map((tag) => (
@@ -141,7 +141,7 @@ export default function MenteeCarousel() {
     <>
       <section className="py-16 sm:py-20 bg-halo-veil" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
-          <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-4">
+          <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-4">
             Ready to learn
           </p>
           <h2

@@ -67,6 +67,10 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
   let statementSectionLabel: string | null = null;
   let statementLabel: string | null = null;
   let statement: string | null = null;
+  /** Quotation marks are reserved for words the named person actually said. */
+  let statementIsQuote = false;
+  /** Factual list shown in place of a statement, e.g. verified honours. */
+  let statementItems: string[] | null = null;
   let linkedInUrl: string | undefined;
 
   if (target.kind === 'mentor') {
@@ -80,8 +84,16 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     subLine = m.company !== '—' ? m.company : '';
     bio = m.shortBio;
     tags = m.priorCompanies ?? [];
-    statementSectionLabel = 'Why I mentor';
-    statementLabel = m.whyLabel === 'In their words' ? null : 'Founder perspective';
+    // Only one of the two labels is the mentor speaking. "Founder perspective"
+    // is editorial copy written by Abel, and it was being rendered in curly
+    // quotes under a heading reading "Why I mentor", directly beneath a real
+    // person's photograph and name. A reader had no way to tell that from a
+    // quotation. The quotes and the first person are now reserved for the
+    // 'In their words' case, which is the only one a mentor has approved.
+    const inTheirWords = m.whyLabel === 'In their words';
+    statementSectionLabel = inTheirWords ? 'Why I mentor' : 'Why they mentor';
+    statementLabel = inTheirWords ? null : 'Mentable\u2019s words, not theirs';
+    statementIsQuote = inTheirWords;
     statement = m.whyIMentor;
     linkedInUrl = m.linkedInUrl;
   } else {
@@ -95,9 +107,17 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     subLine = p.school ?? '';
     bio = p.bio;
     tags = p.interestTags.slice(0, 5);
-    statementSectionLabel = p.demo_impact_story ? 'Their experience' : null;
-    statementLabel = p.demo_impact_story ? 'Demo copy' : null;
-    statement = p.demo_impact_story ?? null;
+    // demo_impact_story is deliberately NOT rendered here, and must not be.
+    // It is invented first-person copy, and every near peer on this roster is a
+    // real, named, findable student. A "Demo copy" badge does not undo an
+    // invented sentence sitting in quotation marks under someone's real face:
+    // the reader still comes away believing that person said it.
+    //
+    // The slot now carries verified honours from their own record instead. When
+    // a student has none listed, the section simply does not render, which is
+    // the correct outcome. Nothing invented replaces it.
+    statementSectionLabel = p.distinctions?.length ? 'Recognition' : null;
+    statementItems = p.distinctions?.length ? p.distinctions : null;
     linkedInUrl = p.linkedInUrl;
   }
 
@@ -192,10 +212,10 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
             <p className="text-halo-heather text-sm leading-relaxed">{bio}</p>
 
             {/* Statement section */}
-            {statement && statementSectionLabel && (
+            {statementSectionLabel && (statement || statementItems) && (
               <div className="mt-5 pt-5 border-t border-halo-rule">
                 <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                  <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+                  <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
                     {statementSectionLabel}
                   </p>
                   {statementLabel && (
@@ -204,9 +224,26 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                     </span>
                   )}
                 </div>
-                <p className="text-halo-heather text-sm leading-relaxed italic">
-                  &ldquo;{statement}&rdquo;
-                </p>
+
+                {statementItems ? (
+                  <ul className="space-y-1.5">
+                    {statementItems.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-halo-heather text-sm leading-relaxed">
+                        <span
+                          aria-hidden="true"
+                          className="w-1 h-1 rounded-full bg-halo-mist-strong flex-none mt-2"
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : statementIsQuote ? (
+                  <p className="text-halo-heather text-sm leading-relaxed italic">
+                    &ldquo;{statement}&rdquo;
+                  </p>
+                ) : (
+                  <p className="text-halo-heather text-sm leading-relaxed">{statement}</p>
+                )}
               </div>
             )}
 

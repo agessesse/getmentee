@@ -24,7 +24,7 @@ export default function MentorshipWorkspace() {
       {/* Who */}
       <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-4 border-b border-halo-rule">
         <div className="min-w-0">
-          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-1.5">
+          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-1.5">
             Mentee
           </p>
           <p className="text-[16px] font-semibold text-halo-ink leading-snug">Ethan Robinson</p>
@@ -38,7 +38,7 @@ export default function MentorshipWorkspace() {
       <div className="grid grid-cols-1 sm:grid-cols-2">
         {/* Direction */}
         <div className="px-5 sm:px-6 py-5 border-b sm:border-r border-halo-rule">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2.5">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
             <Target className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
             Working toward
           </p>
@@ -50,7 +50,7 @@ export default function MentorshipWorkspace() {
 
         {/* When you next speak */}
         <div className="px-5 sm:px-6 py-5 border-b border-halo-rule">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2.5">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
             <Calendar className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
             Next session
           </p>
@@ -61,7 +61,7 @@ export default function MentorshipWorkspace() {
 
       {/* What you said last time */}
       <div className="px-5 sm:px-6 py-5 border-b border-halo-rule">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2.5">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
           Your recap of session three
         </p>
         <p className="text-[13px] text-halo-heather leading-relaxed">
@@ -73,7 +73,7 @@ export default function MentorshipWorkspace() {
 
       {/* What is outstanding */}
       <div className="px-5 sm:px-6 py-5">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">
           Open action items
         </p>
         <ul className="space-y-2.5">

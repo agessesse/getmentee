@@ -20,12 +20,27 @@ export default function SiteFooter() {
           </p>
         </div>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-halo-deep-rule">
-          <div className="flex gap-7 text-sm text-halo-lavender">
+          {/*
+            Privacy, Terms and Accessibility join the two auth links rather than
+            forming a second row or a column block. Six short items wrap
+            naturally on a phone and sit on one line from sm up, so the footer
+            keeps its existing two-part shape instead of becoming a sitemap.
+          */}
+          <div className="flex flex-wrap gap-x-7 gap-y-2 text-sm text-halo-lavender">
             <Link href="/login" className="tap-target hover:text-white transition-colors">
               Sign in
             </Link>
             <Link href="/signup" className="tap-target hover:text-white transition-colors">
               Create account
+            </Link>
+            <Link href="/privacy" className="tap-target hover:text-white transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="tap-target hover:text-white transition-colors">
+              Terms
+            </Link>
+            <Link href="/accessibility" className="tap-target hover:text-white transition-colors">
+              Accessibility
             </Link>
           </div>
           <p className="text-sm text-halo-lavender">&copy; 2026 Mentable. All rights reserved.</p>

@@ -22,9 +22,22 @@ const config: Config = {
 
         // Halo. display = every h1/h2/h3, body = all prose, ui = eyebrows,
         // numerals, small caps and nav.
+        //
+        // `ui` pointed at Space Grotesk until the labels were reviewed. Two
+        // things were wrong with that. Space Grotesk is a geometric face with
+        // very open apertures, and next to Newsreader it read as a different
+        // project rather than a third voice in the same one. It is also the
+        // single most over-used typeface in generated startup interfaces, which
+        // is exactly the impression the uppercase labels were giving.
+        //
+        // It now points at Plex, the face the body copy already uses. Sharing a
+        // family between prose and its labels is ordinary editorial practice,
+        // and Plex has enough humanist detail at 10-11px uppercase to read as a
+        // deliberate small-caps treatment. No new font was added; one was
+        // removed.
         display: ['var(--font-newsreader)', 'Georgia', 'serif'],
         body: ['var(--font-plex)', 'system-ui', 'sans-serif'],
-        ui: ['var(--font-grotesk)', 'system-ui', 'sans-serif'],
+        ui: ['var(--font-plex)', 'system-ui', 'sans-serif'],
       },
       colors: {
         navy: {

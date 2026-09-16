@@ -184,7 +184,18 @@ export function SignupForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="you@university.edu"
+            /*
+              Role-aware, because the field is not validated. There is no .edu
+              check anywhere: not on this form, not in a server action, not in a
+              Supabase constraint, not in middleware. Any working address signs
+              up, and mentors use this same form. A fixed "you@university.edu"
+              therefore told a professional they needed a university address to
+              become a mentor, which is not true.
+
+              Mentable is university-first, so the student example stays a
+              university one. It is an example, not a rule.
+            */
+            placeholder={role === 'mentor' ? 'you@work.com' : 'you@university.edu'}
             disabled={loading}
             className="w-full px-4 py-3 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition bg-white placeholder-halo-mist-body"
           />

@@ -22,7 +22,7 @@ export default function NotFound() {
 
       <main id="main-content" className="flex-1 flex items-center px-6 lg:px-10 py-20 sm:py-28">
         <div className="max-w-6xl mx-auto w-full">
-          <p className="font-ui text-[11px] font-semibold text-halo-heather uppercase tracking-[0.22em] mb-5">
+          <p className="font-ui text-[11px] font-semibold text-halo-heather uppercase tracking-[0.14em] mb-5">
             Error 404
           </p>
           <h1

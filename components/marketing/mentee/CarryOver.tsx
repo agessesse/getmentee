@@ -25,7 +25,7 @@ export default function CarryOver() {
     <div className="max-w-md">
       {/* 1 — the conversation */}
       <div className="rounded-xl bg-halo-deep-panel border border-halo-deep-rule p-4">
-        <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.18em] mb-2.5">
+        <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.12em] mb-2.5">
           <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
           Session one &middot; 45 minutes
         </p>
@@ -39,7 +39,7 @@ export default function CarryOver() {
 
       {/* 2 — what each of you owes */}
       <div className="rounded-xl bg-halo-deep-panel border border-halo-deep-rule p-4">
-        <p className="font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.18em] mb-3">
+        <p className="font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.12em] mb-3">
           Action items
         </p>
         <ul className="space-y-2.5">
@@ -66,7 +66,7 @@ export default function CarryOver() {
 
       {/* 3 — and the loop closes */}
       <div className="rounded-xl bg-halo-ivory p-4">
-        <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">
+        <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">
           <FileText className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
           Session two &middot; opens with your brief
         </p>
@@ -89,7 +89,7 @@ function Connector({ label }: { label: string }) {
     <div className="flex items-center gap-2.5 pl-4 py-2.5" aria-hidden="true">
       <span className="w-px h-6 bg-halo-deep-rule" />
       <ArrowDown className="w-3.5 h-3.5 text-halo-lavender -ml-[7px]" />
-      <span className="font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.18em]">
+      <span className="font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.12em]">
         {label}
       </span>
     </div>

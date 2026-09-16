@@ -44,7 +44,7 @@ export default function RequestAnatomy() {
     <div>
       <div className="bg-white rounded-xl border border-halo-rule shadow-sm overflow-hidden max-w-2xl">
         <div className="flex items-center justify-between gap-3 px-5 py-3 bg-halo-veil border-b border-halo-rule">
-          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
             New request
           </p>
           <span className="text-[10px] font-medium text-halo-mist-body">Example</span>

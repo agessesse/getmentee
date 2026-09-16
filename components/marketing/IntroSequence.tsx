@@ -229,7 +229,7 @@ export default function IntroSequence() {
             fontSize: 'clamp(0.72rem, 2.1vw, 0.95rem)',
             fontWeight: 300,
             letterSpacing: '0.16em',
-            textTransform: 'lowercase',
+            textTransform: 'uppercase',
             opacity: definitionShown ? 1 : 0,
             transform: definitionShown ? 'translateY(0)' : 'translateY(6px)',
             transition: 'opacity 520ms ease 120ms, transform 620ms cubic-bezier(0.16, 1, 0.3, 1) 120ms',

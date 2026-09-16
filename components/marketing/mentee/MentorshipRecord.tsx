@@ -31,7 +31,7 @@ export default function MentorshipRecord() {
   return (
     <div className="bg-white rounded-xl border border-halo-rule shadow-lg overflow-hidden">
       <div className="flex items-center justify-between gap-3 px-5 py-3 bg-halo-veil border-b border-halo-rule">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
           Your mentorship
         </p>
         <span className="text-[10px] font-medium text-halo-mist-body">Example</span>
@@ -60,7 +60,7 @@ export default function MentorshipRecord() {
 
         {/* What you agreed to work on */}
         <div className="rounded-xl border border-halo-rule p-3.5">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2">
             <Target className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
             Shared goal
           </p>
@@ -72,7 +72,7 @@ export default function MentorshipRecord() {
 
         {/* When you next speak */}
         <div className="rounded-xl bg-halo-deep p-3.5">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.18em] mb-2">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-lavender uppercase tracking-[0.12em] mb-2">
             <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
             Next session
           </p>
@@ -81,7 +81,7 @@ export default function MentorshipRecord() {
 
         {/* What each of you owes the other */}
         <div className="rounded-xl border border-halo-rule p-3.5">
-          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2.5">
+          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
             Action items
           </p>
           <ul className="space-y-2">

@@ -111,7 +111,7 @@ export const FEATURED_MENTORS: Mentor[] = [
     linkedInUrl: 'https://www.linkedin.com/in/pete-keane-958b711/',
     helpsWith: ['Career Decisions', 'Professional Guidance', 'Advocacy'],
     shortBio:
-      "Peter has supported Mentee's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
+      "Peter has supported Mentable's founder with candid guidance, encouragement, and advocacy during important academic and professional decisions.",
     whyIMentor:
       'Good mentorship goes beyond advice. It means being willing to advocate for someone when an opportunity can change their trajectory.',
     whyLabel: 'Founder perspective',

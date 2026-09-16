@@ -114,7 +114,7 @@ export default function LogoRail({
     */
     <div className="py-7 overflow-hidden">
       <div className="px-6 lg:px-10">
-        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] mb-5 max-w-6xl mx-auto">
+        <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.12em] mb-5 max-w-6xl mx-auto">
           {eyebrow}
         </p>
       </div>
@@ -135,6 +135,24 @@ export default function LogoRail({
             <Logo key={`${item.domain}-${i}`} item={item} />
           ))}
         </div>
+      </div>
+
+      {/*
+        The non-endorsement note used to live only in the sr-only paragraph
+        below, which meant the one sentence that settles what these logos are
+        was invisible to everyone who could see the logos. A rail of university
+        and bank marks drifting across a homepage reads as a customer list until
+        something says otherwise.
+
+        It is one quiet line on the eyebrow's own type, not a disclaimer band:
+        the point is to be findable by anyone who wonders, not to apologise for
+        the rail.
+      */}
+      <div className="px-6 lg:px-10">
+        <p className="text-[11px] text-halo-mist-body font-light mt-5 max-w-6xl mx-auto">
+          Where people on Mentable studied and worked. Not partners or customers of
+          Mentable.
+        </p>
       </div>
 
       {/* Static, readable equivalent for screen readers and reduced motion */}

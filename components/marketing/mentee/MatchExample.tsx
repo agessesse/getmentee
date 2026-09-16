@@ -62,7 +62,7 @@ export default function MatchExample() {
 
         {/* The part a directory does not have */}
         <div className="px-5 sm:px-6 py-5 bg-halo-lav-wash border-y border-halo-rule">
-          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">
+          <p className="flex items-center gap-2 font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">
             <Sparkles className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
             Why you are seeing this mentor
           </p>
@@ -79,7 +79,7 @@ export default function MatchExample() {
         </div>
 
         <div className="px-5 sm:px-6 py-5">
-          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-2.5">
+          <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
             Can help with
           </p>
           <ul className="flex flex-wrap gap-2">

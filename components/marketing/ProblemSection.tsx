@@ -52,7 +52,7 @@ export default function ProblemSection() {
                     : 'border-halo-rule bg-white hover:border-halo-purple/40'
                 }`}
               >
-                <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em] mb-3">
+                <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">
                   {side.who}
                 </p>
                 <p className="font-display text-halo-ink text-[21px] sm:text-[24px] leading-snug">
@@ -81,7 +81,7 @@ export default function ProblemSection() {
         {/* Convergence */}
         <div className="flex flex-col items-center mt-10" aria-hidden="true">
           <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
-          <p className="font-ui text-[10px] font-bold text-halo-mist-body uppercase tracking-[0.3em] py-2.5">
+          <p className="font-ui text-[10px] font-bold text-halo-mist-body uppercase tracking-[0.16em] py-2.5">
             Luck
           </p>
           <div className="w-px h-8 bg-gradient-to-b from-halo-rule to-halo-ink" />

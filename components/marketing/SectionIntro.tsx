@@ -45,7 +45,7 @@ export default function SectionIntro({
   return (
     <div className={className}>
       <p
-        className={`font-ui text-[11px] font-semibold uppercase tracking-[0.22em] mb-5 ${
+        className={`font-ui text-[11px] font-semibold uppercase tracking-[0.14em] mb-5 ${
           deep ? 'text-halo-lavender' : 'text-halo-purple-d'
         }`}
       >

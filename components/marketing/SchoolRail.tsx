@@ -15,7 +15,10 @@ const MENTEE_SCHOOLS: RailItem[] = [
   { name: 'Georgetown University', domain: 'georgetown.edu', label: 'Georgetown' },
   { name: 'UC Berkeley', domain: 'berkeley.edu' },
   { name: 'University of New Hampshire', domain: 'unh.edu', label: 'New Hampshire' },
-  { name: "Queen's University", domain: 'queensu.ca', label: "Queen's" },
+  // Was "Queen's University" on queensu.ca, which is the Canadian institution
+  // in Kingston, Ontario. The student on the roster attends Queens University
+  // of Charlotte: different school, different country, no apostrophe.
+  { name: 'Queens University of Charlotte', domain: 'queens.edu', label: 'Queens' },
 ];
 
 export default function SchoolRail() {

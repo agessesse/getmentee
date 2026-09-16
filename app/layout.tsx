@@ -6,7 +6,6 @@ import {
   Instrument_Serif,
   Newsreader,
   IBM_Plex_Sans,
-  Space_Grotesk,
 } from 'next/font/google';
 
 // ── The old system. Still loaded because the signed-in portal renders in it:
@@ -41,14 +40,6 @@ const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-plex',
-  display: 'swap',
-  preload: false,
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-grotesk',
   display: 'swap',
   preload: false,
 });
@@ -88,7 +79,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${plexSans.variable} ${spaceGrotesk.variable}`}
+      className={`${dmSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${plexSans.variable}`}
     >
       <body className="bg-cream-50 text-navy-900 font-sans">
         {/*

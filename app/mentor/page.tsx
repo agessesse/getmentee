@@ -52,7 +52,7 @@ export default function MentorPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
               <div>
-                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.22em] mb-5">
+                <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-5">
                   For mentors
                 </p>
 
@@ -183,7 +183,7 @@ export default function MentorPage() {
 
               {/* The other half of being precise */}
               <div className="rounded-xl border border-halo-rule bg-white p-6 lg:mt-14">
-                <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.18em] mb-4">
+                <p className="font-ui text-[10px] font-semibold text-halo-mist-body uppercase tracking-[0.12em] mb-4">
                   And what it does not do
                 </p>
                 <ul className="space-y-3.5">

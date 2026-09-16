@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Shirt, Users, Plane, GraduationCap } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import LandingNav from '@/components/marketing/LandingNav';
@@ -14,7 +13,7 @@ import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import Flywheel from '@/components/marketing/Flywheel';
 import InviteModal from '@/components/marketing/InviteModal';
-import Wordmark from '@/components/ui/Wordmark';
+import SiteFooter from '@/components/marketing/SiteFooter';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
 
@@ -184,7 +183,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div>
-              <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.22em] mb-5">
+              <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
                 A Mentable initiative
               </p>
               <h2
@@ -289,24 +288,13 @@ export default function LandingPage() {
 
       </main>
 
-      {/* ── Footer ──────────────────────────────────────────────────────────── */}
-      <footer className="py-14 px-6 lg:px-10 bg-halo-black">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-9">
-            <Wordmark size="lg" className="text-white" />
-            <p className="text-halo-lavender font-light mt-2 max-w-xs text-sm leading-relaxed">
-              Find someone worth learning from. Become someone worth mentoring.
-            </p>
-          </div>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-halo-deep-rule">
-            <div className="flex gap-7 text-sm text-halo-lavender">
-              <Link href="/login" className="tap-target hover:text-white transition-colors">Sign in</Link>
-              <Link href="/signup" className="tap-target hover:text-white transition-colors">Create account</Link>
-            </div>
-            <p className="text-sm text-halo-lavender">&copy; 2026 Mentable. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      {/*
+        SiteFooter, not a copy of it. This footer was duplicated here character
+        for character, which is precisely why Privacy, Terms and Accessibility
+        landed on every public page except the one an institution opens first.
+        The rendered markup is unchanged; the duplication is not.
+      */}
+      <SiteFooter />
     </div>
   );
 }

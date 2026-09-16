@@ -41,7 +41,7 @@ export default function MenteeLedger() {
   return (
     <div className="bg-white rounded-xl border border-halo-rule shadow-lg overflow-hidden">
       <div className="flex items-center justify-between gap-3 px-5 py-3 bg-halo-veil border-b border-halo-rule">
-        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.18em]">
+        <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
           Your mentees
         </p>
         <span className="text-[10px] font-medium text-halo-mist-body">Example</span>
