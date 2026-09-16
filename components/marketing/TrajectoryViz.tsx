@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useScrollProgress, useReducedMotion, useWideViewport } from '@/lib/useScrollProgress';
 
 // Nodes sit along the mentored curve as fractions of its length.
 // The mentor enters early, at MENTOR_T; the milestones follow. Keeping these
@@ -67,31 +68,32 @@ export default function TrajectoryViz() {
     return () => { mq.removeEventListener('change', onChange); cq.removeEventListener('change', onChange); };
   }, []);
 
-  // Every device resolves the curve once on scroll-in, so the section is never
-  // blank; mouse users can then scrub it with the pointer.
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
+  /*
+    The curve is drawn by scrolling.
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        if (reduced) { setLift(1); io.disconnect(); return; }
-        const started = performance.now();
-        const tick = (now: number) => {
-          if (scrubbed.current) return;
-          const p = Math.min((now - started) / 1100, 1);
-          setLift(1 - Math.pow(1 - p, 3));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-        io.disconnect();
-      },
-      { threshold: 0.45 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [reduced]);
+    It used to play a fixed 1100ms ease the first time the section came into
+    view, which meant the most literal idea on the page, a trajectory bending
+    upward, was disconnected from the one gesture the visitor was already
+    making. Now the section pins for a short range and the lift is a pure
+    function of how far through that range you are: stop halfway and the curve
+    stops halfway, scroll back and it comes back down.
+
+    Pointer scrubbing still wins. Once `scrubbed` is set the mouse owns the
+    value, exactly as before, and scroll stops writing to it.
+  */
+  const pinRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
+  const wide = useWideViewport(768);
+  const pinned = wide && !prefersReduced;
+  const scrollProgress = useScrollProgress(pinRef, pinned);
+
+  useEffect(() => {
+    if (!pinned) { setLift(1); return; }
+    if (scrubbed.current) return;
+    // Resolve a little before the pin ends so the finished curve is held for a
+    // beat rather than completing on the very last pixel.
+    setLift(Math.min(scrollProgress / 0.78, 1));
+  }, [scrollProgress, pinned]);
 
   const startLoop = () => {
     if (raf.current) return;
@@ -152,8 +154,17 @@ export default function TrajectoryViz() {
   const active = activeNode !== null ? NODES[activeNode] : null;
 
   return (
+    /*
+      The pin range. Roughly one extra screen of scroll, which is a single
+      trackpad flick, and every pixel of it is reversible. Below 768px and under
+      reduced motion the wrapper is a plain div with no height and the section
+      behaves exactly as it did before.
+    */
+    <div ref={pinRef} style={pinned ? { height: '190vh' } : undefined}>
     <section
-      className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep overflow-hidden"
+      className={`py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep overflow-hidden${
+        pinned ? ' sticky top-0 min-h-screen flex items-center' : ''
+      }`}
       aria-labelledby="trajectory-heading"
     >
       <div className="max-w-6xl mx-auto">
@@ -323,5 +334,6 @@ export default function TrajectoryViz() {
         </div>
       </div>
     </section>
+    </div>
   );
 }

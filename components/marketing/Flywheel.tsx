@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useScrollProgress, useReducedMotion, useWideViewport } from '@/lib/useScrollProgress';
 
 const STAGES = [
   { verb: 'Learn',  line: 'Ask better questions.' },
@@ -42,11 +43,49 @@ export default function Flywheel() {
   }, []);
 
   const choose = (i: number) => { setActive(i); setEngaged(true); };
+
+  /*
+    Scrolling walks the cycle.
+
+    This is the one diagram on the page whose whole point is a sequence, and it
+    used to present all four stages at once and wait to be hovered. Pinned, the
+    scroll range maps onto the four stages, so Learn, Apply, Grow and Return
+    arrive in order and the progress arc fills as you go. It is a pure function
+    of scroll position: reverse and it walks backwards.
+
+    Hover and tap still work and still win. `choose` sets the stage directly;
+    scroll only writes when the bucket it computes actually changes, so a
+    deliberate click is not immediately overwritten by the next scroll frame.
+  */
+  const pinRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
+  const wide = useWideViewport(768);
+  const pinned = wide && !prefersReduced;
+  const progress = useScrollProgress(pinRef, pinned);
+  const lastBucket = useRef(-1);
+
+  useEffect(() => {
+    if (!pinned) return;
+    // The first and last stages get a little extra dwell so the cycle does not
+    // start mid-stride or snap shut on the final pixel.
+    const p = Math.min(Math.max((progress - 0.08) / 0.74, 0), 0.9999);
+    const bucket = Math.floor(p * STAGES.length);
+    if (bucket === lastBucket.current) return;
+    lastBucket.current = bucket;
+    setActive(bucket);
+  }, [progress, pinned]);
+
   const stage = STAGES[active];
   const isReturn = active === STAGES.length - 1;
 
   return (
-    <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-ivory border-t border-halo-rule" aria-labelledby="flywheel-heading">
+    <div ref={pinRef} style={pinned ? { height: '230vh' } : undefined}>
+    <section
+      className={`py-20 sm:py-24 px-6 lg:px-10 bg-halo-ivory border-t border-halo-rule${
+        pinned ? ' sticky top-0 min-h-screen flex items-center' : ''
+      }`}
+      aria-labelledby="flywheel-heading"
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -63,7 +102,13 @@ export default function Flywheel() {
             </h2>
 
             <p className="text-[14px] text-halo-heather mb-5">
-              {coarse ? 'Tap each stage to follow the cycle.' : 'Hover each stage to follow the cycle.'}
+              {/* The copy has to describe the interaction that is actually
+                  available, which now depends on whether the section is pinned. */}
+              {pinned
+                ? 'Keep scrolling to follow the cycle, or pick a stage.'
+                : coarse
+                  ? 'Tap each stage to follow the cycle.'
+                  : 'Hover each stage to follow the cycle.'}
             </p>
 
             {/* Reserved height keeps the layout still as the label changes */}
@@ -208,5 +253,6 @@ export default function Flywheel() {
         </div>
       </div>
     </section>
+    </div>
   );
 }

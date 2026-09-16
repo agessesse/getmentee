@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Circle, CheckCircle2, ArrowRight, Calendar, Target, Send, Search } from 'lucide-react';
+import { Circle, CheckCircle2, ArrowRight, ArrowLeft, Calendar, Target, Send, Search } from 'lucide-react';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
 
@@ -246,6 +246,7 @@ export default function ProductDemo() {
     // side effect: React invokes it twice under Strict Mode, which would log
     // the event twice for one click.
     const firstVisit = !visited.has(next);
+    setNudge(false);
     setStage(next);
     setVisited((v) => new Set(v).add(next));
     if (firstVisit) trackLandingEvent('product_demo_stage_viewed', { stage: next });
@@ -254,6 +255,48 @@ export default function ProductDemo() {
 
   const activeIdx = STAGES.findIndex((s) => s.id === stage);
   const activeStage = STAGES[activeIdx];
+
+  /*
+    Discoverability, not new behaviour.
+
+    The demo has always been four tabs and a panel, and the copy has always said
+    to click through the four steps. The trouble was that the sentence had
+    nothing obvious to point at: the stage list reads as a legend at rest, the
+    filled row looks like a label rather than the current selection, and on a
+    touch screen there is no hover to reveal otherwise. Someone in their fifties
+    reading this for the first time had to guess.
+
+    So the section gains an explicit pair of controls under the panel, a step
+    counter, and a single nudge of the forward arrow the first time the demo
+    comes into view. Nothing about the demo itself changed: prev and next call
+    the same `go` the tabs call, so analytics, visited state and every panel
+    behave exactly as before.
+  */
+  const goPrev = () => { if (activeIdx > 0) go(STAGES[activeIdx - 1].id); };
+  const goNext = () => { if (activeIdx < STAGES.length - 1) go(STAGES[activeIdx + 1].id); };
+
+  const [nudge, setNudge] = useState(false);
+  const controlsRef = useRef<HTMLDivElement>(null);
+
+  // One nudge, on first view, and never again. Not a perpetual bounce.
+  useEffect(() => {
+    const el = controlsRef.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const on = setTimeout(() => setNudge(true), 450);
+        const off = setTimeout(() => setNudge(false), 1250);
+        cleanup = () => { clearTimeout(on); clearTimeout(off); };
+      },
+      { threshold: 0.6 },
+    );
+    let cleanup = () => {};
+    io.observe(el);
+    return () => { io.disconnect(); cleanup(); };
+  }, []);
 
   return (
     <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-veil border-t border-halo-rule" aria-labelledby="product-demo-heading">
@@ -284,7 +327,26 @@ export default function ProductDemo() {
               <ol> and mark the <li> wrappers presentational — the tabs then sit
               directly under the tablist as far as assistive tech is concerned.
             */}
-            <ol className="space-y-1" role="tablist" aria-label="Product stages">
+            {/*
+              Left and Right walk the tablist, which is what the ARIA tabs
+              pattern promises and what anyone navigating by keyboard will try.
+              Tab-then-Enter already worked; this adds the expected shortcut
+              without changing what the tabs are.
+            */}
+            <ol
+              className="space-y-1"
+              role="tablist"
+              aria-label="Product stages"
+              onKeyDown={(e) => {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                e.preventDefault();
+                const dir = e.key === 'ArrowRight' ? 1 : -1;
+                const nextIdx = (activeIdx + dir + STAGES.length) % STAGES.length;
+                go(STAGES[nextIdx].id);
+                const tab = document.getElementById(`demo-tab-${STAGES[nextIdx].id}`);
+                tab?.focus();
+              }}
+            >
               {STAGES.map((s, i) => {
                 const isActive = s.id === stage;
                 const seen = visited.has(s.id);
@@ -296,6 +358,7 @@ export default function ProductDemo() {
                       id={`demo-tab-${s.id}`}
                       aria-selected={isActive}
                       aria-controls="demo-panel"
+                      tabIndex={isActive ? 0 : -1}
                       onClick={() => go(s.id)}
                       className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple ${
                         isActive ? 'bg-halo-deep' : 'hover:bg-halo-veil'
@@ -363,6 +426,45 @@ export default function ProductDemo() {
             <p aria-live="polite" className="sr-only">
               Showing stage {activeIdx + 1} of {STAGES.length}: {activeStage.label}
             </p>
+
+            {/*
+              Real buttons, 44px, with the step count between them. Deliberately
+              directly under the panel rather than beside the stage list,
+              because that is where the eye already is once the panel has been
+              read, and it is reachable by thumb on a phone without competing
+              with vertical scrolling.
+            */}
+            <div ref={controlsRef} className="flex items-center justify-center gap-2 mt-4">
+              <button
+                type="button"
+                onClick={goPrev}
+                disabled={activeIdx === 0}
+                aria-label="Previous step"
+                className="inline-flex items-center justify-center w-11 h-11 rounded-xl border border-halo-rule bg-white text-halo-heather transition-all hover:border-halo-purple hover:text-halo-purple-d hover:shadow-sm active:scale-95 disabled:opacity-40 disabled:hover:border-halo-rule disabled:hover:text-halo-heather disabled:hover:shadow-none disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
+              >
+                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+              </button>
+
+              <span className="font-ui text-[12px] font-semibold tabular-nums text-halo-heather px-3 select-none">
+                {activeIdx + 1} / {STAGES.length}
+              </span>
+
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={activeIdx === STAGES.length - 1}
+                aria-label="Next step"
+                className="group inline-flex items-center gap-2 h-11 pl-4 pr-3.5 rounded-xl border border-halo-purple bg-halo-purple text-white font-semibold text-[13px] transition-all hover:bg-halo-purple-d active:scale-95 disabled:opacity-40 disabled:hover:bg-halo-purple disabled:cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
+              >
+                Next step
+                <ArrowRight
+                  className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-0.5"
+                  style={{ transform: nudge ? 'translateX(5px)' : undefined }}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+
             <p className="text-center text-[11px] text-halo-mist-body mt-3">
               A preview of the real product.
             </p>

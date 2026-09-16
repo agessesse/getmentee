@@ -14,6 +14,7 @@ import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import Flywheel from '@/components/marketing/Flywheel';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
+import ScrollHandoff from '@/components/marketing/ScrollHandoff';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
 
@@ -51,8 +52,14 @@ export default function LandingPage() {
 
       <main id="main-content">
 
-      {/* ── 01. Hero ─────────────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 lg:py-24 px-6 lg:px-10" aria-labelledby="hero-heading">
+      {/*
+        ── 01. Hero ──────────────────────────────────────────────────────────
+        The hero holds, then recedes as the Problem section climbs over it. It
+        is the first thing the page does after the entrance, and it establishes
+        that scrolling here is directed rather than just long.
+      */}
+      <ScrollHandoff>
+      <section className="py-16 sm:py-20 lg:py-24 px-6 lg:px-10 bg-halo-ivory" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
             <div>
@@ -141,8 +148,14 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </ScrollHandoff>
+
       {/* ── 02. Problem ──────────────────────────────────────────────────────── */}
-      <ProblemSection />
+      {/* Sits above the receding hero. `relative` gives it a stacking context so
+          it paints over the sticky section rather than under it. */}
+      <div className="relative">
+        <ProblemSection />
+      </div>
 
       {/* ── 03. The two rosters ──────────────────────────────────────────────── */}
       {/* Willing to teach, then ready to learn. Each section now carries its own
@@ -190,7 +203,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 09. Opportunity Fund ─────────────────────────────────────────────── */}
+      {/*
+        ── 09. Opportunity Fund ──────────────────────────────────────────────
+        The last handoff, so the ending arrives rather than simply appearing.
+        The deep band settles back and the closing ask rises over it.
+      */}
+      <ScrollHandoff minScale={0.975} minOpacity={0.7}>
       <section
         className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep"
         aria-labelledby="fund-heading"
@@ -264,7 +282,10 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </ScrollHandoff>
+
       {/* ── 10. Final CTA ────────────────────────────────────────────────────── */}
+      <div className="relative">
       <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-ivory" aria-labelledby="cta-heading">
         <div className="max-w-6xl mx-auto">
           <h2
@@ -300,6 +321,7 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+      </div>
 
       </main>
 
