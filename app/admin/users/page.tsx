@@ -90,8 +90,8 @@ export default async function AdminUsers({
   return (
     <div className="max-w-7xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Users</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Users</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           {count ?? 0} total. Email is deliberately not shown here; migration 0018
           revoked read access to it to keep addresses out of the app surface.
         </p>
@@ -99,36 +99,36 @@ export default async function AdminUsers({
 
       <form method="GET" action="/admin/users" className="flex flex-wrap gap-2 items-end">
         <div>
-          <label htmlFor="q" className="block text-[12px] font-medium text-gray-700 mb-1">Search</label>
+          <label htmlFor="q" className="block text-[12px] font-medium text-halo-heather mb-1">Search</label>
           <input
             id="q" name="q" defaultValue={q} placeholder="Name or school"
-            className="h-9 w-64 max-w-full rounded-md border border-gray-300 px-3 text-[14px] text-navy-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-navy-500"
+            className="h-9 w-64 max-w-full rounded-md border border-halo-rule px-3 text-[14px] text-halo-ink placeholder:text-halo-mist-body focus:outline-none focus:ring-2 focus:ring-halo-purple"
           />
         </div>
         <div>
-          <label htmlFor="role" className="block text-[12px] font-medium text-gray-700 mb-1">Role</label>
+          <label htmlFor="role" className="block text-[12px] font-medium text-halo-heather mb-1">Role</label>
           <select id="role" name="role" defaultValue={role ?? ''}
-            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-navy-900 focus:outline-none focus:ring-2 focus:ring-navy-500">
+            className="h-9 rounded-md border border-halo-rule px-2 text-[14px] text-halo-ink focus:outline-none focus:ring-2 focus:ring-halo-purple">
             <option value="">All</option>
             <option value="mentor">Mentor</option>
             <option value="mentee">Mentee</option>
           </select>
         </div>
         <div>
-          <label htmlFor="status" className="block text-[12px] font-medium text-gray-700 mb-1">Profile</label>
+          <label htmlFor="status" className="block text-[12px] font-medium text-halo-heather mb-1">Profile</label>
           <select id="status" name="status" defaultValue={status ?? ''}
-            className="h-9 rounded-md border border-gray-300 px-2 text-[14px] text-navy-900 focus:outline-none focus:ring-2 focus:ring-navy-500">
+            className="h-9 rounded-md border border-halo-rule px-2 text-[14px] text-halo-ink focus:outline-none focus:ring-2 focus:ring-halo-purple">
             <option value="">Any</option>
             <option value="complete">Complete</option>
             <option value="incomplete">Incomplete</option>
           </select>
         </div>
         <button type="submit"
-          className="h-9 px-4 rounded-md bg-navy-900 text-white text-[14px] font-medium hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-500">
+          className="h-9 px-4 rounded-md bg-halo-purple text-white text-[14px] font-medium hover:bg-halo-purple-d focus:outline-none focus:ring-2 focus:ring-halo-purple">
           Apply
         </button>
         {(q || role || status) && (
-          <Link href="/admin/users" className="h-9 inline-flex items-center px-3 text-[14px] text-gray-700 hover:text-navy-900">
+          <Link href="/admin/users" className="h-9 inline-flex items-center px-3 text-[14px] text-halo-heather hover:text-halo-ink">
             Clear
           </Link>
         )}
@@ -142,22 +142,22 @@ export default async function AdminUsers({
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full min-w-[720px]">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-halo-veil border-b border-halo-rule">
                   <tr>
                     <Th>Name</Th><Th>Role</Th><Th>Affiliation</Th><Th>Profile</Th><Th>Flags</Th><Th>Joined</Th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-halo-rule">
                   {visible.map((u) => (
-                    <tr key={u.id} className="hover:bg-gray-50">
+                    <tr key={u.id} className="hover:bg-halo-veil">
                       <Td>
                         <Link href={`/admin/users/${u.id}`} className="font-medium hover:underline">
                           {u.first_name} {u.last_name}
                         </Link>
-                        {u.headline && <div className="text-[12px] text-gray-600 mt-0.5 truncate max-w-[220px]">{u.headline}</div>}
+                        {u.headline && <div className="text-[12px] text-halo-heather mt-0.5 truncate max-w-[220px]">{u.headline}</div>}
                       </Td>
                       <Td><Tag tone={u.role === 'mentor' ? 'blue' : 'neutral'}>{u.role}</Tag></Td>
-                      <Td className="text-gray-700">{u.university || companyOf.get(u.id) || 'Not set'}</Td>
+                      <Td className="text-halo-heather">{u.university || companyOf.get(u.id) || 'Not set'}</Td>
                       <Td>{complete.has(u.id)
                         ? <Tag tone="green">Complete</Tag>
                         : <Tag tone="amber">Incomplete</Tag>}</Td>
@@ -165,10 +165,10 @@ export default async function AdminUsers({
                         <span className="flex gap-1">
                           {u.is_admin && <Tag tone="red">Admin</Tag>}
                           {u.is_demo && <Tag>Demo</Tag>}
-                          {!u.is_admin && !u.is_demo && <span className="text-gray-500 text-[13px]">None</span>}
+                          {!u.is_admin && !u.is_demo && <span className="text-halo-mist-body text-[13px]">None</span>}
                         </span>
                       </Td>
-                      <Td className="text-gray-700 tabular-nums whitespace-nowrap">
+                      <Td className="text-halo-heather tabular-nums whitespace-nowrap">
                         {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
                       </Td>
                     </tr>
@@ -178,13 +178,13 @@ export default async function AdminUsers({
             </div>
 
             {/* Mobile list: a 6-column table is unreadable under 768px */}
-            <ul className="md:hidden divide-y divide-gray-100">
+            <ul className="md:hidden divide-y divide-halo-rule">
               {visible.map((u) => (
                 <li key={u.id} className="p-4">
                   <Link href={`/admin/users/${u.id}`} className="font-medium text-[15px] hover:underline">
                     {u.first_name} {u.last_name}
                   </Link>
-                  <p className="text-[13px] text-gray-700 mt-1">{u.university || companyOf.get(u.id) || 'Not set'}</p>
+                  <p className="text-[13px] text-halo-heather mt-1">{u.university || companyOf.get(u.id) || 'Not set'}</p>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     <Tag tone={u.role === 'mentor' ? 'blue' : 'neutral'}>{u.role}</Tag>
                     {complete.has(u.id) ? <Tag tone="green">Complete</Tag> : <Tag tone="amber">Incomplete</Tag>}
@@ -201,17 +201,17 @@ export default async function AdminUsers({
       <div className="flex items-center gap-3">
         {page > 1 && (
           <Link href={qs({ page: String(page - 1) })}
-            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-navy-300">
+            className="h-9 inline-flex items-center px-3 rounded-md border border-halo-rule bg-white text-[14px] hover:border-halo-purple">
             Previous
           </Link>
         )}
         {users.length === PAGE_SIZE && (
           <Link href={qs({ page: String(page + 1) })}
-            className="h-9 inline-flex items-center px-3 rounded-md border border-gray-300 bg-white text-[14px] hover:border-navy-300">
+            className="h-9 inline-flex items-center px-3 rounded-md border border-halo-rule bg-white text-[14px] hover:border-halo-purple">
             Next
           </Link>
         )}
-        <span className="text-[13px] text-gray-600">Page {page}</span>
+        <span className="text-[13px] text-halo-heather">Page {page}</span>
       </div>
     </div>
   );

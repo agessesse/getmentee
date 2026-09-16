@@ -82,8 +82,8 @@ export default async function AdminMentorships({
   return (
     <div className="max-w-7xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Mentorship operations</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Mentorship operations</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           Requested, accepted, active, completed. Most recent 200 of each.
         </p>
       </div>
@@ -97,13 +97,13 @@ export default async function AdminMentorships({
 
       {stalePending.length > 0 && (
         <Panel title={`Requests pending over 7 days (${stalePending.length})`}>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-halo-rule">
             {stalePending.slice(0, 10).map((r) => (
               <li key={r.id} className="px-4 py-2.5 text-[14px] flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span className="font-medium">{name(people, r.mentee_id)}</span>
-                <span className="text-gray-600">asked</span>
+                <span className="text-halo-heather">asked</span>
                 <span className="font-medium">{name(people, r.mentor_id)}</span>
-                <span className="ml-auto text-[13px] text-gray-700 tabular-nums">
+                <span className="ml-auto text-[13px] text-halo-heather tabular-nums">
                   {Math.floor((now - Date.parse(r.created_at)) / DAY)} days ago
                 </span>
               </li>
@@ -117,7 +117,7 @@ export default async function AdminMentorships({
           <Link key={t} href={`/admin/mentorships${t === 'requests' ? '?tab=requests' : ''}`}
             role="tab" aria-selected={tab === t}
             className={`px-3 py-2 text-[13px] font-medium rounded-md border ${
-              tab === t ? 'bg-navy-900 text-white border-navy-900' : 'bg-white text-gray-700 border-gray-300 hover:border-navy-300'}`}>
+              tab === t ? 'bg-halo-purple text-white border-halo-purple' : 'bg-white text-halo-heather border-halo-rule hover:border-halo-purple'}`}>
             {t === 'active' ? 'Active mentorships' : 'All requests'}
           </Link>
         ))}
@@ -129,17 +129,17 @@ export default async function AdminMentorships({
         ) : tab === 'requests' ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-halo-veil border-b border-halo-rule">
                 <tr><Th>Mentee</Th><Th>Mentor</Th><Th>Status</Th><Th>Goal</Th><Th>Requested</Th></tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-halo-rule">
                 {reqs.map((r) => (
-                  <tr key={r.id} className="hover:bg-gray-50">
+                  <tr key={r.id} className="hover:bg-halo-veil">
                     <Td><Link href={`/admin/users/${r.mentee_id}`} className="hover:underline">{name(people, r.mentee_id)}</Link></Td>
                     <Td><Link href={`/admin/users/${r.mentor_id}`} className="hover:underline">{name(people, r.mentor_id)}</Link></Td>
                     <Td><Tag tone={r.status === 'pending' ? 'amber' : r.status === 'approved' ? 'green' : 'neutral'}>{r.status}</Tag></Td>
-                    <Td className="text-gray-700 max-w-[280px] truncate">{r.goals || 'Not set'}</Td>
-                    <Td className="text-gray-700 tabular-nums whitespace-nowrap">
+                    <Td className="text-halo-heather max-w-[280px] truncate">{r.goals || 'Not set'}</Td>
+                    <Td className="text-halo-heather tabular-nums whitespace-nowrap">
                       {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
                     </Td>
                   </tr>
@@ -150,10 +150,10 @@ export default async function AdminMentorships({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-halo-veil border-b border-halo-rule">
                 <tr><Th>Mentee</Th><Th>Mentor</Th><Th>Sessions</Th><Th>Next session</Th><Th>Started</Th></tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-halo-rule">
                 {activeList.map((m) => {
                   const list = byMship.get(m.id) ?? [];
                   const upcoming = list
@@ -161,16 +161,16 @@ export default async function AdminMentorships({
                     .sort((a, b) => Date.parse(a.scheduled_at) - Date.parse(b.scheduled_at))[0];
                   const done = list.filter((s) => s.status === 'completed').length;
                   return (
-                    <tr key={m.id} className="hover:bg-gray-50">
+                    <tr key={m.id} className="hover:bg-halo-veil">
                       <Td><Link href={`/admin/users/${m.mentee_id}`} className="hover:underline">{name(people, m.mentee_id)}</Link></Td>
                       <Td><Link href={`/admin/users/${m.mentor_id}`} className="hover:underline">{name(people, m.mentor_id)}</Link></Td>
                       <Td className="tabular-nums">{done} done, {list.length} total</Td>
                       <Td>
                         {upcoming
-                          ? <span className="text-gray-700 tabular-nums">{new Date(upcoming.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          ? <span className="text-halo-heather tabular-nums">{new Date(upcoming.scheduled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                           : <Tag tone="amber">None scheduled</Tag>}
                       </Td>
-                      <Td className="text-gray-700 tabular-nums whitespace-nowrap">
+                      <Td className="text-halo-heather tabular-nums whitespace-nowrap">
                         {new Date(m.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
                       </Td>
                     </tr>

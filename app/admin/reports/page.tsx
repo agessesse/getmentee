@@ -45,8 +45,8 @@ export default async function AdminReports() {
   return (
     <div className="max-w-6xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Reports</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Reports</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           {result.ok ? `${reports.length} filed.` : 'Count unavailable.'} This queue is read-only.
         </p>
       </div>
@@ -88,12 +88,12 @@ export default async function AdminReports() {
           <>
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full min-w-[760px]">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-halo-veil border-b border-halo-rule">
                   <tr><Th>Reported user</Th><Th>Reason</Th><Th>Context</Th><Th>Details</Th><Th>Reporter</Th><Th>Filed</Th></tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-halo-rule">
                   {reports.map((r) => (
-                    <tr key={r.id} className="hover:bg-gray-50 align-top">
+                    <tr key={r.id} className="hover:bg-halo-veil align-top">
                       <Td>
                         <Link href={`/admin/users/${r.reported_id}`} className="font-medium hover:underline">{nm(r.reported_id)}</Link>
                         {(tally.get(r.reported_id) ?? 0) > 1 && (
@@ -101,10 +101,10 @@ export default async function AdminReports() {
                         )}
                       </Td>
                       <Td><Tag tone={TONE[r.reason] ?? 'neutral'}>{r.reason.replace(/_/g, ' ')}</Tag></Td>
-                      <Td className="text-gray-700">{r.context || 'Not set'}</Td>
-                      <Td className="text-gray-700 max-w-[280px]">{r.details || 'None given'}</Td>
+                      <Td className="text-halo-heather">{r.context || 'Not set'}</Td>
+                      <Td className="text-halo-heather max-w-[280px]">{r.details || 'None given'}</Td>
                       <Td><Link href={`/admin/users/${r.reporter_id}`} className="hover:underline">{nm(r.reporter_id)}</Link></Td>
-                      <Td className="text-gray-700 tabular-nums whitespace-nowrap">
+                      <Td className="text-halo-heather tabular-nums whitespace-nowrap">
                         {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
                       </Td>
                     </tr>
@@ -112,15 +112,15 @@ export default async function AdminReports() {
                 </tbody>
               </table>
             </div>
-            <ul className="md:hidden divide-y divide-gray-100">
+            <ul className="md:hidden divide-y divide-halo-rule">
               {reports.map((r) => (
                 <li key={r.id} className="p-4">
                   <div className="flex items-center gap-2 flex-wrap">
                     <Link href={`/admin/users/${r.reported_id}`} className="font-medium text-[15px] hover:underline">{nm(r.reported_id)}</Link>
                     <Tag tone={TONE[r.reason] ?? 'neutral'}>{r.reason.replace(/_/g, ' ')}</Tag>
                   </div>
-                  <p className="text-[14px] text-gray-700 mt-1.5">{r.details || 'No details given'}</p>
-                  <p className="text-[13px] text-gray-600 mt-1.5">
+                  <p className="text-[14px] text-halo-heather mt-1.5">{r.details || 'No details given'}</p>
+                  <p className="text-[13px] text-halo-heather mt-1.5">
                     Reported by {nm(r.reporter_id)} on{' '}
                     {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>

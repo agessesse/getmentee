@@ -16,7 +16,7 @@ export default function Card({ padding = 'md', className, children, ...props }: 
   return (
     <div
       className={clsx(
-        'bg-cream-50 rounded-xl shadow-sm border border-gray-100',
+        'bg-white rounded-2xl border border-halo-rule',
         paddings[padding],
         className
       )}

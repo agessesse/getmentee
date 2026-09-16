@@ -112,28 +112,28 @@ function CategoryCard({ cat }: { cat: typeof CATEGORIES[0] }) {
   const [open, setOpen] = useState(false);
   const Icon = cat.icon;
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-navy-100 hover:shadow-sm transition-all">
+    <div className="bg-white border border-halo-rule rounded-2xl p-5 hover:border-halo-lavender hover:shadow-sm transition-all">
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 bg-navy-50 rounded-xl flex items-center justify-center flex-shrink-0">
-          <Icon className="w-5 h-5 text-navy-700" />
+        <div className="w-10 h-10 bg-halo-veil rounded-xl flex items-center justify-center flex-shrink-0">
+          <Icon className="w-5 h-5 text-halo-purple-d" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-navy-900 text-sm">{cat.label}</h3>
+            <h3 className="font-semibold text-halo-ink text-sm">{cat.label}</h3>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="text-gray-400 hover:text-navy-700 transition-colors flex-shrink-0"
+              className="text-halo-mist-body hover:text-halo-purple-d transition-colors flex-shrink-0"
               aria-label={open ? 'Collapse' : 'Expand'}
             >
               {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed">{cat.description}</p>
+          <p className="text-xs text-halo-mist-body mt-1 leading-relaxed">{cat.description}</p>
           {open && (
             <ul className="mt-3 space-y-1">
               {cat.examples.map((ex) => (
-                <li key={ex} className="text-xs text-gray-500 flex items-start gap-2">
-                  <span className="w-1 h-1 rounded-full bg-gray-300 mt-1.5 flex-shrink-0" />
+                <li key={ex} className="text-xs text-halo-mist-body flex items-start gap-2">
+                  <span className="w-1 h-1 rounded-full bg-halo-rule mt-1.5 flex-shrink-0" />
                   {ex}
                 </li>
               ))}
@@ -162,34 +162,34 @@ function PilotBanner() {
 
 function FundCard({ fund }: { fund: Fund }) {
   return (
-    <div className="bg-white border border-navy-100 rounded-2xl p-5">
+    <div className="bg-white border border-halo-lavender rounded-2xl p-5">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          <p className="font-semibold text-navy-900 text-sm">{fund.name}</p>
+          <p className="font-semibold text-halo-ink text-sm">{fund.name}</p>
           {fund.sponsor_name && (
-            <p className="text-xs text-gray-500 mt-0.5">Sponsored by {fund.sponsor_name}</p>
+            <p className="text-xs text-halo-mist-body mt-0.5">Sponsored by {fund.sponsor_name}</p>
           )}
         </div>
-        <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full flex-shrink-0 ${
+        <span className={`text-[10px] font-semibold font-ui uppercase tracking-[0.14em] px-2 py-1 rounded-full flex-shrink-0 ${
           fund.status === 'active'
             ? 'bg-green-100 text-green-700'
             : fund.status === 'pilot'
             ? 'bg-amber-100 text-amber-700'
-            : 'bg-gray-100 text-gray-500'
+            : 'bg-halo-bone text-halo-mist-body'
         }`}>
           {fund.status === 'active' ? 'Open' : fund.status === 'pilot' ? 'Pilot' : 'Closed'}
         </span>
       </div>
       {fund.description && (
-        <p className="text-xs text-gray-600 leading-relaxed mb-3">{fund.description}</p>
+        <p className="text-xs text-halo-heather leading-relaxed mb-3">{fund.description}</p>
       )}
       {fund.max_request_amount && (
-        <p className="text-xs text-gray-500">
-          Max request: <span className="font-medium text-navy-900">${fund.max_request_amount.toLocaleString()}</span>
+        <p className="text-xs text-halo-mist-body">
+          Max request: <span className="font-medium text-halo-ink">${fund.max_request_amount.toLocaleString()}</span>
         </p>
       )}
       {fund.eligibility_notes && (
-        <p className="text-xs text-gray-500 mt-1">{fund.eligibility_notes}</p>
+        <p className="text-xs text-halo-mist-body mt-1">{fund.eligibility_notes}</p>
       )}
     </div>
   );
@@ -366,17 +366,17 @@ export default function OpportunitiesPage() {
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-navy-600">Pilot</span>
+          <span className="text-[10px] font-semibold font-ui uppercase tracking-[0.14em] text-halo-purple-d">Pilot</span>
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
         </div>
-        <h1 className="text-2xl font-bold text-navy-900 mb-3">Mentable Opportunity Fund</h1>
-        <p className="text-gray-500 text-sm leading-relaxed max-w-2xl">
+        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink mb-3">Mentable Opportunity Fund</h1>
+        <p className="text-halo-mist-body text-sm leading-relaxed max-w-2xl">
           A mentor can show you the next step. The Opportunity Fund is being built to make sure financial
           barriers do not prevent you from taking it, covering targeted professional-development needs
           like attire, travel, networking, and career-development expenses for students with demonstrated financial need.
         </p>
         {!isMentee && (
-          <div className="mt-4 p-4 bg-navy-50 border border-navy-100 rounded-xl text-sm text-navy-700">
+          <div className="mt-4 p-4 bg-halo-veil border border-halo-lavender rounded-xl text-sm text-halo-purple-d">
             This program is designed for mentees with demonstrated financial need. As a mentor, you may be asked to endorse
             a mentee&apos;s request as developmentally relevant. You will never see their financial details.
           </div>
@@ -385,7 +385,7 @@ export default function OpportunitiesPage() {
 
       {/* ── Funding status ──────────────────────────────────────────────────── */}
       <section aria-labelledby="funding-status-heading">
-        <h2 id="funding-status-heading" className="text-sm font-semibold text-navy-900 mb-4">
+        <h2 id="funding-status-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">
           Current Programs
         </h2>
         {activeFunds.length === 0 ? (
@@ -404,10 +404,10 @@ export default function OpportunitiesPage() {
 
       {/* ── Support categories ──────────────────────────────────────────────── */}
       <section aria-labelledby="categories-heading">
-        <h2 id="categories-heading" className="text-sm font-semibold text-navy-900 mb-1">
+        <h2 id="categories-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-1">
           Potential Support Categories
         </h2>
-        <p className="text-xs text-gray-400 mb-4">
+        <p className="text-xs text-halo-mist-body mb-4">
           These are the types of professional-development needs the fund is designed to address.
           Not every expense will qualify. Eligibility depends on the specific fund and circumstances.
         </p>
@@ -417,19 +417,19 @@ export default function OpportunitiesPage() {
       </section>
 
       {/* ── Eligibility philosophy ──────────────────────────────────────────── */}
-      <section aria-labelledby="eligibility-heading" className="bg-gray-50 rounded-2xl p-6">
-        <h2 id="eligibility-heading" className="text-sm font-semibold text-navy-900 mb-3">
+      <section aria-labelledby="eligibility-heading" className="bg-halo-veil rounded-2xl p-6">
+        <h2 id="eligibility-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-3">
           How eligibility works
         </h2>
-        <div className="space-y-3 text-xs text-gray-600 leading-relaxed">
+        <div className="space-y-3 text-xs text-halo-heather leading-relaxed">
           <p>
             Eligibility for funded programs is intended for students with demonstrated financial need.
             Indicators may include Pell Grant receipt or eligibility, institutional need-based aid, first-generation
             status, and other approved designations. Pell eligibility is not the only path.
           </p>
           <p>
-            Mentable distinguishes between <strong className="text-navy-800">self-attested</strong> and{' '}
-            <strong className="text-navy-800">verified</strong> information. Submitting a financial need profile
+            Mentable distinguishes between <strong className="text-halo-ink">self-attested</strong> and{' '}
+            <strong className="text-halo-ink">verified</strong> information. Submitting a financial need profile
             marks it as self-reported. Verification processes, where applicable, will be defined when specific
             funded programs launch.
           </p>
@@ -437,9 +437,9 @@ export default function OpportunitiesPage() {
             Mentor endorsement, if requested, confirms developmental relevance only.
             A mentor endorsing your request is not approving a financial award and does not see your financial details.
           </p>
-          <div className="flex items-start gap-2 mt-2 p-3 bg-white border border-gray-100 rounded-xl">
-            <Info className="w-4 h-4 text-navy-500 flex-shrink-0 mt-0.5" />
-            <p className="text-gray-500">
+          <div className="flex items-start gap-2 mt-2 p-3 bg-white border border-halo-rule rounded-xl">
+            <Info className="w-4 h-4 text-halo-purple-d flex-shrink-0 mt-0.5" />
+            <p className="text-halo-mist-body">
               All grant decisions are made by the Mentable team, not mentors or sponsors, to ensure fairness and prevent conflicts of interest.
             </p>
           </div>
@@ -453,16 +453,16 @@ export default function OpportunitiesPage() {
           <section aria-labelledby="need-profile-heading">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h2 id="need-profile-heading" className="text-sm font-semibold text-navy-900 mb-1">
+                <h2 id="need-profile-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-1">
                   Financial Need Profile
                 </h2>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-halo-mist-body leading-relaxed">
                   Self-reported information used for eligibility when funded programs launch.
                   {' '}Your responses are private. Mentors and other users cannot see them.
                 </p>
               </div>
               {needProfile && (
-                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full flex-shrink-0">
+                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-halo-mist-body bg-halo-bone px-2.5 py-1 rounded-full flex-shrink-0">
                   <ShieldCheck className="w-3 h-3" />
                   Self-reported
                 </span>
@@ -470,35 +470,35 @@ export default function OpportunitiesPage() {
             </div>
 
             {needProfile && !showNeedForm ? (
-              <div className="bg-white border border-gray-100 rounded-2xl p-5">
+              <div className="bg-white border border-halo-rule rounded-2xl p-5">
                 <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm mb-4">
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">Pell Grant status</dt>
-                    <dd className="font-medium text-navy-900 capitalize">{needProfile.pell_status.replace(/_/g, ' ')}</dd>
+                    <dt className="text-xs text-halo-mist-body mb-0.5">Pell Grant status</dt>
+                    <dd className="font-medium text-halo-ink capitalize">{needProfile.pell_status.replace(/_/g, ' ')}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">First-generation student</dt>
-                    <dd className="font-medium text-navy-900 capitalize">{needProfile.first_gen_student.replace(/_/g, ' ')}</dd>
+                    <dt className="text-xs text-halo-mist-body mb-0.5">First-generation student</dt>
+                    <dd className="font-medium text-halo-ink capitalize">{needProfile.first_gen_student.replace(/_/g, ' ')}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-gray-400 mb-0.5">Receiving need-based aid</dt>
-                    <dd className="font-medium text-navy-900 capitalize">{needProfile.need_based_aid.replace(/_/g, ' ')}</dd>
+                    <dt className="text-xs text-halo-mist-body mb-0.5">Receiving need-based aid</dt>
+                    <dd className="font-medium text-halo-ink capitalize">{needProfile.need_based_aid.replace(/_/g, ' ')}</dd>
                   </div>
                 </dl>
                 {needProfile.additional_context && (
-                  <p className="text-xs text-gray-600 mb-4 border-t border-gray-50 pt-4">{needProfile.additional_context}</p>
+                  <p className="text-xs text-halo-heather mb-4 border-t border-halo-veil pt-4">{needProfile.additional_context}</p>
                 )}
                 <button
                   onClick={() => setShowNeedForm(true)}
-                  className="text-xs text-navy-600 hover:text-navy-900 font-medium transition-colors"
+                  className="text-xs text-halo-purple-d hover:text-halo-ink font-medium transition-colors"
                 >
                   Update profile
                 </button>
               </div>
             ) : (
-              <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4">
+              <div className="bg-white border border-halo-rule rounded-2xl p-5 space-y-4">
                 {!needProfile && (
-                  <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700">
+                  <div className="flex items-start gap-2 p-3 bg-halo-veil border border-halo-lavender rounded-xl text-xs text-halo-purple-d">
                     <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
                     <span>
                       This profile is self-reported and will be marked as such. It is not automatically verified.
@@ -508,7 +508,7 @@ export default function OpportunitiesPage() {
                 )}
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-2">
+                  <label className="text-xs font-medium text-halo-ink block mb-2">
                     Pell Grant recipient or eligible
                   </label>
                   <div className="flex gap-2">
@@ -519,8 +519,8 @@ export default function OpportunitiesPage() {
                         onClick={() => setNeedForm((f) => ({ ...f, pell_status: opt.value as 'yes' | 'no' | 'prefer_not_to_say' }))}
                         className={`flex-1 text-xs py-2 px-3 rounded-lg border font-medium transition-colors ${
                           needForm.pell_status === opt.value
-                            ? 'border-navy-600 bg-navy-50 text-navy-900'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            ? 'border-halo-purple bg-halo-veil text-halo-ink'
+                            : 'border-halo-rule text-halo-heather hover:border-halo-rule'
                         }`}
                       >
                         {opt.label}
@@ -530,7 +530,7 @@ export default function OpportunitiesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-2">
+                  <label className="text-xs font-medium text-halo-ink block mb-2">
                     First-generation college student
                   </label>
                   <div className="flex gap-2">
@@ -541,8 +541,8 @@ export default function OpportunitiesPage() {
                         onClick={() => setNeedForm((f) => ({ ...f, first_gen_student: opt.value as 'yes' | 'no' | 'prefer_not_to_say' }))}
                         className={`flex-1 text-xs py-2 px-3 rounded-lg border font-medium transition-colors ${
                           needForm.first_gen_student === opt.value
-                            ? 'border-navy-600 bg-navy-50 text-navy-900'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            ? 'border-halo-purple bg-halo-veil text-halo-ink'
+                            : 'border-halo-rule text-halo-heather hover:border-halo-rule'
                         }`}
                       >
                         {opt.label}
@@ -552,7 +552,7 @@ export default function OpportunitiesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-2">
+                  <label className="text-xs font-medium text-halo-ink block mb-2">
                     Currently receiving need-based financial aid
                   </label>
                   <div className="flex gap-2">
@@ -563,8 +563,8 @@ export default function OpportunitiesPage() {
                         onClick={() => setNeedForm((f) => ({ ...f, need_based_aid: opt.value as 'yes' | 'no' | 'prefer_not_to_say' }))}
                         className={`flex-1 text-xs py-2 px-3 rounded-lg border font-medium transition-colors ${
                           needForm.need_based_aid === opt.value
-                            ? 'border-navy-600 bg-navy-50 text-navy-900'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            ? 'border-halo-purple bg-halo-veil text-halo-ink'
+                            : 'border-halo-rule text-halo-heather hover:border-halo-rule'
                         }`}
                       >
                         {opt.label}
@@ -574,10 +574,10 @@ export default function OpportunitiesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                    Additional context <span className="text-gray-400 font-normal">(optional)</span>
+                  <label className="text-xs font-medium text-halo-ink block mb-1.5">
+                    Additional context <span className="text-halo-mist-body font-normal">(optional)</span>
                   </label>
-                  <p className="text-[11px] text-gray-400 mb-2">
+                  <p className="text-[11px] text-halo-mist-body mb-2">
                     Other need-based scholarships, institutional aid designations, or relevant information.
                   </p>
                   <textarea
@@ -586,7 +586,7 @@ export default function OpportunitiesPage() {
                     rows={3}
                     maxLength={500}
                     placeholder="e.g. QuestBridge Scholar, Gates Scholarship recipient, or institutional need designation"
-                    className="w-full text-sm rounded-xl border border-gray-200 px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                    className="w-full text-sm rounded-xl border border-halo-rule px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-halo-purple placeholder:text-halo-mist-body"
                   />
                 </div>
 
@@ -597,7 +597,7 @@ export default function OpportunitiesPage() {
                     <button
                       type="button"
                       onClick={() => setShowNeedForm(false)}
-                      className="text-sm text-gray-500 hover:text-navy-900 transition-colors"
+                      className="text-sm text-halo-mist-body hover:text-halo-ink transition-colors"
                     >
                       Cancel
                     </button>
@@ -606,7 +606,7 @@ export default function OpportunitiesPage() {
                     type="button"
                     onClick={saveNeedProfile}
                     disabled={needSaving}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-halo-purple text-white text-sm font-medium rounded-xl hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
                   >
                     {needSaving ? (
                       <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving…</>
@@ -618,7 +618,7 @@ export default function OpportunitiesPage() {
                   </button>
                 </div>
 
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-halo-mist-body">
                   Your responses are self-reported and will be labeled as such. This information is private to you.
                   It will not be shared with your mentor, other users, or sponsors.
                 </p>
@@ -630,10 +630,10 @@ export default function OpportunitiesPage() {
           <section aria-labelledby="interest-heading">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h2 id="interest-heading" className="text-sm font-semibold text-navy-900 mb-1">
+                <h2 id="interest-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-1">
                   Tell us what would help
                 </h2>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-halo-mist-body leading-relaxed">
                   Not a funding application. This helps us understand what types of support would make the biggest
                   difference so we can prioritize which programs to launch first.
                 </p>
@@ -641,7 +641,7 @@ export default function OpportunitiesPage() {
               {!showInterestForm && (
                 <button
                   onClick={() => setShowInterestForm(true)}
-                  className="flex-shrink-0 text-xs font-medium text-navy-600 hover:text-navy-900 border border-navy-200 px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex-shrink-0 text-xs font-medium text-halo-purple-d hover:text-halo-ink border border-halo-lavender px-3 py-1.5 rounded-lg transition-colors"
                 >
                   + Add
                 </button>
@@ -656,19 +656,19 @@ export default function OpportunitiesPage() {
             )}
 
             {showInterestForm && (
-              <form onSubmit={submitInterest} className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4 mb-4">
+              <form onSubmit={submitInterest} className="bg-white border border-halo-rule rounded-2xl p-5 space-y-4 mb-4">
                 <div className="p-3 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-700">
                   This is not a funding application. Submitting this form does not guarantee any financial support.
                   It helps us understand demand before funded programs launch.
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-2">Category</label>
+                  <label className="text-xs font-medium text-halo-ink block mb-2">Category</label>
                   <select
                     value={interestForm.category}
                     onChange={(e) => setInterestForm((f) => ({ ...f, category: e.target.value }))}
                     required
-                    className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-600"
+                    className="w-full text-sm border border-halo-rule rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-halo-purple"
                   >
                     <option value="">Select a category</option>
                     {CATEGORIES.map((c) => (
@@ -678,7 +678,7 @@ export default function OpportunitiesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-navy-900 block mb-1.5">
+                  <label className="text-xs font-medium text-halo-ink block mb-1.5">
                     What would this support enable?
                   </label>
                   <textarea
@@ -688,14 +688,14 @@ export default function OpportunitiesPage() {
                     rows={3}
                     maxLength={500}
                     placeholder="e.g. I have a superday at Goldman next month but can't afford a suit. My mentor recommended I have professional attire for in-person interviews."
-                    className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                    className="w-full text-sm border border-halo-rule rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:ring-2 focus:ring-halo-purple placeholder:text-halo-mist-body"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                      Rough estimated amount <span className="text-gray-400 font-normal">(optional, in USD)</span>
+                    <label className="text-xs font-medium text-halo-ink block mb-1.5">
+                      Rough estimated amount <span className="text-halo-mist-body font-normal">(optional, in USD)</span>
                     </label>
                     <input
                       type="number"
@@ -705,19 +705,19 @@ export default function OpportunitiesPage() {
                       value={interestForm.estimated_amount}
                       onChange={(e) => setInterestForm((f) => ({ ...f, estimated_amount: e.target.value }))}
                       placeholder="200"
-                      className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-600 placeholder:text-gray-400"
+                      className="w-full text-sm border border-halo-rule rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-halo-purple placeholder:text-halo-mist-body"
                     />
                   </div>
 
                   {mentorships.length > 0 && (
                     <div>
-                      <label className="text-xs font-medium text-navy-900 block mb-1.5">
-                        Related mentorship <span className="text-gray-400 font-normal">(optional)</span>
+                      <label className="text-xs font-medium text-halo-ink block mb-1.5">
+                        Related mentorship <span className="text-halo-mist-body font-normal">(optional)</span>
                       </label>
                       <select
                         value={interestForm.linked_mentorship_id}
                         onChange={(e) => setInterestForm((f) => ({ ...f, linked_mentorship_id: e.target.value }))}
-                        className="w-full text-sm border border-gray-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-navy-600"
+                        className="w-full text-sm border border-halo-rule rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-halo-purple"
                       >
                         <option value="">None</option>
                         {mentorships.map((m) => (
@@ -734,14 +734,14 @@ export default function OpportunitiesPage() {
                   <button
                     type="button"
                     onClick={() => setShowInterestForm(false)}
-                    className="text-sm text-gray-500 hover:text-navy-900 transition-colors"
+                    className="text-sm text-halo-mist-body hover:text-halo-ink transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={interestSaving || !interestForm.category || !interestForm.description.trim()}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-halo-purple text-white text-sm font-medium rounded-xl hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
                   >
                     {interestSaving
                       ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Submitting…</>
@@ -755,24 +755,24 @@ export default function OpportunitiesPage() {
             {/* Submitted interests */}
             {interests.length > 0 && (
               <div className="space-y-2">
-                <p className="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">Your interest submissions</p>
+                <p className="text-[11px] text-halo-mist-body font-ui uppercase tracking-[0.14em] font-semibold">Your interest submissions</p>
                 {interests.map((interest) => (
                   <div
                     key={interest.id}
-                    className="bg-white border border-gray-100 rounded-xl p-4 flex items-start justify-between gap-3"
+                    className="bg-white border border-halo-rule rounded-xl p-4 flex items-start justify-between gap-3"
                   >
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-navy-700 mb-0.5">
+                      <p className="text-xs font-semibold text-halo-purple-d mb-0.5">
                         {CATEGORY_LABELS[interest.category] ?? interest.category}
                       </p>
-                      <p className="text-xs text-gray-600 leading-relaxed">{interest.description}</p>
+                      <p className="text-xs text-halo-heather leading-relaxed">{interest.description}</p>
                       {interest.estimated_amount && (
-                        <p className="text-[11px] text-gray-400 mt-1">
+                        <p className="text-[11px] text-halo-mist-body mt-1">
                           Estimated: ${Number(interest.estimated_amount).toLocaleString()}
                         </p>
                       )}
                     </div>
-                    <span className="text-[10px] text-gray-400 flex-shrink-0 whitespace-nowrap">
+                    <span className="text-[10px] text-halo-mist-body flex-shrink-0 whitespace-nowrap">
                       {new Date(interest.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                   </div>

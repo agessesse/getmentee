@@ -60,20 +60,20 @@ export default async function AdminFeedback({
   return (
     <div className="max-w-5xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Pilot feedback</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Pilot feedback</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           What users submitted, grouped by the category they chose. No inferred sentiment.
         </p>
       </div>
 
       <div className="flex flex-wrap gap-1.5">
         <Link href="/admin/feedback"
-          className={`px-3 py-1.5 rounded-md border text-[13px] font-medium ${!active ? 'bg-navy-900 text-white border-navy-900' : 'bg-white text-gray-700 border-gray-300 hover:border-navy-300'}`}>
+          className={`px-3 py-1.5 rounded-md border text-[13px] font-medium ${!active ? 'bg-halo-purple text-white border-halo-purple' : 'bg-white text-halo-heather border-halo-rule hover:border-halo-purple'}`}>
           All
         </Link>
         {CATEGORIES.map((c) => (
           <Link key={c.key} href={`/admin/feedback?category=${c.key}`}
-            className={`px-3 py-1.5 rounded-md border text-[13px] font-medium ${active === c.key ? 'bg-navy-900 text-white border-navy-900' : 'bg-white text-gray-700 border-gray-300 hover:border-navy-300'}`}>
+            className={`px-3 py-1.5 rounded-md border text-[13px] font-medium ${active === c.key ? 'bg-halo-purple text-white border-halo-purple' : 'bg-white text-halo-heather border-halo-rule hover:border-halo-purple'}`}>
             {c.label} {counts.get(c.key) ? <span className="tabular-nums opacity-70">({counts.get(c.key)})</span> : null}
           </Link>
         ))}
@@ -81,11 +81,11 @@ export default async function AdminFeedback({
 
       {topRoutes.length > 0 && (
         <Panel title="Routes drawing the most broken or confusing reports">
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-halo-rule">
             {topRoutes.map(([route, n]) => (
               <li key={route} className="px-4 py-2.5 flex items-center gap-3 text-[14px]">
-                <code className="text-[13px] text-navy-900">{route}</code>
-                <span className="ml-auto tabular-nums text-gray-700">{n}</span>
+                <code className="text-[13px] text-halo-ink">{route}</code>
+                <span className="ml-auto tabular-nums text-halo-heather">{n}</span>
               </li>
             ))}
           </ul>
@@ -96,7 +96,7 @@ export default async function AdminFeedback({
         {items.length === 0 ? (
           <Empty>No feedback in this category yet.</Empty>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-halo-rule">
             {items.map((i) => {
               const cat = CATEGORIES.find((c) => c.key === i.category);
               const p = people.get(i.user_id);
@@ -106,14 +106,14 @@ export default async function AdminFeedback({
                     <Tag tone={cat?.tone ?? 'neutral'}>{cat?.label ?? i.category}</Tag>
                     {i.role && <Tag>{i.role}</Tag>}
                     {i.rating !== null && <Tag>{i.rating}/5</Tag>}
-                    {i.current_route && <code className="text-[12px] text-gray-600">{i.current_route}</code>}
-                    <span className="ml-auto text-[13px] text-gray-600 tabular-nums">
+                    {i.current_route && <code className="text-[12px] text-halo-heather">{i.current_route}</code>}
+                    <span className="ml-auto text-[13px] text-halo-heather tabular-nums">
                       {new Date(i.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
-                  <p className="text-[15px] text-navy-900 leading-relaxed whitespace-pre-wrap">{i.feedback}</p>
+                  <p className="text-[15px] text-halo-ink leading-relaxed whitespace-pre-wrap">{i.feedback}</p>
                   {p && (
-                    <Link href={`/admin/users/${i.user_id}`} className="inline-block text-[13px] text-gray-600 hover:text-navy-900 mt-2">
+                    <Link href={`/admin/users/${i.user_id}`} className="inline-block text-[13px] text-halo-heather hover:text-halo-ink mt-2">
                       {p.first_name} {p.last_name}
                     </Link>
                   )}

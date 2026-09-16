@@ -131,11 +131,11 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all flex flex-col">
+    <div className="bg-white rounded-2xl border border-halo-rule hover:border-halo-lavender hover:shadow-sm transition-all flex flex-col">
       <div className="p-5 flex-1">
         {/* Header */}
         <div className="flex items-start gap-3 mb-3">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-navy-100">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-halo-lavender/50">
             {person.image ? (
               <Image
                 src={person.image}
@@ -145,7 +145,7 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
                 sizes="40px"
               />
             ) : (
-              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-navy-600">
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-halo-purple-d">
                 {initials}
               </span>
             )}
@@ -153,29 +153,29 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
           <div className="min-w-0 flex-1">
             <Link
               href={`/people/${person.slug}`}
-              className="text-sm font-semibold text-navy-900 hover:text-navy-600 transition-colors block truncate"
+              className="text-sm font-semibold text-halo-ink hover:text-halo-purple-d transition-colors block truncate"
             >
               {fullName}
             </Link>
             {(person.title || person.organization) && (
-              <p className="text-xs text-gray-500 mt-0.5 truncate">
+              <p className="text-xs text-halo-mist-body mt-0.5 truncate">
                 {[person.title, person.organization].filter(Boolean).join(' · ')}
               </p>
             )}
           </div>
-          <span className="text-[10px] font-medium text-gray-400 bg-gray-50 border border-gray-200 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+          <span className="text-[10px] font-medium text-halo-mist-body bg-halo-veil border border-halo-rule px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
             Preview
           </span>
         </div>
 
         {/* Bio snippet */}
         {person.bio && (
-          <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">{person.bio}</p>
+          <p className="text-xs text-halo-mist-body leading-relaxed line-clamp-2 mb-3">{person.bio}</p>
         )}
 
         {/* Location */}
         {person.location && (
-          <div className="flex items-center gap-1 text-xs text-gray-400 mb-3">
+          <div className="flex items-center gap-1 text-xs text-halo-mist-body mb-3">
             <MapPin className="w-3 h-3" />
             <span>{person.location.split(',')[0]}</span>
           </div>
@@ -184,25 +184,25 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
           {person.expertiseTags.slice(0, 4).map((tag) => (
-            <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+            <span key={tag} className="text-xs bg-halo-bone text-halo-heather px-2 py-0.5 rounded-full">
               {tag}
             </span>
           ))}
           {person.expertiseTags.length > 4 && (
-            <span className="text-xs text-gray-400 px-1">+{person.expertiseTags.length - 4}</span>
+            <span className="text-xs text-halo-mist-body px-1">+{person.expertiseTags.length - 4}</span>
           )}
         </div>
       </div>
 
       {/* Actions */}
-      <div className="px-5 py-4 border-t border-gray-50 flex gap-2">
+      <div className="px-5 py-4 border-t border-halo-veil flex gap-2">
         <Link
           href={`/people/${person.slug}`}
-          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-navy-300 hover:text-navy-900 transition-all"
+          className="flex-1 text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
         >
           View profile
         </Link>
-        <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-gray-50 text-xs font-medium text-gray-400 cursor-default">
+        <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-halo-veil text-xs font-medium text-halo-mist-body cursor-default">
           Not yet on Mentable
         </div>
       </div>
@@ -219,9 +219,9 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
   return (
     <Link
       href={`/people/${person.slug}`}
-      className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all p-5 flex items-start gap-4"
+      className="bg-white rounded-2xl border border-halo-rule hover:border-halo-lavender hover:shadow-sm transition-all p-5 flex items-start gap-4"
     >
-      <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-navy-100">
+      <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-halo-lavender/50">
         {person.image ? (
           <Image
             src={person.image}
@@ -231,21 +231,21 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
             sizes="44px"
           />
         ) : (
-          <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-navy-600">
+          <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-halo-purple-d">
             {initials}
           </span>
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-navy-900 truncate">{fullName}</p>
-        {person.school && <p className="text-xs text-gray-500 mt-0.5 truncate">{person.school}</p>}
+        <p className="text-sm font-semibold text-halo-ink truncate">{fullName}</p>
+        {person.school && <p className="text-xs text-halo-mist-body mt-0.5 truncate">{person.school}</p>}
         {person.expectedGraduation && (
-          <p className="text-xs text-gray-400">Class of {person.expectedGraduation}</p>
+          <p className="text-xs text-halo-mist-body">Class of {person.expectedGraduation}</p>
         )}
         <div className="flex flex-wrap gap-1 mt-2">
           {person.interestTags.slice(0, 3).map((tag) => (
-            <span key={tag} className="text-[10px] bg-navy-50 text-navy-600 px-2 py-0.5 rounded-full font-medium">
+            <span key={tag} className="text-[10px] bg-halo-veil text-halo-purple-d px-2 py-0.5 rounded-full font-medium">
               {tag}
             </span>
           ))}
@@ -276,7 +276,7 @@ function LiveMentorCard({
   const fullName = `${mentor.first_name} ${mentor.last_name}`;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-navy-200 hover:shadow-sm transition-all flex flex-col">
+    <div className="bg-white rounded-2xl border border-halo-rule hover:border-halo-lavender hover:shadow-sm transition-all flex flex-col">
       <div className="p-5 flex-1">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
@@ -284,12 +284,12 @@ function LiveMentorCard({
             <div className="min-w-0">
               <Link
                 href={`/mentor/${mentor.id}`}
-                className="text-sm font-semibold text-navy-900 hover:text-navy-600 transition-colors block truncate"
+                className="text-sm font-semibold text-halo-ink hover:text-halo-purple-d transition-colors block truncate"
               >
                 {fullName}
               </Link>
               {mp?.title && mp?.company && (
-                <p className="text-xs text-gray-500 mt-0.5 truncate">
+                <p className="text-xs text-halo-mist-body mt-0.5 truncate">
                   {mp.title} · {mp.company}
                 </p>
               )}
@@ -297,7 +297,7 @@ function LiveMentorCard({
           </div>
           <button
             onClick={onSaveToggle}
-            className={`p-1.5 rounded-lg transition-colors ${isSaved ? 'text-navy-600' : 'text-gray-300 hover:text-gray-500'}`}
+            className={`p-1.5 rounded-lg transition-colors ${isSaved ? 'text-halo-purple-d' : 'text-halo-mist hover:text-halo-mist-body'}`}
             title={isSaved ? 'Unsave' : 'Save'}
           >
             {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
@@ -305,27 +305,27 @@ function LiveMentorCard({
         </div>
 
         {showMatch && mentor.matchScore > 0 && (
-          <div className="mb-3 p-2.5 bg-navy-50 rounded-xl">
+          <div className="mb-3 p-2.5 bg-halo-veil rounded-xl">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold text-navy-700">{mentor.matchScore}% match</span>
+              <span className="text-xs font-semibold text-halo-purple-d">{mentor.matchScore}% match</span>
               {mp?.is_available && (
                 <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Available</span>
               )}
             </div>
-            <div className="w-full h-1.5 bg-navy-100 rounded-full overflow-hidden">
-              <div className="h-full bg-navy-600 rounded-full" style={{ width: `${mentor.matchScore}%` }} />
+            <div className="w-full h-1.5 bg-halo-lavender/50 rounded-full overflow-hidden">
+              <div className="h-full bg-halo-purple rounded-full" style={{ width: `${mentor.matchScore}%` }} />
             </div>
             {mentor.matchReasons.length > 0 && (
-              <p className="text-xs text-navy-600 mt-1.5">{mentor.matchReasons.join(' · ')}</p>
+              <p className="text-xs text-halo-purple-d mt-1.5">{mentor.matchReasons.join(' · ')}</p>
             )}
           </div>
         )}
 
         {mp?.bio && (
-          <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">{mp.bio}</p>
+          <p className="text-xs text-halo-mist-body leading-relaxed line-clamp-2 mb-3">{mp.bio}</p>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-3">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-halo-mist-body mb-3">
           {mp?.rating > 0 && (
             <span className="flex items-center gap-1">
               <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
@@ -354,20 +354,20 @@ function LiveMentorCard({
 
         <div className="flex flex-wrap gap-1">
           {mp?.expertise_tags?.slice(0, 3).map((tag) => (
-            <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+            <span key={tag} className="text-xs bg-halo-bone text-halo-heather px-2 py-0.5 rounded-full">
               {tag}
             </span>
           ))}
           {(mp?.expertise_tags?.length ?? 0) > 3 && (
-            <span className="text-xs text-gray-400 px-1">+{mp.expertise_tags.length - 3}</span>
+            <span className="text-xs text-halo-mist-body px-1">+{mp.expertise_tags.length - 3}</span>
           )}
         </div>
       </div>
 
-      <div className="px-5 py-4 border-t border-gray-50 flex gap-2">
+      <div className="px-5 py-4 border-t border-halo-veil flex gap-2">
         <Link
           href={`/mentor/${mentor.id}`}
-          className="flex-1 text-center py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:border-navy-300 hover:text-navy-900 transition-all"
+          className="flex-1 text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
         >
           View profile
         </Link>
@@ -376,10 +376,10 @@ function LiveMentorCard({
           disabled={hasRequest || !mp?.is_available}
           className={`flex-1 py-2 rounded-xl text-xs font-medium transition-all ${
             hasRequest
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              ? 'bg-halo-bone text-halo-mist-body cursor-not-allowed'
               : !mp?.is_available
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-navy-900 text-white hover:bg-navy-800'
+              ? 'bg-halo-bone text-halo-mist-body cursor-not-allowed'
+              : 'bg-halo-purple text-white hover:bg-halo-purple-d'
           }`}
         >
           {hasRequest ? 'Requested' : !mp?.is_available ? 'Unavailable' : 'Request'}
@@ -634,8 +634,8 @@ export default function DiscoverPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Discover Mentors</h1>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Discover Mentors</h1>
+          <p className="text-halo-mist-body mt-1 text-sm">
             {totalMentorCount} mentor{totalMentorCount !== 1 ? 's' : ''}
             {menteeProfile ? ' · sorted by match' : ''}
           </p>
@@ -645,13 +645,13 @@ export default function DiscoverPage() {
       {/* Search + filter bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-halo-mist-body" />
           <input
             type="text"
             placeholder="Search by name, firm, skill, or interest…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent"
           />
         </div>
 
@@ -660,8 +660,8 @@ export default function DiscoverPage() {
             onClick={() => setSavedOnly((v) => !v)}
             className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
               savedOnly
-                ? 'border-navy-600 bg-navy-50 text-navy-700'
-                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                ? 'border-halo-purple bg-halo-veil text-halo-purple-d'
+                : 'border-halo-rule bg-white text-halo-heather hover:border-halo-rule'
             }`}
           >
             <BookmarkCheck className="w-4 h-4" />
@@ -673,14 +673,14 @@ export default function DiscoverPage() {
           onClick={() => setShowFilters((v) => !v)}
           className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
             showFilters || activeFilterCount > 0
-              ? 'border-navy-600 bg-navy-50 text-navy-700'
-              : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              ? 'border-halo-purple bg-halo-veil text-halo-purple-d'
+              : 'border-halo-rule bg-white text-halo-heather hover:border-halo-rule'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
           Filters
           {activeFilterCount > 0 && (
-            <span className="w-5 h-5 bg-navy-600 text-white text-xs rounded-full flex items-center justify-center">
+            <span className="w-5 h-5 bg-halo-purple text-white text-xs rounded-full flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
@@ -690,28 +690,28 @@ export default function DiscoverPage() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as typeof sort)}
-            className="appearance-none pl-3 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy-600 cursor-pointer"
+            className="appearance-none pl-3 pr-8 py-2.5 bg-white border border-halo-rule rounded-xl text-sm text-halo-heather focus:outline-none focus:ring-2 focus:ring-halo-purple cursor-pointer"
           >
             <option value="match">Best match</option>
             <option value="rating">Top rated</option>
             <option value="experience">Most experience</option>
           </select>
-          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-halo-mist-body pointer-events-none" />
         </div>
       </div>
 
       {/* Filters panel */}
       {showFilters && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-5">
+        <div className="bg-white rounded-2xl border border-halo-rule p-5 space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-halo-mist-body font-ui uppercase tracking-[0.14em] mb-2">
                 Industry
               </label>
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                className="w-full px-3 py-2 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
               >
                 <option value="">All industries</option>
                 {INDUSTRIES.map((ind) => (
@@ -721,7 +721,7 @@ export default function DiscoverPage() {
             </div>
 
             <div className="col-span-2">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-halo-mist-body font-ui uppercase tracking-[0.14em] mb-2">
                 Expertise
               </label>
               <div className="flex flex-wrap gap-2">
@@ -733,8 +733,8 @@ export default function DiscoverPage() {
                     )}
                     className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all ${
                       selectedExpertise.includes(exp)
-                        ? 'bg-navy-900 border-navy-900 text-white'
-                        : 'bg-white border-gray-200 text-gray-600 hover:border-navy-300'
+                        ? 'bg-halo-purple border-halo-purple text-white'
+                        : 'bg-white border-halo-rule text-halo-heather hover:border-halo-purple'
                     }`}
                   >
                     {exp}
@@ -744,20 +744,20 @@ export default function DiscoverPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-2 border-t border-halo-rule">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={availableOnly}
                 onChange={(e) => setAvailableOnly(e.target.checked)}
-                className="rounded border-gray-300 text-navy-600 focus:ring-navy-600"
+                className="rounded border-halo-rule text-halo-purple-d focus:ring-halo-purple"
               />
-              <span className="text-sm text-gray-700">Active members only</span>
+              <span className="text-sm text-halo-heather">Active members only</span>
             </label>
             {activeFilterCount > 0 && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-navy-900 transition-colors"
+                className="flex items-center gap-1 text-sm text-halo-mist-body hover:text-halo-ink transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear all
@@ -791,11 +791,11 @@ export default function DiscoverPage() {
         <div>
           {filteredLiveMentors.length > 0 && (
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-px flex-1 bg-gray-100" />
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <div className="h-px flex-1 bg-halo-bone" />
+              <p className="text-xs font-semibold text-halo-mist-body font-ui uppercase tracking-[0.14em]">
                 Invited mentors
               </p>
-              <div className="h-px flex-1 bg-gray-100" />
+              <div className="h-px flex-1 bg-halo-bone" />
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -808,10 +808,10 @@ export default function DiscoverPage() {
 
       {/* Empty state */}
       {filteredLiveMentors.length === 0 && filteredSourcedMentors.length === 0 && (
-        <div className="text-center py-24 bg-white rounded-2xl border border-gray-100">
-          <p className="text-lg font-medium text-navy-900 mb-2">No mentors found</p>
-          <p className="text-sm text-gray-400 mb-4">Try adjusting your search or filters.</p>
-          <button onClick={clearFilters} className="text-sm text-navy-600 font-medium hover:underline">
+        <div className="text-center py-24 bg-white rounded-2xl border border-halo-rule">
+          <p className="text-lg font-medium text-halo-ink mb-2">No mentors found</p>
+          <p className="text-sm text-halo-mist-body mb-4">Try adjusting your search or filters.</p>
+          <button onClick={clearFilters} className="text-sm text-halo-purple-d font-medium hover:underline">
             Clear all filters
           </button>
         </div>
@@ -821,12 +821,12 @@ export default function DiscoverPage() {
       {filteredNearPeers.length > 0 && (
         <div className="pt-4">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-8 h-8 bg-navy-50 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-navy-600" />
+            <div className="w-8 h-8 bg-halo-veil rounded-lg flex items-center justify-center">
+              <Users className="w-4 h-4 text-halo-purple-d" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-navy-900">Near-peer network</h2>
-              <p className="text-xs text-gray-400">
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Near-peer network</h2>
+              <p className="text-xs text-halo-mist-body">
                 Students and early-career peers shaping their paths.
               </p>
             </div>
@@ -837,8 +837,8 @@ export default function DiscoverPage() {
             ))}
           </div>
           <div className="mt-4 flex items-center gap-2">
-            <GraduationCap className="w-3.5 h-3.5 text-gray-300" />
-            <p className="text-xs text-gray-400">
+            <GraduationCap className="w-3.5 h-3.5 text-halo-mist" />
+            <p className="text-xs text-halo-mist-body">
               Near-peers may both seek and offer mentorship as the platform grows.
             </p>
           </div>

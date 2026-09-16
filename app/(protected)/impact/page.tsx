@@ -54,12 +54,15 @@ function ImpactStat({
   accent?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border p-6 ${accent ? 'bg-navy-900 border-navy-900' : 'bg-white border-gray-100'}`}>
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${accent ? 'bg-white/10' : 'bg-navy-50'}`}>
-        <Icon className={`w-4.5 h-4.5 ${accent ? 'text-white' : 'text-navy-600'}`} />
+    <div
+      className={`rounded-2xl border p-6 ${accent ? 'bg-halo-deep border-halo-deep' : 'bg-white border-halo-rule'}`}
+      style={accent ? { backgroundImage: 'radial-gradient(ellipse 90% 80% at 90% 0%, rgba(120,90,247,0.55) 0%, transparent 70%)' } : undefined}
+    >
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${accent ? 'bg-white/10' : 'bg-halo-veil'}`}>
+        <Icon className={`w-4.5 h-4.5 ${accent ? 'text-white' : 'text-halo-purple-d'}`} />
       </div>
-      <p className={`text-3xl font-bold mb-1 ${accent ? 'text-white' : 'text-navy-900'}`}>{value}</p>
-      <p className={`text-sm ${accent ? 'text-navy-300' : 'text-gray-500'}`}>{label}</p>
+      <p className={`font-display font-medium text-[2.5rem] leading-none tabular-nums mb-2 ${accent ? 'text-white' : 'text-halo-ink'}`}>{value}</p>
+      <p className={`text-sm ${accent ? 'text-halo-lavender' : 'text-halo-mist-body'}`}>{label}</p>
     </div>
   );
 }
@@ -79,15 +82,15 @@ function MilestoneBadge({
     <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
       achieved
         ? 'bg-green-50 border-green-200'
-        : 'bg-gray-50 border-gray-100 opacity-50'
+        : 'bg-halo-veil border-halo-rule opacity-50'
     }`}>
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        achieved ? 'bg-green-100' : 'bg-gray-100'
+        achieved ? 'bg-green-100' : 'bg-halo-bone'
       }`}>
-        <Icon className={`w-4 h-4 ${achieved ? 'text-green-600' : 'text-gray-400'}`} />
+        <Icon className={`w-4 h-4 ${achieved ? 'text-green-600' : 'text-halo-mist-body'}`} />
       </div>
       <div className="min-w-0">
-        <p className={`text-sm font-medium ${achieved ? 'text-green-900' : 'text-gray-500'}`}>{label}</p>
+        <p className={`text-sm font-medium ${achieved ? 'text-green-900' : 'text-halo-mist-body'}`}>{label}</p>
         {achieved && <p className="text-xs text-green-600 mt-0.5">Achieved</p>}
       </div>
       {achieved && <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 ml-auto" />}
@@ -98,8 +101,8 @@ function MilestoneBadge({
 // ─── Timeline event ───────────────────────────────────────────────────────────
 
 const EVENT_COLOR: Record<TimelineEvent['type'], string> = {
-  mentorship_started: 'bg-navy-100 text-navy-600',
-  session_completed:  'bg-blue-100 text-blue-600',
+  mentorship_started: 'bg-halo-lavender/50 text-halo-purple-d',
+  session_completed:  'bg-halo-lavender/50 text-halo-purple-d',
   goal_completed:     'bg-green-100 text-green-600',
   review_received:    'bg-amber-100 text-amber-600',
 };
@@ -260,8 +263,8 @@ export default function ImpactPage() {
   if (!stats) {
     return (
       <div className="text-center py-24">
-        <p className="text-gray-400">This page is only available to mentors.</p>
-        <Link href="/dashboard" className="text-sm text-navy-600 hover:underline mt-3 inline-block">
+        <p className="text-halo-mist-body">This page is only available to mentors.</p>
+        <Link href="/dashboard" className="text-sm text-halo-purple-d hover:underline mt-3 inline-block">
           Back to Dashboard
         </Link>
       </div>
@@ -290,7 +293,7 @@ export default function ImpactPage() {
       <div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Dashboard
@@ -298,8 +301,8 @@ export default function ImpactPage() {
 
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-navy-900">My Impact</h1>
-            <p className="text-gray-500 mt-1 text-sm">
+            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">My Impact</h1>
+            <p className="text-halo-mist-body mt-1 text-sm">
               Your mentoring history and the difference you&apos;ve made.
             </p>
           </div>
@@ -311,7 +314,7 @@ export default function ImpactPage() {
                 Founding Mentor
               </span>
             )}
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-halo-mist-body">
               Mentoring since {format(new Date(stats.joinedAt), 'MMMM yyyy')}
             </span>
           </div>
@@ -360,8 +363,8 @@ export default function ImpactPage() {
         {/* Recognition milestones */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-navy-900">Milestones</h2>
-            <span className="text-xs text-gray-400">
+            <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Milestones</h2>
+            <span className="text-xs text-halo-mist-body">
               {achievedCount}/{milestones.length} achieved
             </span>
           </div>
@@ -379,10 +382,10 @@ export default function ImpactPage() {
 
         {/* Timeline */}
         <div>
-          <h2 className="text-base font-semibold text-navy-900 mb-4">Timeline</h2>
+          <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">Timeline</h2>
           {timeline.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-              <p className="text-sm text-gray-400">
+            <div className="text-center py-16 bg-white rounded-2xl border border-halo-rule">
+              <p className="text-sm text-halo-mist-body">
                 Your mentoring journey will appear here as you start sessions and reach goals.
               </p>
             </div>
@@ -399,19 +402,19 @@ export default function ImpactPage() {
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 z-10 ${color}`}>
                         <Icon className="w-3.5 h-3.5" />
                       </div>
-                      {!isLast && <div className="w-px flex-1 bg-gray-100 my-1" />}
+                      {!isLast && <div className="w-px flex-1 bg-halo-bone my-1" />}
                     </div>
                     {/* Content */}
                     <div className="pb-5 min-w-0 flex-1">
-                      <p className="text-sm font-medium text-navy-900 leading-tight">{event.label}</p>
+                      <p className="text-sm font-medium text-halo-ink leading-tight">{event.label}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-halo-mist-body">
                           {formatDistanceToNow(new Date(event.date), { addSuffix: true })}
                         </p>
                         {event.sub && (
                           <>
-                            <span className="text-gray-200">·</span>
-                            <p className="text-xs text-gray-400 capitalize">{event.sub}</p>
+                            <span className="text-halo-bone">·</span>
+                            <p className="text-xs text-halo-mist-body capitalize">{event.sub}</p>
                           </>
                         )}
                       </div>

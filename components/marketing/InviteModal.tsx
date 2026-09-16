@@ -56,11 +56,11 @@ export default function InviteModal({ open, onClose }: InviteModalProps) {
       aria-modal="true"
       aria-labelledby="invite-modal-title"
     >
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-halo-ink/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-halo-rule">
-          <h2 id="invite-modal-title" className="text-base font-semibold text-halo-ink">
+          <h2 id="invite-modal-title" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
             Invite a mentor
           </h2>
           <button

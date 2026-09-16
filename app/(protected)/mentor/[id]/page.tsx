@@ -237,7 +237,7 @@ export default function MentorProfilePage() {
   };
 
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
-  if (!mentor) return <p className="text-center py-24 text-gray-400">Mentor not found.</p>;
+  if (!mentor) return <p className="text-center py-24 text-halo-mist-body">Mentor not found.</p>;
 
   const mp = mentor.mentor_profiles;
   const fullName = `${mentor.first_name} ${mentor.last_name}`;
@@ -248,13 +248,13 @@ export default function MentorProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Back link */}
-      <Link href="/discover" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors">
+      <Link href="/discover" className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors">
         <ArrowLeft className="w-4 h-4" />
         Back to Discover
       </Link>
 
       {/* Hero card */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 md:p-8">
+      <div className="bg-white rounded-2xl border border-halo-rule p-6 md:p-8">
         <div className="flex flex-col sm:flex-row gap-6">
           <div className="flex-shrink-0">
             <Avatar src={mentor.avatar_url} name={fullName} size="xl" />
@@ -264,9 +264,9 @@ export default function MentorProfilePage() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl font-bold text-navy-900">{fullName}</h1>
+                  <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">{fullName}</h1>
                   {mp.is_verified && (
-                    <CheckCircle className="w-5 h-5 text-blue-500" />
+                    <CheckCircle className="w-5 h-5 text-halo-purple-d" />
                   )}
                   {mp.is_founding_mentor && (
                     <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
@@ -276,7 +276,7 @@ export default function MentorProfilePage() {
                   )}
                 </div>
                 {mentor.headline && (
-                  <p className="text-gray-600 mt-1 text-sm font-medium">{mentor.headline}</p>
+                  <p className="text-halo-heather mt-1 text-sm font-medium">{mentor.headline}</p>
                 )}
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
@@ -284,69 +284,69 @@ export default function MentorProfilePage() {
                   <button
                     onClick={handleSaveToggle}
                     className={`p-2 rounded-xl border transition-all ${
-                      isSaved ? 'border-navy-200 bg-navy-50 text-navy-700' : 'border-gray-200 text-gray-400 hover:text-navy-700'
+                      isSaved ? 'border-halo-lavender bg-halo-veil text-halo-purple-d' : 'border-halo-rule text-halo-mist-body hover:text-halo-purple-d'
                     }`}
                     title={isSaved ? 'Unsave' : 'Save'}
                   >
                     {isSaved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
                   </button>
                 )}
-                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${mp.is_available ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${mp.is_available ? 'bg-green-50 text-green-700' : 'bg-halo-bone text-halo-mist-body'}`}>
                   {mp.is_available ? 'Available' : 'Not available'}
                 </span>
               </div>
             </div>
 
             {/* Meta info */}
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
+            <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-halo-mist-body">
               {mp.company && (
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-gray-400" />
+                  <Building2 className="w-4 h-4 text-halo-mist-body" />
                   {mp.title ? `${mp.title} at ${mp.company}` : mp.company}
                 </span>
               )}
               {mentor.location && (
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <MapPin className="w-4 h-4 text-halo-mist-body" />
                   {mentor.location}
                 </span>
               )}
               {mentor.university && (
                 <span className="flex items-center gap-1.5">
-                  <GraduationCap className="w-4 h-4 text-gray-400" />
+                  <GraduationCap className="w-4 h-4 text-halo-mist-body" />
                   {mentor.university}{mentor.graduation_year ? ` '${String(mentor.graduation_year).slice(-2)}` : ''}
                 </span>
               )}
               {mp.timezone && (
                 <span className="flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-gray-400" />
+                  <Globe className="w-4 h-4 text-halo-mist-body" />
                   {mp.timezone.replace('America/', '').replace('_', ' ')}
                 </span>
               )}
             </div>
 
             {/* Stats row */}
-            <div className="flex items-center gap-5 mt-4 py-4 border-t border-b border-gray-100">
+            <div className="flex items-center gap-5 mt-4 py-4 border-t border-b border-halo-rule">
               <div className="text-center">
                 <div className="flex items-center gap-1 justify-center">
                   <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span className="text-lg font-bold text-navy-900">
+                  <span className="text-lg font-bold text-halo-ink">
                     {avgRating > 0 ? avgRating.toFixed(1) : '—'}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5">{mp.review_count} reviews</p>
+                <p className="text-xs text-halo-mist-body mt-0.5">{mp.review_count} reviews</p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.years_experience}</span>
-                <p className="text-xs text-gray-400 mt-0.5">years exp</p>
+                <span className="text-lg font-bold text-halo-ink">{mp.years_experience}</span>
+                <p className="text-xs text-halo-mist-body mt-0.5">years exp</p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.weekly_hours}h</span>
-                <p className="text-xs text-gray-400 mt-0.5">per week</p>
+                <span className="text-lg font-bold text-halo-ink">{mp.weekly_hours}h</span>
+                <p className="text-xs text-halo-mist-body mt-0.5">per week</p>
               </div>
               <div className="text-center">
-                <span className="text-lg font-bold text-navy-900">{mp.max_mentees}</span>
-                <p className="text-xs text-gray-400 mt-0.5">max mentees</p>
+                <span className="text-lg font-bold text-halo-ink">{mp.max_mentees}</span>
+                <p className="text-xs text-halo-mist-body mt-0.5">max mentees</p>
               </div>
             </div>
 
@@ -359,10 +359,10 @@ export default function MentorProfilePage() {
                     disabled={hasRequest || !mp.is_available}
                     className={`px-6 py-2.5 rounded-xl font-medium text-sm transition-all ${
                       hasRequest
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        ? 'bg-halo-bone text-halo-mist-body cursor-not-allowed'
                         : !mp.is_available
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-navy-900 text-white hover:bg-navy-800'
+                        ? 'bg-halo-bone text-halo-mist-body cursor-not-allowed'
+                        : 'bg-halo-purple text-white hover:bg-halo-purple-d'
                     }`}
                   >
                     {hasRequest ? '✓ Request Sent' : 'Request Mentorship'}
@@ -372,20 +372,20 @@ export default function MentorProfilePage() {
                       href={mentor.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2.5 rounded-xl border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-300 transition-all"
+                      className="p-2.5 rounded-xl border border-halo-rule text-halo-mist-body hover:text-halo-purple-d hover:border-halo-lavender transition-all"
                       title="LinkedIn"
                     >
                       <LinkIcon className="w-4 h-4" />
                     </a>
                   )}
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-halo-mist-body">
                     {mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}
                   </span>
                 </div>
                 {hasRequest && (
-                  <p className="mt-2 text-xs text-gray-400">
+                  <p className="mt-2 text-xs text-halo-mist-body">
                     Your request is pending.{' '}
-                    <Link href="/requests" className="text-navy-600 hover:text-navy-800 underline underline-offset-2 font-medium">
+                    <Link href="/requests" className="text-halo-purple-d hover:text-halo-ink underline underline-offset-2 font-medium">
                       Track it in Requests →
                     </Link>
                   </p>
@@ -400,21 +400,21 @@ export default function MentorProfilePage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Match card */}
           {matchInfo && matchInfo.score > 0 && (
-            <div className="bg-navy-900 text-white rounded-2xl p-5">
+            <div className="bg-halo-deep text-white rounded-2xl p-5 sm:p-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-semibold">Why you match</h2>
-                <span className="text-2xl font-bold">{matchInfo.score}%</span>
+                <h2 className="font-display text-2xl leading-tight">Why you match</h2>
+                <span className="font-display text-[2.25rem] leading-none tabular-nums">{matchInfo.score}%</span>
               </div>
-              <div className="w-full h-2 bg-navy-700 rounded-full overflow-hidden mb-4">
+              <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden mb-4">
                 <div
-                  className="h-full bg-white rounded-full"
+                  className="h-full bg-halo-lavender rounded-full"
                   style={{ width: `${matchInfo.score}%` }}
                 />
               </div>
               {matchInfo.reasons.length > 0 && (
                 <ul className="space-y-2">
                   {matchInfo.reasons.map((r) => (
-                    <li key={r} className="flex items-center gap-2 text-sm text-navy-200">
+                    <li key={r} className="flex items-center gap-2 text-sm text-halo-lavender">
                       <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                       {r}
                     </li>
@@ -426,22 +426,22 @@ export default function MentorProfilePage() {
 
           {/* Bio */}
           {mp.bio && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6">
-              <h2 className="text-base font-semibold text-navy-900 mb-3">About</h2>
-              <p className="text-sm text-gray-600 leading-relaxed">{mp.bio}</p>
+            <div className="bg-white rounded-2xl border border-halo-rule p-6">
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-3">About</h2>
+              <p className="text-sm text-halo-heather leading-relaxed">{mp.bio}</p>
             </div>
           )}
 
           {/* Reviews */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h2 className="text-base font-semibold text-navy-900 mb-5">
+          <div className="bg-white rounded-2xl border border-halo-rule p-6">
+            <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-5">
               Reviews
               {mp.review_count > 0 && (
-                <span className="ml-2 text-sm font-normal text-gray-400">({mp.review_count})</span>
+                <span className="ml-2 text-sm font-normal text-halo-mist-body">({mp.review_count})</span>
               )}
             </h2>
             {reviews.length === 0 ? (
-              <p className="text-sm text-gray-400">No reviews yet. Be the first to review this mentor.</p>
+              <p className="text-sm text-halo-mist-body">No reviews yet. Be the first to review this mentor.</p>
             ) : (
               <div className="space-y-5">
                 {reviews.map((r) => {
@@ -455,22 +455,22 @@ export default function MentorProfilePage() {
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-navy-900">
+                          <span className="text-sm font-medium text-halo-ink">
                             {reviewer ? `${reviewer.first_name} ${reviewer.last_name}` : 'Anonymous'}
                           </span>
                           <div className="flex">
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-3 w-3 ${i < r.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`}
+                                className={`h-3 w-3 ${i < r.rating ? 'text-amber-400 fill-amber-400' : 'text-halo-bone fill-halo-bone'}`}
                               />
                             ))}
                           </div>
                         </div>
                         {r.feedback && (
-                          <p className="text-sm text-gray-600 leading-relaxed">{r.feedback}</p>
+                          <p className="text-sm text-halo-heather leading-relaxed">{r.feedback}</p>
                         )}
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-halo-mist-body mt-1">
                           {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                         </p>
                       </div>
@@ -485,11 +485,11 @@ export default function MentorProfilePage() {
         {/* Sidebar */}
         <div className="space-y-4">
           {/* Expertise */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-3">Expertise</h3>
+          <div className="bg-white rounded-2xl border border-halo-rule p-5">
+            <h3 className="text-sm font-semibold text-halo-ink mb-3">Expertise</h3>
             <div className="flex flex-wrap gap-1.5">
               {mp.expertise_tags.map((tag) => (
-                <span key={tag} className="text-xs bg-navy-50 text-navy-700 px-2.5 py-1 rounded-full font-medium">
+                <span key={tag} className="text-xs bg-halo-veil text-halo-purple-d px-2.5 py-1 rounded-full font-medium">
                   {tag}
                 </span>
               ))}
@@ -498,11 +498,11 @@ export default function MentorProfilePage() {
 
           {/* Goals they help with */}
           {mp.goals.length > 0 && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-5">
-              <h3 className="text-sm font-semibold text-navy-900 mb-3">Goals I help with</h3>
+            <div className="bg-white rounded-2xl border border-halo-rule p-5">
+              <h3 className="text-sm font-semibold text-halo-ink mb-3">Goals I help with</h3>
               <ul className="space-y-2">
                 {mp.goals.map((g) => (
-                  <li key={g} className="flex items-center gap-2 text-sm text-gray-600">
+                  <li key={g} className="flex items-center gap-2 text-sm text-halo-heather">
                     <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
                     {g}
                   </li>
@@ -512,26 +512,26 @@ export default function MentorProfilePage() {
           )}
 
           {/* Session details */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-3">Session details</h3>
-            <div className="space-y-2 text-sm text-gray-600">
+          <div className="bg-white rounded-2xl border border-halo-rule p-5">
+            <h3 className="text-sm font-semibold text-halo-ink mb-3">Session details</h3>
+            <div className="space-y-2 text-sm text-halo-heather">
               <div className="flex justify-between">
-                <span className="text-gray-400">Rate</span>
+                <span className="text-halo-mist-body">Rate</span>
                 <span className="font-medium">{mp.session_rate ? `$${mp.session_rate}/hr` : 'Free'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Availability</span>
+                <span className="text-halo-mist-body">Availability</span>
                 <span className="font-medium">{mp.weekly_hours}h/week</span>
               </div>
               {mp.communication_preference && (
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Format</span>
+                  <span className="text-halo-mist-body">Format</span>
                   <span className="font-medium capitalize">{mp.communication_preference}</span>
                 </div>
               )}
               {mp.languages.length > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Languages</span>
+                  <span className="text-halo-mist-body">Languages</span>
                   <span className="font-medium">{mp.languages.join(', ')}</span>
                 </div>
               )}
@@ -545,7 +545,7 @@ export default function MentorProfilePage() {
         <div className="flex justify-center">
           <button
             onClick={() => setReportOpen(true)}
-            className="text-xs text-gray-300 hover:text-gray-500 transition-colors"
+            className="text-xs text-halo-mist hover:text-halo-mist-body transition-colors"
           >
             Report this profile
           </button>

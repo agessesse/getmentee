@@ -55,16 +55,16 @@ function EmptyRequestsState({ tab, userRole }: { tab: Status; userRole: 'mentor'
   const { title, body, cta } = config[tab][userRole];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-12 flex flex-col items-center text-center">
-      <div className="w-11 h-11 bg-gray-50 rounded-xl flex items-center justify-center mb-4">
-        <ClipboardList className="w-5 h-5 text-gray-300" />
+    <div className="bg-white rounded-2xl border border-halo-rule p-12 flex flex-col items-center text-center">
+      <div className="w-11 h-11 bg-halo-veil rounded-xl flex items-center justify-center mb-4">
+        <ClipboardList className="w-5 h-5 text-halo-mist" />
       </div>
-      <p className="text-sm font-medium text-navy-900 mb-1">{title}</p>
-      <p className="text-sm text-gray-400 max-w-xs leading-relaxed">{body}</p>
+      <p className="text-sm font-medium text-halo-ink mb-1">{title}</p>
+      <p className="text-sm text-halo-mist-body max-w-xs leading-relaxed">{body}</p>
       {cta && (
         <Link
           href={cta.href}
-          className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+          className="mt-6 inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
         >
           {cta.label}
         </Link>
@@ -327,10 +327,10 @@ export default function RequestsPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-navy-900">
+        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
           {userRole === 'mentor' ? 'Mentorship Requests' : 'My Requests'}
         </h1>
-        <p className="text-gray-500 mt-1 text-sm">
+        <p className="text-halo-mist-body mt-1 text-sm">
           {userRole === 'mentor'
             ? 'Review incoming requests and manage your mentee roster.'
             : 'Track the status of your mentorship requests.'}
@@ -369,9 +369,9 @@ export default function RequestsPage() {
 
       {/* Capacity bar — mentor only */}
       {capacity && (
-        <div className="mb-6 bg-white rounded-xl border border-gray-100 px-5 py-4">
+        <div className="mb-6 bg-white rounded-xl border border-halo-rule px-5 py-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-navy-900">
+            <p className="text-sm font-medium text-halo-ink">
               Capacity: {capacity.activeMentees}/{capacity.maxMentees} mentees
             </p>
             <span
@@ -386,7 +386,7 @@ export default function RequestsPage() {
               {isFull ? 'Full' : pct >= 75 ? 'Nearly full' : 'Open'}
             </span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-1.5">
+          <div className="w-full bg-halo-bone rounded-full h-1.5">
             <div
               className={`h-1.5 rounded-full transition-all ${
                 isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-green-400'
@@ -404,15 +404,15 @@ export default function RequestsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="flex border-b border-halo-rule mb-6">
         {tabs.map(({ label, status }) => (
           <button
             key={status}
             onClick={() => handleTabChange(status)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               tab === status
-                ? 'border-navy-600 text-navy-600'
-                : 'border-transparent text-gray-500 hover:text-navy-900'
+                ? 'border-halo-purple text-halo-purple-d'
+                : 'border-transparent text-halo-mist-body hover:text-halo-ink'
             }`}
           >
             {label}

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { WORDMARK } from '@/components/marketing/intro-wordmark';
 import { isMarketingRoute } from '@/components/marketing/marketing-links';
+import { isAppRoute } from '@/lib/portal-routes';
 import {
   EASE, LEAD_BG, FOLLOW_BG,
   COVER_PANEL_MS, COVER_FOLLOW_DELAY_MS,
@@ -38,11 +39,21 @@ import {
  * defaultPrevented and would have no way to tell a real click from Link's own
  * handling, so the listener runs at capture, before Link sees the event.
  *
- * Mounted once in the root layout. On any route that is not one of the four it
- * is inert: the guard below requires both the current page and the destination
- * to be marketing routes, so auth, legal, profile and product navigation is
- * never delayed.
+ * Mounted once in the root layout. It runs within two zones: the four marketing
+ * pages, and the signed-in app, so moving between Dashboard, Discover, Goals
+ * and the rest carries the same wipe the public site does. It never runs
+ * ACROSS the zones or anywhere outside them, so signing in, signing out, auth,
+ * legal and public profile navigation are never delayed. Sign-in has its own
+ * arrival (SignInTransition), and a wipe stacked on top of it would be two
+ * animations for one step.
  */
+
+/** Which wipe zone a path is in, or null when it takes part in neither. */
+function zoneOf(pathname: string): 'marketing' | 'app' | null {
+  if (isMarketingRoute(pathname)) return 'marketing';
+  if (isAppRoute(pathname)) return 'app';
+  return null;
+}
 
 type Phase = 'idle' | 'cover' | 'hold' | 'reveal';
 
@@ -97,7 +108,7 @@ export default function PageTransition() {
       // the ceiling: a slow route reveals anyway rather than hanging.
       const waitStart = Date.now();
       const tick = () => {
-        const arrived = pathRef.current === href;
+        const arrived = pathRef.current === href.split('?')[0];
         const waited = Date.now() - waitStart;
         if (arrived || waited >= MAX_WAIT_MS) {
           const remaining = Math.max(0, MIN_HOLD_MS - waited);
@@ -139,9 +150,9 @@ export default function PageTransition() {
       if (url.origin !== window.location.origin) return;
       if (url.pathname === window.location.pathname) return;
 
-      // Both ends must belong to the four-page marketing story.
-      if (!isMarketingRoute(window.location.pathname)) return;
-      if (!isMarketingRoute(url.pathname)) return;
+      // Both ends must sit in the same zone: the marketing story, or the app.
+      const from = zoneOf(window.location.pathname);
+      if (!from || from !== zoneOf(url.pathname)) return;
 
       // A transition already running swallows further marketing clicks rather
       // than queueing a second wipe or double-navigating.
@@ -151,7 +162,8 @@ export default function PageTransition() {
       }
 
       e.preventDefault();
-      run(url.pathname);
+      // Keep the query: app links such as /messages?mentorshipId=… carry state.
+      run(url.pathname + url.search);
     };
 
     document.addEventListener('click', onClick, true);

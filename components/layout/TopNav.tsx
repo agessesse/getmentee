@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Bell, Menu, ChevronDown, Check, ClipboardList, ClipboardCheck, MessageSquare, Calendar, CalendarX, Target, TrendingUp } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
+import Wordmark from '@/components/ui/Wordmark';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
@@ -147,15 +148,21 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
   };
 
   return (
-    <header className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-6 flex-shrink-0">
-      {/* Mobile hamburger */}
-      <button
-        onClick={onMenuClick}
-        className="lg:hidden text-gray-400 hover:text-navy-900 transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 rounded-lg"
-        aria-label="Open menu"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+    <header className="sticky top-0 z-10 h-16 bg-halo-ivory/85 backdrop-blur-md border-b border-halo-rule flex items-center justify-between px-4 lg:px-8 flex-shrink-0">
+      {/* Mobile hamburger, with the lockup beside it: the sidebar that carries
+          it on desktop is off-canvas here. */}
+      <div className="flex items-center gap-3 lg:hidden">
+        <button
+          onClick={onMenuClick}
+          className="text-halo-heather hover:text-halo-ink transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded-lg"
+          aria-label="Open menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <Link href="/dashboard" className="text-halo-ink rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple">
+          <Wordmark size="sm" />
+        </Link>
+      </div>
 
       <div className="flex-1" />
 
@@ -167,27 +174,27 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setNotifDropdown((v) => !v);
               setUserDropdown(false);
             }}
-            className="relative p-2 text-gray-400 hover:text-navy-900 transition-colors rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            className="relative p-2 text-halo-mist-body hover:text-halo-ink transition-colors rounded-lg hover:bg-halo-veil focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-halo-purple-d text-white text-[10px] font-semibold rounded-full ring-2 ring-halo-ivory flex items-center justify-center leading-none">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
 
           {notifDropdown && (
-            <div className="absolute right-0 mt-1 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
-                <span className="text-sm font-semibold text-navy-900">
-                  Notifications {unreadCount > 0 && <span className="text-xs text-gray-400 font-normal">({unreadCount} new)</span>}
+            <div className="halo-pop absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-[0_18px_50px_-12px_rgba(21,19,26,0.22)] border border-halo-rule z-50 overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-3.5 border-b border-halo-rule">
+                <span className="font-display text-lg text-halo-ink">
+                  Notifications {unreadCount > 0 && <span className="text-xs text-halo-mist-body font-normal">({unreadCount} new)</span>}
                 </span>
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-xs text-navy-600 hover:text-navy-900 font-medium flex items-center gap-1"
+                    className="text-xs text-halo-purple-d hover:text-halo-ink font-medium flex items-center gap-1"
                   >
                     <Check className="w-3 h-3" />
                     Mark all read
@@ -197,7 +204,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
 
               <div className="max-h-80 overflow-y-auto">
                 {notifications.length === 0 ? (
-                  <div className="px-5 py-8 text-center text-sm text-gray-400">
+                  <div className="px-5 py-8 text-center text-sm text-halo-mist-body">
                     No notifications yet
                   </div>
                 ) : (
@@ -207,24 +214,24 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                       <button
                         key={notif.id}
                         onClick={() => handleNotifClick(notif)}
-                        className={`w-full flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors text-left ${!notif.is_read ? 'bg-navy-50/40' : ''}`}
+                        className={`w-full flex items-start gap-3 px-5 py-3.5 hover:bg-halo-veil transition-colors text-left ${!notif.is_read ? 'bg-halo-veil/60' : ''}`}
                       >
-                        <div className="w-8 h-8 rounded-full bg-navy-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Icon className="w-4 h-4 text-navy-600" />
+                        <div className="w-8 h-8 rounded-full bg-halo-lavender/50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Icon className="w-4 h-4 text-halo-purple-d" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className={`text-sm ${!notif.is_read ? 'font-semibold text-navy-900' : 'font-medium text-gray-700'}`}>
+                          <p className={`text-sm ${!notif.is_read ? 'font-semibold text-halo-ink' : 'font-medium text-halo-heather'}`}>
                             {notif.title}
                           </p>
                           {notif.body && (
-                            <p className="text-xs text-gray-500 mt-0.5 truncate">{notif.body}</p>
+                            <p className="text-xs text-halo-mist-body mt-0.5 truncate">{notif.body}</p>
                           )}
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-halo-mist-body mt-1">
                             {formatDistanceToNow(new Date(notif.created_at), { addSuffix: true })}
                           </p>
                         </div>
                         {!notif.is_read && (
-                          <span className="w-2 h-2 bg-navy-600 rounded-full mt-2 flex-shrink-0" />
+                          <span className="w-2 h-2 bg-halo-purple rounded-full mt-2 flex-shrink-0" />
                         )}
                       </button>
                     );
@@ -242,29 +249,29 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
               setUserDropdown((v) => !v);
               setNotifDropdown(false);
             }}
-            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-halo-veil transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
           >
             <Avatar src={user.avatar_url} name={fullName} size="sm" />
-            <span className="hidden md:block text-sm font-medium text-navy-900 max-w-[120px] truncate">
+            <span className="hidden md:block text-sm font-medium text-halo-ink max-w-[120px] truncate">
               {user.first_name}
             </span>
-            <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-halo-mist-body" />
           </button>
 
           {userDropdown && (
-            <div className="absolute right-0 mt-1 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-1.5 z-50 overflow-hidden">
-              <div className="px-4 py-2.5 border-b border-gray-100">
-                <p className="text-sm font-semibold text-navy-900">{fullName}</p>
-                <p className="text-xs text-gray-400 truncate mt-0.5">{user.email}</p>
+            <div className="halo-pop absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-[0_18px_50px_-12px_rgba(21,19,26,0.22)] border border-halo-rule py-1.5 z-50 overflow-hidden">
+              <div className="px-4 py-2.5 border-b border-halo-rule">
+                <p className="text-sm font-semibold text-halo-ink">{fullName}</p>
+                <p className="text-xs text-halo-mist-body truncate mt-0.5">{user.email}</p>
               </div>
               <Link
                 href="/profile/setup"
                 onClick={() => setUserDropdown(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2.5 px-4 py-2 text-sm text-halo-heather hover:bg-halo-veil transition-colors"
               >
                 Edit Profile
               </Link>
-              <div className="border-t border-gray-100 mt-1 pt-1">
+              <div className="border-t border-halo-rule mt-1 pt-1">
                 <button
                   onClick={handleSignOut}
                   className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

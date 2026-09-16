@@ -26,14 +26,14 @@ export default function ConversationList({
 }: ConversationListProps) {
   if (conversations.length === 0) {
     return (
-      <div className="p-6 text-sm text-gray-400 text-center">
+      <div className="p-6 text-sm text-halo-mist-body text-center">
         No conversations yet. Start a mentorship to begin chatting.
       </div>
     );
   }
 
   return (
-    <ul className="divide-y divide-gray-100">
+    <ul className="divide-y divide-halo-rule">
       {conversations.map((c) => {
         const active = c.mentorshipId === activeMentorshipId;
         const fullName = `${c.partnerFirstName} ${c.partnerLastName}`;
@@ -42,16 +42,16 @@ export default function ConversationList({
             <button
               onClick={() => onSelect(c.mentorshipId)}
               className={clsx(
-                'w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-cream-100 transition-colors',
-                active && 'bg-navy-50'
+                'w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-halo-veil transition-colors',
+                active && 'bg-halo-veil'
               )}
             >
               <Avatar src={c.partnerAvatarUrl} name={fullName} size="md" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-navy-900 truncate">{fullName}</span>
+                  <span className="text-sm font-medium text-halo-ink truncate">{fullName}</span>
                   {c.lastMessageAt && (
-                    <span className="text-xs text-gray-400 flex-shrink-0 ml-2">
+                    <span className="text-xs text-halo-mist-body flex-shrink-0 ml-2">
                       {new Date(c.lastMessageAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -60,11 +60,11 @@ export default function ConversationList({
                   )}
                 </div>
                 <div className="flex items-center justify-between mt-0.5">
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-halo-mist-body truncate">
                     {c.lastMessage ?? 'Start the conversation...'}
                   </p>
                   {c.unreadCount > 0 && (
-                    <span className="ml-2 flex-shrink-0 bg-navy-600 text-white text-xs font-medium rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
+                    <span className="ml-2 flex-shrink-0 bg-halo-purple text-white text-xs font-medium rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
                       {c.unreadCount}
                     </span>
                   )}

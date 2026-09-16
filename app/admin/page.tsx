@@ -65,14 +65,14 @@ export default async function AdminOverview() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Overview</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Overview</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           Live counts from the database. Windows are rolling from today.
         </p>
       </div>
 
       <section aria-labelledby="people-h">
-        <h2 id="people-h" className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-600 mb-2">
+        <h2 id="people-h" className="text-[12px] font-semibold font-ui uppercase tracking-[0.14em] text-halo-heather mb-2">
           People
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -84,7 +84,7 @@ export default async function AdminOverview() {
       </section>
 
       <section aria-labelledby="funnel-h">
-        <h2 id="funnel-h" className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-600 mb-2">
+        <h2 id="funnel-h" className="text-[12px] font-semibold font-ui uppercase tracking-[0.14em] text-halo-heather mb-2">
           Mentorship funnel
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -96,7 +96,7 @@ export default async function AdminOverview() {
       </section>
 
       <section aria-labelledby="sessions-h">
-        <h2 id="sessions-h" className="text-[12px] font-semibold uppercase tracking-[0.08em] text-gray-600 mb-2">
+        <h2 id="sessions-h" className="text-[12px] font-semibold font-ui uppercase tracking-[0.14em] text-halo-heather mb-2">
           Sessions and trust
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -113,14 +113,14 @@ export default async function AdminOverview() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-halo-veil border-b border-halo-rule">
                 <tr>
                   <Th>Name</Th><Th>Role</Th><Th>Affiliation</Th><Th>Joined</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-halo-rule">
                 {recent.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50">
+                  <tr key={u.id} className="hover:bg-halo-veil">
                     <Td>
                       <a href={`/admin/users/${u.id}`} className="font-medium hover:underline">
                         {u.first_name} {u.last_name}
@@ -128,8 +128,8 @@ export default async function AdminOverview() {
                       {u.is_demo && <span className="ml-2"><Tag>Demo</Tag></span>}
                     </Td>
                     <Td><Tag tone={u.role === 'mentor' ? 'blue' : 'neutral'}>{u.role}</Tag></Td>
-                    <Td className="text-gray-700">{u.university || 'Not set'}</Td>
-                    <Td className="text-gray-700 tabular-nums">
+                    <Td className="text-halo-heather">{u.university || 'Not set'}</Td>
+                    <Td className="text-halo-heather tabular-nums">
                       {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </Td>
                   </tr>

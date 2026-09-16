@@ -1,7 +1,8 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   open: boolean;
@@ -18,26 +19,34 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
     return () => document.removeEventListener('keydown', handler);
   }, [open, onClose]);
 
-  if (!open) return null;
+  // Portalled to <body>. Portal pages settle into place on arrival with a
+  // transform, and a transformed ancestor re-anchors position:fixed, which
+  // would pin the overlay to the page instead of the viewport.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  if (!open || !mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-body">
       <div
-        className="absolute inset-0 bg-navy-900/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-halo-ink/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md p-6 z-10">
+      <div className="halo-pop relative bg-white rounded-2xl border border-halo-rule shadow-[0_30px_80px_-20px_rgba(21,19,26,0.35)] w-full max-w-md p-6 sm:p-7 z-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-navy-900">{title}</h2>
+          <h2 className="font-display text-2xl leading-tight text-halo-ink">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-navy-900 transition-colors"
+            aria-label="Close"
+            className="text-halo-mist-body hover:text-halo-ink transition-colors rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -172,10 +172,10 @@ export default function BookingModal({
 
         {/* Availability hint */}
         {slots.length > 0 && (
-          <div className="bg-navy-50 rounded-xl px-4 py-3">
+          <div className="bg-halo-veil rounded-xl px-4 py-3">
             <div className="flex items-center gap-1.5 mb-2">
-              <Clock className="w-3.5 h-3.5 text-navy-500" />
-              <p className="text-xs font-semibold text-navy-700">Mentor&apos;s available days</p>
+              <Clock className="w-3.5 h-3.5 text-halo-purple-d" />
+              <p className="text-xs font-semibold text-halo-purple-d">Mentor&apos;s available days</p>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {availableDays.map((dow) => (
@@ -183,8 +183,8 @@ export default function BookingModal({
                   key={dow}
                   className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     selectedDow === dow
-                      ? 'bg-navy-700 text-white'
-                      : 'bg-white text-navy-700 border border-navy-200'
+                      ? 'bg-halo-purple-d text-white'
+                      : 'bg-white text-halo-purple-d border border-halo-lavender'
                   }`}
                 >
                   {DAYS[dow]}
@@ -215,7 +215,7 @@ export default function BookingModal({
         {/* Quick-select available time windows for selected day */}
         {daySlots.length > 0 && (
           <div>
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-halo-mist-body mb-2">
               Available windows on {DAYS[selectedDow!]}. Click to auto-fill:
             </p>
             <div className="flex flex-wrap gap-2">
@@ -230,8 +230,8 @@ export default function BookingModal({
                     onClick={() => set('time', start)}
                     className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
                       active
-                        ? 'bg-navy-900 text-white border-navy-900'
-                        : 'bg-white text-navy-700 border-navy-200 hover:bg-navy-50'
+                        ? 'bg-halo-purple text-white border-halo-purple'
+                        : 'bg-white text-halo-purple-d border-halo-lavender hover:bg-halo-veil'
                     }`}
                   >
                     {fmt12(start)}–{fmt12(end)}

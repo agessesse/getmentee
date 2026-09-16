@@ -180,3 +180,53 @@ button:hover .arrow-slide {
   .scroll-cue,
   .scroll-cue > * { animation: none; }
 }
+
+/* ── Signed-in portal motion ──
+   Additive. Nothing above is modified; the keyframes are the homepage hero's
+   own (heroRiseOuter / heroRiseInner), so the portal moves in the same hand.
+
+   Every route arrival settles the page 20px into place, then its top-level
+   blocks follow a beat apart, which is the hero's outer/inner pair turned into
+   a cascade. Opacity is never touched: content is readable from the first
+   frame and only its position resolves.
+
+   fill-mode is `backwards`, not `both`. After the animation ends no transform
+   remains on these wrappers, so nothing inside them has position:fixed
+   re-anchored once the page is at rest.
+
+   The cascade selectors are wrapped in :where() so they carry zero
+   specificity. A spinner or skeleton that lands at that depth keeps its own
+   animate-spin / animate-pulse instead of being overridden by this. */
+@keyframes portalCascade { from { transform: translateY(26px); } to { transform: none; } }
+
+.portal-arrive {
+  animation: heroRiseOuter 0.8s cubic-bezier(0.2, 1, 0.3, 1) 0.04s backwards;
+}
+:where(.portal-arrive > * > *) {
+  animation: portalCascade 0.95s cubic-bezier(0.2, 1, 0.3, 1) backwards;
+}
+:where(.portal-arrive > * > *:nth-child(1)) { animation-delay: 0.06s; }
+:where(.portal-arrive > * > *:nth-child(2)) { animation-delay: 0.12s; }
+:where(.portal-arrive > * > *:nth-child(3)) { animation-delay: 0.18s; }
+:where(.portal-arrive > * > *:nth-child(4)) { animation-delay: 0.24s; }
+:where(.portal-arrive > * > *:nth-child(5)) { animation-delay: 0.30s; }
+:where(.portal-arrive > * > *:nth-child(n+6)) { animation-delay: 0.36s; }
+
+/* Menus and dialogs: arrive from a few pixels up, fast. These are transient
+   surfaces opened by a click, so a short fade is appropriate here. */
+@keyframes haloPop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+.halo-pop { animation: haloPop 180ms cubic-bezier(0.2, 1, 0.3, 1) both; transform-origin: top right; }
+
+/* The loading lockup breathes rather than spins. */
+@keyframes haloBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+.halo-breathe { animation: haloBreathe 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-arrive,
+  :where(.portal-arrive > * > *),
+  .halo-pop,
+  .halo-breathe { animation: none; }
+}

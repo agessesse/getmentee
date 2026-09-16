@@ -22,17 +22,17 @@ export default function ConsentModal({
   return (
     <Modal open={open} onClose={onCancel} title="Session Notes">
       <div className="space-y-5">
-        <div className="flex items-start gap-3 p-4 bg-navy-50 rounded-xl border border-navy-100">
-          <ShieldCheck className="w-5 h-5 text-navy-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-navy-800 leading-relaxed">
+        <div className="flex items-start gap-3 p-4 bg-halo-veil rounded-xl border border-halo-lavender">
+          <ShieldCheck className="w-5 h-5 text-halo-purple-d flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-halo-ink leading-relaxed">
             Session Notes can transcribe this conversation and create a private summary and action
             items for your mentorship record.
           </p>
         </div>
 
-        <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
+        <div className="space-y-3 text-sm text-halo-heather leading-relaxed">
           <p>
-            <strong className="text-navy-900">Before you start recording:</strong>
+            <strong className="text-halo-ink">Before you start recording:</strong>
           </p>
           <ul className="space-y-2 pl-4">
             <li className="list-disc">
@@ -53,7 +53,7 @@ export default function ConsentModal({
           </ul>
         </div>
 
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-halo-mist-body">
           By clicking &ldquo;Start Session Notes,&rdquo; you confirm that all participants have
           agreed to this transcription.
         </p>

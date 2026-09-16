@@ -45,10 +45,10 @@ export default function MentorshipCard({
             <Avatar src={partnerAvatarUrl} name={fullName} size="lg" />
           </Link>
           <div>
-            <Link href={profileHref} className="font-semibold text-navy-900 hover:text-navy-600 transition-colors">
+            <Link href={profileHref} className="font-semibold text-halo-ink hover:text-halo-purple-d transition-colors">
               {fullName}
             </Link>
-            <p className="text-xs text-gray-400">Mentoring for {duration}</p>
+            <p className="text-xs text-halo-mist-body">Mentoring for {duration}</p>
           </div>
         </div>
         <Badge
@@ -58,33 +58,33 @@ export default function MentorshipCard({
       </div>
 
       {/* Stats row */}
-      <div className="flex items-center gap-4 text-sm text-gray-500">
+      <div className="flex items-center gap-4 text-sm text-halo-mist-body">
         <span className="flex items-center gap-1">
-          <Award className="h-4 w-4 text-gray-400" />
+          <Award className="h-4 w-4 text-halo-mist-body" />
           {sessionsCount} session{sessionsCount !== 1 ? 's' : ''}
         </span>
         {activeGoalCount > 0 && (
           <span className="flex items-center gap-1">
-            <Target className="h-4 w-4 text-navy-400" />
-            <span className="text-navy-600 font-medium">{activeGoalCount}</span> active goal{activeGoalCount !== 1 ? 's' : ''}
+            <Target className="h-4 w-4 text-halo-mist-body" />
+            <span className="text-halo-purple-d font-medium">{activeGoalCount}</span> active goal{activeGoalCount !== 1 ? 's' : ''}
           </span>
         )}
       </div>
 
       {/* Next session callout */}
       {nextSessionAt && (
-        <div className="flex items-center gap-2 bg-navy-50 rounded-xl px-3 py-2.5 text-sm">
-          <Calendar className="h-4 w-4 text-navy-500 flex-shrink-0" />
+        <div className="flex items-center gap-2 bg-halo-veil rounded-xl px-3 py-2.5 text-sm">
+          <Calendar className="h-4 w-4 text-halo-purple-d flex-shrink-0" />
           <div>
-            <span className="text-xs text-navy-500 font-medium">Next session</span>
-            <p className="text-sm font-semibold text-navy-900">
+            <span className="text-xs text-halo-purple-d font-medium">Next session</span>
+            <p className="text-sm font-semibold text-halo-ink">
               {format(new Date(nextSessionAt), 'EEE MMM d, h:mm a')}
             </p>
           </div>
         </div>
       )}
 
-      <div className="flex gap-2 pt-1 border-t border-gray-100">
+      <div className="flex gap-2 pt-1 border-t border-halo-rule">
         <Link href={`/messages?mentorshipId=${mentorshipId}`} className="flex-1">
           <Button variant="primary" size="sm" className="w-full">
             <MessageSquare className="h-4 w-4" /> Chat

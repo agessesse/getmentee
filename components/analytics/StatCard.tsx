@@ -10,13 +10,13 @@ interface StatCardProps {
 export default function StatCard({ icon: Icon, value, label, sub }: StatCardProps) {
   return (
     <Card className="flex items-start gap-4">
-      <div className="p-2.5 bg-navy-50 rounded-lg">
-        <Icon className="h-6 w-6 text-navy-600" />
+      <div className="p-2.5 bg-halo-veil rounded-lg">
+        <Icon className="h-6 w-6 text-halo-purple-d" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-navy-900">{value}</p>
-        <p className="text-sm text-gray-600">{label}</p>
-        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+        <p className="font-display text-[2rem] leading-none text-halo-ink tabular-nums">{value}</p>
+        <p className="text-sm text-halo-heather">{label}</p>
+        {sub && <p className="text-xs text-halo-mist-body mt-0.5">{sub}</p>}
       </div>
     </Card>
   );

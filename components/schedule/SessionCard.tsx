@@ -48,8 +48,8 @@ export default function SessionCard({
         <div className="flex items-center gap-2">
           <Avatar src={partnerAvatarUrl} name={fullName} size="sm" />
           <div>
-            <p className="text-sm font-medium text-navy-900">{fullName}</p>
-            <p className="text-xs text-gray-400">
+            <p className="text-sm font-medium text-halo-ink">{fullName}</p>
+            <p className="text-xs text-halo-mist-body">
               {date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}{' '}
               at {date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
             </p>
@@ -58,7 +58,7 @@ export default function SessionCard({
         <Badge label={status.replace('_', ' ')} variant={statusVariant[status]} />
       </div>
 
-      <div className="flex items-center gap-3 text-xs text-gray-500">
+      <div className="flex items-center gap-3 text-xs text-halo-mist-body">
         <span className="flex items-center gap-1">
           {sessionType === 'video' ? <Video className="h-3.5 w-3.5" /> : <MessageSquare className="h-3.5 w-3.5" />}
           {sessionType === 'video' ? 'Video Call' : 'Async'}
@@ -68,7 +68,7 @@ export default function SessionCard({
         </span>
       </div>
 
-      {notes && <p className="text-xs text-gray-500 italic">{notes}</p>}
+      {notes && <p className="text-xs text-halo-mist-body italic">{notes}</p>}
 
       <div className="flex gap-2">
         <Link href={`/sessions/${id}`}>

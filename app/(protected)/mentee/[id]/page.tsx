@@ -71,8 +71,8 @@ export default function MenteeProfilePage() {
   if (notFound || !mentee) {
     return (
       <div className="max-w-2xl mx-auto text-center py-24">
-        <p className="text-gray-400">Mentee profile not found.</p>
-        <Link href="/requests" className="mt-4 inline-block text-sm text-navy-600 hover:underline">Back to Requests</Link>
+        <p className="text-halo-mist-body">Mentee profile not found.</p>
+        <Link href="/requests" className="mt-4 inline-block text-sm text-halo-purple-d hover:underline">Back to Requests</Link>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function MenteeProfilePage() {
       <div>
         <Link
           href="/requests"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Requests
@@ -92,15 +92,15 @@ export default function MenteeProfilePage() {
       </div>
 
       {/* Profile header */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+      <div className="bg-white rounded-2xl border border-halo-rule p-6">
         <div className="flex items-start gap-5">
           <Avatar src={mentee.avatar_url} name={fullName} size="lg" />
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-navy-900">{fullName}</h1>
+            <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">{fullName}</h1>
             {mentee.headline && (
-              <p className="text-sm text-gray-500 mt-0.5">{mentee.headline}</p>
+              <p className="text-sm text-halo-mist-body mt-0.5">{mentee.headline}</p>
             )}
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-gray-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-3 text-xs text-halo-mist-body">
               {mentee.university && (
                 <span className="flex items-center gap-1">
                   <GraduationCap className="w-3.5 h-3.5" />
@@ -124,7 +124,7 @@ export default function MenteeProfilePage() {
                   href={mentee.linkedin_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-navy-600 hover:text-navy-900"
+                  className="flex items-center gap-1 text-halo-purple-d hover:text-halo-ink"
                 >
                   <Globe className="w-3.5 h-3.5" />
                   LinkedIn
@@ -135,7 +135,7 @@ export default function MenteeProfilePage() {
         </div>
 
         {mentee.bio && (
-          <p className="text-sm text-gray-600 leading-relaxed mt-5 pt-5 border-t border-gray-100">
+          <p className="text-sm text-halo-heather leading-relaxed mt-5 pt-5 border-t border-halo-rule">
             {mentee.bio}
           </p>
         )}
@@ -143,12 +143,12 @@ export default function MenteeProfilePage() {
 
       {/* Goals */}
       {mentee.goals.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-navy-900 mb-3">Their goals</h2>
+        <div className="bg-white rounded-2xl border border-halo-rule p-6">
+          <h2 className="font-display font-normal text-lg leading-tight text-halo-ink mb-3">Their goals</h2>
           <ul className="space-y-2">
             {mentee.goals.map((goal, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                <span className="w-1.5 h-1.5 rounded-full bg-navy-400 flex-shrink-0 mt-2" />
+              <li key={i} className="flex items-start gap-2 text-sm text-halo-heather">
+                <span className="w-1.5 h-1.5 rounded-full bg-halo-purple flex-shrink-0 mt-2" />
                 {goal}
               </li>
             ))}
@@ -158,11 +158,11 @@ export default function MenteeProfilePage() {
 
       {/* Interest tags */}
       {mentee.interest_tags.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-navy-900 mb-3">Interests</h2>
+        <div className="bg-white rounded-2xl border border-halo-rule p-6">
+          <h2 className="font-display font-normal text-lg leading-tight text-halo-ink mb-3">Interests</h2>
           <div className="flex flex-wrap gap-2">
             {mentee.interest_tags.map((tag) => (
-              <span key={tag} className="text-xs bg-navy-50 text-navy-700 px-3 py-1 rounded-full font-medium">
+              <span key={tag} className="text-xs bg-halo-veil text-halo-purple-d px-3 py-1 rounded-full font-medium">
                 {tag}
               </span>
             ))}

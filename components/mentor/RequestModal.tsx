@@ -43,25 +43,25 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
 
   return (
     <Modal open={open} onClose={onClose} title="Request Mentorship">
-      <div className="flex items-center gap-3 mb-5 pb-4 border-b border-gray-100">
+      <div className="flex items-center gap-3 mb-5 pb-4 border-b border-halo-rule">
         <Avatar
           src={mentor.avatarUrl}
           name={`${mentor.firstName} ${mentor.lastName}`}
           size="md"
         />
         <div>
-          <p className="font-medium text-navy-900">
+          <p className="font-medium text-halo-ink">
             {mentor.firstName} {mentor.lastName}
           </p>
-          <p className="text-xs text-gray-500">Your request will be sent to this mentor</p>
+          <p className="text-xs text-halo-mist-body">Your request will be sent to this mentor</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-gray-700">
-              Why do you want to work with this mentor? <span className="text-gray-400">(optional)</span>
+            <span className="text-xs font-medium text-halo-heather">
+              Why do you want to work with this mentor? <span className="text-halo-mist-body">(optional)</span>
             </span>
             <VoiceInputButton
               context="message"
@@ -78,8 +78,8 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
         </div>
         <div>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-gray-700">
-              What are your goals? <span className="text-gray-400">(optional)</span>
+            <span className="text-xs font-medium text-halo-heather">
+              What are your goals? <span className="text-halo-mist-body">(optional)</span>
             </span>
             <VoiceInputButton
               context="goal"

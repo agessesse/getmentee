@@ -11,7 +11,6 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import Avatar from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
-import SignInTransition from '@/components/auth/SignInTransition';
 import { FORMER_MEMBER, displayName } from '@/lib/display-name';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -71,24 +70,24 @@ function StatCard({
   const bg =
     color === 'green' ? 'bg-green-50'
     : color === 'amber' ? 'bg-amber-50'
-    : 'bg-navy-50';
+    : 'bg-halo-veil';
   const iconColor =
     color === 'green' ? 'text-green-600'
     : color === 'amber' ? 'text-amber-600'
-    : 'text-navy-600';
+    : 'text-halo-purple-d';
   return (
     <Link
       href={href}
-      className="group block bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all"
+      className="group block bg-white rounded-2xl border border-halo-rule p-5 hover:border-halo-lavender hover:shadow-sm transition-all"
     >
       <div className="flex items-start justify-between mb-4">
         <div className={`w-9 h-9 ${bg} rounded-xl flex items-center justify-center`}>
           <Icon className={`w-4.5 h-4.5 ${iconColor}`} />
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-600 group-hover:translate-x-0.5 transition-all" />
+        <ArrowRight className="w-4 h-4 text-halo-mist group-hover:text-halo-purple-d group-hover:translate-x-0.5 transition-all" />
       </div>
-      <p className="text-3xl font-bold text-navy-900 mb-1">{value}</p>
-      <p className="text-sm text-gray-500">{label}</p>
+      <p className="font-display font-medium text-3xl tabular-nums text-halo-ink mb-1">{value}</p>
+      <p className="text-sm text-halo-mist-body">{label}</p>
     </Link>
   );
 }
@@ -105,9 +104,9 @@ function CapacityBar({
   const pct = max > 0 ? Math.min((active / max) * 100, 100) : 0;
   const isFull = active >= max;
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5">
+    <div className="bg-white rounded-2xl border border-halo-rule p-5">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-semibold text-navy-900">Mentee Capacity</p>
+        <p className="text-sm font-semibold text-halo-ink">Mentee Capacity</p>
         <span
           className={`text-xs font-medium px-2.5 py-1 rounded-full ${
             isFull
@@ -120,7 +119,7 @@ function CapacityBar({
           {isFull ? 'Full' : pct >= 75 ? 'Nearly full' : 'Open'}
         </span>
       </div>
-      <div className="w-full bg-gray-100 rounded-full h-2 mb-2">
+      <div className="w-full bg-halo-bone rounded-full h-2 mb-2">
         <div
           className={`h-2 rounded-full transition-all ${
             isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-green-400'
@@ -128,7 +127,7 @@ function CapacityBar({
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-halo-mist-body">
         {active} of {max} mentee {max === 1 ? 'slot' : 'slots'} filled
       </p>
       {isFull && (
@@ -184,17 +183,17 @@ function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
           href={step.href}
           className={`group flex flex-col gap-3 rounded-2xl border p-5 transition-all hover:shadow-sm ${
             step.primary
-              ? 'bg-navy-900 border-navy-900 hover:bg-navy-800'
-              : 'bg-white border-gray-100 hover:border-navy-200'
+              ? 'bg-halo-deep border-halo-deep hover:-translate-y-0.5 hover:shadow-lg'
+              : 'bg-white border-halo-rule hover:border-halo-purple hover:-translate-y-0.5'
           }`}
         >
-          <p className={`text-base font-semibold leading-snug ${step.primary ? 'text-white' : 'text-navy-900'}`}>
+          <p className={`text-base font-semibold leading-snug ${step.primary ? 'text-white' : 'text-halo-ink'}`}>
             {step.label}
           </p>
-          <p className={`text-sm font-light leading-relaxed flex-1 ${step.primary ? 'text-navy-300' : 'text-gray-500'}`}>
+          <p className={`text-sm font-light leading-relaxed flex-1 ${step.primary ? 'text-halo-lavender' : 'text-halo-mist-body'}`}>
             {step.detail}
           </p>
-          <span className={`text-sm font-medium ${step.primary ? 'text-navy-400 group-hover:text-navy-200' : 'text-navy-600 group-hover:text-navy-900'} transition-colors`}>
+          <span className={`text-sm font-medium ${step.primary ? 'text-halo-lavender group-hover:text-white' : 'text-halo-purple-d group-hover:text-halo-ink'} transition-colors`}>
             {step.primary ? 'Get started →' : 'Go →'}
           </span>
         </Link>
@@ -213,14 +212,6 @@ export default function DashboardPage() {
 
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showTransition, setShowTransition] = useState(false);
-
-  useEffect(() => {
-    if (sessionStorage.getItem('mentee_signin_transition')) {
-      sessionStorage.removeItem('mentee_signin_transition');
-      setShowTransition(true);
-    }
-  }, []);
 
   useEffect(() => {
     async function load() {
@@ -408,16 +399,13 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <>
-        {showTransition && (
-          <SignInTransition onComplete={() => setShowTransition(false)} />
-        )}
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-navy-900">
+              <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
                 {greeting(firstName)}
               </h1>
-              <p className="text-gray-500 mt-1 text-sm">
+              <p className="text-halo-mist-body mt-1 text-sm">
                 {isMentee
                   ? 'Goals, sessions, and connections.'
                   : 'Requests, mentees, and impact.'}
@@ -427,24 +415,24 @@ export default function DashboardPage() {
           {/* Skeleton stat cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 animate-pulse">
-                <div className="w-9 h-9 bg-gray-100 rounded-xl mb-4" />
-                <div className="h-8 w-12 bg-gray-100 rounded mb-2" />
-                <div className="h-3 w-24 bg-gray-100 rounded" />
+              <div key={i} className="bg-white rounded-2xl border border-halo-rule p-5 animate-pulse">
+                <div className="w-9 h-9 bg-halo-bone rounded-xl mb-4" />
+                <div className="h-8 w-12 bg-halo-bone rounded mb-2" />
+                <div className="h-3 w-24 bg-halo-bone rounded" />
               </div>
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
-              <div className="h-4 w-32 bg-gray-100 rounded mb-5" />
+            <div className="bg-white rounded-2xl border border-halo-rule p-6 animate-pulse">
+              <div className="h-4 w-32 bg-halo-bone rounded mb-5" />
               <div className="space-y-3">
-                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-gray-50 rounded-xl" />)}
+                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-halo-veil rounded-xl" />)}
               </div>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
-              <div className="h-4 w-32 bg-gray-100 rounded mb-5" />
+            <div className="bg-white rounded-2xl border border-halo-rule p-6 animate-pulse">
+              <div className="h-4 w-32 bg-halo-bone rounded mb-5" />
               <div className="space-y-3">
-                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-gray-50 rounded-xl" />)}
+                {[0, 1, 2].map((i) => <div key={i} className="h-12 bg-halo-veil rounded-xl" />)}
               </div>
             </div>
           </div>
@@ -509,16 +497,13 @@ export default function DashboardPage() {
 
   return (
     <>
-    {showTransition && (
-      <SignInTransition onComplete={() => setShowTransition(false)} />
-    )}
     <div className="max-w-5xl mx-auto space-y-8">
 
       {/* ── Welcome header ────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold text-navy-900">
+            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
               {greeting(profile.first_name)}
             </h1>
             {mentorExtra?.isFoundingMentor && (
@@ -528,7 +513,7 @@ export default function DashboardPage() {
               </span>
             )}
           </div>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-halo-mist-body mt-1 text-sm">
             {isMentee
               ? 'Goals, sessions, and connections.'
               : 'Requests, mentees, and impact.'}
@@ -538,7 +523,7 @@ export default function DashboardPage() {
         {isMentee && (
           <Link
             href="/discover"
-            className="hidden sm:inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-800 transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors"
           >
             <Search className="w-4 h-4" />
             Find mentors
@@ -547,7 +532,7 @@ export default function DashboardPage() {
         {!isMentee && pendingRequests > 0 && (
           <Link
             href="/requests"
-            className="hidden sm:inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-navy-800 transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors"
           >
             <ClipboardList className="w-4 h-4" />
             {pendingRequests} pending {pendingRequests === 1 ? 'request' : 'requests'}
@@ -558,9 +543,9 @@ export default function DashboardPage() {
       {/* ── Today's priority card ────────────────────────────────────────── */}
       {priorityCard && (() => {
         const Icon = priorityCard.icon;
-        const bgMap: Record<string, string> = { blue: 'bg-blue-50 border-blue-100', amber: 'bg-amber-50 border-amber-100', navy: 'bg-navy-50 border-navy-100' };
-        const iconMap: Record<string, string> = { blue: 'text-blue-600 bg-blue-100', amber: 'text-amber-600 bg-amber-100', navy: 'text-navy-600 bg-navy-100' };
-        const textMap: Record<string, string> = { blue: 'text-blue-800', amber: 'text-amber-800', navy: 'text-navy-800' };
+        const bgMap: Record<string, string> = { blue: 'bg-halo-veil border-halo-lavender', amber: 'bg-amber-50 border-amber-100', navy: 'bg-halo-veil border-halo-lavender' };
+        const iconMap: Record<string, string> = { blue: 'text-halo-purple-d bg-halo-lavender/50', amber: 'text-amber-600 bg-amber-100', navy: 'text-halo-purple-d bg-halo-lavender/50' };
+        const textMap: Record<string, string> = { blue: 'text-halo-purple-d', amber: 'text-amber-800', navy: 'text-halo-ink' };
         return (
           <Link
             href={priorityCard.href}
@@ -571,9 +556,9 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1 min-w-0">
               <p className={`text-sm font-semibold ${textMap[priorityCard.color]}`}>{priorityCard.label}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{priorityCard.sub}</p>
+              <p className="text-xs text-halo-mist-body mt-0.5">{priorityCard.sub}</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+            <ArrowRight className="w-4 h-4 text-halo-mist-body group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
           </Link>
         );
       })()}
@@ -581,43 +566,43 @@ export default function DashboardPage() {
       {/* ── Mentor impact strip ──────────────────────────────────────────── */}
       {!isMentee && mentorExtra && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-navy-900 rounded-2xl p-4 col-span-1">
+          <div className="bg-halo-deep rounded-2xl p-4 col-span-1" style={{ backgroundImage: 'radial-gradient(ellipse 90% 80% at 90% 0%, rgba(120,90,247,0.55) 0%, transparent 70%)' }}>
             <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center mb-3">
               <Users className="w-3.5 h-3.5 text-white" />
             </div>
-            <p className="text-2xl font-bold text-white">{mentorExtra.totalMenteesEver}</p>
-            <p className="text-xs text-navy-300 mt-0.5">
+            <p className="font-display font-medium text-2xl tabular-nums text-white">{mentorExtra.totalMenteesEver}</p>
+            <p className="text-xs text-halo-lavender mt-0.5">
               {mentorExtra.totalMenteesEver === 1 ? 'Mentee' : 'Mentees'} mentored
             </p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <div className="w-7 h-7 bg-navy-50 rounded-lg flex items-center justify-center mb-3">
-              <Clock className="w-3.5 h-3.5 text-navy-600" />
+          <div className="bg-white rounded-2xl border border-halo-rule p-4">
+            <div className="w-7 h-7 bg-halo-veil rounded-lg flex items-center justify-center mb-3">
+              <Clock className="w-3.5 h-3.5 text-halo-purple-d" />
             </div>
-            <p className="text-2xl font-bold text-navy-900">{mentorExtra.totalHours}h</p>
-            <p className="text-xs text-gray-500 mt-0.5">Hours invested</p>
+            <p className="font-display font-medium text-2xl tabular-nums text-halo-ink">{mentorExtra.totalHours}h</p>
+            <p className="text-xs text-halo-mist-body mt-0.5">Hours invested</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div className="bg-white rounded-2xl border border-halo-rule p-4">
             <div className="w-7 h-7 bg-amber-50 rounded-lg flex items-center justify-center mb-3">
               <Star className="w-3.5 h-3.5 text-amber-500" />
             </div>
-            <p className="text-2xl font-bold text-navy-900">
+            <p className="font-display font-medium text-2xl tabular-nums text-halo-ink">
               {mentorExtra.avgRating ? mentorExtra.avgRating.toFixed(1) : '—'}
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-halo-mist-body mt-0.5">
               Avg rating ({mentorExtra.reviewCount})
             </p>
           </div>
           <Link
             href="/impact"
-            className="group bg-white rounded-2xl border border-gray-100 p-4 flex flex-col justify-between hover:border-navy-200 hover:shadow-sm transition-all"
+            className="group bg-white rounded-2xl border border-halo-rule p-4 flex flex-col justify-between hover:border-halo-lavender hover:shadow-sm transition-all"
           >
-            <div className="w-7 h-7 bg-navy-50 rounded-lg flex items-center justify-center mb-3">
-              <BarChart2 className="w-3.5 h-3.5 text-navy-600" />
+            <div className="w-7 h-7 bg-halo-veil rounded-lg flex items-center justify-center mb-3">
+              <BarChart2 className="w-3.5 h-3.5 text-halo-purple-d" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-navy-900">Full impact</p>
-              <p className="text-xs text-navy-500 group-hover:text-navy-700 transition-colors">
+              <p className="text-sm font-semibold text-halo-ink">Full impact</p>
+              <p className="text-xs text-halo-purple-d group-hover:text-halo-purple-d transition-colors">
                 View timeline →
               </p>
             </div>
@@ -670,27 +655,27 @@ export default function DashboardPage() {
       {/* ── Upcoming sessions + recent messages ──────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming sessions */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl border border-halo-rule p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-semibold text-navy-900">
+            <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
               Upcoming Sessions
             </h2>
             <Link
               href="/schedule"
-              className="text-sm text-navy-600 hover:text-navy-900 font-medium"
+              className="text-sm text-halo-purple-d hover:text-halo-ink font-medium"
             >
               View all
             </Link>
           </div>
           {upcomingSessions.length === 0 ? (
             <div className="text-center py-8">
-              <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Calendar className="w-5 h-5 text-gray-400" />
+              <div className="w-10 h-10 bg-halo-veil rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Calendar className="w-5 h-5 text-halo-mist-body" />
               </div>
-              <p className="text-sm text-gray-500 mb-3">No upcoming sessions</p>
+              <p className="text-sm text-halo-mist-body mb-3">No upcoming sessions</p>
               <Link
                 href="/schedule"
-                className="text-sm text-navy-600 font-medium hover:underline"
+                className="text-sm text-halo-purple-d font-medium hover:underline"
               >
                 Schedule a session →
               </Link>
@@ -701,13 +686,13 @@ export default function DashboardPage() {
                 <Link
                   key={s.id}
                   href={`/sessions/${s.id}`}
-                  className="flex items-center justify-between py-3 border-b border-gray-50 last:border-0 hover:opacity-80 transition-opacity"
+                  className="flex items-center justify-between py-3 border-b border-halo-veil last:border-0 hover:opacity-80 transition-opacity"
                 >
                   <div>
-                    <p className="text-sm font-medium text-navy-900">
+                    <p className="text-sm font-medium text-halo-ink">
                       {s.partner_name}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-halo-mist-body mt-0.5">
                       {new Date(s.scheduled_at).toLocaleDateString('en-US', {
                         weekday: 'short',
                         month: 'short',
@@ -721,14 +706,14 @@ export default function DashboardPage() {
                     <span
                       className={`text-xs font-medium px-2.5 py-1 rounded-full ${
                         s.session_type === 'video'
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'bg-gray-100 text-gray-600'
+                          ? 'bg-halo-veil text-halo-purple-d'
+                          : 'bg-halo-bone text-halo-heather'
                       }`}
                     >
                       {s.session_type}
                     </span>
                     {!isMentee && (
-                      <span className="text-xs text-navy-500 font-medium">
+                      <span className="text-xs text-halo-purple-d font-medium">
                         Brief →
                       </span>
                     )}
@@ -740,24 +725,24 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent messages */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl border border-halo-rule p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-semibold text-navy-900">
+            <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
               Recent Messages
             </h2>
             <Link
               href="/messages"
-              className="text-sm text-navy-600 hover:text-navy-900 font-medium"
+              className="text-sm text-halo-purple-d hover:text-halo-ink font-medium"
             >
               View all
             </Link>
           </div>
           {recentMessages.length === 0 ? (
             <div className="text-center py-8">
-              <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <MessageSquare className="w-5 h-5 text-gray-400" />
+              <div className="w-10 h-10 bg-halo-veil rounded-xl flex items-center justify-center mx-auto mb-3">
+                <MessageSquare className="w-5 h-5 text-halo-mist-body" />
               </div>
-              <p className="text-sm text-gray-500 mb-3">
+              <p className="text-sm text-halo-mist-body mb-3">
                 {activeMentorships > 0
                   ? 'No new messages'
                   : 'No active mentorships yet'}
@@ -765,7 +750,7 @@ export default function DashboardPage() {
               {isMentee && activeMentorships === 0 && (
                 <Link
                   href="/discover"
-                  className="text-sm text-navy-600 font-medium hover:underline"
+                  className="text-sm text-halo-purple-d font-medium hover:underline"
                 >
                   Find a mentor →
                 </Link>
@@ -777,21 +762,21 @@ export default function DashboardPage() {
                 <Link
                   key={i}
                   href={`/messages?mentorshipId=${msg.mentorship_id}`}
-                  className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0 hover:opacity-80 transition-opacity"
+                  className="flex items-start gap-3 py-3 border-b border-halo-veil last:border-0 hover:opacity-80 transition-opacity"
                 >
                   <Avatar name={msg.sender_name} size="sm" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-navy-900">
+                      <p className="text-sm font-medium text-halo-ink">
                         {msg.sender_name}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-halo-mist-body">
                         {formatDistanceToNow(new Date(msg.created_at), {
                           addSuffix: true,
                         })}
                       </p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">
+                    <p className="text-xs text-halo-mist-body mt-0.5 truncate">
                       {msg.content}
                     </p>
                   </div>
@@ -806,33 +791,36 @@ export default function DashboardPage() {
       {isMentee && (
         <Link
           href="/opportunities"
-          className="group flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:border-navy-200 hover:shadow-sm transition-all"
+          className="group flex items-start gap-4 bg-white rounded-2xl border border-halo-rule p-5 hover:border-halo-lavender hover:shadow-sm transition-all"
         >
           <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
             <Lightbulb className="w-5 h-5 text-amber-600" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-navy-900">Opportunity Fund</p>
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
+              <p className="text-sm font-semibold text-halo-ink">Opportunity Fund</p>
+              <span className="text-[11px] font-semibold font-ui uppercase tracking-[0.14em] text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
                 Pilot
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+            <p className="text-xs text-halo-mist-body mt-0.5 leading-relaxed">
               Professional-development funding for students with demonstrated financial need. Attire, travel, networking, and more.
             </p>
           </div>
-          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-navy-500 transition-colors flex-shrink-0 mt-3" />
+          <ArrowRight className="w-4 h-4 text-halo-mist group-hover:text-halo-purple-d transition-colors flex-shrink-0 mt-3" />
         </Link>
       )}
 
       {/* ── CTA for new users ────────────────────────────────────────────── */}
       {activeMentorships === 0 && (
-        <div className="bg-navy-900 rounded-2xl p-6 text-white">
-          <h2 className="text-base font-semibold mb-1">
+        <div
+          className="relative overflow-hidden bg-halo-deep rounded-2xl p-6 sm:p-8 text-white"
+          style={{ backgroundImage: 'radial-gradient(ellipse 70% 90% at 85% 0%, rgba(120,90,247,0.55) 0%, transparent 65%)' }}
+        >
+          <h2 className="font-display text-[1.75rem] leading-tight mb-2">
             {isMentee ? 'Find your first mentor' : 'Start accepting mentees'}
           </h2>
-          <p className="text-navy-300 text-sm mb-5 font-light">
+          <p className="text-halo-lavender text-sm mb-5 font-light">
             {isMentee
               ? 'Browse mentors at leading firms. Professionals ready to help you build your path.'
               : 'Your profile is live. Set your availability and start accepting requests.'}
@@ -842,14 +830,14 @@ export default function DashboardPage() {
               <>
                 <Link
                   href="/discover"
-                  className="inline-flex items-center gap-2 bg-white text-navy-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-halo-ivory text-halo-purple-d px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-halo-lavender hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
                 >
                   <Search className="w-4 h-4" />
                   Browse mentors
                 </Link>
                 <Link
                   href="/profile/setup"
-                  className="inline-flex items-center gap-2 border border-navy-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                  className="inline-flex items-center gap-2 border border-halo-lavender text-halo-ivory px-5 py-3 rounded-xl text-sm font-semibold hover:bg-halo-ivory hover:text-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
                 >
                   Complete profile
                 </Link>
@@ -858,14 +846,14 @@ export default function DashboardPage() {
               <>
                 <Link
                   href="/requests"
-                  className="inline-flex items-center gap-2 bg-white text-navy-900 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 bg-halo-ivory text-halo-purple-d px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-halo-lavender hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
                 >
                   <ClipboardList className="w-4 h-4" />
                   View requests
                 </Link>
                 <Link
                   href="/schedule"
-                  className="inline-flex items-center gap-2 border border-navy-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                  className="inline-flex items-center gap-2 border border-halo-lavender text-halo-ivory px-5 py-3 rounded-xl text-sm font-semibold hover:bg-halo-ivory hover:text-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
                 >
                   Set availability
                 </Link>

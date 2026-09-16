@@ -117,8 +117,8 @@ function AvailabilityEditor({ userId }: { userId: string }) {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h2 className="text-base font-semibold text-navy-900">Weekly Availability</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Weekly Availability</h2>
+        <p className="text-sm text-halo-mist-body mt-1">
           Set recurring windows when you&apos;re generally available for sessions. Mentees will see these when booking.
         </p>
       </div>
@@ -128,13 +128,13 @@ function AvailabilityEditor({ userId }: { userId: string }) {
           const daySlots = slotsByDay[dayIndex];
           const isAdding = addingDay === dayIndex;
           return (
-            <div key={day} className="bg-white rounded-2xl border border-gray-100 p-4">
+            <div key={day} className="bg-white rounded-2xl border border-halo-rule p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-navy-900">{day}</span>
+                <span className="text-sm font-medium text-halo-ink">{day}</span>
                 {!isAdding && (
                   <button
                     onClick={() => setAddingDay(dayIndex)}
-                    className="flex items-center gap-1 text-xs text-navy-600 hover:text-navy-900 transition-colors"
+                    className="flex items-center gap-1 text-xs text-halo-purple-d hover:text-halo-ink transition-colors"
                   >
                     <PlusIcon className="w-3.5 h-3.5" />
                     Add window
@@ -143,20 +143,20 @@ function AvailabilityEditor({ userId }: { userId: string }) {
               </div>
 
               {daySlots.length === 0 && !isAdding && (
-                <p className="text-xs text-gray-400">No availability set</p>
+                <p className="text-xs text-halo-mist-body">No availability set</p>
               )}
 
               {daySlots.map((slot) => (
                 <div key={slot.id} className="flex items-center justify-between py-1.5">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-navy-400" />
-                    <span className="text-sm text-gray-700">
+                    <Clock className="w-3.5 h-3.5 text-halo-mist-body" />
+                    <span className="text-sm text-halo-heather">
                       {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
                     </span>
                   </div>
                   <button
                     onClick={() => removeSlot(slot.id)}
-                    className="text-gray-300 hover:text-red-400 transition-colors p-1"
+                    className="text-halo-mist hover:text-red-400 transition-colors p-1"
                     title="Remove"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -168,21 +168,21 @@ function AvailabilityEditor({ userId }: { userId: string }) {
                 <div className="mt-2 space-y-2">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-xs text-gray-500 block mb-1">From</label>
+                      <label className="text-xs text-halo-mist-body block mb-1">From</label>
                       <input
                         type="time"
                         value={newStart}
                         onChange={(e) => setNewStart(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                        className="w-full border border-halo-rule rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
                       />
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 block mb-1">To</label>
+                      <label className="text-xs text-halo-mist-body block mb-1">To</label>
                       <input
                         type="time"
                         value={newEnd}
                         onChange={(e) => setNewEnd(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                        className="w-full border border-halo-rule rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
                       />
                     </div>
                   </div>
@@ -191,13 +191,13 @@ function AvailabilityEditor({ userId }: { userId: string }) {
                     <button
                       onClick={addSlot}
                       disabled={saving}
-                      className="flex-1 py-1.5 bg-navy-900 text-white text-xs font-medium rounded-lg hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                      className="flex-1 py-1.5 bg-halo-purple text-white text-xs font-medium rounded-lg hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
                     >
                       {saving ? 'Saving…' : 'Save window'}
                     </button>
                     <button
                       onClick={() => { setAddingDay(null); setError(''); }}
-                      className="px-4 py-1.5 border border-gray-200 text-gray-600 text-xs rounded-lg hover:bg-gray-50 transition-colors"
+                      className="px-4 py-1.5 border border-halo-rule text-halo-heather text-xs rounded-lg hover:bg-halo-veil transition-colors"
                     >
                       Cancel
                     </button>
@@ -209,7 +209,7 @@ function AvailabilityEditor({ userId }: { userId: string }) {
         })}
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-halo-mist-body">
         These are recurring weekly windows. They do not block specific dates or sync with external calendars.
       </p>
     </div>
@@ -344,8 +344,8 @@ export default function SchedulePage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-navy-900">Schedule</h1>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Schedule</h1>
+          <p className="text-halo-mist-body mt-1 text-sm">
             {userRole === 'mentor'
               ? 'Manage sessions and set your weekly availability.'
               : 'Manage your upcoming and past sessions.'}
@@ -361,13 +361,13 @@ export default function SchedulePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="flex border-b border-halo-rule mb-6">
         {tabs.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => handleTabChange(key)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2 ${
-              tab === key ? 'border-navy-600 text-navy-600' : 'border-transparent text-gray-500 hover:text-navy-900'
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2 ${
+              tab === key ? 'border-halo-purple text-halo-purple-d' : 'border-transparent text-halo-mist-body hover:text-halo-ink'
             }`}
           >
             {label}
@@ -388,11 +388,11 @@ export default function SchedulePage() {
               <Spinner size="lg" />
             </div>
           ) : sessions.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
-              <p className="text-base font-medium text-navy-900 mb-1">No {tab} sessions</p>
+            <div className="text-center py-20 text-halo-mist-body">
+              <p className="text-base font-medium text-halo-ink mb-1">No {tab} sessions</p>
               {tab === 'upcoming' && canBook && (
                 <>
-                  <p className="text-sm text-gray-400 mb-4">
+                  <p className="text-sm text-halo-mist-body mb-4">
                     {mentorships.length === 1
                       ? `Ready to meet with ${mentorships[0].partnerName}? Book your first session.`
                       : 'Schedule time with one of your mentors.'}
@@ -403,12 +403,12 @@ export default function SchedulePage() {
                 </>
               )}
               {tab === 'upcoming' && userRole === 'mentor' && (
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-halo-mist-body mt-1">
                   No upcoming sessions. Mentees can book sessions once you&apos;re connected.
                 </p>
               )}
               {tab === 'past' && (
-                <p className="text-sm text-gray-400 mt-1">Sessions you&apos;ve completed will appear here.</p>
+                <p className="text-sm text-halo-mist-body mt-1">Sessions you&apos;ve completed will appear here.</p>
               )}
             </div>
           ) : (

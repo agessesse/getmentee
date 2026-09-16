@@ -63,14 +63,14 @@ export default async function AdminAnalytics() {
   return (
     <div className="max-w-5xl mx-auto space-y-5">
       <div>
-        <h1 className="text-[20px] font-semibold text-navy-900">Analytics</h1>
-        <p className="text-[14px] text-gray-600 mt-1">
+        <h1 className="font-display font-normal text-[1.75rem] leading-tight text-halo-ink">Analytics</h1>
+        <p className="text-[14px] text-halo-heather mt-1">
           {events.length === 5000 ? 'Most recent 5,000 events.' : `${events.length} events recorded.`}
         </p>
       </div>
 
-      <div className="bg-gray-100 border border-gray-200 rounded-lg p-4">
-        <p className="text-[14px] text-gray-800 leading-relaxed">
+      <div className="bg-halo-bone border border-halo-rule rounded-lg p-4">
+        <p className="text-[14px] text-halo-ink leading-relaxed">
           <span className="font-semibold">How to read this.</span> Each stage counts
           distinct users who have ever fired that event, not a time-ordered
           cohort. A user can appear in a later stage without appearing in an
@@ -85,7 +85,7 @@ export default async function AdminAnalytics() {
         {events.length === 0 ? (
           <Empty>No events recorded yet.</Empty>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-halo-rule">
             {FUNNEL.map((f) => {
               const rec = byName.get(f.key);
               const u = rec?.users.size ?? 0;
@@ -93,16 +93,16 @@ export default async function AdminAnalytics() {
               return (
                 <li key={f.key} className="px-4 py-3">
                   <div className="flex items-baseline gap-3">
-                    <span className="text-[14px] font-medium text-navy-900">{f.label}</span>
-                    <span className="ml-auto text-[14px] tabular-nums text-navy-900">
+                    <span className="text-[14px] font-medium text-halo-ink">{f.label}</span>
+                    <span className="ml-auto text-[14px] tabular-nums text-halo-ink">
                       {u} user{u === 1 ? '' : 's'}
                     </span>
-                    <span className="text-[13px] tabular-nums text-gray-600 w-12 text-right">{pct}%</span>
+                    <span className="text-[13px] tabular-nums text-halo-heather w-12 text-right">{pct}%</span>
                   </div>
-                  <div className="mt-1.5 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-navy-700 rounded-full" style={{ width: `${pct}%` }} />
+                  <div className="mt-1.5 h-1.5 bg-halo-bone rounded-full overflow-hidden">
+                    <div className="h-full bg-halo-purple-d rounded-full" style={{ width: `${pct}%` }} />
                   </div>
-                  <p className="text-[12px] text-gray-600 mt-1 tabular-nums">
+                  <p className="text-[12px] text-halo-heather mt-1 tabular-nums">
                     {rec?.total ?? 0} total event{(rec?.total ?? 0) === 1 ? '' : 's'}
                   </p>
                 </li>
@@ -121,12 +121,12 @@ export default async function AdminAnalytics() {
                  aria-label={`Daily event counts: ${last14.map((d) => `${d.label}: ${d.n}`).join(', ')}`}>
               {last14.map((d) => (
                 <div key={d.label} className="flex-1 flex flex-col items-center gap-1 min-w-0">
-                  <div className="w-full bg-navy-700 rounded-t" style={{ height: `${Math.round((d.n / peak) * 100)}%` }} />
-                  <span className="text-[10px] text-gray-600 tabular-nums truncate w-full text-center">{d.label}</span>
+                  <div className="w-full bg-halo-purple-d rounded-t" style={{ height: `${Math.round((d.n / peak) * 100)}%` }} />
+                  <span className="text-[10px] text-halo-heather tabular-nums truncate w-full text-center">{d.label}</span>
                 </div>
               ))}
             </div>
-            <p className="text-[12px] text-gray-600 mt-2 tabular-nums">Peak {peak} in a day.</p>
+            <p className="text-[12px] text-halo-heather mt-2 tabular-nums">Peak {peak} in a day.</p>
           </div>
         )}
       </Panel>
@@ -137,10 +137,10 @@ export default async function AdminAnalytics() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[420px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-halo-veil border-b border-halo-rule">
                 <tr><Th>Event</Th><Th>Total</Th><Th>Distinct users</Th></tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-halo-rule">
                 {other.map(([k, v]) => (
                   <tr key={k}>
                     <Td><code className="text-[13px]">{k}</code></Td>

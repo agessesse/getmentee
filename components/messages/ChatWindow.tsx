@@ -160,35 +160,35 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
       />
 
       {/* Chat header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-halo-rule bg-white">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
               onClick={onBack}
               aria-label="Back to conversations"
-              className="md:hidden -ml-1 p-1.5 text-gray-400 hover:text-navy-900 rounded-lg hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500"
+              className="md:hidden -ml-1 p-1.5 text-halo-mist-body hover:text-halo-ink rounded-lg hover:bg-halo-bone transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
           )}
           <Avatar src={partnerAvatarUrl} name={partnerName} size="sm" />
-          <span className="text-sm font-semibold text-navy-900">{partnerName}</span>
+          <span className="text-sm font-semibold text-halo-ink">{partnerName}</span>
         </div>
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="p-1.5 text-gray-400 hover:text-navy-900 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-1.5 text-halo-mist-body hover:text-halo-ink rounded-lg hover:bg-halo-bone transition-colors"
             aria-label="More options"
           >
             <MoreVertical className="w-4 h-4" />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-100 rounded-xl shadow-lg py-1 z-20">
+            <div className="absolute right-0 mt-1 w-44 bg-white border border-halo-rule rounded-xl shadow-lg py-1 z-20">
               <button
                 onClick={() => { setMenuOpen(false); setReportOpen(true); }}
-                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-halo-heather hover:bg-halo-veil transition-colors"
               >
-                <Flag className="w-4 h-4 text-gray-400" />
+                <Flag className="w-4 h-4 text-halo-mist-body" />
                 Report user
               </button>
               <button
@@ -204,9 +204,9 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
       </div>
 
       {/* Message thread */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-halo-veil">
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 text-sm py-8">
+          <div className="text-center text-halo-mist-body text-sm py-8">
             No messages yet. Say hello!
           </div>
         )}
@@ -227,7 +227,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
       </div>
 
       {/* Input */}
-      <form onSubmit={sendMessage} className="flex items-center gap-2 p-4 border-t border-gray-200 bg-white">
+      <form onSubmit={sendMessage} className="flex items-center gap-2 p-4 border-t border-halo-rule bg-white">
         <VoiceInputButton
           context="message"
           onTranscript={(text) => setInput((prev) => prev ? `${prev} ${text}` : text)}
@@ -238,7 +238,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type or speak a message…"
-          className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-navy-500 bg-white"
+          className="flex-1 px-4 py-2 text-sm border border-halo-rule rounded-full focus:outline-none focus:ring-2 focus:ring-halo-purple bg-white"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) sendMessage(e as unknown as React.FormEvent);
           }}
@@ -246,7 +246,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
         <button
           type="submit"
           disabled={!input.trim() || sending}
-          className="bg-navy-600 text-white rounded-full p-2 hover:bg-navy-700 transition-colors disabled:opacity-40"
+          className="bg-halo-purple text-white rounded-full p-2 hover:bg-halo-purple-d transition-colors disabled:opacity-40"
         >
           <Send className="h-4 w-4" />
         </button>

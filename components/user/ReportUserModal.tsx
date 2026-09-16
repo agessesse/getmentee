@@ -85,16 +85,16 @@ export default function ReportUserModal({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-sm font-medium text-navy-900">Report submitted</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-sm font-medium text-halo-ink">Report submitted</p>
+          <p className="text-xs text-halo-mist-body">
             Thank you. Our team will review this report and take appropriate action.
           </p>
           <Button onClick={handleClose} className="mt-2 w-full">Done</Button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-sm text-gray-500">
-            What is the issue with <span className="font-medium text-navy-900">{reportedName}</span>?
+          <p className="text-sm text-halo-mist-body">
+            What is the issue with <span className="font-medium text-halo-ink">{reportedName}</span>?
           </p>
 
           <div className="space-y-2">
@@ -103,8 +103,8 @@ export default function ReportUserModal({
                 key={r.value}
                 className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   reason === r.value
-                    ? 'border-navy-300 bg-navy-50'
-                    : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                    ? 'border-halo-purple bg-halo-veil'
+                    : 'border-halo-rule hover:border-halo-rule hover:bg-halo-veil'
                 }`}
               >
                 <input
@@ -113,19 +113,19 @@ export default function ReportUserModal({
                   value={r.value}
                   checked={reason === r.value}
                   onChange={() => setReason(r.value)}
-                  className="mt-0.5 accent-navy-700 flex-shrink-0"
+                  className="mt-0.5 accent-halo-purple flex-shrink-0"
                 />
                 <div>
-                  <p className="text-sm font-medium text-navy-900">{r.label}</p>
-                  <p className="text-xs text-gray-500">{r.description}</p>
+                  <p className="text-sm font-medium text-halo-ink">{r.label}</p>
+                  <p className="text-xs text-halo-mist-body">{r.description}</p>
                 </div>
               </label>
             ))}
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-700 block mb-1">
-              Additional details <span className="text-gray-400">(optional)</span>
+            <label className="text-xs font-medium text-halo-heather block mb-1">
+              Additional details <span className="text-halo-mist-body">(optional)</span>
             </label>
             <textarea
               value={details}
@@ -133,7 +133,7 @@ export default function ReportUserModal({
               rows={3}
               maxLength={500}
               placeholder="Share any additional context that might help us review this report…"
-              className="w-full text-sm rounded-lg border border-gray-200 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent placeholder:text-gray-400"
+              className="w-full text-sm rounded-lg border border-halo-rule px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent placeholder:text-halo-mist-body"
             />
           </div>
 

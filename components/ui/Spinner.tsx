@@ -15,7 +15,7 @@ const sizes = {
 export default function Spinner({ size = 'md', className }: SpinnerProps) {
   return (
     <Loader2
-      className={clsx('animate-spin text-navy-600', sizes[size], className)}
+      className={clsx('animate-spin text-halo-purple', sizes[size], className)}
     />
   );
 }

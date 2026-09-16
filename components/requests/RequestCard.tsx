@@ -72,11 +72,11 @@ export default function RequestCard({
           <div>
             <Link
               href={`/mentor/${partnerId}`}
-              className="font-medium text-navy-900 hover:text-navy-600"
+              className="font-medium text-halo-ink hover:text-halo-purple-d"
             >
               {fullName}
             </Link>
-            <p className="text-xs text-gray-400">{timeAgo}</p>
+            <p className="text-xs text-halo-mist-body">{timeAgo}</p>
           </div>
         </div>
         <Badge label={status} variant={statusVariant[status]} />
@@ -84,26 +84,26 @@ export default function RequestCard({
 
       {/* Mentee context — shown to mentor on pending requests */}
       {showMenteeContext && (
-        <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+        <div className="bg-halo-veil rounded-xl p-4 space-y-2">
           {menteeHeadline && (
             <div className="flex items-center gap-2">
-              <Briefcase className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-              <p className="text-sm text-gray-700">{menteeHeadline}</p>
+              <Briefcase className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0" />
+              <p className="text-sm text-halo-heather">{menteeHeadline}</p>
             </div>
           )}
           {menteeUniversity && (
             <div className="flex items-center gap-2">
-              <GraduationCap className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-              <p className="text-sm text-gray-700">{menteeUniversity}</p>
+              <GraduationCap className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0" />
+              <p className="text-sm text-halo-heather">{menteeUniversity}</p>
             </div>
           )}
           {menteeExperienceLevel && (
-            <p className="text-xs text-gray-400 capitalize">
+            <p className="text-xs text-halo-mist-body capitalize">
               {menteeExperienceLevel} level
             </p>
           )}
           {menteeBio && (
-            <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+            <p className="text-sm text-halo-heather leading-relaxed line-clamp-2">
               {menteeBio}
             </p>
           )}
@@ -112,15 +112,15 @@ export default function RequestCard({
 
       {/* Goals */}
       {goals && (
-        <div className="text-sm text-gray-600 bg-navy-50 rounded-lg px-3 py-2">
-          <span className="font-medium text-navy-700">Their goals: </span>
+        <div className="text-sm text-halo-heather bg-halo-veil rounded-lg px-3 py-2">
+          <span className="font-medium text-halo-purple-d">Their goals: </span>
           {goals}
         </div>
       )}
 
       {/* Personal message */}
       {message && (
-        <p className="text-sm text-gray-600 italic border-l-2 border-gray-200 pl-3">
+        <p className="text-sm text-halo-heather italic border-l-2 border-halo-rule pl-3">
           &ldquo;{message}&rdquo;
         </p>
       )}

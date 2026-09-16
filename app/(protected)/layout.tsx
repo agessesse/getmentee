@@ -5,7 +5,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Sidebar from '@/components/layout/Sidebar';
 import TopNav from '@/components/layout/TopNav';
-import Spinner from '@/components/ui/Spinner';
+import Wordmark from '@/components/ui/Wordmark';
+import RouteArrive from '@/components/layout/RouteArrive';
+import SignInTransition from '@/components/auth/SignInTransition';
 import { ProfileProvider } from '@/lib/profile-context';
 
 interface Profile {
@@ -21,6 +23,18 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // The sign-in arrival lives here rather than on the dashboard. The dashboard
+  // only mounts after the profile check below resolves, which left the loading
+  // screen visible for most of a second before the arrival cut in over it.
+  // Mounted at the layout, it covers that wait instead of following it.
+  const [showSignIn, setShowSignIn] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('mentee_signin_transition')) {
+      sessionStorage.removeItem('mentee_signin_transition');
+      setShowSignIn(true);
+    }
+  }, []);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -78,13 +92,15 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   return (
     <>
+      {showSignIn && <SignInTransition onComplete={() => setShowSignIn(false)} />}
       {loading ? (
-        <div className="flex h-screen items-center justify-center bg-gray-50">
-          <Spinner size="lg" />
+        <div className="flex h-screen flex-col items-center justify-center gap-5 bg-halo-ivory font-body">
+          <Wordmark size="lg" className="halo-breathe text-halo-ink" />
+          <span className="sr-only">Loading</span>
         </div>
       ) : profile ? (
         <ProfileProvider profile={profile}>
-          <div className="flex h-screen bg-gray-50 overflow-hidden">
+          <div className="flex h-screen bg-halo-ivory text-halo-ink font-body overflow-hidden">
             <Sidebar
               role={profile.role}
               open={sidebarOpen}
@@ -97,8 +113,16 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 user={profile}
                 onMenuClick={() => setSidebarOpen(true)}
               />
-              <main id="main-content" className="flex-1 overflow-y-auto p-4 lg:p-8">
-                {children}
+              <main id="main-content" className="flex-1 overflow-y-auto">
+                {/*
+                  Every arrival replays the homepage hero's entrance: the page is
+                  fully visible from the first frame and only settles the last
+                  20px into place. No opacity, so nothing is hidden while data
+                  loads.
+                */}
+                <RouteArrive className="p-4 sm:p-6 lg:p-10">
+                  {children}
+                </RouteArrive>
               </main>
             </div>
           </div>

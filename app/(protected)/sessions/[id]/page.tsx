@@ -53,7 +53,7 @@ interface PreBrief {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_STYLES: Record<string, string> = {
-  scheduled:   'bg-blue-50 text-blue-700',
+  scheduled:   'bg-halo-veil text-halo-purple-d',
   in_progress: 'bg-amber-50 text-amber-700',
   completed:   'bg-green-50 text-green-700',
   cancelled:   'bg-red-50 text-red-600',
@@ -70,10 +70,10 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
   if (!hasContent) return null;
 
   return (
-    <div className="bg-navy-50 border border-navy-100 rounded-2xl p-5">
+    <div className="bg-halo-veil border border-halo-lavender rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-4">
-        <FileText className="w-4 h-4 text-navy-600" />
-        <h3 className="text-sm font-semibold text-navy-900">
+        <FileText className="w-4 h-4 text-halo-purple-d" />
+        <h3 className="text-sm font-semibold text-halo-ink">
           Pre-Meeting Brief: {menteeName}
         </h3>
       </div>
@@ -82,17 +82,17 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Open action items */}
         {brief.openActionItems.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-navy-600 uppercase tracking-wide mb-2">
+            <p className="text-xs font-semibold text-halo-purple-d font-ui uppercase tracking-[0.14em] mb-2">
               Open action items ({brief.openActionItems.length})
             </p>
             <div className="space-y-1.5">
               {brief.openActionItems.slice(0, 4).map((item) => (
                 <div key={item.id} className="flex items-start gap-2">
-                  <Circle className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+                  <Circle className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0 mt-0.5" />
                   <div className="min-w-0">
-                    <p className="text-sm text-navy-900">{item.title}</p>
+                    <p className="text-sm text-halo-ink">{item.title}</p>
                     {item.due_date && (
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-halo-mist-body">
                         Due {format(new Date(item.due_date), 'MMM d')}
                       </p>
                     )}
@@ -100,7 +100,7 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
                 </div>
               ))}
               {brief.openActionItems.length > 4 && (
-                <p className="text-xs text-navy-500 pl-5">
+                <p className="text-xs text-halo-purple-d pl-5">
                   +{brief.openActionItems.length - 4} more
                 </p>
               )}
@@ -111,12 +111,12 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Active goals */}
         {brief.menteeGoals.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-navy-600 uppercase tracking-wide mb-2">
+            <p className="text-xs font-semibold text-halo-purple-d font-ui uppercase tracking-[0.14em] mb-2">
               Active goals
             </p>
             <div className="space-y-1">
               {brief.menteeGoals.slice(0, 3).map((g) => (
-                <p key={g.id} className="text-sm text-navy-900">
+                <p key={g.id} className="text-sm text-halo-ink">
                   · {g.title}
                 </p>
               ))}
@@ -127,16 +127,16 @@ function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: s
         {/* Last message */}
         {brief.lastMessageAt && (
           <div className="flex items-start gap-2">
-            <MessageSquare className="w-3.5 h-3.5 text-navy-400 flex-shrink-0 mt-0.5" />
+            <MessageSquare className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-halo-mist-body">
                 Last message{' '}
                 {formatDistanceToNow(new Date(brief.lastMessageAt), {
                   addSuffix: true,
                 })}
               </p>
               {brief.lastMessagePreview && (
-                <p className="text-xs text-gray-400 truncate max-w-xs">
+                <p className="text-xs text-halo-mist-body truncate max-w-xs">
                   &ldquo;{brief.lastMessagePreview}&rdquo;
                 </p>
               )}
@@ -465,7 +465,7 @@ export default function SessionDetailPage() {
     );
   if (!session)
     return (
-      <p className="text-center py-24 text-gray-400">Session not found.</p>
+      <p className="text-center py-24 text-halo-mist-body">Session not found.</p>
     );
 
   const date = new Date(session.scheduled_at);
@@ -499,22 +499,22 @@ export default function SessionDetailPage() {
       <div>
         <Link
           href="/schedule"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-900 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Schedule
         </Link>
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-navy-900">Session Workspace</h1>
-            <p className="text-gray-500 text-sm mt-1">
+            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Session Workspace</h1>
+            <p className="text-halo-mist-body text-sm mt-1">
               with {partner.first_name} {partner.last_name} ·{' '}
               {format(date, 'EEEE, MMMM d, yyyy')}
             </p>
           </div>
           <span
             className={`text-xs font-medium px-3 py-1.5 rounded-full capitalize ${
-              STATUS_STYLES[session.status] ?? 'bg-gray-100 text-gray-600'
+              STATUS_STYLES[session.status] ?? 'bg-halo-bone text-halo-heather'
             }`}
           >
             {session.status.replace('_', ' ')}
@@ -533,15 +533,15 @@ export default function SessionDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-5">
           {/* Notes / Agenda */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <div className="bg-white rounded-2xl border border-halo-rule p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-navy-900">
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
                 {isCompleted ? 'Session Notes' : 'Agenda & Notes'}
               </h2>
               <button
                 onClick={saveNotes}
                 disabled={notesLoading}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-halo-purple-d hover:text-halo-ink transition-colors"
               >
                 {notesSaved ? (
                   <>
@@ -559,15 +559,15 @@ export default function SessionDetailPage() {
               onChange={(e) => setNotes(e.target.value)}
               rows={8}
               placeholder={`What will you cover in this session?\n\n• Topic 1\n• Topic 2\n• Questions to ask`}
-              className="w-full text-sm text-gray-700 placeholder-gray-400 focus:outline-none resize-none leading-relaxed"
+              className="w-full text-sm text-halo-heather placeholder-halo-mist-body focus:outline-none resize-none leading-relaxed"
             />
           </div>
 
           {/* Post-session recap — mentor only, after completing */}
           {isMentor && isCompleted && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl border border-halo-rule p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-semibold text-navy-900">
+                <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
                   Session Recap
                 </h2>
                 <div className="flex items-center gap-3">
@@ -581,7 +581,7 @@ export default function SessionDetailPage() {
                   <button
                     onClick={saveRecap}
                     disabled={recapLoading}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-halo-purple-d hover:text-halo-ink transition-colors"
                   >
                     {recapSaved ? (
                       <>
@@ -600,18 +600,18 @@ export default function SessionDetailPage() {
                 onChange={(e) => setRecap(e.target.value)}
                 rows={5}
                 placeholder={`Speak or type: summarize what was covered, decisions made, and key takeaways for ${mentee.first_name}…`}
-                className="w-full text-sm text-gray-700 placeholder-gray-400 focus:outline-none resize-none leading-relaxed"
+                className="w-full text-sm text-halo-heather placeholder-halo-mist-body focus:outline-none resize-none leading-relaxed"
               />
             </div>
           )}
 
           {/* Session Notes (voice recording + AI summary) */}
           {process.env.NEXT_PUBLIC_VOICE_ENABLED === 'true' && (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl border border-halo-rule p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-base font-semibold text-navy-900">Session Recording</h2>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Session Recording</h2>
+                  <p className="text-xs text-halo-mist-body mt-0.5">
                     Transcribe your session and generate a private summary.
                   </p>
                 </div>
@@ -626,14 +626,14 @@ export default function SessionDetailPage() {
           )}
 
           {/* Action items */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <div className="bg-white rounded-2xl border border-halo-rule p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-navy-900">
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
                 Action Items
               </h2>
               <button
                 onClick={() => setShowAddAction((v) => !v)}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-halo-purple-d hover:text-halo-ink transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add item
@@ -641,29 +641,29 @@ export default function SessionDetailPage() {
             </div>
 
             {showAddAction && (
-              <div className="mb-4 p-4 bg-gray-50 rounded-xl space-y-3">
+              <div className="mb-4 p-4 bg-halo-veil rounded-xl space-y-3">
                 <input
                   type="text"
                   value={newActionTitle}
                   onChange={(e) => setNewActionTitle(e.target.value)}
                   placeholder="What needs to be done?"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                  className="w-full px-3 py-2 border border-halo-rule rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
                   onKeyDown={(e) => e.key === 'Enter' && addActionItem()}
                 />
                 {/* Assign to */}
                 {partnerId && (
-                  <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
+                  <div className="flex rounded-lg border border-halo-rule overflow-hidden text-xs font-medium">
                     <button
                       type="button"
                       onClick={() => setNewActionAssignedTo('self')}
-                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'self' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'self' ? 'bg-halo-purple text-white' : 'bg-white text-halo-heather hover:bg-halo-veil'}`}
                     >
                       Me
                     </button>
                     <button
                       type="button"
                       onClick={() => setNewActionAssignedTo('partner')}
-                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'partner' ? 'bg-navy-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                      className={`flex-1 py-2 transition-colors ${newActionAssignedTo === 'partner' ? 'bg-halo-purple text-white' : 'bg-white text-halo-heather hover:bg-halo-veil'}`}
                     >
                       {partnerFirstName}
                     </button>
@@ -674,18 +674,18 @@ export default function SessionDetailPage() {
                     type="date"
                     value={newActionDueDate}
                     onChange={(e) => setNewActionDueDate(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-navy-600"
+                    className="flex-1 px-3 py-2 border border-halo-rule rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
                   />
                   <button
                     onClick={addActionItem}
                     disabled={addingAction || !newActionTitle.trim()}
-                    className="px-4 py-2 bg-navy-900 text-white text-sm rounded-lg hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                    className="px-4 py-2 bg-halo-purple text-white text-sm rounded-lg hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
                   >
                     Add
                   </button>
                   <button
                     onClick={() => setShowAddAction(false)}
-                    className="px-4 py-2 border border-gray-200 text-gray-500 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2 border border-halo-rule text-halo-mist-body text-sm rounded-lg hover:bg-halo-veil transition-colors"
                   >
                     Cancel
                   </button>
@@ -694,7 +694,7 @@ export default function SessionDetailPage() {
             )}
 
             {actionItems.length === 0 ? (
-              <p className="text-sm text-gray-400 py-4 text-center">
+              <p className="text-sm text-halo-mist-body py-4 text-center">
                 No action items yet. Add tasks to follow up on after this
                 session.
               </p>
@@ -709,20 +709,20 @@ export default function SessionDetailPage() {
                       {item.is_completed ? (
                         <CheckCircle className="w-5 h-5 text-green-500" />
                       ) : (
-                        <Circle className="w-5 h-5 text-gray-300 hover:text-navy-400 transition-colors" />
+                        <Circle className="w-5 h-5 text-halo-mist hover:text-halo-mist-body transition-colors" />
                       )}
                     </button>
                     <div className="flex-1 min-w-0">
                       <p
                         className={`text-sm ${
                           item.is_completed
-                            ? 'line-through text-gray-400'
-                            : 'text-navy-900'
+                            ? 'line-through text-halo-mist-body'
+                            : 'text-halo-ink'
                         }`}
                       >
                         {item.title}
                       </p>
-                      <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-400">
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-halo-mist-body">
                         <span>{item.assigneeName}</span>
                         {item.due_date && (
                           <span>
@@ -741,19 +741,19 @@ export default function SessionDetailPage() {
         {/* ── Right sidebar ───────────────────────────────────────────────── */}
         <div className="space-y-4">
           {/* Session info */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-4">
+          <div className="bg-white rounded-2xl border border-halo-rule p-5">
+            <h3 className="text-sm font-semibold text-halo-ink mb-4">
               Session Info
             </h3>
-            <div className="space-y-3 text-sm text-gray-600">
+            <div className="space-y-3 text-sm text-halo-heather">
               <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <Clock className="w-4 h-4 text-halo-mist-body flex-shrink-0" />
                 <span>
                   {format(date, 'h:mm a')} · {session.duration_minutes} min
                 </span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Video className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <Video className="w-4 h-4 text-halo-mist-body flex-shrink-0" />
                 <span className="capitalize">
                   {session.session_type === 'video' ? 'Video Call' : 'Async'}
                 </span>
@@ -765,7 +765,7 @@ export default function SessionDetailPage() {
                 href={session.video_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-navy-900 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-navy-800 transition-colors"
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-halo-purple text-white py-2.5 rounded-xl text-sm font-medium hover:bg-halo-purple-d transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
                 Join Call
@@ -786,7 +786,7 @@ export default function SessionDetailPage() {
             {isScheduled && !showCancelConfirm && (
               <button
                 onClick={() => setShowCancelConfirm(true)}
-                className="mt-2 w-full text-xs text-gray-400 hover:text-red-500 transition-colors py-1.5"
+                className="mt-2 w-full text-xs text-halo-mist-body hover:text-red-500 transition-colors py-1.5"
               >
                 Cancel session
               </button>
@@ -804,7 +804,7 @@ export default function SessionDetailPage() {
                   </button>
                   <button
                     onClick={() => setShowCancelConfirm(false)}
-                    className="flex-1 py-1.5 border border-gray-200 text-gray-500 text-xs rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex-1 py-1.5 border border-halo-rule text-halo-mist-body text-xs rounded-lg hover:bg-halo-veil transition-colors"
                   >
                     Keep
                   </button>
@@ -814,8 +814,8 @@ export default function SessionDetailPage() {
           </div>
 
           {/* Participants */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5">
-            <h3 className="text-sm font-semibold text-navy-900 mb-4">
+          <div className="bg-white rounded-2xl border border-halo-rule p-5">
+            <h3 className="text-sm font-semibold text-halo-ink mb-4">
               Participants
             </h3>
             <div className="space-y-3">
@@ -830,10 +830,10 @@ export default function SessionDetailPage() {
                     size="sm"
                   />
                   <div>
-                    <p className="text-sm font-medium text-navy-900">
+                    <p className="text-sm font-medium text-halo-ink">
                       {data?.first_name} {data?.last_name}
                     </p>
-                    <p className="text-xs text-gray-400">{label}</p>
+                    <p className="text-xs text-halo-mist-body">{label}</p>
                   </div>
                 </div>
               ))}
@@ -842,8 +842,8 @@ export default function SessionDetailPage() {
 
           {/* Review */}
           {canReview && (
-            <div className="bg-white rounded-2xl border border-navy-100 p-5">
-              <h3 className="text-sm font-semibold text-navy-900 mb-4">
+            <div className="bg-white rounded-2xl border border-halo-lavender p-5">
+              <h3 className="text-sm font-semibold text-halo-ink mb-4">
                 Leave a Review
               </h3>
               <div className="flex gap-1 mb-4">
@@ -859,7 +859,7 @@ export default function SessionDetailPage() {
                       className={`h-7 w-7 transition-colors ${
                         star <= (hoverRating || rating)
                           ? 'text-amber-400 fill-amber-400'
-                          : 'text-gray-200 fill-gray-200'
+                          : 'text-halo-bone fill-halo-bone'
                       }`}
                     />
                   </button>
@@ -870,12 +870,12 @@ export default function SessionDetailPage() {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 resize-none mb-3"
+                className="w-full px-3 py-2.5 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple resize-none mb-3"
               />
               <button
                 onClick={submitReview}
                 disabled={reviewLoading || !rating}
-                className="w-full py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors"
+                className="w-full py-2.5 bg-halo-purple text-white text-sm font-medium rounded-xl hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
               >
                 {reviewLoading ? 'Submitting...' : 'Submit Review'}
               </button>
@@ -892,14 +892,14 @@ export default function SessionDetailPage() {
                 {session?.mentorship_id && (
                   <Link
                     href={`/schedule?mentorshipId=${session.mentorship_id}`}
-                    className="text-xs font-medium text-navy-700 hover:text-navy-900 underline underline-offset-2"
+                    className="text-xs font-medium text-halo-purple-d hover:text-halo-ink underline underline-offset-2"
                   >
                     Schedule next session →
                   </Link>
                 )}
                 <Link
                   href="/mentorships"
-                  className="text-xs font-medium text-gray-500 hover:text-gray-700 underline underline-offset-2"
+                  className="text-xs font-medium text-halo-mist-body hover:text-halo-heather underline underline-offset-2"
                 >
                   Back to mentorships
                 </Link>

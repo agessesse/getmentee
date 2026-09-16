@@ -1,26 +1,67 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { BRAND_DEFINITION } from '@/components/ui/Wordmark';
+import { WORDMARK } from '@/components/marketing/intro-wordmark';
+import {
+  EASE, LEAD_BG, REVEAL_PANEL_MS, REVEAL_LEAD_DELAY_MS,
+} from '@/components/marketing/motion';
 
-// ─── Streak configuration ─────────────────────────────────────────────────────
-// Identical to IntroSequence; slightly tighter overall timing (2.7s vs 3.0s)
-// so returning users feel momentum rather than ceremony.
-const STREAKS = [
-  { d: 'l', top: '17%',  delay: '0ms',   dur: '700ms', op: 0.70, h: 1 },
-  { d: 'l', top: '31%',  delay: '95ms',  dur: '660ms', op: 0.50, h: 1 },
-  { d: 'l', top: '50%',  delay: '10ms',  dur: '740ms', op: 0.90, h: 2 },
-  { d: 'l', top: '64%',  delay: '130ms', dur: '680ms', op: 0.55, h: 1 },
-  { d: 'l', top: '80%',  delay: '55ms',  dur: '720ms', op: 0.40, h: 1 },
-  { d: 'l', top: '9%',   delay: '175ms', dur: '760ms', op: 0.35, h: 1 },
-  { d: 'r', top: '23%',  delay: '45ms',  dur: '690ms', op: 0.65, h: 1 },
-  { d: 'r', top: '42%',  delay: '25ms',  dur: '750ms', op: 0.80, h: 2 },
-  { d: 'r', top: '57%',  delay: '110ms', dur: '670ms', op: 0.55, h: 1 },
-  { d: 'r', top: '71%',  delay: '65ms',  dur: '710ms', op: 0.45, h: 1 },
-  { d: 'r', top: '87%',  delay: '155ms', dur: '740ms', op: 0.38, h: 1 },
-  { d: 'r', top: '5%',   delay: '200ms', dur: '680ms', op: 0.42, h: 1 },
-] as const;
+/**
+ * The moment after sign-in, in the homepage entrance's own hand.
+ *
+ * It used to be light streaks racing in from both edges around a word that
+ * un-blurred, a sequence written before the homepage entrance was rebuilt, so
+ * the first thing a returning member saw was an animation the public site no
+ * longer does. This replays the entrance's first two beats and its exit, and
+ * drops the particle travel in the middle so it stays quick:
+ *
+ *   1. The wordmark writes itself on as outlines, letter by letter.
+ *   2. The solid fill wipes across it right to left, and the definition lands.
+ *   3. The dark surface lifts out through the top with the lavender panel 80ms
+ *      behind, which is exactly how the homepage entrance leaves.
+ *
+ * Same outline data, same colours, same exit curve and lag as IntroSequence;
+ * the timeline is simply compressed from ~3s to ~1.8s, because this plays every
+ * time someone signs in and the entrance plays once per session.
+ *
+ * Any click, key or touch skips straight to the exit. Reduced motion shows the
+ * name and definition briefly and removes the overlay without any movement.
+ *
+ * Portalled to <body>: the dashboard page it is rendered from settles into
+ * place with a transform on arrival, and a transformed ancestor would re-anchor
+ * this position:fixed overlay to the page instead of the viewport.
+ */
 
-type Phase = 'pre' | 'streaks' | 'form' | 'hold' | 'wipe' | 'done';
+const T = {
+  drawStart: 40,
+  letterDraw: 520,
+  letterStaggerMax: 140,
+  fillAt: 640,
+  fillMs: 440,
+  definitionAt: 900,
+  sweepAt: 1340,
+} as const;
+const END_MS = T.sweepAt + REVEAL_PANEL_MS + REVEAL_LEAD_DELAY_MS + 60;
+const SKIP_SWEEP_MS = 60;
+
+const INK = '#FBFAF8';      // halo-ivory
+const GROUND = '#0A0A0F';   // halo-black, the entrance's surface
+const LAVENDER = '#D9CFFB'; // halo-lavender
+
+const BBOX = WORDMARK.bbox;
+const VIEWBOX = `${BBOX.minX} ${BBOX.minY} ${BBOX.maxX - BBOX.minX} ${BBOX.maxY - BBOX.minY}`;
+
+/** Every letter's subpaths, each tagged with its letter index for the stagger. */
+const SUBPATHS = WORDMARK.letters.flatMap((l, li) =>
+  l.d.split(/(?=M)/g)
+    .filter((d) => d.trim().length > 1)
+    .map((d) => ({ d, li })),
+);
+const LETTERS = WORDMARK.letters.length;
+
+type Phase = 'pre' | 'draw' | 'fill' | 'define' | 'sweep' | 'done';
 
 interface Props {
   onComplete?: () => void;
@@ -28,139 +69,203 @@ interface Props {
 
 export default function SignInTransition({ onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>('pre');
+  const [reduced, setReduced] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   /**
    * The parent passes onComplete as an inline arrow, so its identity changes on
-   * every dashboard render. With [onComplete] in the dependency array the
-   * effect tore down and restarted the whole timer sequence each time the
-   * dashboard re-rendered while fetching, so the animation kept resetting and
-   * the intro appeared to hang. Holding the callback in a ref lets the sequence
-   * run exactly once while still calling the latest callback.
+   * every dashboard render. Holding it in a ref lets the sequence run exactly
+   * once while still calling the latest callback.
    */
   const onCompleteRef = useRef(onComplete);
   useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const phaseRef = useRef<Phase>('pre');
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
 
-    if (reduced) {
-      setPhase('form');
-      // Reduced motion: show the mark briefly, then get out of the way.
-      const t1 = setTimeout(() => setPhase('hold'), 120);
-      const t2 = setTimeout(() => setPhase('wipe'), 300);
-      const t3 = setTimeout(() => {
-        setPhase('done');
-        onCompleteRef.current?.();
-      }, 760); // 300 + 460ms wipe
-      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  useEffect(() => {
+    setMounted(true);
+    const at = (fn: () => void, ms: number) => { timers.current.push(setTimeout(fn, ms)); };
+    const finish = () => { setPhase('done'); onCompleteRef.current?.(); };
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setReduced(true);
+      setPhase('define');
+      at(finish, 700);
+      return () => timers.current.forEach(clearTimeout);
     }
 
-    // Phases overlap rather than queue. The wordmark starts forming while the
-    // streaks are still travelling, which is what made the old sequence feel
-    // like waiting: each stage politely waited for the previous one to finish.
-    const t1 = setTimeout(() => setPhase('streaks'),  60);
-    const t2 = setTimeout(() => setPhase('form'),    360);
-    const t3 = setTimeout(() => setPhase('hold'),    820);
-    const t4 = setTimeout(() => setPhase('wipe'),   1180);
-    const t5 = setTimeout(() => {
-      setPhase('done');
-      onCompleteRef.current?.();
-    }, 1640); // 1180 + 460ms wipe
+    // Two painted frames before the draw is released, so the browser has the
+    // parked dash offset as a start value instead of snapping straight to 0.
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setPhase('draw'));
+    });
+    at(() => setPhase('fill'), T.fillAt);
+    at(() => setPhase('define'), T.definitionAt);
+    at(() => setPhase('sweep'), T.sweepAt);
+    at(finish, END_MS);
 
-    // Empty deps on purpose: the sequence must survive parent re-renders.
-    return () => { [t1, t2, t3, t4, t5].forEach(clearTimeout); };
+    // Nobody is held by it: any input goes straight to the exit.
+    const skip = () => {
+      if (phaseRef.current === 'sweep' || phaseRef.current === 'done') return;
+      timers.current.forEach(clearTimeout);
+      timers.current = [];
+      setPhase('sweep');
+      at(finish, REVEAL_PANEL_MS + REVEAL_LEAD_DELAY_MS + SKIP_SWEEP_MS);
+    };
+    const evts = ['pointerdown', 'keydown', 'touchstart'] as const;
+    evts.forEach((e) => window.addEventListener(e, skip, { passive: true }));
+
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+      timers.current.forEach(clearTimeout);
+      evts.forEach((e) => window.removeEventListener(e, skip));
+    };
   }, []);
 
-  if (phase === 'done') return null;
+  if (phase === 'done' || !mounted) return null;
 
-  const showStreaks = phase === 'streaks' || phase === 'form' || phase === 'hold' || phase === 'wipe';
-  const wordFormed  = phase === 'form'    || phase === 'hold' || phase === 'wipe';
+  const drawn = phase !== 'pre';
+  const filled = phase === 'fill' || phase === 'define' || phase === 'sweep';
+  const defined = phase === 'define' || phase === 'sweep';
+  const swept = phase === 'sweep';
 
-  return (
-    <div
-      aria-hidden="true"
-      role="presentation"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 200,
-        backgroundColor: '#0A0A0F',
-        overflow: 'hidden',
-        transform: phase === 'wipe' ? 'translateY(-100%)' : 'translateY(0%)',
-        transition: phase === 'wipe'
-          ? 'transform 460ms cubic-bezier(0.76, 0, 0.24, 1)'
-          : 'none',
-      }}
-    >
-      {/* Ambient depth glow */}
+  const sweep = (delay: number): React.CSSProperties => ({
+    transform: swept ? 'translateY(-100%)' : 'translateY(0%)',
+    transition: swept ? `transform ${REVEAL_PANEL_MS}ms ${EASE} ${delay}ms` : 'none',
+    willChange: 'transform',
+  });
+
+  const markStyle: React.CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    overflow: 'visible',
+  };
+
+  return createPortal(
+    <>
+      {/* Trailing lavender panel, mounted at rest so it has a value to animate
+          from. The dark surface lifts first and this follows 80ms behind. */}
       <div
         aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, #2A1160 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
+        className={`fixed inset-0 ${LEAD_BG}`}
+        style={{ zIndex: 199, ...(reduced ? {} : sweep(REVEAL_LEAD_DELAY_MS)) }}
       />
 
-      {showStreaks && STREAKS.map((s, i) => {
-        const isLeft = s.d === 'l';
-        return (
-          <div
-            key={i}
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              top: s.top,
-              ...(isLeft
-                ? { right: '50%', width: '48vw' }
-                : { left: '50%',  width: '48vw' }),
-              height: `${s.h}px`,
-              background: isLeft
-                ? 'linear-gradient(to right, transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)'
-                : 'linear-gradient(to left,  transparent 0%, rgba(120,90,247,0.60) 55%, rgba(217,207,251,0.50) 100%)',
-              animationName: isLeft ? 'streak-l' : 'streak-r',
-              animationDuration: s.dur,
-              animationDelay: s.delay,
-              animationTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              animationFillMode: 'both',
-              opacity: s.op,
-              willChange: 'transform',
-            }}
-          />
-        );
-      })}
-
-      {/* Wordmark */}
       <div
+        aria-hidden="true"
+        role="presentation"
         style={{
-          position: 'absolute',
+          position: 'fixed',
           inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'none',
+          zIndex: 200,
+          backgroundColor: GROUND,
+          overflow: 'hidden',
+          ...(reduced ? {} : sweep(0)),
         }}
       >
-        <span
+        {/* The entrance's ambient depth, so the ground is not a flat black. */}
+        <div
+          aria-hidden="true"
           style={{
-            fontWeight: 700,
-            color: '#ffffff',
-            fontSize: 'clamp(2.5rem, 10vw, 5rem)',
-            letterSpacing: wordFormed ? '-0.015em' : '0.18em',
-            opacity: wordFormed ? 1 : 0,
-            filter: phase === 'form' ? 'blur(10px)' : 'blur(0px)',
-            transition: [
-              'opacity 380ms ease',
-              'filter 850ms cubic-bezier(0.16, 1, 0.3, 1)',
-              'letter-spacing 950ms cubic-bezier(0.16, 1, 0.3, 1)',
-            ].join(', '),
-            userSelect: 'none',
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(ellipse 60% 50% at 50% 46%, rgba(71,23,202,0.55) 0%, transparent 70%)',
+            opacity: drawn ? 1 : 0,
+            transition: 'opacity 700ms ease-out',
+            pointerEvents: 'none',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'clamp(22px, 4vw, 40px)',
+            padding: '0 24px',
+            pointerEvents: 'none',
           }}
         >
-          Mentable
-        </span>
+          {reduced ? (
+            <span
+              className="font-bold tracking-tight select-none"
+              style={{ color: INK, fontSize: 'clamp(2.2rem, 9vw, 5rem)' }}
+            >
+              {WORDMARK.text}
+            </span>
+          ) : (
+            <div
+              style={{
+                position: 'relative',
+                width: 'min(78vw, 620px)',
+                aspectRatio: `${BBOX.maxX - BBOX.minX} / ${BBOX.maxY - BBOX.minY}`,
+              }}
+            >
+              {/* Outlines, written on per letter. */}
+              <svg viewBox={VIEWBOX} style={markStyle}>
+                <g fill="none" stroke={INK} strokeWidth={12} strokeLinejoin="round">
+                  {SUBPATHS.map(({ d, li }, i) => (
+                    <path
+                      key={i}
+                      d={d}
+                      pathLength={1}
+                      strokeDasharray={1}
+                      style={{
+                        strokeDashoffset: drawn ? 0 : 1,
+                        transition: `stroke-dashoffset ${T.letterDraw}ms cubic-bezier(.33,0,.2,1) ${
+                          T.drawStart + Math.round((li / Math.max(1, LETTERS - 1)) * T.letterStaggerMax)
+                        }ms`,
+                      }}
+                    />
+                  ))}
+                </g>
+              </svg>
+
+              {/* Solid fill, wiped in right to left, on the wipe's own curve. */}
+              <svg
+                viewBox={VIEWBOX}
+                style={{
+                  ...markStyle,
+                  clipPath: filled ? 'inset(-10% 0 -10% 0)' : 'inset(-10% 0 -10% 100%)',
+                  transition: filled ? `clip-path ${T.fillMs}ms ${EASE}` : 'none',
+                }}
+              >
+                <g fill={INK}>
+                  {WORDMARK.letters.map((letter, i) => <path key={i} d={letter.d} />)}
+                </g>
+              </svg>
+            </div>
+          )}
+
+          <span
+            className="font-ui"
+            style={{
+              color: LAVENDER,
+              fontSize: 'clamp(0.72rem, 2.1vw, 0.95rem)',
+              fontWeight: 400,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              textAlign: 'center',
+              opacity: defined ? 1 : 0,
+              transform: defined || reduced ? 'translateY(0)' : 'translateY(8px)',
+              transition: reduced ? 'none' : 'opacity 420ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1)',
+              userSelect: 'none',
+            }}
+          >
+            {BRAND_DEFINITION}
+          </span>
+        </div>
       </div>
-    </div>
+    </>,
+    document.body,
   );
 }

@@ -117,10 +117,10 @@ export default function MentorshipsPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-navy-900">
+        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
           {userRole === 'mentor' ? 'My Mentees' : 'My Mentorships'}
         </h1>
-        <p className="text-gray-500 mt-1 text-sm">
+        <p className="text-halo-mist-body mt-1 text-sm">
           {userRole === 'mentor'
             ? 'Track and connect with your active mentees.'
             : 'Your active and past mentorship relationships.'}
@@ -132,12 +132,12 @@ export default function MentorshipsPage() {
           <Spinner size="lg" />
         </div>
       ) : mentorships.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 p-12 flex flex-col items-center text-center">
-          <div className="w-11 h-11 bg-gray-50 rounded-xl flex items-center justify-center mb-4">
-            <Handshake className="w-5 h-5 text-gray-300" />
+        <div className="bg-white rounded-2xl border border-halo-rule p-12 flex flex-col items-center text-center">
+          <div className="w-11 h-11 bg-halo-veil rounded-xl flex items-center justify-center mb-4">
+            <Handshake className="w-5 h-5 text-halo-mist" />
           </div>
-          <p className="text-sm font-medium text-navy-900 mb-1">No mentorships yet</p>
-          <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
+          <p className="text-sm font-medium text-halo-ink mb-1">No mentorships yet</p>
+          <p className="text-sm text-halo-mist-body max-w-xs leading-relaxed">
             {userRole === 'mentee'
               ? 'Once a mentor accepts your request, your mentorship appears here.'
               : 'Mentorships appear here after you approve a request from the Requests page.'}
@@ -145,7 +145,7 @@ export default function MentorshipsPage() {
           {userRole === 'mentee' && (
             <Link
               href="/discover"
-              className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+              className="mt-6 inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
               Find a mentor
             </Link>
@@ -153,7 +153,7 @@ export default function MentorshipsPage() {
           {userRole === 'mentor' && (
             <Link
               href="/requests"
-              className="mt-6 inline-flex items-center gap-2 bg-navy-900 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-navy-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-500 focus-visible:ring-offset-2"
+              className="mt-6 inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
               Review requests
             </Link>
@@ -163,7 +163,7 @@ export default function MentorshipsPage() {
         <div className="space-y-8">
           {active.length > 0 && (
             <section>
-              <h2 className="text-base font-semibold text-navy-900 mb-4">
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">
                 Active ({active.length})
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -189,7 +189,7 @@ export default function MentorshipsPage() {
 
           {past.length > 0 && (
             <section>
-              <h2 className="text-base font-semibold text-navy-900 mb-4">Past</h2>
+              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">Past</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {past.map((m) => (
                   <MentorshipCard

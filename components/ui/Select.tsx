@@ -19,15 +19,15 @@ export default function Select({ label, error, options, placeholder, className, 
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={selectId} className="text-sm font-medium text-navy-900">
+        <label htmlFor={selectId} className="text-sm font-medium text-halo-ink">
           {label}
         </label>
       )}
       <select
         id={selectId}
         className={clsx(
-          'rounded-lg border px-3 py-2 text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors bg-white',
-          error ? 'border-red-400 bg-red-50' : 'border-gray-300',
+          'rounded-xl border px-3.5 py-2.5 text-sm text-halo-ink focus:outline-none focus:ring-2 focus:ring-halo-purple focus:border-transparent transition-colors bg-white',
+          error ? 'border-red-400 bg-red-50' : 'border-halo-rule',
           className
         )}
         {...props}

@@ -46,11 +46,11 @@ export default function MentorCard({
         <div className="flex-1 min-w-0">
           <Link
             href={`/mentor/${id}`}
-            className="font-semibold text-navy-900 hover:text-navy-600 transition-colors"
+            className="font-semibold text-halo-ink hover:text-halo-purple-d transition-colors"
           >
             {fullName}
           </Link>
-          <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500">
+          <div className="flex items-center gap-3 mt-0.5 text-xs text-halo-mist-body">
             <span className="flex items-center gap-1">
               <Star className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
               {rating > 0 ? `${rating.toFixed(1)} (${reviewCount})` : 'No reviews yet'}
@@ -70,7 +70,7 @@ export default function MentorCard({
 
       {/* Bio */}
       {bio && (
-        <p className="text-sm text-gray-600 line-clamp-2">{bio}</p>
+        <p className="text-sm text-halo-heather line-clamp-2">{bio}</p>
       )}
 
       {/* Tags */}
@@ -84,8 +84,8 @@ export default function MentorCard({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
-        <span className="text-sm text-gray-500">
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-halo-rule">
+        <span className="text-sm text-halo-mist-body">
           {sessionRate ? `$${sessionRate}/hr` : 'Free'}
         </span>
         <div className="flex gap-2">

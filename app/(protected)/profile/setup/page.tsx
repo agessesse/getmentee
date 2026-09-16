@@ -74,18 +74,18 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all flex-shrink-0 ${
-                  done ? 'bg-green-500 text-white' : active ? 'bg-navy-900 text-white' : 'bg-gray-100 text-gray-400'
+                  done ? 'bg-green-500 text-white' : active ? 'bg-halo-purple text-white' : 'bg-halo-bone text-halo-mist-body'
                 }`}
                 aria-label={`Step ${step}: ${labels[i]}${done ? ' (complete)' : active ? ' (current)' : ''}`}
               >
                 {done ? <Check className="w-4 h-4" /> : step}
               </div>
-              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-navy-900' : 'text-gray-400'}`}>
+              <span className={`text-[11px] mt-1.5 font-medium text-center leading-tight ${active ? 'text-halo-ink' : 'text-halo-mist-body'}`}>
                 {labels[i]}
               </span>
             </div>
             {i < total - 1 && (
-              <div className={`h-0.5 flex-1 mx-2 mt-4 transition-colors flex-shrink ${done ? 'bg-green-500' : 'bg-gray-200'}`} />
+              <div className={`h-0.5 flex-1 mx-2 mt-4 transition-colors flex-shrink ${done ? 'bg-green-500' : 'bg-halo-rule'}`} />
             )}
           </div>
         );
@@ -100,9 +100,9 @@ function StepIndicator({ current, total, labels }: { current: Step; total: numbe
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-navy-900 mb-1.5">{label}</label>
+      <label className="block text-sm font-medium text-halo-ink mb-1.5">{label}</label>
       {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-halo-mist-body mt-1">{hint}</p>}
     </div>
   );
 }
@@ -111,7 +111,7 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white placeholder-gray-400"
+      className="w-full px-3.5 py-2.5 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple bg-white placeholder-halo-mist-body"
     />
   );
 }
@@ -120,7 +120,7 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white placeholder-gray-400 resize-none"
+      className="w-full px-3.5 py-2.5 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple bg-white placeholder-halo-mist-body resize-none"
     />
   );
 }
@@ -129,7 +129,7 @@ function SelectInput(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       {...props}
-      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 bg-white"
+      className="w-full px-3.5 py-2.5 border border-halo-rule rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple bg-white"
     />
   );
 }
@@ -154,8 +154,8 @@ function TagPicker({ options, value, onChange, max = 8 }: {
             }}
             className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all ${
               selected
-                ? 'bg-navy-900 border-navy-900 text-white'
-                : 'bg-white border-gray-200 text-gray-600 hover:border-navy-300'
+                ? 'bg-halo-purple border-halo-purple text-white'
+                : 'bg-white border-halo-rule text-halo-heather hover:border-halo-purple'
             }`}
           >
             {opt}
@@ -332,8 +332,8 @@ export default function ProfileSetupPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-navy-900">Complete your profile</h1>
-        <p className="text-gray-500 mt-1 text-sm">
+        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Complete your profile</h1>
+        <p className="text-halo-mist-body mt-1 text-sm">
           {role === 'mentor'
             ? 'Help mentees understand your background and what you offer.'
             : 'Help mentors understand your goals so they can guide you better.'}
@@ -342,7 +342,7 @@ export default function ProfileSetupPage() {
 
       <StepIndicator current={step} total={3} labels={stepLabels} />
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-6">
+      <div className="bg-white rounded-2xl border border-halo-rule p-6 space-y-6">
 
         {/* ── STEP 1: Basic Info (both roles) ── */}
         {step === 1 && (
@@ -489,12 +489,12 @@ export default function ProfileSetupPage() {
         )}
 
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-2 border-t border-halo-rule">
           <button
             type="button"
             onClick={() => step > 1 && setStep((s) => (s - 1) as Step)}
             disabled={step === 1}
-            className="px-4 py-2.5 text-sm text-gray-500 hover:text-navy-900 disabled:opacity-0 transition-colors"
+            className="px-4 py-2.5 text-sm text-halo-mist-body hover:text-halo-ink disabled:opacity-0 transition-colors"
           >
             ← Back
           </button>
@@ -507,7 +507,7 @@ export default function ProfileSetupPage() {
                 setError('');
                 setStep((s) => (s + 1) as Step);
               }}
-              className="px-6 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 transition-colors"
+              className="px-6 py-2.5 bg-halo-purple text-white text-sm font-medium rounded-xl hover:bg-halo-purple-d transition-colors"
             >
               Continue →
             </button>
@@ -516,7 +516,7 @@ export default function ProfileSetupPage() {
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="px-6 py-2.5 bg-navy-900 text-white text-sm font-medium rounded-xl hover:bg-navy-800 disabled:opacity-50 transition-colors flex items-center gap-2"
+              className="px-6 py-2.5 bg-halo-purple text-white text-sm font-medium rounded-xl hover:bg-halo-purple-d disabled:opacity-50 transition-colors flex items-center gap-2"
             >
               {saving ? (
                 <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving...</>
@@ -531,7 +531,7 @@ export default function ProfileSetupPage() {
       {/* Danger zone */}
       <div className="mt-8 bg-white rounded-2xl border border-red-100 p-6">
         <h2 className="text-sm font-semibold text-red-700 mb-1">Danger zone</h2>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-halo-mist-body mb-4">
           Permanently delete your account and all associated data. This cannot be undone.
         </p>
         <button

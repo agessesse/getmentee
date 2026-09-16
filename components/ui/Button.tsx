@@ -11,10 +11,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: 'bg-navy-600 text-white hover:bg-navy-700 focus:ring-navy-500',
-  secondary: 'border border-navy-600 text-navy-600 hover:bg-navy-50 focus:ring-navy-500',
-  danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-  ghost: 'text-navy-600 hover:bg-navy-50 focus:ring-navy-500',
+  primary: 'bg-halo-purple text-white shadow-sm hover:bg-halo-purple-d hover:shadow-md hover:-translate-y-px active:translate-y-0 active:scale-[0.98] focus:ring-halo-purple',
+  secondary: 'border border-halo-purple text-halo-purple-d hover:bg-halo-purple hover:text-white focus:ring-halo-purple',
+  // An outline, not a fill: declining or cancelling is a considered choice, and
+  // a solid red block beside the purple primary out-shouted it. Final,
+  // irreversible confirmations elsewhere keep a solid red fill.
+  danger: 'border border-red-200 bg-white text-red-700 hover:bg-red-50 hover:border-red-300 focus:ring-red-500',
+  ghost: 'text-halo-purple-d hover:bg-halo-veil focus:ring-halo-purple',
 };
 
 const sizes = {
@@ -36,7 +39,7 @@ export default function Button({
     <button
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-halo-ivory disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0',
         variants[variant],
         sizes[size],
         className

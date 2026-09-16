@@ -31,13 +31,13 @@ export default function MessageBubble({
           className={clsx(
             'px-4 py-2 rounded-2xl text-sm leading-relaxed',
             isOwn
-              ? 'bg-navy-600 text-white rounded-br-sm'
-              : 'bg-white border border-gray-200 text-navy-900 rounded-bl-sm'
+              ? 'bg-halo-purple text-white rounded-br-sm'
+              : 'bg-white border border-halo-rule text-halo-ink rounded-bl-sm'
           )}
         >
           {content}
         </div>
-        <span className="text-xs text-gray-400 px-1">{time}</span>
+        <span className="text-xs text-halo-mist-body px-1">{time}</span>
       </div>
     </div>
   );
