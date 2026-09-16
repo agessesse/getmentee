@@ -14,7 +14,7 @@ export default function SiteFooter() {
     <footer className="py-14 px-6 lg:px-10 bg-halo-black">
       <div className="max-w-6xl mx-auto">
         <div className="mb-9">
-          <Wordmark size="lg" className="text-white" />
+          <Wordmark size="lg" tone="reversed" className="text-white" />
           <p className="text-halo-lavender font-light mt-2 max-w-xs text-sm leading-relaxed">
             Find someone worth learning from. Become someone worth mentoring.
           </p>
