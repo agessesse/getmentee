@@ -71,6 +71,11 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
   let statementIsQuote = false;
   /** Factual list shown in place of a statement, e.g. verified honours. */
   let statementItems: string[] | null = null;
+  /** Fictional prototype sketch. Rendered in its own framed block, never as a
+   *  statement, and only for near peers. See SourcedNearPeer.prototype_scenario. */
+  let prototypeScenario: string | null = null;
+  /** Used only by the prototype framing line, so it names the person directly. */
+  let firstNameOnly = '';
   let linkedInUrl: string | undefined;
 
   if (target.kind === 'mentor') {
@@ -120,17 +125,22 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
     subLine = p.school ?? '';
     bio = p.bio;
     tags = p.interestTags.slice(0, 5);
-    // demo_impact_story is deliberately NOT rendered here, and must not be.
-    // It is invented first-person copy, and every near peer on this roster is a
-    // real, named, findable student. A "Demo copy" badge does not undo an
-    // invented sentence sitting in quotation marks under someone's real face:
-    // the reader still comes away believing that person said it.
+    // This slot is factual only: verified honours from the person's own record.
+    // It used to hold demo_impact_story, invented first-person copy set in
+    // quotation marks under a real student's face. A "Demo copy" badge did not
+    // undo that, because the reader still came away believing the person said
+    // it. That field is gone.
     //
-    // The slot now carries verified honours from their own record instead. When
-    // a student has none listed, the section simply does not render, which is
-    // the correct outcome. Nothing invented replaces it.
+    // Illustrative prototype copy does still render on this card, in its own
+    // block further down, written in the third person about a hypothetical
+    // student and framed as an example. The two are kept apart on purpose: a
+    // factual section and a fictional one should never share a container.
     statementSectionLabel = p.distinctions?.length ? 'Recognition' : null;
     statementItems = p.distinctions?.length ? p.distinctions : null;
+    // Kept in a separate variable, and rendered in a separate block below the
+    // factual ones, so fiction never shares a container with verified fields.
+    prototypeScenario = p.prototype_scenario ?? null;
+    firstNameOnly = p.firstName;
     linkedInUrl = p.linkedInUrl;
   }
 
@@ -257,6 +267,34 @@ export default function ProfilePreviewModal({ target, onClose }: Props) {
                 ) : (
                   <p className="text-halo-heather text-sm leading-relaxed">{statement}</p>
                 )}
+              </div>
+            )}
+
+            {/*
+              The prototype scenario.
+
+              Deliberately unlike every other block in this modal. It is the
+              only one on the lavender wash, the only one with a rule above AND
+              a framing line below, and the only one whose heading names
+              Mentable rather than the person. No quotation marks, no italics,
+              no first person: three signals that previously made invented copy
+              read as something the person said.
+
+              The closing line is the part that has to be unambiguous, so it
+              says what the block is and what it is not, in two short sentences.
+            */}
+            {prototypeScenario && (
+              <div className="mt-5 pt-5 border-t border-halo-rule">
+                <div className="rounded-xl bg-halo-lav-wash border border-halo-rule p-4">
+                  <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-2.5">
+                    Example Mentable experience
+                  </p>
+                  <p className="text-halo-heather text-sm leading-relaxed">{prototypeScenario}</p>
+                  <p className="text-[11px] text-halo-mist-body leading-relaxed mt-3 pt-3 border-t border-halo-rule">
+                    Illustrative example for this prototype. Not something {firstNameOnly} said
+                    or did.
+                  </p>
+                </div>
               </div>
             )}
 

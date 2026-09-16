@@ -98,6 +98,32 @@ export interface SourcedNearPeer {
   experience?: ExperienceItem[];
   linkedInUrl?: string;
   status: ProfileStatus;
+  /**
+   * PROTOTYPE ONLY. Fictional, illustrative, and not about this person.
+   *
+   * A short third-person sketch of what a Mentable relationship could look like
+   * for someone with this person's interests. It exists so the prototype can
+   * show the shape of the product to mentors, students and university contacts
+   * while the real product is still being built.
+   *
+   * THE RULES, which are the reason this is not called demo_impact_story:
+   *   - It is fiction. Nothing in it happened.
+   *   - Never render it as factual information about the person.
+   *   - Never write it in the first person, and never put it in quotation
+   *     marks. It describes a hypothetical student, not the person pictured.
+   *   - Never present it as a testimonial, an endorsement, an outcome, a real
+   *     mentorship, or verified activity.
+   *   - Wherever it renders it must carry visible prototype framing, so a
+   *     reasonable visitor reads "this is what Mentable could look like" and
+   *     not "this person did this".
+   *   - Delete it, or replace it with a statement the person actually supplied
+   *     and approved, before Mentable presents real outcomes or testimonials.
+   *
+   * Every other field on this interface is factual and governed by the rule at
+   * the top. This one is the single deliberate exception, and it is fenced off
+   * by name, by type doc, and by how it renders.
+   */
+  prototype_scenario?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -383,6 +409,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     ],
     experience: [{ organization: 'JPMorganChase' }],
     linkedInUrl: 'https://www.linkedin.com/in/bethlehem-agegne/',
+    prototype_scenario:
+      'A student whose interests sit across global development, public policy and data could use Mentable to work with someone who has built a career at that intersection, agree on which roles actually exist and which are worth targeting, and learn to present an interdisciplinary background as an asset rather than something to explain away.',
     status: 'sourced',
   },
   {
@@ -421,6 +449,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { title: 'Investment Banking Summer Analyst', organization: 'Envoy Capital Advisors' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/abelgessesse/',
+    prototype_scenario:
+      'A student trying to understand fixed income could use Mentable to work with someone decades into that desk, set a shared goal around what to learn first, and turn what is usually years of trial and error into a handful of prepared sessions whose notes carry forward.',
     status: 'sourced',
   },
   {
@@ -459,6 +489,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/cooperdelo/',
+    prototype_scenario:
+      'A student building a product could use Mentable to work with a founder who has already made the early mistakes, and get honest feedback on the thing itself rather than encouragement, with every session leaving one concrete action item attached to the work.',
     status: 'sourced',
   },
   {
@@ -494,6 +526,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/teaganfitzgerald/',
+    prototype_scenario:
+      'A student who has already secured the offer could use Mentable for what comes after it: how to show up, what to prioritise in the first weeks, and how to read a culture from the inside. Those are goals a mentor can set with them before the start date rather than after it.',
     status: 'sourced',
   },
   {
@@ -533,6 +567,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { organization: 'J.P. Morgan', description: 'Fixed Income Treasury Sales; Securitized Products Sales.' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/jadensmall/',
+    prototype_scenario:
+      'A student moving from political economy toward markets could use Mentable to work with someone who can translate that background into language a desk recognises, and rehearse the pivot in a session before it has to be explained in an interview.',
     status: 'sourced',
   },
   {
@@ -551,6 +587,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       'All-American Swimmer',
     ],
     linkedInUrl: 'https://www.linkedin.com/in/troy-keen-jr-829717337/',
+    prototype_scenario:
+      'A varsity athlete facing a recruiting timeline that does not accommodate a season could use Mentable to plan around it with someone who has done the same, and work out how to present years of high-performance competition without underselling what it taught them.',
     status: 'sourced',
   },
   {
@@ -563,6 +601,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     portraitPosition: '50% 15%',
     interestTags: ['Finance', 'Markets', 'Duke'],
     linkedInUrl: 'https://www.linkedin.com/in/cooper-lipton-199544285/',
+    prototype_scenario:
+      'A student learning markets from the outside could use Mentable to reach someone already inside them, and arrive at each session with the questions worth asking rather than the ones that sound safe.',
     status: 'sourced',
   },
   {
@@ -586,6 +626,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { organization: 'J.P. Morgan', description: 'Global Markets' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/erick-angwenyi/',
+    prototype_scenario:
+      'A first-generation student entering capital markets could use Mentable to work with someone who came up the same way, and see what the path looks like from the inside instead of assembling it from job postings and guesswork.',
     status: 'sourced',
   },
   {
@@ -604,6 +646,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { organization: 'Bank of America' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/eliphaz-getachew/',
+    prototype_scenario:
+      'A student at the very beginning could use Mentable to work with someone who still remembers what the first steps felt like, and replace a run of guesses with decisions they have actually talked through with somebody.',
     status: 'sourced',
   },
   {
@@ -622,6 +666,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       { title: 'Incoming Markets Summer Intern — Fixed Income', organization: 'Wells Fargo Corporate & Investment Banking' },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/hugo-canseco/',
+    prototype_scenario:
+      'A student who already has the internship could use Mentable for what happens inside it: how to learn quickly, what to ask, and how to be useful early. Action items between sessions are what turn that advice into something that actually got done.',
     status: 'sourced',
   },
   {
@@ -657,6 +703,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
       },
     ],
     linkedInUrl: 'https://www.linkedin.com/in/william-walker-iii/',
+    prototype_scenario:
+      'A student whose leadership experience does not obviously map to the industry they want could use Mentable to work out how to articulate it, on paper and in a room, with someone who has heard both versions and can say which one lands.',
     status: 'sourced',
   },
   {
@@ -670,6 +718,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     portraitPosition: '50% 30%',
     interestTags: ['Finance', 'Career Development', 'Leadership'],
     linkedInUrl: 'https://www.linkedin.com/in/pabloon/',
+    prototype_scenario:
+      'A student who has to create their own visibility rather than wait for recruiters to arrive could use Mentable to reach someone who made the same climb, and work from a plan with dates on it rather than from encouragement alone.',
     status: 'sourced',
   },
 ];
