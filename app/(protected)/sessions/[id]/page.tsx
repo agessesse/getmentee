@@ -5,16 +5,16 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   Video, Clock, ExternalLink, Star, ArrowLeft, CheckCircle, Circle,
-  Plus, Check, FileText, MessageSquare,
+  Plus, Check, Users,
 } from 'lucide-react';
-import VoiceInputButton from '@/components/voice/VoiceInputButton';
 import SessionRecorder from '@/components/voice/SessionRecorder';
 import { createClient } from '@/lib/supabase/client';
 import { trackEvent } from '@/lib/analytics';
 import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 import { FORMER_MEMBER } from '@/lib/display-name';
+import SessionCoach from '@/components/sessions/SessionCoach';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,13 +43,6 @@ interface ActionItem {
   assigneeName: string;
 }
 
-interface PreBrief {
-  openActionItems: { id: string; title: string; due_date: string | null }[];
-  menteeGoals: { id: string; title: string; status: string }[];
-  lastMessageAt: string | null;
-  lastMessagePreview: string | null;
-}
-
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STATUS_STYLES: Record<string, string> = {
@@ -58,95 +51,6 @@ const STATUS_STYLES: Record<string, string> = {
   completed:   'bg-green-50 text-green-700',
   cancelled:   'bg-red-50 text-red-600',
 };
-
-// ─── Pre-meeting brief card ───────────────────────────────────────────────────
-
-function PreMeetingBrief({ brief, menteeName }: { brief: PreBrief; menteeName: string }) {
-  const hasContent =
-    brief.openActionItems.length > 0 ||
-    brief.menteeGoals.length > 0 ||
-    brief.lastMessageAt;
-
-  if (!hasContent) return null;
-
-  return (
-    <div className="bg-halo-veil border border-halo-lavender rounded-2xl p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <FileText className="w-4 h-4 text-halo-purple-d" />
-        <h3 className="text-sm font-semibold text-halo-ink">
-          Pre-Meeting Brief: {menteeName}
-        </h3>
-      </div>
-
-      <div className="space-y-4">
-        {/* Open action items */}
-        {brief.openActionItems.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold text-halo-purple-d font-ui uppercase tracking-[0.14em] mb-2">
-              Open action items ({brief.openActionItems.length})
-            </p>
-            <div className="space-y-1.5">
-              {brief.openActionItems.slice(0, 4).map((item) => (
-                <div key={item.id} className="flex items-start gap-2">
-                  <Circle className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <p className="text-sm text-halo-ink">{item.title}</p>
-                    {item.due_date && (
-                      <p className="text-xs text-halo-mist-body">
-                        Due {format(new Date(item.due_date), 'MMM d')}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {brief.openActionItems.length > 4 && (
-                <p className="text-xs text-halo-purple-d pl-5">
-                  +{brief.openActionItems.length - 4} more
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Active goals */}
-        {brief.menteeGoals.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold text-halo-purple-d font-ui uppercase tracking-[0.14em] mb-2">
-              Active goals
-            </p>
-            <div className="space-y-1">
-              {brief.menteeGoals.slice(0, 3).map((g) => (
-                <p key={g.id} className="text-sm text-halo-ink">
-                  · {g.title}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Last message */}
-        {brief.lastMessageAt && (
-          <div className="flex items-start gap-2">
-            <MessageSquare className="w-3.5 h-3.5 text-halo-mist-body flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-xs text-halo-mist-body">
-                Last message{' '}
-                {formatDistanceToNow(new Date(brief.lastMessageAt), {
-                  addSuffix: true,
-                })}
-              </p>
-              {brief.lastMessagePreview && (
-                <p className="text-xs text-halo-mist-body truncate max-w-xs">
-                  &ldquo;{brief.lastMessagePreview}&rdquo;
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -168,11 +72,6 @@ export default function SessionDetailPage() {
   const [notesSaved, setNotesSaved] = useState(false);
   const [notesLoading, setNotesLoading] = useState(false);
 
-  // Mentor recap (post-session)
-  const [recap, setRecap] = useState('');
-  const [recapSaved, setRecapSaved] = useState(false);
-  const [recapLoading, setRecapLoading] = useState(false);
-
   // Action items
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
   const [newActionTitle, setNewActionTitle] = useState('');
@@ -187,9 +86,6 @@ export default function SessionDetailPage() {
   const [markingComplete, setMarkingComplete] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-
-  // Pre-meeting brief (mentor only, scheduled sessions)
-  const [preBrief, setPreBrief] = useState<PreBrief | null>(null);
 
   // Error banner for failed mutations
   const [actionError, setActionError] = useState<string | null>(null);
@@ -219,47 +115,6 @@ export default function SessionDetailPage() {
       );
     },
     [id]
-  );
-
-  const loadPreBrief = useCallback(
-    async (mentorshipId: string, menteeId: string) => {
-      const supabase = createClient();
-
-      const [openActionsRes, goalsRes, lastMsgRes] = await Promise.all([
-        // Open action items for this mentee (across mentorship, not just this session)
-        supabase
-          .from('action_items')
-          .select('id, title, due_date')
-          .eq('mentorship_id', mentorshipId)
-          .eq('assigned_to', menteeId)
-          .eq('is_completed', false)
-          .order('due_date', { ascending: true })
-          .limit(10),
-        // Active goals for this mentorship
-        supabase
-          .from('mentorship_goals')
-          .select('id, title, status')
-          .eq('mentorship_id', mentorshipId)
-          .eq('status', 'active')
-          .limit(5),
-        // Last message in conversation
-        supabase
-          .from('messages')
-          .select('content, created_at')
-          .eq('mentorship_id', mentorshipId)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle(),
-      ]);
-
-      setPreBrief({
-        openActionItems: openActionsRes.data ?? [],
-        menteeGoals: goalsRes.data ?? [],
-        lastMessageAt: lastMsgRes.data?.created_at ?? null,
-        lastMessagePreview: lastMsgRes.data?.content ?? null,
-      });
-    },
-    []
   );
 
   useEffect(() => {
@@ -303,7 +158,6 @@ export default function SessionDetailPage() {
       }
       setSession(sessionData);
       if (sessionData?.notes) setNotes(sessionData.notes);
-      if (sessionData?.mentor_recap) setRecap(sessionData.mentor_recap);
 
       const role = profileRes.data?.role as 'mentor' | 'mentee';
       setUserRole(role);
@@ -321,17 +175,12 @@ export default function SessionDetailPage() {
 
       if (sessionData?.mentorship_id) {
         await loadActionItems(sessionData.mentorship_id);
-
-        // Load pre-meeting brief for mentor on scheduled/upcoming sessions
-        if (role === 'mentor' && sessionData.status === 'scheduled') {
-          await loadPreBrief(sessionData.mentorship_id, sessionData.mentee_id);
-        }
       }
 
       setLoading(false);
     }
     load();
-  }, [id, loadActionItems, loadPreBrief]);
+  }, [id, loadActionItems]);
 
   const saveNotes = async () => {
     if (!session) return;
@@ -342,17 +191,6 @@ export default function SessionDetailPage() {
     if (error) { setActionError('Failed to save notes. Please try again.'); }
     else { setNotesSaved(true); setTimeout(() => setNotesSaved(false), 2000); }
     setNotesLoading(false);
-  };
-
-  const saveRecap = async () => {
-    if (!session) return;
-    setRecapLoading(true);
-    setActionError(null);
-    const supabase = createClient();
-    const { error } = await supabase.from('sessions').update({ mentor_recap: recap }).eq('id', id);
-    if (error) { setActionError('Failed to save recap. Please try again.'); }
-    else { setRecapSaved(true); setTimeout(() => setRecapSaved(false), 2000); }
-    setRecapLoading(false);
   };
 
   const addActionItem = async () => {
@@ -522,11 +360,18 @@ export default function SessionDetailPage() {
         </div>
       </div>
 
-      {/* Pre-meeting brief — mentor only, scheduled */}
-      {isMentor && isScheduled && preBrief && (
-        <PreMeetingBrief
-          brief={preBrief}
-          menteeName={`${mentee.first_name} ${mentee.last_name}`}
+      {/*
+        Preparation, the conversation itself, and reflection, for whichever side
+        is looking. It replaces the mentor-only pre-meeting brief and the recap
+        box, whose save was rejected by the column grants in 0017.
+      */}
+      {userId && (
+        <SessionCoach
+          session={{ ...session, notes }}
+          userId={userId}
+          role={userRole}
+          onAgendaChange={(n) => setNotes(n)}
+          onActionItemsChanged={() => loadActionItems(session.mentorship_id)}
         />
       )}
 
@@ -535,9 +380,14 @@ export default function SessionDetailPage() {
           {/* Notes / Agenda */}
           <div className="bg-white rounded-2xl border border-halo-rule p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
-                {isCompleted ? 'Session Notes' : 'Agenda & Notes'}
-              </h2>
+              <div>
+                <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+                  {isCompleted ? 'Shared notes' : 'Shared agenda'}
+                </h2>
+                <p className="inline-flex items-center gap-1.5 text-xs text-halo-mist-body mt-0.5">
+                  <Users className="w-3.5 h-3.5" /> You and {partner.first_name} can both see and edit this.
+                </p>
+              </div>
               <button
                 onClick={saveNotes}
                 disabled={notesLoading}
@@ -558,52 +408,10 @@ export default function SessionDetailPage() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={8}
-              placeholder={`What will you cover in this session?\n\n• Topic 1\n• Topic 2\n• Questions to ask`}
+              placeholder={`What would make this conversation useful?\n\n• Topic 1\n• Topic 2`}
               className="w-full text-sm text-halo-heather placeholder-halo-mist-body focus:outline-none resize-none leading-relaxed"
             />
           </div>
-
-          {/* Post-session recap — mentor only, after completing */}
-          {isMentor && isCompleted && (
-            <div className="bg-white rounded-2xl border border-halo-rule p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
-                  Session Recap
-                </h2>
-                <div className="flex items-center gap-3">
-                  {process.env.NEXT_PUBLIC_VOICE_ENABLED === 'true' && (
-                    <VoiceInputButton
-                      context="note"
-                      onTranscript={(t) => setRecap((p) => p ? `${p} ${t}` : t)}
-                      disabled={recapLoading}
-                    />
-                  )}
-                  <button
-                    onClick={saveRecap}
-                    disabled={recapLoading}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-halo-purple-d hover:text-halo-ink transition-colors"
-                  >
-                    {recapSaved ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-green-500" /> Saved
-                      </>
-                    ) : recapLoading ? (
-                      'Saving...'
-                    ) : (
-                      'Save recap'
-                    )}
-                  </button>
-                </div>
-              </div>
-              <textarea
-                value={recap}
-                onChange={(e) => setRecap(e.target.value)}
-                rows={5}
-                placeholder={`Speak or type: summarize what was covered, decisions made, and key takeaways for ${mentee.first_name}…`}
-                className="w-full text-sm text-halo-heather placeholder-halo-mist-body focus:outline-none resize-none leading-relaxed"
-              />
-            </div>
-          )}
 
           {/* Session Notes (voice recording + AI summary) */}
           {process.env.NEXT_PUBLIC_VOICE_ENABLED === 'true' && (

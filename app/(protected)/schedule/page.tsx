@@ -2,10 +2,11 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Plus, Clock, Plus as PlusIcon, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import SessionCard from '@/components/schedule/SessionCard';
 import BookingModal from '@/components/schedule/BookingModal';
+import AvailabilityPlanner from '@/components/schedule/AvailabilityPlanner';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import { FORMER_MEMBER } from '@/lib/display-name';
@@ -33,189 +34,6 @@ interface Mentorship {
   partnerName: string;
 }
 
-interface AvailabilitySlot {
-  id: string;
-  day_of_week: number;
-  start_time: string;
-  end_time: string;
-}
-
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-// ─── Availability editor (mentor view) ───────────────────────────────────────
-
-function AvailabilityEditor({ userId }: { userId: string }) {
-  const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [addingDay, setAddingDay] = useState<number | null>(null);
-  const [newStart, setNewStart] = useState('09:00');
-  const [newEnd, setNewEnd] = useState('17:00');
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    async function load() {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from('availability_slots')
-        .select('id, day_of_week, start_time, end_time')
-        .eq('mentor_id', userId)
-        .order('day_of_week')
-        .order('start_time');
-      setSlots((data ?? []) as AvailabilitySlot[]);
-      setLoading(false);
-    }
-    load();
-  }, [userId]);
-
-  const addSlot = async () => {
-    if (addingDay === null) return;
-    if (newStart >= newEnd) {
-      setError('End time must be after start time.');
-      return;
-    }
-    setSaving(true);
-    setError('');
-    const supabase = createClient();
-    const { data, error: err } = await supabase
-      .from('availability_slots')
-      .insert({ mentor_id: userId, day_of_week: addingDay, start_time: newStart, end_time: newEnd })
-      .select('id, day_of_week, start_time, end_time')
-      .single();
-    if (err) {
-      setError(err.message);
-    } else if (data) {
-      setSlots((prev) =>
-        [...prev, data as AvailabilitySlot].sort(
-          (a, b) => a.day_of_week - b.day_of_week || a.start_time.localeCompare(b.start_time)
-        )
-      );
-      setAddingDay(null);
-      setNewStart('09:00');
-      setNewEnd('17:00');
-    }
-    setSaving(false);
-  };
-
-  const removeSlot = async (id: string) => {
-    const supabase = createClient();
-    await supabase.from('availability_slots').delete().eq('id', id);
-    setSlots((prev) => prev.filter((s) => s.id !== id));
-  };
-
-  const formatTime = (t: string) => {
-    const [h, m] = t.split(':').map(Number);
-    const ampm = h >= 12 ? 'pm' : 'am';
-    const hour = h % 12 || 12;
-    return `${hour}:${String(m).padStart(2, '0')}${ampm}`;
-  };
-
-  const slotsByDay = DAYS.map((_, i) => slots.filter((s) => s.day_of_week === i));
-
-  if (loading) return <div className="flex justify-center py-12"><Spinner size="lg" /></div>;
-
-  return (
-    <div className="max-w-2xl space-y-6">
-      <div>
-        <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Weekly Availability</h2>
-        <p className="text-sm text-halo-mist-body mt-1">
-          Set recurring windows when you&apos;re generally available for sessions. Mentees will see these when booking.
-        </p>
-      </div>
-
-      <div className="space-y-3">
-        {DAYS.map((day, dayIndex) => {
-          const daySlots = slotsByDay[dayIndex];
-          const isAdding = addingDay === dayIndex;
-          return (
-            <div key={day} className="bg-white rounded-2xl border border-halo-rule p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-halo-ink">{day}</span>
-                {!isAdding && (
-                  <button
-                    onClick={() => setAddingDay(dayIndex)}
-                    className="flex items-center gap-1 text-xs text-halo-purple-d hover:text-halo-ink transition-colors"
-                  >
-                    <PlusIcon className="w-3.5 h-3.5" />
-                    Add window
-                  </button>
-                )}
-              </div>
-
-              {daySlots.length === 0 && !isAdding && (
-                <p className="text-xs text-halo-mist-body">No availability set</p>
-              )}
-
-              {daySlots.map((slot) => (
-                <div key={slot.id} className="flex items-center justify-between py-1.5">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-halo-mist-body" />
-                    <span className="text-sm text-halo-heather">
-                      {formatTime(slot.start_time)} – {formatTime(slot.end_time)}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => removeSlot(slot.id)}
-                    className="text-halo-mist hover:text-red-400 transition-colors p-1"
-                    title="Remove"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ))}
-
-              {isAdding && (
-                <div className="mt-2 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-xs text-halo-mist-body block mb-1">From</label>
-                      <input
-                        type="time"
-                        value={newStart}
-                        onChange={(e) => setNewStart(e.target.value)}
-                        className="w-full border border-halo-rule rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-halo-mist-body block mb-1">To</label>
-                      <input
-                        type="time"
-                        value={newEnd}
-                        onChange={(e) => setNewEnd(e.target.value)}
-                        className="w-full border border-halo-rule rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-halo-purple"
-                      />
-                    </div>
-                  </div>
-                  {error && <p className="text-xs text-red-600">{error}</p>}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={addSlot}
-                      disabled={saving}
-                      className="flex-1 py-1.5 bg-halo-purple text-white text-xs font-medium rounded-lg hover:bg-halo-purple-d disabled:opacity-50 transition-colors"
-                    >
-                      {saving ? 'Saving…' : 'Save window'}
-                    </button>
-                    <button
-                      onClick={() => { setAddingDay(null); setError(''); }}
-                      className="px-4 py-1.5 border border-halo-rule text-halo-heather text-xs rounded-lg hover:bg-halo-veil transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <p className="text-xs text-halo-mist-body">
-        These are recurring weekly windows. They do not block specific dates or sync with external calendars.
-      </p>
-    </div>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 type TabType = 'upcoming' | 'past' | 'availability';
@@ -231,7 +49,11 @@ export default function SchedulePage() {
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(true);
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [tab, setTab] = useState<TabType>('upcoming');
+  // ?tab=availability opens the planner directly, e.g. from the mentor dashboard.
+  const [tab, setTab] = useState<TabType>(searchParams.get('tab') === 'availability' ? 'availability' : 'upcoming');
+  // The availability planner keeps a draft until saved. Leaving the tab would
+  // throw that draft away silently, so it reports whether there is one.
+  const [availabilityDirty, setAvailabilityDirty] = useState(false);
 
   // loadSessions accepts the active tab explicitly to avoid stale closure
   const loadSessions = useCallback(async (activeTab: 'upcoming' | 'past', uid: string) => {
@@ -325,6 +147,10 @@ export default function SchedulePage() {
   }, [loadSessions]);
 
   const handleTabChange = async (newTab: TabType) => {
+    if (
+      tab === 'availability' && newTab !== 'availability' && availabilityDirty &&
+      !window.confirm('You have unsaved availability changes. Leave without saving?')
+    ) return;
     setTab(newTab);
     if (newTab === 'availability') return; // availability editor manages its own loading
     setLoading(true);
@@ -376,8 +202,8 @@ export default function SchedulePage() {
       </div>
 
       {/* Availability tab */}
-      {tab === 'availability' && userId && (
-        <AvailabilityEditor userId={userId} />
+      {tab === 'availability' && userId && userRole === 'mentor' && (
+        <AvailabilityPlanner userId={userId} onDirtyChange={setAvailabilityDirty} />
       )}
 
       {/* Sessions tabs */}

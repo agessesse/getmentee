@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useProfile } from '@/lib/profile-context';
 import {
   Search, ClipboardList, Handshake, Calendar, ArrowRight,
-  TrendingUp, MessageSquare, Target, Star, Award, Users, Clock,
-  BarChart2, Lightbulb,
+  TrendingUp, MessageSquare, Target, Lightbulb,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Avatar from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
 import { FORMER_MEMBER, displayName } from '@/lib/display-name';
+import MentorDashboard from '@/components/dashboard/MentorDashboard';
+import MenteeCoachingCard from '@/components/dashboard/MenteeCoachingCard';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,15 +34,6 @@ interface DashboardData {
     created_at: string;
   }>;
   activeGoals: number;
-  // mentor-only
-  mentorExtra?: {
-    totalMenteesEver: number;
-    avgRating: number | null;
-    reviewCount: number;
-    totalHours: number;
-    maxMentees: number;
-    isFoundingMentor: boolean;
-  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -92,61 +84,10 @@ function StatCard({
   );
 }
 
-// ─── Capacity bar (mentor-only) ───────────────────────────────────────────────
-
-function CapacityBar({
-  active,
-  max,
-}: {
-  active: number;
-  max: number;
-}) {
-  const pct = max > 0 ? Math.min((active / max) * 100, 100) : 0;
-  const isFull = active >= max;
-  return (
-    <div className="bg-white rounded-2xl border border-halo-rule p-5">
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-semibold text-halo-ink">Mentee Capacity</p>
-        <span
-          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-            isFull
-              ? 'bg-red-50 text-red-600'
-              : pct >= 75
-              ? 'bg-amber-50 text-amber-600'
-              : 'bg-green-50 text-green-700'
-          }`}
-        >
-          {isFull ? 'Full' : pct >= 75 ? 'Nearly full' : 'Open'}
-        </span>
-      </div>
-      <div className="w-full bg-halo-bone rounded-full h-2 mb-2">
-        <div
-          className={`h-2 rounded-full transition-all ${
-            isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-green-400'
-          }`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <p className="text-xs text-halo-mist-body">
-        {active} of {max} mentee {max === 1 ? 'slot' : 'slots'} filled
-      </p>
-      {isFull && (
-        <p className="text-xs text-red-500 mt-1">
-          New requests will remain pending until a slot opens.{' '}
-          <Link href="/profile/setup" className="underline hover:text-red-700">
-            Adjust capacity →
-          </Link>
-        </p>
-      )}
-    </div>
-  );
-}
-
 // ─── First-run guide (shown only when account has zero activity) ──────────────
 
-function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
-  const steps = isMentee
-    ? [
+function FirstRunGuide() {
+  const steps = [
         {
           href: '/discover',
           label: 'Find a mentor',
@@ -157,20 +98,6 @@ function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
           href: '/profile/setup',
           label: 'Complete your profile',
           detail: 'Help mentors understand your goals so they can decide whether they\'re a good fit for you.',
-          primary: false,
-        },
-      ]
-    : [
-        {
-          href: '/requests',
-          label: 'Review incoming requests',
-          detail: 'Mentees who want to work with you will send requests here. Approve to begin a mentorship.',
-          primary: true,
-        },
-        {
-          href: '/profile/setup',
-          label: 'Update your profile',
-          detail: 'Make sure your availability, expertise tags, and bio are current so mentees can find you.',
           primary: false,
         },
       ];
@@ -204,7 +131,18 @@ function FirstRunGuide({ isMentee }: { isMentee: boolean }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+/**
+ * Mentors and mentees get different dashboards. The role is already on the
+ * profile context, populated by the protected layout before this page mounts,
+ * so the split costs nothing and neither side ever renders the other's data.
+ * The mentor side lives in components/dashboard/MentorDashboard.tsx.
+ */
 export default function DashboardPage() {
+  const contextProfile = useProfile();
+  return contextProfile?.role === 'mentor' ? <MentorDashboard /> : <MenteeDashboard />;
+}
+
+function MenteeDashboard() {
   // Profile from context is available immediately (populated by layout before
   // this page mounts) — use it for the greeting so it renders without waiting
   // for the stats fetch to complete.
@@ -328,50 +266,6 @@ export default function DashboardPage() {
         }
       }
 
-      // ── Mentor-specific extras ────────────────────────────────────────────
-      let mentorExtra: DashboardData['mentorExtra'] | undefined;
-
-      if (role === 'mentor') {
-        const [mpRes, allMentorshipsRes, allSessionsRes] = await Promise.all([
-          supabase
-            .from('mentor_profiles')
-            .select('rating, review_count, max_mentees, is_founding_mentor')
-            .eq('id', uid)
-            .single(),
-          supabase
-            .from('mentorships')
-            .select('mentee_id')
-            .eq('mentor_id', uid),
-          supabase
-            .from('sessions')
-            .select('duration_minutes')
-            .eq('mentor_id', uid)
-            .eq('status', 'completed'),
-        ]);
-
-        const uniqueMentees = new Set(
-          (allMentorshipsRes.data ?? []).map((m) => m.mentee_id)
-        ).size;
-
-        const totalHours = Math.round(
-          (allSessionsRes.data ?? []).reduce(
-            (sum, s) => sum + (s.duration_minutes ?? 60),
-            0
-          ) / 60
-        );
-
-        mentorExtra = {
-          totalMenteesEver: uniqueMentees,
-          avgRating: mpRes.data?.rating
-            ? Number(mpRes.data.rating)
-            : null,
-          reviewCount: mpRes.data?.review_count ?? 0,
-          totalHours,
-          maxMentees: mpRes.data?.max_mentees ?? 3,
-          isFoundingMentor: mpRes.data?.is_founding_mentor ?? false,
-        };
-      }
-
       setData({
         profile: { first_name: profileRes.data?.first_name ?? '', role },
         pendingRequests: requestsRes.count ?? 0,
@@ -380,7 +274,6 @@ export default function DashboardPage() {
         upcomingSessions,
         recentMessages,
         activeGoals: goalsRes.count ?? 0,
-        mentorExtra,
       });
       setLoading(false);
     }
@@ -391,9 +284,6 @@ export default function DashboardPage() {
   // Derive display values: prefer loaded data, fall back to context for
   // the greeting header so it renders on the first paint with no delay.
   const firstName = data?.profile.first_name ?? contextProfile?.first_name ?? '';
-  const isMentee = data
-    ? data.profile.role === 'mentee'
-    : contextProfile?.role === 'mentee';
 
   // While stats are loading, show the header immediately and skeleton cards.
   if (loading) {
@@ -406,9 +296,7 @@ export default function DashboardPage() {
                 {greeting(firstName)}
               </h1>
               <p className="text-halo-mist-body mt-1 text-sm">
-                {isMentee
-                  ? 'Goals, sessions, and connections.'
-                  : 'Requests, mentees, and impact.'}
+                Goals, sessions, and connections.
               </p>
             </div>
           </div>
@@ -451,7 +339,6 @@ export default function DashboardPage() {
     upcomingSessions,
     recentMessages,
     activeGoals,
-    mentorExtra,
   } = data;
   const isNewUser =
     pendingRequests === 0 &&
@@ -474,16 +361,7 @@ export default function DashboardPage() {
         color: 'blue',
       };
     }
-    if (!isMentee && pendingRequests > 0) {
-      return {
-        label: `${pendingRequests} mentee${pendingRequests > 1 ? 's' : ''} waiting for your response`,
-        sub: 'Review and approve or decline',
-        href: '/requests',
-        icon: ClipboardList,
-        color: 'amber',
-      };
-    }
-    if (isMentee && activeMentorships === 0 && !isNewUser) {
+    if (activeMentorships === 0 && !isNewUser) {
       return {
         label: 'No active mentorship yet',
         sub: 'Browse mentors and send a request to get started',
@@ -506,38 +384,19 @@ export default function DashboardPage() {
             <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
               {greeting(profile.first_name)}
             </h1>
-            {mentorExtra?.isFoundingMentor && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
-                <Award className="w-3 h-3" />
-                Founding Mentor
-              </span>
-            )}
           </div>
           <p className="text-halo-mist-body mt-1 text-sm">
-            {isMentee
-              ? 'Goals, sessions, and connections.'
-              : 'Requests, mentees, and impact.'}
+            Goals, sessions, and connections.
           </p>
         </div>
 
-        {isMentee && (
-          <Link
-            href="/discover"
-            className="hidden sm:inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors"
-          >
-            <Search className="w-4 h-4" />
-            Find mentors
-          </Link>
-        )}
-        {!isMentee && pendingRequests > 0 && (
-          <Link
-            href="/requests"
-            className="hidden sm:inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors"
-          >
-            <ClipboardList className="w-4 h-4" />
-            {pendingRequests} pending {pendingRequests === 1 ? 'request' : 'requests'}
-          </Link>
-        )}
+        <Link
+          href="/discover"
+          className="hidden sm:inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-halo-purple-d transition-colors"
+        >
+          <Search className="w-4 h-4" />
+          Find mentors
+        </Link>
       </div>
 
       {/* ── Today's priority card ────────────────────────────────────────── */}
@@ -563,64 +422,12 @@ export default function DashboardPage() {
         );
       })()}
 
-      {/* ── Mentor impact strip ──────────────────────────────────────────── */}
-      {!isMentee && mentorExtra && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-halo-deep rounded-2xl p-4 col-span-1" style={{ backgroundImage: 'radial-gradient(ellipse 90% 80% at 90% 0%, rgba(120,90,247,0.55) 0%, transparent 70%)' }}>
-            <div className="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center mb-3">
-              <Users className="w-3.5 h-3.5 text-white" />
-            </div>
-            <p className="font-display font-medium text-2xl tabular-nums text-white">{mentorExtra.totalMenteesEver}</p>
-            <p className="text-xs text-halo-lavender mt-0.5">
-              {mentorExtra.totalMenteesEver === 1 ? 'Mentee' : 'Mentees'} mentored
-            </p>
-          </div>
-          <div className="bg-white rounded-2xl border border-halo-rule p-4">
-            <div className="w-7 h-7 bg-halo-veil rounded-lg flex items-center justify-center mb-3">
-              <Clock className="w-3.5 h-3.5 text-halo-purple-d" />
-            </div>
-            <p className="font-display font-medium text-2xl tabular-nums text-halo-ink">{mentorExtra.totalHours}h</p>
-            <p className="text-xs text-halo-mist-body mt-0.5">Hours invested</p>
-          </div>
-          <div className="bg-white rounded-2xl border border-halo-rule p-4">
-            <div className="w-7 h-7 bg-amber-50 rounded-lg flex items-center justify-center mb-3">
-              <Star className="w-3.5 h-3.5 text-amber-500" />
-            </div>
-            <p className="font-display font-medium text-2xl tabular-nums text-halo-ink">
-              {mentorExtra.avgRating ? mentorExtra.avgRating.toFixed(1) : '—'}
-            </p>
-            <p className="text-xs text-halo-mist-body mt-0.5">
-              Avg rating ({mentorExtra.reviewCount})
-            </p>
-          </div>
-          <Link
-            href="/impact"
-            className="group bg-white rounded-2xl border border-halo-rule p-4 flex flex-col justify-between hover:border-halo-lavender hover:shadow-sm transition-all"
-          >
-            <div className="w-7 h-7 bg-halo-veil rounded-lg flex items-center justify-center mb-3">
-              <BarChart2 className="w-3.5 h-3.5 text-halo-purple-d" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-halo-ink">Full impact</p>
-              <p className="text-xs text-halo-purple-d group-hover:text-halo-purple-d transition-colors">
-                View timeline →
-              </p>
-            </div>
-          </Link>
-        </div>
-      )}
-
-      {/* ── Capacity bar (mentor) ────────────────────────────────────────── */}
-      {!isMentee && mentorExtra && (
-        <CapacityBar
-          active={activeMentorships}
-          max={mentorExtra.maxMentees}
-        />
-      )}
+      {/* ── Coaching: prepare, capture, close the loop ──────────────────────── */}
+      {activeMentorships > 0 && <MenteeCoachingCard />}
 
       {/* ── Stat grid or first-run guide ─────────────────────────────────── */}
       {isNewUser ? (
-        <FirstRunGuide isMentee={isMentee} />
+        <FirstRunGuide />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
@@ -712,11 +519,6 @@ export default function DashboardPage() {
                     >
                       {s.session_type}
                     </span>
-                    {!isMentee && (
-                      <span className="text-xs text-halo-purple-d font-medium">
-                        Brief →
-                      </span>
-                    )}
                   </div>
                 </Link>
               ))}
@@ -747,7 +549,7 @@ export default function DashboardPage() {
                   ? 'No new messages'
                   : 'No active mentorships yet'}
               </p>
-              {isMentee && activeMentorships === 0 && (
+              {activeMentorships === 0 && (
                 <Link
                   href="/discover"
                   className="text-sm text-halo-purple-d font-medium hover:underline"
@@ -787,8 +589,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Opportunity Fund entry point (mentees only) ─────────────────── */}
-      {isMentee && (
+      {/* ── Opportunity Fund entry point ──────────────────────────────────── */}
+      {(
         <Link
           href="/opportunities"
           className="group flex items-start gap-4 bg-white rounded-2xl border border-halo-rule p-5 hover:border-halo-lavender hover:shadow-sm transition-all"
@@ -818,47 +620,25 @@ export default function DashboardPage() {
           style={{ backgroundImage: 'radial-gradient(ellipse 70% 90% at 85% 0%, rgba(120,90,247,0.55) 0%, transparent 65%)' }}
         >
           <h2 className="font-display text-[1.75rem] leading-tight mb-2">
-            {isMentee ? 'Find your first mentor' : 'Start accepting mentees'}
+            Find your first mentor
           </h2>
           <p className="text-halo-lavender text-sm mb-5 font-light">
-            {isMentee
-              ? 'Browse mentors at leading firms. Professionals ready to help you build your path.'
-              : 'Your profile is live. Set your availability and start accepting requests.'}
+            Browse mentors at leading firms. Professionals ready to help you build your path.
           </p>
           <div className="flex flex-wrap gap-3">
-            {isMentee ? (
-              <>
-                <Link
-                  href="/discover"
-                  className="inline-flex items-center gap-2 bg-halo-ivory text-halo-purple-d px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-halo-lavender hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
-                >
-                  <Search className="w-4 h-4" />
-                  Browse mentors
-                </Link>
-                <Link
-                  href="/profile/setup"
-                  className="inline-flex items-center gap-2 border border-halo-lavender text-halo-ivory px-5 py-3 rounded-xl text-sm font-semibold hover:bg-halo-ivory hover:text-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
-                >
-                  Complete profile
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/requests"
-                  className="inline-flex items-center gap-2 bg-halo-ivory text-halo-purple-d px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-halo-lavender hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
-                >
-                  <ClipboardList className="w-4 h-4" />
-                  View requests
-                </Link>
-                <Link
-                  href="/schedule"
-                  className="inline-flex items-center gap-2 border border-halo-lavender text-halo-ivory px-5 py-3 rounded-xl text-sm font-semibold hover:bg-halo-ivory hover:text-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
-                >
-                  Set availability
-                </Link>
-              </>
-            )}
+            <Link
+              href="/discover"
+              className="inline-flex items-center gap-2 bg-halo-ivory text-halo-purple-d px-5 py-3 rounded-xl text-sm font-semibold shadow-sm hover:bg-halo-lavender hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
+            >
+              <Search className="w-4 h-4" />
+              Browse mentors
+            </Link>
+            <Link
+              href="/profile/setup"
+              className="inline-flex items-center gap-2 border border-halo-lavender text-halo-ivory px-5 py-3 rounded-xl text-sm font-semibold hover:bg-halo-ivory hover:text-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender focus-visible:ring-offset-2 focus-visible:ring-offset-halo-deep"
+            >
+              Complete profile
+            </Link>
           </div>
         </div>
       )}

@@ -17,6 +17,8 @@ import {
   BarChart2,
   UserPlus,
   Lightbulb,
+  BookOpen,
+  Compass,
 } from 'lucide-react';
 import InviteModal from '@/components/marketing/InviteModal';
 import Wordmark from '@/components/ui/Wordmark';
@@ -42,6 +44,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/discover', label: 'Discover', icon: Search, menteeOnly: true },
       { href: '/impact', label: 'My Impact', icon: BarChart2, mentorOnly: true },
       { href: '/opportunities', label: 'Opportunity Fund', icon: Lightbulb, menteeOnly: true },
+      { href: '/networking', label: 'Networking 101', icon: BookOpen, menteeOnly: true },
     ],
   },
   {
@@ -50,6 +53,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: '/requests', label: 'Requests', icon: ClipboardList },
       { href: '/mentorships', label: 'Mentorships', icon: Handshake },
       { href: '/goals', label: 'Goals', icon: Target },
+      { href: '/guide', label: 'Mentorship Guide', icon: Compass },
     ],
   },
   {
