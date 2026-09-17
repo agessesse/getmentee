@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
 import PageTransition from '@/components/marketing/PageTransition';
+import { INTRO_SESSION_KEY, INTRO_COVER_CLASS } from '@/components/marketing/intro-session';
 import {
   DM_Sans,
   Instrument_Serif,
@@ -51,6 +52,28 @@ const plexSans = IBM_Plex_Sans({
 // the deployment environment.
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
+/*
+  Runs while the HTML is still being parsed, before the first paint.
+
+  The homepage intro is a client component, so it can only decide to play after
+  the server-rendered page has already been drawn, which showed the landing
+  page for a moment before the intro covered it. This makes the same decision
+  up front (homepage, and either not yet seen this session, ?intro, or dev,
+  exactly as IntroSequence decides) and paints the intro's black ground first.
+  IntroSequence removes the class the moment its own overlay is on screen.
+
+  If JavaScript never hydrates, a CSS timeout in globals.css lifts the cover,
+  so a failed load can never leave the page black.
+*/
+const INTRO_COVER_SCRIPT = `(function(){try{
+if(location.pathname!=='/')return;
+var forced=new URLSearchParams(location.search).has('intro');
+var always=${JSON.stringify(process.env.NODE_ENV === 'development')};
+var seen=false;try{seen=!!sessionStorage.getItem(${JSON.stringify(INTRO_SESSION_KEY)})}catch(e){}
+if(!forced&&!always&&seen)return;
+document.documentElement.classList.add(${JSON.stringify(INTRO_COVER_CLASS)});
+}catch(e){}})();`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: '/' },
@@ -78,11 +101,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    // suppressHydrationWarning: the cover script adds a class to <html> before
+    // React hydrates, so the attribute legitimately differs from the server's.
     <html
+      suppressHydrationWarning
       lang="en"
       className={`${dmSans.variable} ${instrumentSerif.variable} ${newsreader.variable} ${plexSans.variable}`}
     >
       <body className="bg-cream-50 text-navy-900 font-sans">
+        <script dangerouslySetInnerHTML={{ __html: INTRO_COVER_SCRIPT }} />
         {/*
           Keyboard and screen-reader users had to tab through the entire nav on
           every page before reaching content. Every <main> in the app carries

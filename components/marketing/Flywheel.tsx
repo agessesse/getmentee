@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useScrollProgress, useReducedMotion, useWideViewport } from '@/lib/useScrollProgress';
+import InteractionCue from '@/components/marketing/InteractionCue';
 
 const STAGES = [
   { verb: 'Learn',  line: 'Ask better questions.' },
@@ -101,15 +102,18 @@ export default function Flywheel() {
               It doesn&apos;t end<br />with you.
             </h2>
 
-            <p className="text-[14px] text-halo-heather mb-5">
-              {/* The copy has to describe the interaction that is actually
-                  available, which now depends on whether the section is pinned. */}
-              {pinned
-                ? 'Keep scrolling to follow the cycle, or pick a stage.'
-                : coarse
-                  ? 'Tap each stage to follow the cycle.'
-                  : 'Hover each stage to follow the cycle.'}
-            </p>
+            {/* The copy has to describe the interaction that is actually
+                available, which depends on whether the section is pinned. */}
+            <InteractionCue
+              className="mb-5"
+              hover={
+                pinned
+                  ? 'Keep scrolling to follow the cycle, or pick a stage.'
+                  : coarse
+                    ? 'Tap each stage to follow the cycle.'
+                    : 'Hover each stage to follow the cycle.'
+              }
+            />
 
             {/* Reserved height keeps the layout still as the label changes */}
             <div className="min-h-[76px] border-l-2 border-halo-rule pl-5">
@@ -129,7 +133,7 @@ export default function Flywheel() {
               className="text-[14px] text-halo-heather font-medium mt-6 transition-opacity duration-500"
               style={{ opacity: isReturn ? 1 : 0 }}
             >
-              …and the cycle starts again, one person further along.
+              …and whoever taught you gets to watch it work.
             </p>
           </div>
 

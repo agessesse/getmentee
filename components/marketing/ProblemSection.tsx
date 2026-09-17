@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import InteractionCue from '@/components/marketing/InteractionCue';
 
 const SIDES = [
   {
@@ -8,19 +9,26 @@ const SIDES = [
     who: 'Student',
     line: 'I don’t know who to ask.',
     detail:
-      'Finding a name is easy. Knowing what to ask, and how to turn one reply into an ongoing relationship, is not.',
+      'The people worth asking seem too busy, and there is no way to tell who would actually say yes.',
   },
   {
     id: 'professional',
     who: 'Professional',
-    line: 'I want to help, but requests go nowhere.',
+    line: 'I’d help. I just don’t know who’s looking.',
     detail:
-      'Requests arrive with no context and no follow-up, so people who want to help end up doing nothing.',
+      'Plenty of experienced people would make time for someone serious. They rarely find out who wants what they know.',
   },
 ] as const;
 
 export default function ProblemSection() {
   const [open, setOpen] = useState<string | null>(null);
+  // Each quote hides its explanation until it is opened, and nothing about a
+  // quotation says it opens. The cue says so, and retires once one has been.
+  const [engaged, setEngaged] = useState(false);
+  const openSide = (id: string | null) => {
+    if (id) setEngaged(true);
+    setOpen(id);
+  };
 
   return (
     <section
@@ -30,11 +38,19 @@ export default function ProblemSection() {
       <div className="max-w-4xl mx-auto">
         <h2
           id="problem-heading"
-          className="font-display text-halo-ink leading-[1.06] text-center mb-14 mx-auto max-w-2xl"
+          className="font-display text-halo-ink leading-[1.06] text-center mb-8 mx-auto max-w-2xl"
           style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
         >
           Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
         </h2>
+
+        <div className="flex justify-center mb-8">
+          <InteractionCue
+            retired={engaged}
+            hover="Hover each side to see why."
+            touch="Tap each side to see why."
+          />
+        </div>
 
         {/* Two failing sides, converging */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -43,8 +59,8 @@ export default function ProblemSection() {
             return (
               <button
                 key={side.id}
-                onClick={() => setOpen(isOpen ? null : side.id)}
-                onPointerEnter={() => setOpen(side.id)}
+                onClick={() => openSide(isOpen ? null : side.id)}
+                onPointerEnter={() => openSide(side.id)}
                 aria-expanded={isOpen}
                 className={`text-left rounded-xl border p-6 sm:p-7 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple ${
                   isOpen

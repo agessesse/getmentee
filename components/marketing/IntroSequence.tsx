@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { BRAND_DEFINITION } from '@/components/ui/Wordmark';
 import { WORDMARK } from '@/components/marketing/intro-wordmark';
+import { INTRO_SESSION_KEY, INTRO_COVER_CLASS } from '@/components/marketing/intro-session';
 import {
   EASE, LEAD_BG, REVEAL_PANEL_MS, REVEAL_LEAD_DELAY_MS,
 } from '@/components/marketing/motion';
@@ -96,7 +97,7 @@ const C = {
 };
 
 const MOBILE_BP = 768;
-const SESSION_KEY = 'mentable_intro_v7';
+const SESSION_KEY = INTRO_SESSION_KEY;
 const RETIRED_KEYS = [
   'mentee_intro_shown', 'mentee_intro_v2', 'mentee_intro_v3',
   'mentee_intro_v4', 'mentable_intro_v5', 'mentable_intro_v6',
@@ -332,8 +333,18 @@ export default function IntroSequence() {
   const skipRef = useRef<{ at: number; from: number } | null>(null);
   const doneRef = useRef(false);
 
-  /* Decide once, on mount, exactly as before. */
-  useEffect(() => {
+  /*
+    Decide once, on mount, before the browser paints.
+
+    This was a useEffect, which runs after paint: the landing page was drawn,
+    then the intro decided to play and covered it, so every first visit opened
+    on a flash of the page the intro was meant to reveal. A layout effect
+    decides before that paint. On a full page load the server-rendered page
+    paints before any script can run at all, so the root layout also sets
+    INTRO_COVER_CLASS from a blocking inline script, and the effect below hands
+    over from that cover in the same frame the overlay appears.
+  */
+  useLayoutEffect(() => {
     try { RETIRED_KEYS.forEach((k) => localStorage.removeItem(k)); } catch { /* private browsing */ }
 
     const forced = new URLSearchParams(window.location.search).has('intro');
@@ -375,6 +386,17 @@ export default function IntroSequence() {
     document.body.style.overflow = '';
     setMode('off');
   };
+
+  /*
+    Take over from the pre-paint cover. Once the decision is made, either the
+    overlay is now in the DOM (full, reduced) or there is nothing to play (off),
+    and in both cases the cover has done its job. Removing it here, before
+    paint, means the overlay and the cover swap within a single frame.
+  */
+  useLayoutEffect(() => {
+    if (mode === 'pending') return;
+    document.documentElement.classList.remove(INTRO_COVER_CLASS);
+  }, [mode]);
 
   /* Hold the page still while it plays. */
   useLayoutEffect(() => {

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useScrollProgress, useReducedMotion, useWideViewport } from '@/lib/useScrollProgress';
+import InteractionCue from '@/components/marketing/InteractionCue';
 
 // Nodes sit along the mentored curve as fractions of its length.
 // The mentor enters early, at MENTOR_T; the milestones follow. Keeping these
@@ -179,22 +180,21 @@ export default function TrajectoryViz() {
               className="font-display text-white leading-[1.05] mb-4"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
-              What changes when<br />someone has done it before.
+              What changes when<br />experience is passed forward.
             </h2>
 
             {/* Reserved height: the hint is replaced in place by the hovered
                 node's note, so nothing below it ever shifts. */}
-            <div className="min-h-[62px]">
+            <div className="relative min-h-[62px]">
+              <InteractionCue
+                tone="deep"
+                icon={coarse ? 'click' : 'browse'}
+                retired={!!active}
+                durationMs={200}
+                hover={coarse ? 'Tap each point to see what changes.' : 'Move across the path to see what changes.'}
+              />
               <p
-                className="text-halo-lavender font-light text-[14px] transition-opacity duration-200"
-                style={{ opacity: active ? 0 : 1 }}
-              >
-                {coarse
-                  ? 'Tap each point to see what changes.'
-                  : 'Move across the path to see what changes.'}
-              </p>
-              <p
-                className="text-halo-lavender font-light text-[14px] -mt-[21px] transition-opacity duration-200"
+                className="absolute inset-x-0 top-0 text-halo-lavender font-light text-[14px] transition-opacity duration-200"
                 style={{ opacity: active ? 1 : 0 }}
               >
                 {active?.note ?? ' '}

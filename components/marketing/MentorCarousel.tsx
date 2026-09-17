@@ -139,8 +139,8 @@ export default function MentorCarousel() {
             className="font-display text-halo-ink leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
-            People who walked the path first,<br className="hidden sm:block" />{' '}
-            then came back to teach.
+            People who learned it the hard way,<br className="hidden sm:block" />{' '}
+            so the next person doesn&apos;t have to.
           </h2>
         </div></div>
 

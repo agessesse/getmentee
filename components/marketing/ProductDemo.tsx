@@ -345,7 +345,7 @@ export default function ProductDemo() {
               Everything after<br />the introduction.
             </h2>
             <p className="text-halo-mist-body text-[16px] leading-relaxed mb-7 max-w-md">
-              Requests, goals, sessions, and follow-up in one place. Click through the four steps.
+              Requests, goals, sessions, and follow-up in one place, for both of you. Click through the four steps.
             </p>
 
             {/*

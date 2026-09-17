@@ -2,6 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { useCarouselPhysics } from '@/lib/useCarouselPhysics';
+import InteractionCue from '@/components/marketing/InteractionCue';
+
+/**
+ * Both rosters use this shell, so both would show the same cue. Using either
+ * one retires it in both: the visitor has learned the gesture, and being told
+ * again one section later is nagging.
+ */
+const ENGAGED_EVENT = 'mentable:carousel-engaged';
+let carouselEngaged = false;
+function markCarouselEngaged() {
+  if (carouselEngaged) return;
+  carouselEngaged = true;
+  window.dispatchEvent(new Event(ENGAGED_EVENT));
+}
 
 interface Props<T> {
   items: T[];
@@ -42,8 +56,21 @@ export default function CarouselShell<T>({
   } = useCarouselPhysics(idleDirection);
 
   const [hovered, setHovered] = useState<string | null>(null);
+  const [engaged, setEngaged] = useState(false);
 
   useEffect(() => { setFrozen(frozen); }, [frozen, setFrozen]);
+
+  useEffect(() => {
+    if (carouselEngaged) { setEngaged(true); return; }
+    const on = () => setEngaged(true);
+    window.addEventListener(ENGAGED_EVENT, on);
+    return () => window.removeEventListener(ENGAGED_EVENT, on);
+  }, []);
+
+  // Browsing by cursor, hovering a card, or opening one all count as use.
+  useEffect(() => {
+    if (hovered !== null || driveDirection !== 0 || frozen) markCarouselEngaged();
+  }, [hovered, driveDirection, frozen]);
 
   // Pointer physics duplicate the list to loop seamlessly. Native scrolling
   // does not, so a single pass avoids showing every person twice.
@@ -51,6 +78,7 @@ export default function CarouselShell<T>({
   const rendered = nativeScroll ? items : [...items, ...items];
 
   return (
+    <>
     <div className="relative">
       {/* Edge masks — hide the loop seam and imply the row continues past view */}
       {!nativeScroll && (
@@ -71,6 +99,7 @@ export default function CarouselShell<T>({
         }
         style={nativeScroll ? { WebkitOverflowScrolling: 'touch' } : { overflowX: 'clip' }}
         onPointerMove={nativeScroll ? undefined : onPointerMove}
+        onScroll={nativeScroll ? markCarouselEngaged : undefined}
         onPointerLeave={nativeScroll ? undefined : onPointerLeave}
       >
         <div
@@ -113,11 +142,25 @@ export default function CarouselShell<T>({
         </div>
       )}
 
-      {nativeScroll && (
-        <p className="text-center text-[11px] text-halo-mist-body font-light mt-1">
-          Swipe to explore
-        </p>
-      )}
     </div>
+
+    {/*
+      Outside the relative wrapper on purpose: the "more" indicator is pinned to
+      that wrapper's bottom edge, and a cue inside it would sit underneath.
+      The wording follows the input the row is actually using: cursor-driven
+      drift on a desktop, native scrolling on touch or with reduced motion.
+    */}
+    <div className="flex justify-center mt-2 px-6">
+      <InteractionCue
+        icon="browse"
+        retired={engaged}
+        hover={
+          nativeScroll
+            ? (isTouch ? 'Swipe to browse. Tap a card to preview.' : 'Scroll sideways to browse. Click a card to preview.')
+            : 'Move toward either edge to browse. Click a card to preview.'
+        }
+      />
+    </div>
+    </>
   );
 }

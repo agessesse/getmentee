@@ -230,3 +230,50 @@ button:hover .arrow-slide {
   .halo-pop,
   .halo-breathe { animation: none; }
 }
+
+/* ── Hero headline size ──
+   Four lines, "Find someone / worth learning from. / Become someone / worth
+   learning from.", sized so the whole hero, definition to both buttons, is
+   on screen at first glance.
+
+   The size is the smallest of three limits, and never above the original
+   5.2rem:
+     width   "worth learning from." is 8.3em wide, so the size is the column
+             width divided by 8.6. That keeps each phrase on one line.
+     height  the hero sits 32px under the 65px header, so its content must
+             fit in (100vh - 97px). The rest of that content is about 353px,
+             plus room below the buttons for the scroll cue, so four lines at
+             0.98 leading get (100vh - 523px). Hence 25.5vh - 133px.
+     floor   2.2rem, so small phones still get a display-size headline.
+   Below lg the headline column is the page width less 48px of gutter, up to
+   its 768px max. At lg and up it shares the row with the 400px card pair and
+   a 64px gap, inside a 1232px container with 80px of gutter. */
+.hero-headline {
+  font-size: clamp(2.2rem, min(calc((min(100vw, 816px) - 48px) / 8.6), calc(25.5vh - 133px)), 5.2rem);
+}
+@media (min-width: 1024px) {
+  .hero-headline {
+    font-size: clamp(2.2rem, min(calc((min(100vw, 1232px) - 544px) / 8.6), calc(25.5vh - 133px)), 5.2rem);
+  }
+}
+
+/* ── Intro pre-paint cover ──
+   Painted before anything else on a homepage load where the intro is about to
+   play, so the first thing on screen is the intro's black ground rather than
+   the page underneath it. IntroSequence removes the class once its overlay is
+   mounted. Sits just under the overlay's two layers (199, 200) and above
+   everything on the page.
+
+   The failsafe hides the cover after 6s regardless. The intro removes it within
+   a few hundred milliseconds; the timeout only matters if JavaScript fails to
+   load, in which case the page must still be reachable. */
+@keyframes introCoverFailsafe { to { visibility: hidden; } }
+
+html.intro-cover body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 198;
+  background: #0A0A0F;
+  animation: introCoverFailsafe 0s linear 6s forwards;
+}

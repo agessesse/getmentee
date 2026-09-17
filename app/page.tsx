@@ -31,9 +31,9 @@ import CtaButton from '@/components/marketing/CtaButton';
 // ("an introduction only helps if you are ready") rather than an outcome.
 const OUTCOMES = [
   { label: 'Clarity',        body: 'See what the work is actually like before you spend years on it.' },
-  { label: 'Preparation',    body: 'Walk in knowing what matters and what does not.' },
-  { label: 'Accountability', body: 'Someone notices when you do not follow through.' },
-  { label: 'Reciprocity',    body: 'Eventually become the person you once needed.' },
+  { label: 'Preparation',    body: 'Both people walk in knowing what the time is for.' },
+  { label: 'Accountability', body: 'Both people can see what was promised and what got done.' },
+  { label: 'Reciprocity',    body: 'Learn from someone ahead. Later, teach someone coming up.' },
 ];
 
 
@@ -71,7 +71,7 @@ export default function LandingPage() {
         is one sticky container, no scroll listener and no measurement.
       */}
       <HeroPin>
-      <section className="w-full py-16 sm:py-20 lg:py-24 px-6 lg:px-10" aria-labelledby="hero-heading">
+      <section className="w-full pt-8 pb-16 sm:pb-20 lg:pb-[clamp(3rem,8vh,6rem)] px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
             {/* Outer block rises 20px, the headline inside it a further 30px,
@@ -82,31 +82,29 @@ export default function LandingPage() {
 
               <h1
                 id="hero-heading"
-                className="hero-rise-inner font-display text-halo-ink leading-[0.98] tracking-tight mb-7 max-w-3xl"
-                style={{ fontSize: 'clamp(2.6rem, 7vw, 5.2rem)' }}
+                className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-7 max-w-3xl"
               >
-                The Right Mentor<br />
-                Can Change Your<br />
-                Trajectory
+                Find someone<br />
+                worth learning from.<br />
+                Become someone<br />
+                worth learning from.
               </h1>
 
               {/*
-                The thesis, carrying three jobs in two sentences.
+                The thesis. The headline was "The Right Mentor Can Change Your
+                Trajectory", which only a student could see themselves in. It now
+                claims the relationship for both people, in the same three short
+                lines so the hero keeps its shape. The standfirst then says the
+                actual problem, that the two rarely find each other, and keeps
+                "everything after the introduction", which answers the question
+                every visitor arrives with: "is this just a list of names?"
 
-                It names the luck, because that is the thing Mentable actually
-                removes. It keeps "everything after the introduction", which
-                answers the question every visitor to a mentorship site arrives
-                with: "is this just a list of names?" And it ends on the payoff
-                running in both directions, because a page that forks to mentor
-                and mentee has to make both paths feel legitimate in one breath.
+                Teacher first, learner second, matching the order of the pair of
+                cards beside it and of the two roster sections below.
 
-                Note it does NOT open on luck as a statement. The Problem section
-                two blocks down already opens "Right now, mentorship mostly
-                depends on luck", and a hero that says it first turns that
-                heading into an echo of itself.
-
-                The closing clause is lifted from the footer, where the only
-                two-sided line on the site had been sitting unread.
+                Note it does NOT say "luck". The Problem section below opens
+                "Right now, mentorship mostly depends on luck", and a hero that
+                says it first turns that heading into an echo of itself.
               */}
               {/*
                 The standfirst, not body copy.
@@ -127,16 +125,16 @@ export default function LandingPage() {
                 className="font-display text-halo-heather leading-[1.45] max-w-xl mb-10"
                 style={{ fontSize: 'clamp(1.2rem, 1.9vw, 1.5rem)' }}
               >
-                Mentable takes the luck out of mentorship, and handles everything
-                after the introduction. Find someone{' '}
+                People{' '}
                 <span className="font-medium text-halo-purple-d">
-                  worth learning from
+                  willing to teach
                 </span>
-                , then become someone{' '}
+                {' '}and people{' '}
                 <span className="font-medium text-halo-purple-d">
-                  worth mentoring
+                  ready to learn
                 </span>
-                .
+                {' '}rarely know how to find each other. Mentable brings them
+                together, and handles everything after the introduction.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
@@ -259,10 +257,9 @@ export default function LandingPage() {
                 In pilot. We&apos;re building partnerships to fund the first cohort.
               </p>
               {/*
-                The student's closing ask. The final CTA below is mentor-facing
-                ("Someone helped them get there. Now they're here for you."), so
-                without this the page qualifies a student through nine sections
-                and then spends its last words talking to someone else.
+                The student's closing ask, inside the one section that is
+                deliberately about students. The final CTA below speaks to both
+                sides, so this is the student's more specific next step.
 
                 Ordered ask-then-read: the button is the commitment, the fund
                 link is the lower-commitment alternative for anyone not ready.
@@ -322,7 +319,7 @@ export default function LandingPage() {
               className="font-display text-halo-ink leading-[1.03] mb-8 max-w-2xl"
               style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)' }}
             >
-              Someone helped them get there.<br />Now they&apos;re here for you.
+              Ask someone ahead.<br />Help someone coming up.
             </h2>
           </Rise>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">

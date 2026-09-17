@@ -16,7 +16,7 @@ export default function SiteFooter() {
         <div className="mb-9">
           <Wordmark size="lg" tone="reversed" className="text-white" />
           <p className="text-halo-lavender font-light mt-2 max-w-xs text-sm leading-relaxed">
-            Find someone worth learning from. Become someone worth mentoring.
+            Find someone worth learning from. Become someone worth learning from.
           </p>
         </div>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 pt-7 border-t border-halo-deep-rule">
