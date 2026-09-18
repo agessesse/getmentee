@@ -29,7 +29,9 @@ export default function HeroPair() {
     cue beside the cards carries the instruction and retires on first use.
   */
   const [demo, setDemo] = useState<'mentor' | 'student' | null>(null);
-  const [engaged, setEngaged] = useState(false);
+  // Touching a card stops the one-time demo. It does not retire the cue: the
+  // cue steps aside while a card is open and returns when the pointer leaves,
+  // so it is there the next time anyone looks.
   const engagedRef = useRef(false);
 
   // The demo's timers check this ref before every step, so engaging stops the
@@ -37,7 +39,6 @@ export default function HeroPair() {
   const engage = () => {
     if (engagedRef.current) return;
     engagedRef.current = true;
-    setEngaged(true);
     setDemo(null);
   };
 
@@ -92,7 +93,7 @@ export default function HeroPair() {
         trackLandingEvent('mentor_card_opened', { name: MENTOR.name, surface: 'hero' });
         setPreview({ kind: 'mentor', data: MENTOR });
       },
-      box: 'absolute top-0 right-0 w-[190px] h-[260px] rotate-[2.5deg]',
+      box: 'absolute top-0 right-0 w-[196px] rotate-[2.5deg]',
     },
     {
       id: 'student' as const,
@@ -107,21 +108,21 @@ export default function HeroPair() {
         trackLandingEvent('mentee_card_opened', { slug: STUDENT.slug, surface: 'hero' });
         setPreview({ kind: 'mentee', data: STUDENT });
       },
-      box: 'absolute bottom-0 left-0 w-[172px] h-[232px] rotate-[-2.5deg]',
+      box: 'absolute bottom-0 left-0 w-[182px] rotate-[-2.5deg]',
     },
   ];
 
   return (
     <>
-      <div className="relative h-[392px] w-full">
+      <div className="relative h-[440px] w-full">
         {/* Relationship line — brightens when either side is engaged */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 400 392"
+          viewBox="0 0 400 440"
           aria-hidden="true"
         >
           <line
-            x1="150" y1="176" x2="238" y2="248"
+            x1="180" y1="232" x2="212" y2="196"
             stroke={lit ? '#785AF7' : '#D9CFFB'}
             strokeWidth={lit ? 1.8 : 1}
             strokeDasharray="4 5"
@@ -140,36 +141,46 @@ export default function HeroPair() {
               onFocus={() => { engage(); setHover(card.id); }}
               onBlur={() => setHover(null)}
               aria-label={`View ${card.name}'s profile`}
-              className={`${card.box} rounded-xl overflow-hidden shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2`}
+              className={`${card.box} rounded-xl overflow-hidden bg-white shadow-2xl border-[3px] border-white text-left cursor-pointer motion-safe:transition-transform motion-safe:duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2`}
               style={{ transform: active ? 'scale(1.04) rotate(0deg)' : undefined, zIndex: active ? 20 : 10 }}
             >
+              {/*
+                The photographs are square, so a square frame shows each person
+                exactly as they were photographed: head, shoulders and suit, no
+                crop. The details used to sit in a gradient over the bottom of
+                the picture, which covered the half people dress up for. They
+                now sit underneath it.
+              */}
               {card.photo && (
-                <Image
-                  src={card.photo}
-                  alt=""
-                  fill
-                  className="object-cover transition-all duration-500"
-                  style={{ objectPosition: card.pos, filter: active ? 'grayscale(0)' : 'grayscale(0.55)' }}
-                  sizes="200px"
-                  priority
-                />
+                <div className="relative w-full aspect-square bg-halo-bone">
+                  <Image
+                    src={card.photo}
+                    alt=""
+                    fill
+                    className="object-cover transition-all duration-500"
+                    style={{ objectPosition: '50% 50%', filter: active ? 'grayscale(0)' : 'grayscale(0.4)' }}
+                    sizes="200px"
+                    priority
+                  />
+                </div>
               )}
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/95 via-black/85 to-transparent px-3 pb-3 pt-14">
-                <p className="font-ui text-[10px] font-semibold text-white uppercase tracking-[0.12em]">
+
+              <div className="px-3 pt-2.5 pb-3 border-t border-halo-rule">
+                <p className="font-ui text-[9.5px] font-semibold text-halo-purple-d uppercase tracking-[0.12em]">
                   {card.eyebrow}
                 </p>
-                <p className="text-[12px] font-bold text-white leading-tight mt-0.5">{card.name}</p>
-                <p className="text-[11px] text-white/90 mt-0.5">{card.sub}</p>
+                <p className="text-[12.5px] font-bold text-halo-ink leading-tight mt-0.5">{card.name}</p>
+                <p className="text-[11px] text-halo-mist-body leading-snug mt-0.5">{card.sub}</p>
 
                 <div
                   className="motion-safe:transition-all motion-safe:duration-300 overflow-hidden"
-                  style={{ maxHeight: active ? 56 : 0, opacity: active ? 1 : 0, marginTop: active ? 8 : 0 }}
+                  style={{ maxHeight: active ? 64 : 0, opacity: active ? 1 : 0, marginTop: active ? 8 : 0 }}
                 >
-                  <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.12em] mb-1">
+                  <p className="font-ui text-[9.5px] font-semibold text-halo-mist-body uppercase tracking-[0.12em] mb-1">
                     {card.revealLabel}
                   </p>
                   {card.reveal.map((t) => (
-                    <p key={t} className="text-[10px] text-white font-medium leading-tight">{t}</p>
+                    <p key={t} className="text-[10.5px] text-halo-ink font-medium leading-tight">{t}</p>
                   ))}
                 </div>
               </div>
@@ -184,7 +195,7 @@ export default function HeroPair() {
         */}
         <InteractionCue
           className="absolute bottom-4 right-0"
-          retired={engaged}
+          retired={!!lit}
           hover={<>Hover a card to preview.<br />Click to open a profile.</>}
           touch="Tap a card to open a profile."
         />
