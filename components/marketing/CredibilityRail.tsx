@@ -29,8 +29,8 @@ const MENTOR_AFFILIATIONS: RailItem[] = [
   { name: 'Morgan Stanley', domain: 'morganstanley.com' },
   { name: 'University of North Carolina at Chapel Hill', domain: 'unc.edu', label: 'UNC Chapel Hill' },
   { name: 'Fifth Third Securities', domain: '53.com', label: 'Fifth Third' },
-  { name: 'McColl Partners', domain: 'mccollpartners.com' },
-  { name: 'MyEyeDr.', domain: 'myeyedr.com' },
+  { name: 'Harvard Business School', domain: 'hbs.edu', label: 'Harvard Business School' },
+  { name: 'Raymond James', domain: 'raymondjames.com' },
   { name: 'Engineered Land Solutions', domain: 'engineeredlandsolutions.com', label: 'Engineered Land' },
   { name: 'Alyra Technology', domain: 'alyratechnology.com', label: 'Alyra' },
 ];

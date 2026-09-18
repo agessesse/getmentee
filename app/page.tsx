@@ -14,7 +14,6 @@ import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import Flywheel from '@/components/marketing/Flywheel';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
-import ScrollHandoff from '@/components/marketing/ScrollHandoff';
 import HeroPin from '@/components/marketing/HeroPin';
 import Rise from '@/components/marketing/Rise';
 import ScrollCue from '@/components/marketing/ScrollCue';
@@ -226,10 +225,10 @@ export default function LandingPage() {
 
       {/*
         ── 09. Opportunity Fund ──────────────────────────────────────────────
-        The last handoff, so the ending arrives rather than simply appearing.
-        The deep band settles back and the closing ask rises over it.
+        No scroll handoff on this one. It used to scale and fade to 70% as the
+        closing section arrived, which read as the band greying out rather than
+        as depth, and the fund is not the thing to dim.
       */}
-      <ScrollHandoff minScale={0.975} minOpacity={0.7}>
       <section
         className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep"
         aria-labelledby="fund-heading"
@@ -306,7 +305,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      </ScrollHandoff>
 
       {/* ── 10. Final CTA ────────────────────────────────────────────────────── */}
       <div className="relative">
