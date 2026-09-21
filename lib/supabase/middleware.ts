@@ -2,9 +2,9 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 // Every first path segment under app/(protected)/ EXCEPT /people, which is
-// public by design. These had drifted: /goals, /impact, /mentee, /mentees,
-// /network and /opportunities were in the route group but missing here, so they
-// served 200 to anonymous visitors instead of redirecting.
+// public by design. These had drifted: /goals, /impact, /mentee and
+// /opportunities were in the route group but missing here, so they served 200
+// to anonymous visitors instead of redirecting.
 // scripts/check-protected-routes.ts fails the build if they diverge again.
 // /mentee and /mentor are public marketing pages, but the protected route
 // group also owns /mentee/[id] and /mentor/[id]. So those two segments are
@@ -15,18 +15,16 @@ import { NextResponse, type NextRequest } from 'next/server';
 const PROTECTED_SUBPATHS_ONLY = new Set(['/mentee', '/mentor']);
 
 const PROTECTED_PATHS = [
-  '/analytics',
   '/dashboard',
   '/discover',
   '/goals',
   '/guide',
   '/impact',
+  '/learn',
   '/mentee',
-  '/mentees',
   '/mentor',
   '/mentorships',
   '/messages',
-  '/network',
   '/networking',
   '/opportunities',
   '/profile',

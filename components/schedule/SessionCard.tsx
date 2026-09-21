@@ -72,7 +72,7 @@ export default function SessionCard({
 
       <div className="flex gap-2">
         <Link href={`/sessions/${id}`}>
-          <Button size="sm" variant="secondary">View Details</Button>
+          <Button size="sm" variant="secondary">Open</Button>
         </Link>
         {videoLink && status !== 'cancelled' && (
           <a href={videoLink} target="_blank" rel="noopener noreferrer">

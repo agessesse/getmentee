@@ -61,7 +61,7 @@ export default function MentorshipCard({
       <div className="flex items-center gap-4 text-sm text-halo-mist-body">
         <span className="flex items-center gap-1">
           <Award className="h-4 w-4 text-halo-mist-body" />
-          {sessionsCount} session{sessionsCount !== 1 ? 's' : ''}
+          {sessionsCount} conversation{sessionsCount !== 1 ? 's' : ''}
         </span>
         {activeGoalCount > 0 && (
           <span className="flex items-center gap-1">
@@ -76,7 +76,7 @@ export default function MentorshipCard({
         <div className="flex items-center gap-2 bg-halo-veil rounded-xl px-3 py-2.5 text-sm">
           <Calendar className="h-4 w-4 text-halo-purple-d flex-shrink-0" />
           <div>
-            <span className="text-xs text-halo-purple-d font-medium">Next session</span>
+            <span className="text-xs text-halo-purple-d font-medium">Next conversation</span>
             <p className="text-sm font-semibold text-halo-ink">
               {format(new Date(nextSessionAt), 'EEE MMM d, h:mm a')}
             </p>

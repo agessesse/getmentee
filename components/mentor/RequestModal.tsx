@@ -6,6 +6,7 @@ import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 import VoiceInputButton from '@/components/voice/VoiceInputButton';
+import LearnHint from '@/components/ui/LearnHint';
 
 interface RequestModalProps {
   open: boolean;
@@ -56,6 +57,20 @@ export default function RequestModal({ open, onClose, mentor, onSubmit }: Reques
           <p className="text-xs text-halo-mist-body">Your request will be sent to this mentor</p>
         </div>
       </div>
+
+      {/* The moment a student most often freezes: they have the box and no idea
+          what belongs in it. Two sentences here, not an article, and nothing
+          is written for them. */}
+      <LearnHint
+        id="request-message"
+        className="mb-4"
+        hint={{
+          title: 'What to write',
+          body: 'Say who you are in one line, why you picked them specifically, and what you hope to learn. Short is fine — they read these between meetings.',
+          href: '/networking#message',
+          linkLabel: 'See a few examples',
+        }}
+      />
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

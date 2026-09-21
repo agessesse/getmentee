@@ -251,7 +251,7 @@ export default function SessionDetailPage() {
     setActionError(null);
     const supabase = createClient();
     const { error } = await supabase.from('sessions').update({ status: 'completed' }).eq('id', id);
-    if (error) { setActionError('Could not mark session complete. Please try again.'); }
+    if (error) { setActionError('Could not mark this conversation complete. Please try again.'); }
     else {
       setSession((s) => (s ? { ...s, status: 'completed' } : s));
       void trackEvent('session_completed', userRole, { entityId: id as string });
@@ -265,7 +265,7 @@ export default function SessionDetailPage() {
     setActionError(null);
     const supabase = createClient();
     const { error } = await supabase.from('sessions').update({ status: 'cancelled' }).eq('id', id);
-    if (error) { setActionError('Could not cancel session. Please try again.'); }
+    if (error) { setActionError('Could not cancel this conversation. Please try again.'); }
     else { setSession((s) => (s ? { ...s, status: 'cancelled' } : s)); }
     setShowCancelConfirm(false);
     setCancelling(false);
@@ -344,7 +344,7 @@ export default function SessionDetailPage() {
         </Link>
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Session Workspace</h1>
+            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Your conversation</h1>
             <p className="text-halo-mist-body text-sm mt-1">
               with {partner.first_name} {partner.last_name} ·{' '}
               {format(date, 'EEEE, MMMM d, yyyy')}
@@ -534,7 +534,13 @@ export default function SessionDetailPage() {
                         <span>{item.assigneeName}</span>
                         {item.due_date && (
                           <span>
-                            · Due {format(new Date(item.due_date), 'MMM d')}
+                            {/* A DATE column has no time zone. new Date('2026-09-20')
+                                is parsed as UTC midnight and renders a day earlier
+                                west of Greenwich, so this row said "Due Sep 19"
+                                while Goals and the session coach — which both read
+                                the date at local noon — said Sep 20 for the same
+                                commitment. Same parse as everywhere else now. */}
+                            · Due {format(new Date(`${item.due_date}T12:00:00`), 'MMM d')}
                           </span>
                         )}
                       </div>

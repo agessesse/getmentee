@@ -2,123 +2,64 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {
-  Users, Star, Clock, Target, TrendingUp, Award, ArrowLeft,
-  CheckCircle, Calendar,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, Award, CheckCircle2, MessageSquare, Target, Users } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Spinner from '@/components/ui/Spinner';
-import { format, formatDistanceToNow } from 'date-fns';
+import Avatar from '@/components/ui/Avatar';
+import { displayName, firstName } from '@/lib/display-name';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+/**
+ * Your mentoring: what came of the time you gave.
+ *
+ * WHAT THIS PAGE USED TO BE. "Hours invested" as a headline number, an average
+ * star rating out of five with a review count, and ten milestone badges that
+ * greyed out until you hit 10 hours, then 50. It read like a performance
+ * review of a volunteer. Worse, the rating framed a relationship as a service
+ * with a score, and the hour count framed time with a student as a cost.
+ *
+ * WHAT IT IS NOW. The people, and what moved. Each student the mentor has
+ * worked with, what they came for, and what has actually happened since. No
+ * hours, no rating, no badges, no quotas, no comparisons, and no replacement
+ * vanity number dressed up as insight.
+ *
+ * The two counts that remain — conversations held, goals reached — are there
+ * because each one names something specific you can click into and read. They
+ * are never shown as a target, a streak, or a level.
+ *
+ * Every line comes from a row: mentorships, sessions marked completed, goals
+ * marked completed, and the request that started the relationship. Nothing is
+ * estimated and nothing is attributed to a student who did not do it.
+ */
 
-interface MentorStats {
-  totalMenteesEver: number;
-  activeMentees: number;
-  totalSessions: number;
-  totalHours: number;
-  avgRating: number | null;
-  reviewCount: number;
-  goalsCompleted: number;
-  isFoundingMentor: boolean;
-  joinedAt: string;
-}
-
-interface TimelineEvent {
+interface Student {
+  mentorshipId: string;
   id: string;
-  type: 'mentorship_started' | 'session_completed' | 'goal_completed' | 'review_received';
-  date: string;
-  label: string;
-  sub: string;
+  name: string;
+  first: string;
+  avatarUrl: string | null;
+  startedAt: string;
+  active: boolean;
+  reason: string | null;
+  conversations: number;
+  lastConversation: string | null;
+  goalsReached: { id: string; title: string; at: string }[];
 }
 
-interface Milestone {
-  label: string;
-  achieved: boolean;
-  threshold: number;
-  unit: string;
-  icon: React.ComponentType<{ className?: string }>;
+interface Moment {
+  id: string;
+  at: string;
+  text: string;
+  kind: 'start' | 'conversation' | 'goal';
 }
 
-// ─── Stat card ────────────────────────────────────────────────────────────────
-
-function ImpactStat({
-  value,
-  label,
-  icon: Icon,
-  accent = false,
-}: {
-  value: string | number;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  accent?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl border p-6 ${accent ? 'bg-halo-deep border-halo-deep' : 'bg-white border-halo-rule'}`}
-      style={accent ? { backgroundImage: 'radial-gradient(ellipse 90% 80% at 90% 0%, rgba(120,90,247,0.55) 0%, transparent 70%)' } : undefined}
-    >
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 ${accent ? 'bg-white/10' : 'bg-halo-veil'}`}>
-        <Icon className={`w-4.5 h-4.5 ${accent ? 'text-white' : 'text-halo-purple-d'}`} />
-      </div>
-      <p className={`font-display font-medium text-[2.5rem] leading-none tabular-nums mb-2 ${accent ? 'text-white' : 'text-halo-ink'}`}>{value}</p>
-      <p className={`text-sm ${accent ? 'text-halo-lavender' : 'text-halo-mist-body'}`}>{label}</p>
-    </div>
-  );
-}
-
-// ─── Milestone badge ──────────────────────────────────────────────────────────
-
-function MilestoneBadge({
-  label,
-  achieved,
-  icon: Icon,
-}: {
-  label: string;
-  achieved: boolean;
-  icon: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
-      achieved
-        ? 'bg-green-50 border-green-200'
-        : 'bg-halo-veil border-halo-rule opacity-50'
-    }`}>
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-        achieved ? 'bg-green-100' : 'bg-halo-bone'
-      }`}>
-        <Icon className={`w-4 h-4 ${achieved ? 'text-green-600' : 'text-halo-mist-body'}`} />
-      </div>
-      <div className="min-w-0">
-        <p className={`text-sm font-medium ${achieved ? 'text-green-900' : 'text-halo-mist-body'}`}>{label}</p>
-        {achieved && <p className="text-xs text-green-600 mt-0.5">Achieved</p>}
-      </div>
-      {achieved && <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 ml-auto" />}
-    </div>
-  );
-}
-
-// ─── Timeline event ───────────────────────────────────────────────────────────
-
-const EVENT_COLOR: Record<TimelineEvent['type'], string> = {
-  mentorship_started: 'bg-halo-lavender/50 text-halo-purple-d',
-  session_completed:  'bg-halo-lavender/50 text-halo-purple-d',
-  goal_completed:     'bg-green-100 text-green-600',
-  review_received:    'bg-amber-100 text-amber-600',
-};
-
-const EVENT_ICON: Record<TimelineEvent['type'], React.ComponentType<{ className?: string }>> = {
-  mentorship_started: Users,
-  session_completed:  Calendar,
-  goal_completed:     Target,
-  review_received:    Star,
-};
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+const longDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const monthYear = (iso: string) => new Date(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
 export default function ImpactPage() {
-  const [stats, setStats] = useState<MentorStats | null>(null);
-  const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
+  const [students, setStudents] = useState<Student[] | null>(null);
+  const [moments, setMoments] = useState<Moment[]>([]);
+  const [isMentor, setIsMentor] = useState(true);
+  const [founding, setFounding] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -128,304 +69,224 @@ export default function ImpactPage() {
       if (!session) return;
       const uid = session.user.id;
 
-      // Verify this user is a mentor
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, created_at')
-        .eq('id', uid)
-        .single();
+      const [profileRes, mpRes, msRes, sessRes] = await Promise.all([
+        supabase.from('profiles').select('role').eq('id', uid).single(),
+        supabase.from('mentor_profiles').select('is_founding_mentor').eq('id', uid).maybeSingle(),
+        supabase.from('mentorships').select('id, mentee_id, request_id, status, started_at').eq('mentor_id', uid).order('started_at', { ascending: false }),
+        supabase.from('sessions').select('id, mentorship_id, scheduled_at').eq('mentor_id', uid).eq('status', 'completed').order('scheduled_at', { ascending: false }),
+      ]);
 
-      if (profile?.role !== 'mentor') { setLoading(false); return; }
+      if (profileRes.data?.role !== 'mentor') { setIsMentor(false); setLoading(false); return; }
+      setFounding(mpRes.data?.is_founding_mentor ?? false);
 
-      // Mentor profile fields
-      const { data: mp } = await supabase
-        .from('mentor_profiles')
-        .select('rating, review_count, is_founding_mentor')
-        .eq('id', uid)
-        .single();
+      const mentorships = msRes.data ?? [];
+      const sessions = sessRes.data ?? [];
+      const menteeIds = [...new Set(mentorships.map((m) => m.mentee_id))];
+      const msIds = mentorships.map((m) => m.id);
+      const requestIds = mentorships.map((m) => m.request_id).filter(Boolean);
+      const none = { data: [] as never[] };
 
-      // All mentorships (ever, not just active)
-      const { data: allMentorships } = await supabase
-        .from('mentorships')
-        .select('id, mentee_id, status, started_at')
-        .eq('mentor_id', uid);
+      const [peopleRes, goalsRes, originRes] = await Promise.all([
+        menteeIds.length ? supabase.from('public_profiles').select('id, first_name, last_name, avatar_url').in('id', menteeIds) : Promise.resolve(none),
+        msIds.length
+          ? supabase.from('mentorship_goals').select('id, mentorship_id, title, completed_at').in('mentorship_id', msIds).eq('status', 'completed').not('completed_at', 'is', null)
+          : Promise.resolve(none),
+        requestIds.length ? supabase.from('mentorship_requests').select('id, goals').in('id', requestIds) : Promise.resolve(none),
+      ]);
 
-      const activeMentorships = (allMentorships ?? []).filter((m) => m.status === 'active');
+      const people = new Map(((peopleRes.data ?? []) as { id: string; first_name: string; last_name: string; avatar_url: string | null }[]).map((p) => [p.id, p]));
+      const goals = (goalsRes.data ?? []) as { id: string; mentorship_id: string; title: string; completed_at: string }[];
+      const origin = new Map(((originRes.data ?? []) as { id: string; goals: string | null }[]).map((r) => [r.id, r.goals]));
 
-      // Sessions
-      const { data: sessions } = await supabase
-        .from('sessions')
-        .select('id, scheduled_at, duration_minutes, status, mentorship_id')
-        .eq('mentor_id', uid)
-        .eq('status', 'completed');
-
-      const totalHours = Math.round(
-        ((sessions ?? []).reduce((sum, s) => sum + (s.duration_minutes ?? 60), 0)) / 60
-      );
-
-      // Completed goals across all mentorships
-      const mentorshipIds = (allMentorships ?? []).map((m) => m.id);
-      let goalsCompleted = 0;
-      if (mentorshipIds.length > 0) {
-        const { count } = await supabase
-          .from('mentorship_goals')
-          .select('id', { count: 'exact', head: true })
-          .in('mentorship_id', mentorshipIds)
-          .eq('status', 'completed');
-        goalsCompleted = count ?? 0;
-      }
-
-      setStats({
-        totalMenteesEver: new Set((allMentorships ?? []).map((m) => m.mentee_id)).size,
-        activeMentees: activeMentorships.length,
-        totalSessions: sessions?.length ?? 0,
-        totalHours,
-        avgRating: mp?.rating ? Number(mp.rating) : null,
-        reviewCount: mp?.review_count ?? 0,
-        goalsCompleted,
-        isFoundingMentor: mp?.is_founding_mentor ?? false,
-        joinedAt: profile.created_at,
+      const built: Student[] = mentorships.map((m) => {
+        const p = people.get(m.mentee_id) ?? null;
+        const theirs = sessions.filter((s) => s.mentorship_id === m.id);
+        return {
+          mentorshipId: m.id,
+          id: m.mentee_id,
+          name: displayName(p),
+          first: firstName(p),
+          avatarUrl: p?.avatar_url ?? null,
+          startedAt: m.started_at,
+          active: m.status === 'active',
+          reason: origin.get(m.request_id) ?? null,
+          conversations: theirs.length,
+          lastConversation: theirs[0]?.scheduled_at ?? null,
+          goalsReached: goals
+            .filter((g) => g.mentorship_id === m.id)
+            .map((g) => ({ id: g.id, title: g.title, at: g.completed_at }))
+            .sort((a, b) => b.at.localeCompare(a.at)),
+        };
       });
+      setStudents(built);
 
-      // ── Build timeline ──────────────────────────────────────────────────────
-      const events: TimelineEvent[] = [];
-
-      // Batch-fetch all mentee display names in one query
-      const menteeIds = [...new Set((allMentorships ?? []).map((m) => m.mentee_id))];
-      const { data: menteeProfilesBatch } = menteeIds.length > 0
-        ? await supabase.from('public_profiles').select('id, first_name, last_name').in('id', menteeIds)
-        : { data: [] };
-      const menteeNameMap = new Map(
-        (menteeProfilesBatch ?? []).map((p) => [p.id, `${p.first_name} ${p.last_name}`])
-      );
-
-      // Mentorships started
-      for (const m of allMentorships ?? []) {
-        const name = menteeNameMap.get(m.mentee_id) ?? 'a mentee';
-        events.push({
-          id: `ms-${m.id}`,
-          type: 'mentorship_started',
-          date: m.started_at,
-          label: `Started mentoring ${name}`,
-          sub: m.status === 'active' ? 'Active' : m.status,
-        });
+      const byMentorship = new Map(built.map((s) => [s.mentorshipId, s]));
+      const list: Moment[] = [];
+      for (const s of built) {
+        list.push({ id: `start-${s.mentorshipId}`, at: s.startedAt, kind: 'start', text: `You started working with ${s.name}` });
       }
-
-      // Sessions completed (last 20)
-      for (const s of (sessions ?? []).slice(0, 20)) {
-        events.push({
-          id: `sess-${s.id}`,
-          type: 'session_completed',
-          date: s.scheduled_at,
-          label: 'Session completed',
-          sub: `${s.duration_minutes ?? 60} minutes`,
-        });
+      for (const sess of sessions.slice(0, 25)) {
+        const s = byMentorship.get(sess.mentorship_id);
+        if (s) list.push({ id: `sess-${sess.id}`, at: sess.scheduled_at, kind: 'conversation', text: `You talked with ${s.first}` });
       }
-
-      // Goals completed
-      if (mentorshipIds.length > 0) {
-        const { data: completedGoals } = await supabase
-          .from('mentorship_goals')
-          .select('id, title, completed_at')
-          .in('mentorship_id', mentorshipIds)
-          .eq('status', 'completed')
-          .not('completed_at', 'is', null)
-          .limit(15);
-
-        for (const g of completedGoals ?? []) {
-          events.push({
-            id: `goal-${g.id}`,
-            type: 'goal_completed',
-            date: g.completed_at!,
-            label: `Goal completed: ${g.title}`,
-            sub: '',
-          });
-        }
+      for (const g of goals) {
+        const s = byMentorship.get(g.mentorship_id);
+        if (s) list.push({ id: `goal-${g.id}`, at: g.completed_at, kind: 'goal', text: `${s.first} reached a goal: ${g.title}` });
       }
-
-      // Sort descending
-      events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setTimeline(events.slice(0, 30));
+      list.sort((a, b) => b.at.localeCompare(a.at));
+      setMoments(list.slice(0, 25));
       setLoading(false);
     }
-
     load();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center py-24">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
+  if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
 
-  if (!stats) {
+  if (!isMentor || !students) {
     return (
       <div className="text-center py-24">
-        <p className="text-halo-mist-body">This page is only available to mentors.</p>
-        <Link href="/dashboard" className="text-sm text-halo-purple-d hover:underline mt-3 inline-block">
-          Back to Dashboard
-        </Link>
+        <p className="text-halo-mist-body">This page is for mentors.</p>
+        <Link href="/dashboard" className="text-sm text-halo-purple-d hover:underline mt-3 inline-block">Back home</Link>
       </div>
     );
   }
 
-  const milestones: Milestone[] = [
-    { label: 'First mentee',         achieved: stats.totalMenteesEver >= 1,  threshold: 1,  unit: 'mentee',   icon: Users   },
-    { label: '5 mentees mentored',   achieved: stats.totalMenteesEver >= 5,  threshold: 5,  unit: 'mentees',  icon: Users   },
-    { label: '10 mentees mentored',  achieved: stats.totalMenteesEver >= 10, threshold: 10, unit: 'mentees',  icon: Users   },
-    { label: 'First session',        achieved: stats.totalSessions >= 1,     threshold: 1,  unit: 'session',  icon: Calendar },
-    { label: '10 sessions',          achieved: stats.totalSessions >= 10,    threshold: 10, unit: 'sessions', icon: Calendar },
-    { label: '25 sessions',          achieved: stats.totalSessions >= 25,    threshold: 25, unit: 'sessions', icon: Calendar },
-    { label: '10 hours mentoring',   achieved: stats.totalHours >= 10,       threshold: 10, unit: 'hours',    icon: Clock   },
-    { label: '50 hours mentoring',   achieved: stats.totalHours >= 50,       threshold: 50, unit: 'hours',    icon: Clock   },
-    { label: 'First goal completed', achieved: stats.goalsCompleted >= 1,    threshold: 1,  unit: 'goal',     icon: Target  },
-    { label: '5 goals completed',    achieved: stats.goalsCompleted >= 5,    threshold: 5,  unit: 'goals',    icon: Target  },
-  ];
-
-  const achievedCount = milestones.filter((m) => m.achieved).length;
+  const conversations = students.reduce((n, s) => n + s.conversations, 0);
+  const goalsReached = students.reduce((n, s) => n + s.goalsReached.length, 0);
+  const firstStarted = students.length ? students[students.length - 1].startedAt : null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10">
-
-      {/* Header */}
-      <div>
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors mb-4"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Dashboard
+    <div className="max-w-3xl mx-auto space-y-8">
+      <header>
+        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-halo-mist-body hover:text-halo-ink transition-colors mb-4">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+          Home
         </Link>
-
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">My Impact</h1>
-            <p className="text-halo-mist-body mt-1 text-sm">
-              Your mentoring history and the difference you&apos;ve made.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap">
-            {stats.isFoundingMentor && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
-                <Award className="w-3.5 h-3.5" />
-                Founding Mentor
-              </span>
-            )}
-            <span className="text-xs text-halo-mist-body">
-              Mentoring since {format(new Date(stats.joinedAt), 'MMMM yyyy')}
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="font-display font-normal text-[2.25rem] leading-tight text-halo-ink">Your mentoring</h1>
+          {founding && (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-halo-purple-d bg-halo-veil border border-halo-lavender px-2.5 py-1 rounded-full">
+              <Award className="w-3 h-3" aria-hidden="true" />
+              Founding Mentor
             </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Stat grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="col-span-2 md:col-span-1 lg:col-span-2">
-          <ImpactStat
-            value={stats.totalMenteesEver}
-            label={stats.totalMenteesEver === 1 ? 'Mentee mentored' : 'Mentees mentored'}
-            icon={Users}
-            accent
-          />
-        </div>
-        <ImpactStat
-          value={stats.totalSessions}
-          label="Sessions completed"
-          icon={Calendar}
-        />
-        <ImpactStat
-          value={`${stats.totalHours}h`}
-          label="Hours invested"
-          icon={Clock}
-        />
-        <ImpactStat
-          value={stats.goalsCompleted}
-          label="Goals completed"
-          icon={Target}
-        />
-        <ImpactStat
-          value={stats.avgRating ? stats.avgRating.toFixed(1) : '—'}
-          label={`Avg rating (${stats.reviewCount} reviews)`}
-          icon={Star}
-        />
-        <ImpactStat
-          value={stats.activeMentees}
-          label="Active mentees"
-          icon={TrendingUp}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        {/* Recognition milestones */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Milestones</h2>
-            <span className="text-xs text-halo-mist-body">
-              {achievedCount}/{milestones.length} achieved
-            </span>
-          </div>
-          <div className="space-y-2">
-            {milestones.map((m) => (
-              <MilestoneBadge
-                key={m.label}
-                label={m.label}
-                achieved={m.achieved}
-                icon={m.icon}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Timeline */}
-        <div>
-          <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">Timeline</h2>
-          {timeline.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-halo-rule">
-              <p className="text-sm text-halo-mist-body">
-                Your mentoring journey will appear here as you start sessions and reach goals.
-              </p>
-            </div>
-          ) : (
-            <div className="relative space-y-0">
-              {timeline.map((event, i) => {
-                const Icon = EVENT_ICON[event.type];
-                const color = EVENT_COLOR[event.type];
-                const isLast = i === timeline.length - 1;
-                return (
-                  <div key={event.id} className="flex gap-4">
-                    {/* Stem */}
-                    <div className="flex flex-col items-center">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 z-10 ${color}`}>
-                        <Icon className="w-3.5 h-3.5" />
-                      </div>
-                      {!isLast && <div className="w-px flex-1 bg-halo-bone my-1" />}
-                    </div>
-                    {/* Content */}
-                    <div className="pb-5 min-w-0 flex-1">
-                      <p className="text-sm font-medium text-halo-ink leading-tight">{event.label}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-halo-mist-body">
-                          {formatDistanceToNow(new Date(event.date), { addSuffix: true })}
-                        </p>
-                        {event.sub && (
-                          <>
-                            <span className="text-halo-bone">·</span>
-                            <p className="text-xs text-halo-mist-body capitalize">{event.sub}</p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           )}
         </div>
-      </div>
+        {students.length > 0 ? (
+          <p className="text-[15px] text-halo-heather mt-2 leading-relaxed">
+            {/* Numerals throughout: "2 students, 3 conversations, one goal
+                reached" mixed two counting styles in one sentence. */}
+            {students.length === 1 ? '1 student' : `${students.length} students`}
+            {conversations > 0 && `, ${conversations} ${conversations === 1 ? 'conversation' : 'conversations'}`}
+            {goalsReached > 0 && `, ${goalsReached} ${goalsReached === 1 ? 'goal' : 'goals'} reached`}
+            {firstStarted && ` since ${monthYear(firstStarted)}`}.
+          </p>
+        ) : (
+          <p className="text-[15px] text-halo-heather mt-2 leading-relaxed">
+            Nothing here yet. This page fills in as you work with students.
+          </p>
+        )}
+      </header>
+
+      {students.length === 0 && (
+        <section className="bg-white rounded-2xl border border-halo-rule px-5 sm:px-6 py-6">
+          <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+            This page is a record, not a scoreboard.
+          </h2>
+          <p className="text-[15px] text-halo-heather mt-2 leading-relaxed">
+            When a student starts working with you, you&apos;ll see what they came for, what you talked about, and
+            what they went on to do. No hours, no ratings, nothing to keep up.
+          </p>
+          <Link href="/dashboard" className="inline-flex items-center gap-1.5 mt-4 text-sm font-semibold text-halo-purple-d hover:text-halo-ink transition-colors">
+            Back home
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </Link>
+        </section>
+      )}
+
+      {students.length > 0 && (
+        <section aria-labelledby="students-heading" className="space-y-3">
+          <h2 id="students-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+            {students.length === 1 ? 'The student you’ve worked with' : 'The students you’ve worked with'}
+          </h2>
+          {students.map((s) => (
+            <article key={s.mentorshipId} className="bg-white rounded-2xl border border-halo-rule p-5 sm:p-6">
+              <div className="flex items-start gap-4">
+                <Avatar src={s.avatarUrl} name={s.name} size="lg" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link href={`/mentee/${s.id}`} className="text-lg font-semibold text-halo-ink hover:text-halo-purple-d transition-colors">
+                      {s.name}
+                    </Link>
+                    {!s.active && (
+                      <span className="text-[11px] font-medium text-halo-mist-body bg-halo-veil border border-halo-rule px-2 py-0.5 rounded-full">
+                        Past mentorship
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-halo-mist-body mt-0.5">Since {monthYear(s.startedAt)}</p>
+
+                  {s.reason && (
+                    <p className="text-[15px] text-halo-ink mt-3 leading-relaxed">
+                      <span className="text-halo-mist-body">Came to you for: </span>{s.reason}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-sm text-halo-heather">
+                    <span className="inline-flex items-center gap-1.5">
+                      <MessageSquare className="w-3.5 h-3.5 text-halo-mist-strong" aria-hidden="true" />
+                      {s.conversations === 0 ? 'No conversations yet' : s.conversations === 1 ? '1 conversation' : `${s.conversations} conversations`}
+                    </span>
+                    {s.lastConversation && (
+                      <span className="text-halo-mist-body">Last on {longDate(s.lastConversation)}</span>
+                    )}
+                  </div>
+
+                  {s.goalsReached.length > 0 && (
+                    <ul className="mt-3 space-y-1.5">
+                      {s.goalsReached.slice(0, 3).map((g) => (
+                        <li key={g.id} className="flex items-start gap-2.5 text-sm text-halo-ink leading-snug">
+                          <CheckCircle2 className="w-4 h-4 text-halo-purple-d flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>{g.title}<span className="text-halo-mist-body"> · reached {longDate(g.at)}</span></span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {s.active && (
+                    <Link
+                      href={`/messages?mentorshipId=${s.mentorshipId}`}
+                      className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-halo-purple-d hover:text-halo-ink transition-colors"
+                    >
+                      Message {s.first}
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
+
+      {moments.length > 0 && (
+        <section aria-labelledby="moments-heading">
+          <h2 id="moments-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-3">
+            What has happened
+          </h2>
+          <ul className="bg-white rounded-2xl border border-halo-rule divide-y divide-halo-rule overflow-hidden">
+            {moments.map((m) => {
+              const Icon = m.kind === 'goal' ? Target : m.kind === 'start' ? Users : MessageSquare;
+              return (
+                <li key={m.id} className="flex items-start gap-3 px-5 py-3.5">
+                  <Icon className="w-4 h-4 text-halo-mist-strong flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <span className="flex-1 min-w-0 text-sm text-halo-ink leading-snug">{m.text}</span>
+                  <span className="text-xs text-halo-mist-body flex-shrink-0 whitespace-nowrap">{longDate(m.at)}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

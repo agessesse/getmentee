@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { ClipboardList, CheckCircle } from 'lucide-react';
@@ -112,6 +113,10 @@ const MENTOR_TABS: { label: string; status: Status }[] = [
 ];
 
 export default function RequestsPage() {
+  // The dashboard links straight to one request. Land on it rather than on a
+  // list the mentor has to re-scan.
+  const focusId = useSearchParams().get('request');
+  const focusRef = useRef<HTMLDivElement | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
   const [userRole, setUserRole] = useState<'mentor' | 'mentee'>('mentee');
   const [userId, setUserId] = useState('');
@@ -317,23 +322,27 @@ export default function RequestsPage() {
     setActionLoadingId(null);
   }
 
+  // Bring the linked request into view once the list has rendered. Scrolling
+  // is skipped for anyone who has asked the system for less motion.
+  useEffect(() => {
+    if (!focusId || loading || !focusRef.current) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    focusRef.current.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  }, [focusId, loading, requests]);
+
   const tabs = userRole === 'mentee' ? MENTEE_TABS : MENTOR_TABS;
-  const pct =
-    capacity && capacity.maxMentees > 0
-      ? Math.min((capacity.activeMentees / capacity.maxMentees) * 100, 100)
-      : 0;
   const isFull = capacity ? capacity.activeMentees >= capacity.maxMentees : false;
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
         <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
-          {userRole === 'mentor' ? 'Mentorship Requests' : 'My Requests'}
+          {userRole === 'mentor' ? 'Requests' : 'Your requests'}
         </h1>
         <p className="text-halo-mist-body mt-1 text-sm">
           {userRole === 'mentor'
-            ? 'Review incoming requests and manage your mentee roster.'
-            : 'Track the status of your mentorship requests.'}
+            ? 'Students who have asked to work with you.'
+            : 'Mentors you have asked to work with.'}
         </p>
       </div>
 
@@ -367,57 +376,75 @@ export default function RequestsPage() {
         </div>
       )}
 
-      {/* Capacity bar — mentor only */}
+      {/*
+        What the mentor chose, stated as a fact.
+
+        This was a utilisation meter: a bar that filled up, turned amber at 75%
+        and red at 100%, beside the words "Capacity", "Nearly full", "Full" and
+        "You're at capacity... until a slot opens". It framed students as load
+        and the mentor as a resource being used up, which is the one framing
+        this product does not want. The number is still useful — the mentor set
+        it themselves — so it stays, as a sentence.
+      */}
       {capacity && (
-        <div className="mb-6 bg-white rounded-xl border border-halo-rule px-5 py-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-halo-ink">
-              Capacity: {capacity.activeMentees}/{capacity.maxMentees} mentees
-            </p>
-            <span
-              className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                isFull
-                  ? 'bg-red-50 text-red-600'
-                  : pct >= 75
-                  ? 'bg-amber-50 text-amber-600'
-                  : 'bg-green-50 text-green-700'
-              }`}
-            >
-              {isFull ? 'Full' : pct >= 75 ? 'Nearly full' : 'Open'}
-            </span>
-          </div>
-          <div className="w-full bg-halo-bone rounded-full h-1.5">
-            <div
-              className={`h-1.5 rounded-full transition-all ${
-                isFull ? 'bg-red-400' : pct >= 75 ? 'bg-amber-400' : 'bg-green-400'
-              }`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          {isFull && (
-            <p className="text-xs text-red-500 mt-2">
-              You&apos;re at capacity. Approve new requests only after a current mentee
-              completes or a slot opens.
-            </p>
-          )}
+        <div className="mb-6 bg-white rounded-2xl border border-halo-rule px-5 py-4">
+          <p className="text-sm text-halo-ink leading-relaxed">
+            {capacity.activeMentees === 0
+              ? `You said you'd work with up to ${capacity.maxMentees} ${capacity.maxMentees === 1 ? 'student' : 'students'} at a time.`
+              : isFull
+                ? `You're working with ${capacity.activeMentees} ${capacity.activeMentees === 1 ? 'student' : 'students'}, the number you chose. You can take on more, or come back to a request later.`
+                : `You're working with ${capacity.activeMentees} of the ${capacity.maxMentees} students you said you'd take on.`}
+          </p>
+          <Link href="/profile/setup" className="inline-block mt-1.5 text-sm font-medium text-halo-purple-d hover:text-halo-ink transition-colors">
+            Change this →
+          </Link>
         </div>
       )}
 
-      {/* Tabs */}
-      <div className="flex border-b border-halo-rule mb-6">
-        {tabs.map(({ label, status }) => (
-          <button
-            key={status}
-            onClick={() => handleTabChange(status)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-              tab === status
-                ? 'border-halo-purple text-halo-purple-d'
-                : 'border-transparent text-halo-mist-body hover:text-halo-ink'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      {/*
+        Tabs, weighted by what someone actually came here to do.
+
+        All three used to sit at equal weight, so a mentor scanning for the one
+        request that needs an answer had to read past two archives to find it.
+        The live tab now leads; Approved and Declined move right as history,
+        still one click away and still holding every record. Nothing is
+        deleted, and neither archive is hidden behind a menu.
+      */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-halo-rule mb-6">
+        <div className="flex">
+          {tabs.filter(({ status }) => status === 'pending').map(({ label, status }) => (
+            <button
+              key={status}
+              onClick={() => handleTabChange(status)}
+              className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple ${
+                tab === status
+                  ? 'border-halo-purple text-halo-purple-d'
+                  : 'border-transparent text-halo-mist-body hover:text-halo-ink'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-1 pb-1.5">
+          <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body pr-1">
+            History
+          </span>
+          {tabs.filter(({ status }) => status !== 'pending').map(({ label, status }) => (
+            <button
+              key={status}
+              onClick={() => handleTabChange(status)}
+              aria-pressed={tab === status}
+              className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple ${
+                tab === status
+                  ? 'bg-halo-veil text-halo-purple-d border border-halo-lavender'
+                  : 'text-halo-mist-body hover:text-halo-ink border border-transparent'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {loading ? (
@@ -429,8 +456,13 @@ export default function RequestsPage() {
       ) : (
         <div className="space-y-4">
           {requests.map((req) => (
-            <RequestCard
+            <div
               key={req.id}
+              id={`request-${req.id}`}
+              ref={req.id === focusId ? focusRef : undefined}
+              className={req.id === focusId ? 'rounded-2xl ring-2 ring-halo-purple ring-offset-4 ring-offset-halo-ivory' : undefined}
+            >
+            <RequestCard
               partnerFirstName={req.partner.first_name}
               partnerLastName={req.partner.last_name}
               partnerAvatarUrl={req.partner.avatar_url}
@@ -456,6 +488,7 @@ export default function RequestsPage() {
               onDecline={() => updateRequestStatus(req.id, 'declined')}
               onCancel={() => withdrawRequest(req.id)}
             />
+            </div>
           ))}
         </div>
       )}

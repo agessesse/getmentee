@@ -1,9 +1,9 @@
 /**
  * Fails the build if app/(protected)/ and PROTECTED_PATHS have drifted.
  *
- * This drift is what caused F6: /goals, /impact, /mentees, /network and
- * /opportunities were in the route group but missing from the middleware list,
- * so they served 200 to anonymous visitors instead of redirecting.
+ * This drift is what caused F6: /goals, /impact and /opportunities were in the
+ * route group but missing from the middleware list, so they served 200 to
+ * anonymous visitors instead of redirecting.
  *
  * Middleware runs in the Edge runtime and cannot read the filesystem, so the
  * list cannot be derived at request time. Checking it at build time gets the

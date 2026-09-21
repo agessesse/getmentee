@@ -12,16 +12,14 @@
  */
 const APP_SEGMENTS = [
   '/admin',
-  '/analytics',
   '/dashboard',
   '/discover',
   '/goals',
   '/guide',
   '/impact',
-  '/mentees',
+  '/learn',
   '/mentorships',
   '/messages',
-  '/network',
   '/networking',
   '/opportunities',
   '/profile',

@@ -8,6 +8,7 @@ import Avatar from '@/components/ui/Avatar';
 import Wordmark from '@/components/ui/Wordmark';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
+import { notificationHref } from '@/lib/notifications';
 import { formatDistanceToNow } from 'date-fns';
 
 interface TopNavProps {
@@ -44,23 +45,6 @@ const NOTIF_ICONS: Record<string, React.ComponentType<{ className?: string }>> =
   action_item_assigned:   ClipboardCheck,
   review_received:        TrendingUp,
 };
-
-function getNotifHref(type: string, data?: Record<string, string>): string {
-  switch (type) {
-    case 'request_received':     return '/requests';
-    case 'request_accepted':     return '/mentorships';
-    case 'request_declined':     return '/requests';
-    case 'new_message':          return data?.mentorship_id ? `/messages?mentorshipId=${data.mentorship_id}` : '/messages';
-    case 'session_scheduled':    return '/schedule';
-    case 'session_reminder':     return '/schedule';
-    case 'session_cancelled':    return '/schedule';
-    case 'goal_completed':       return '/goals';
-    case 'action_item_due':      return '/goals';
-    case 'action_item_assigned': return '/goals';
-    case 'review_received':      return '/impact';
-    default:                     return '/dashboard';
-  }
-}
 
 export default function TopNav({ user, onMenuClick }: TopNavProps) {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -136,7 +120,7 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
     await markOneRead(notif.id);
     setNotifDropdown(false);
     const data = (notif as Notification & { data?: Record<string, string> }).data;
-    router.push(getNotifHref(notif.type, data));
+    router.push(notificationHref(notif.type, data));
   };
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;

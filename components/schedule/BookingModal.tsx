@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
+import LearnHint from '@/components/ui/LearnHint';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import Textarea from '@/components/ui/Textarea';
@@ -155,7 +156,19 @@ export default function BookingModal({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Schedule a Session">
+    <Modal open={open} onClose={onClose} title="Book a conversation">
+      {/* Most students have never booked time with a professional and quietly
+          worry they are asking for too much. One sentence settles it. */}
+      <LearnHint
+        id="booking-length"
+        className="mb-4"
+        hint={{
+          title: 'Thirty minutes is normal',
+          body: 'Ask for the shorter slot if you’re unsure. It’s easier to say yes to, and you can always talk again.',
+          href: '/networking#scheduling',
+          linkLabel: 'Scheduling the conversation',
+        }}
+      />
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Mentor selection — shown when there are multiple active mentorships */}
         {mentorships.length > 1 && (
@@ -297,7 +310,7 @@ export default function BookingModal({
             Cancel
           </Button>
           <Button type="submit" loading={loading} className="flex-1">
-            Book Session
+            Book it
           </Button>
         </div>
       </form>

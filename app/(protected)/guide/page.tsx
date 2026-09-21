@@ -107,8 +107,8 @@ export default function GuidePage() {
       </div>
 
       {standard && (
-        <section className="rounded-2xl bg-halo-veil border border-halo-lavender px-5 sm:px-6 py-5">
-          <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">{standard.title}</h2>
+        <section aria-labelledby="guide-standard" className="rounded-2xl bg-halo-veil border border-halo-lavender px-5 sm:px-6 py-5">
+          <h2 id="guide-standard" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">{standard.title}</h2>
           <ul className="mt-3 grid sm:grid-cols-2 gap-x-6 gap-y-1.5">
             {standard.lines.map((l) => <li key={l} className="text-[15px] text-halo-ink">{l}</li>)}
           </ul>

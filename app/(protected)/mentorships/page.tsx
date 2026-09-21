@@ -118,12 +118,12 @@ export default function MentorshipsPage() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
-          {userRole === 'mentor' ? 'My Mentees' : 'My Mentorships'}
+          {userRole === 'mentor' ? 'My mentees' : 'My mentors'}
         </h1>
         <p className="text-halo-mist-body mt-1 text-sm">
           {userRole === 'mentor'
-            ? 'Track and connect with your active mentees.'
-            : 'Your active and past mentorship relationships.'}
+            ? 'Everyone you are working with, and everyone you have worked with.'
+            : 'Everyone you are working with, and everyone you have worked with.'}
         </p>
       </div>
 
@@ -162,8 +162,8 @@ export default function MentorshipsPage() {
       ) : (
         <div className="space-y-8">
           {active.length > 0 && (
-            <section>
-              <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">
+            <section aria-labelledby="active-mentorships">
+              <h2 id="active-mentorships" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-4">
                 Active ({active.length})
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -173,32 +173,54 @@ export default function SchedulePage() {
           <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Schedule</h1>
           <p className="text-halo-mist-body mt-1 text-sm">
             {userRole === 'mentor'
-              ? 'Manage sessions and set your weekly availability.'
-              : 'Manage your upcoming and past sessions.'}
+              ? 'Your conversations, and the times students can book.'
+              : 'Your conversations with your mentors.'}
           </p>
         </div>
 
         {/* Book session button — mentor selection happens inside the modal */}
         {userRole === 'mentee' && mentorships.length > 0 && (
           <Button onClick={() => setBookingOpen(true)}>
-            <Plus className="h-4 w-4" /> Book Session
+            <Plus className="h-4 w-4" /> Book a conversation
           </Button>
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-halo-rule mb-6">
-        {tabs.map(({ key, label }) => (
+      {/*
+        What's ahead leads; what's done moves right as history. Past sessions
+        are still here in full, they just no longer compete with the thing
+        someone opened this page to check.
+      */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-halo-rule mb-6">
+        <div className="flex">
+          {tabs.filter(({ key }) => key !== 'past').map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => handleTabChange(key)}
+              className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2 ${
+                tab === key ? 'border-halo-purple text-halo-purple-d' : 'border-transparent text-halo-mist-body hover:text-halo-ink'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-1 pb-1.5">
+          <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body pr-1">
+            History
+          </span>
           <button
-            key={key}
-            onClick={() => handleTabChange(key)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2 ${
-              tab === key ? 'border-halo-purple text-halo-purple-d' : 'border-transparent text-halo-mist-body hover:text-halo-ink'
+            onClick={() => handleTabChange('past')}
+            aria-pressed={tab === 'past'}
+            className={`px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple ${
+              tab === 'past'
+                ? 'bg-halo-veil text-halo-purple-d border border-halo-lavender'
+                : 'text-halo-mist-body hover:text-halo-ink border border-transparent'
             }`}
           >
-            {label}
+            Past conversations
           </button>
-        ))}
+        </div>
       </div>
 
       {/* Availability tab */}
@@ -215,26 +237,28 @@ export default function SchedulePage() {
             </div>
           ) : sessions.length === 0 ? (
             <div className="text-center py-20 text-halo-mist-body">
-              <p className="text-base font-medium text-halo-ink mb-1">No {tab} sessions</p>
+              <p className="text-base font-medium text-halo-ink mb-1">
+                {tab === 'past' ? 'No past conversations' : 'Nothing booked yet'}
+              </p>
               {tab === 'upcoming' && canBook && (
                 <>
                   <p className="text-sm text-halo-mist-body mb-4">
                     {mentorships.length === 1
-                      ? `Ready to meet with ${mentorships[0].partnerName}? Book your first session.`
-                      : 'Schedule time with one of your mentors.'}
+                      ? `Ready to talk with ${mentorships[0].partnerName}? Book your first conversation.`
+                      : 'Book time with one of your mentors.'}
                   </p>
                   <Button onClick={() => setBookingOpen(true)}>
-                    <Plus className="h-4 w-4" /> Book a session
+                    <Plus className="h-4 w-4" /> Book a conversation
                   </Button>
                 </>
               )}
               {tab === 'upcoming' && userRole === 'mentor' && (
                 <p className="text-sm text-halo-mist-body mt-1">
-                  No upcoming sessions. Mentees can book sessions once you&apos;re connected.
+                  Students can book time with you once you&apos;re working together.
                 </p>
               )}
               {tab === 'past' && (
-                <p className="text-sm text-halo-mist-body mt-1">Sessions you&apos;ve completed will appear here.</p>
+                <p className="text-sm text-halo-mist-body mt-1">Conversations you&apos;ve had will appear here.</p>
               )}
             </div>
           ) : (

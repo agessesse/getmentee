@@ -165,6 +165,14 @@ export default function MessagesPage() {
 
   return (
     <>
+      {/*
+        The page's heading. Both panes below are rendered and CSS-hidden by
+        width, so putting the h1 in either one gives the document two of them.
+        One heading here, read by screen readers, invisible on screen — the
+        layout is a chat client and has no room for a page title.
+      */}
+      <h1 className="sr-only">Messages</h1>
+
       {/* ── Desktop: classic split-pane ─────────────────────────────────────── */}
       <div className="hidden md:flex h-[calc(100vh-8rem)] rounded-xl overflow-hidden border border-halo-rule bg-white shadow-sm">
         {/* Conversation list */}

@@ -18,7 +18,6 @@ import {
   UserPlus,
   Lightbulb,
   BookOpen,
-  Compass,
 } from 'lucide-react';
 import InviteModal from '@/components/marketing/InviteModal';
 import Wordmark from '@/components/ui/Wordmark';
@@ -26,9 +25,13 @@ import Wordmark from '@/components/ui/Wordmark';
 interface NavItem {
   href: string;
   label: string;
+  /** Used instead of `label` for mentors, where the plain word differs. */
+  mentorLabel?: string;
   icon: React.ComponentType<{ className?: string }>;
   menteeOnly?: boolean;
   mentorOnly?: boolean;
+  /** Other paths that belong to this destination, for the active state. */
+  also?: string[];
 }
 
 interface NavSection {
@@ -36,24 +39,36 @@ interface NavSection {
   items: NavItem[];
 }
 
+/*
+  Labels are written for someone who has never used a product like this. Two
+  rules: say what the thing is in the words the person would use, and stay
+  short enough to scan. "Discover" tested as a verb with no object, so mentees
+  now see "Find a mentor"; "Mentorships" is a word almost nobody says out loud,
+  so each side sees the people it means. Nothing is renamed for novelty:
+  Requests, Goals, Messages and Schedule already say what they are.
+
+  The two guides used to be two entries. They are now one, Learn, which opens a
+  page carrying both in full. /networking and /guide still exist and still keep
+  the nav item lit, so an old link or a deep link from a lesson doesn't lose
+  its place in the sidebar.
+*/
 const NAV_SECTIONS: NavSection[] = [
   {
     label: 'Overview',
     items: [
-      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { href: '/discover', label: 'Discover', icon: Search, menteeOnly: true },
-      { href: '/impact', label: 'My Impact', icon: BarChart2, mentorOnly: true },
+      { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
+      { href: '/discover', label: 'Find a mentor', icon: Search, menteeOnly: true },
+      { href: '/impact', label: 'Your mentoring', icon: BarChart2, mentorOnly: true },
       { href: '/opportunities', label: 'Opportunity Fund', icon: Lightbulb, menteeOnly: true },
-      { href: '/networking', label: 'Networking 101', icon: BookOpen, menteeOnly: true },
     ],
   },
   {
     label: 'Mentorship',
     items: [
       { href: '/requests', label: 'Requests', icon: ClipboardList },
-      { href: '/mentorships', label: 'Mentorships', icon: Handshake },
+      { href: '/mentorships', label: 'My mentors', mentorLabel: 'My mentees', icon: Handshake },
       { href: '/goals', label: 'Goals', icon: Target },
-      { href: '/guide', label: 'Mentorship Guide', icon: Compass },
+      { href: '/learn', label: 'Learn', icon: BookOpen, also: ['/networking', '/guide'] },
     ],
   },
   {
@@ -83,8 +98,10 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
   const pathname = usePathname();
   const [inviteOpen, setInviteOpen] = useState(false);
 
-  const isActive = (href: string) =>
-    pathname === href || (href !== '/dashboard' && pathname.startsWith(href + '/'));
+  const isActive = (item: NavItem) =>
+    [item.href, ...(item.also ?? [])].some(
+      (href) => pathname === href || (href !== '/dashboard' && pathname.startsWith(href + '/'))
+    );
 
   const filterItems = (items: NavItem[]) =>
     items.filter((item) => {
@@ -148,8 +165,10 @@ export default function Sidebar({ role, open, onClose, firstName, lastName }: Si
                   {section.label}
                 </p>
                 <div className="space-y-0.5">
-                  {visibleItems.map(({ href, label, icon: Icon }) => {
-                    const active = isActive(href);
+                  {visibleItems.map((item) => {
+                    const { href, icon: Icon } = item;
+                    const label = role === 'mentor' ? item.mentorLabel ?? item.label : item.label;
+                    const active = isActive(item);
                     return (
                       <Link
                         key={href}

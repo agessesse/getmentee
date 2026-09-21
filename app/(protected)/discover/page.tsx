@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { trackEvent } from '@/lib/analytics';
 import RequestModal from '@/components/mentor/RequestModal';
@@ -11,9 +11,10 @@ import Avatar from '@/components/ui/Avatar';
 import Spinner from '@/components/ui/Spinner';
 import {
   Search, Star, Clock, MapPin, Building2, Bookmark, BookmarkCheck,
-  ChevronDown, SlidersHorizontal, X, GraduationCap, Users,
+  ChevronDown, SlidersHorizontal, X, GraduationCap, Users, Mail, UserPlus,
 } from 'lucide-react';
 import { SOURCED_MENTORS, SOURCED_NEAR_PEERS, type SourcedProfile, type SourcedNearPeer } from '@/data/people';
+import InviteModal from '@/components/marketing/InviteModal';
 
 // ─── Filter taxonomy ──────────────────────────────────────────────────────────
 
@@ -194,17 +195,22 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="px-5 py-4 border-t border-halo-veil flex gap-2">
+      {/* Actions.
+          This person has no account, so there is nothing to request and we say
+          so in words rather than with a greyed-out button that looks like a
+          bug. What they CAN do sits right next to it: read the profile, which
+          is built from public sources, or invite someone they already know. */}
+      <div className="px-5 py-4 border-t border-halo-veil space-y-3">
+        <p className="text-xs text-halo-mist-body leading-relaxed">
+          Not on Mentable yet. This profile comes from public sources so you can see who is out there.
+          {' '}{person.firstName} can&apos;t receive requests until they join.
+        </p>
         <Link
           href={`/people/${person.slug}`}
-          className="flex-1 text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
+          className="block text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
         >
           View profile
         </Link>
-        <div className="flex-1 flex items-center justify-center py-2 rounded-xl bg-halo-veil text-xs font-medium text-halo-mist-body cursor-default">
-          Not yet on Mentable
-        </div>
       </div>
     </div>
   );
@@ -393,6 +399,9 @@ function LiveMentorCard({
 
 export default function DiscoverPage() {
   const router = useRouter();
+  // ?saved=1 is how the dashboard reaches a student's saved mentors without
+  // adding a fifth thing to the sidebar.
+  const savedParam = useSearchParams().get('saved') === '1';
   const analyticsFiredRef = useRef(false);
   const [liveMentors, setLiveMentors] = useState<LiveMentorData[]>([]);
   const [existingRequests, setExistingRequests] = useState<Set<string>>(new Set());
@@ -406,7 +415,8 @@ export default function DiscoverPage() {
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [sort, setSort] = useState<'match' | 'rating' | 'experience'>('match');
   const [availableOnly, setAvailableOnly] = useState(false);
-  const [savedOnly, setSavedOnly] = useState(false);
+  const [savedOnly, setSavedOnly] = useState(savedParam);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const [modalMentor, setModalMentor] = useState<LiveMentorData | null>(null);
@@ -581,6 +591,13 @@ export default function DiscoverPage() {
       return true;
     })
     .sort((a, b) => {
+      // Someone who can receive a request today comes before someone who
+      // can't, whatever the sort. This reorders nothing WITHIN either group:
+      // the match, rating and experience comparisons below are untouched, so
+      // the matching logic still decides who is most relevant. It only stops
+      // the page leading with mentors a student cannot act on.
+      const actionable = (m: LiveMentorData) => (m.mentor_profiles?.is_available ? 1 : 0);
+      if (actionable(a) !== actionable(b)) return actionable(b) - actionable(a);
       if (sort === 'match') return b.matchScore - a.matchScore;
       if (sort === 'rating') return (b.mentor_profiles?.rating ?? 0) - (a.mentor_profiles?.rating ?? 0);
       if (sort === 'experience') return (b.mentor_profiles?.years_experience ?? 0) - (a.mentor_profiles?.years_experience ?? 0);
@@ -625,6 +642,9 @@ export default function DiscoverPage() {
     (selectedIndustry ? 1 : 0) + selectedExpertise.length + (availableOnly ? 1 : 0) + (savedOnly ? 1 : 0);
 
   const totalMentorCount = filteredLiveMentors.length + filteredSourcedMentors.length;
+  // Counted off the unfiltered roster, so a narrow search doesn't make the
+  // platform look emptier than it is.
+  const contactableCount = liveMentors.filter((m) => m.mentor_profiles?.is_available).length;
 
   if (loading) return <div className="flex justify-center py-24"><Spinner size="lg" /></div>;
 
@@ -634,13 +654,71 @@ export default function DiscoverPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Discover Mentors</h1>
+          <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Find a mentor</h1>
           <p className="text-halo-mist-body mt-1 text-sm">
-            {totalMentorCount} mentor{totalMentorCount !== 1 ? 's' : ''}
+            {totalMentorCount} profile{totalMentorCount !== 1 ? 's' : ''}
+            {' · '}
+            {contactableCount === 0
+              ? 'none taking requests yet'
+              : `${contactableCount} taking requests`}
             {menteeProfile ? ' · sorted by match' : ''}
           </p>
         </div>
       </div>
+
+      {/*
+        The honest state of the page, stated before anyone scrolls.
+
+        This page has always shown two different kinds of people, and never
+        said so. Most profiles here are built from public sources for people
+        who have been invited but have not joined, and a student who sends
+        nothing and hears nothing has no way to know which was which. Now the
+        count of mentors who can actually receive a request today leads, and
+        when that count is zero the page says so and offers the one thing that
+        genuinely works: inviting someone you already know.
+      */}
+      <section aria-labelledby="who-can-be-reached" className="bg-white rounded-2xl border border-halo-rule px-5 sm:px-6 py-5">
+        {contactableCount > 0 ? (
+          <>
+            <h2 id="who-can-be-reached" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+              {contactableCount === 1
+                ? 'One mentor is on Mentable and open to requests.'
+                : `${contactableCount} mentors are on Mentable and open to requests.`}
+            </h2>
+            <p className="text-sm text-halo-heather mt-1.5 leading-relaxed">
+              They appear first. Everyone below them has been invited but hasn&apos;t joined yet, so their profiles are
+              here to read rather than to contact.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 id="who-can-be-reached" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+              No mentors are taking requests right now.
+            </h2>
+            <p className="text-sm text-halo-heather mt-1.5 leading-relaxed">
+              The profiles below are people we&apos;ve invited, built from public sources. You can read them, but they
+              can&apos;t receive a request until they join. The fastest way to get a mentor today is to invite someone
+              you already have a reason to ask: an alum, a family friend, someone from your school.
+            </p>
+            <div className="flex flex-wrap gap-2.5 mt-4">
+              <button
+                onClick={() => setInviteOpen(true)}
+                className="inline-flex items-center gap-2 bg-halo-purple text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
+              >
+                <UserPlus className="w-4 h-4" aria-hidden="true" />
+                Invite a mentor
+              </button>
+              <Link
+                href="/networking#who"
+                className="inline-flex items-center gap-2 border border-halo-rule bg-white text-halo-ink text-sm font-medium px-4 py-2.5 rounded-xl hover:border-halo-purple transition-colors"
+              >
+                <Mail className="w-4 h-4 text-halo-purple-d" aria-hidden="true" />
+                Who to ask, and how
+              </Link>
+            </div>
+          </>
+        )}
+      </section>
 
       {/* Search + filter bar */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -770,6 +848,12 @@ export default function DiscoverPage() {
       {/* ── Live mentors (Supabase-backed, can receive requests) ─────────────── */}
       {filteredLiveMentors.length > 0 && (
         <div>
+          <div className="flex items-center gap-3 mb-4">
+            <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body">
+              On Mentable
+            </p>
+            <div className="h-px flex-1 bg-halo-bone" />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredLiveMentors.map((mentor) => (
               <LiveMentorCard
@@ -789,15 +873,18 @@ export default function DiscoverPage() {
       {/* ── Sourced mentor profiles ───────────────────────────────────────────── */}
       {filteredSourcedMentors.length > 0 && (
         <div>
-          {filteredLiveMentors.length > 0 && (
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-px flex-1 bg-halo-bone" />
-              <p className="text-xs font-semibold text-halo-mist-body font-ui uppercase tracking-[0.14em]">
-                Invited mentors
+          <div className="mb-4">
+            <div className="flex items-center gap-3">
+              <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body">
+                Invited · not on Mentable yet
               </p>
               <div className="h-px flex-1 bg-halo-bone" />
             </div>
-          )}
+            <p className="text-sm text-halo-mist-body mt-1.5 leading-relaxed max-w-2xl">
+              We&apos;ve asked these people to join. Their profiles are assembled from public sources, and nothing here
+              was written by them. You can read one to decide whether they&apos;re worth reaching later.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredSourcedMentors.map((mentor) => (
               <SourcedMentorCard key={mentor.slug} person={mentor} />
@@ -827,7 +914,7 @@ export default function DiscoverPage() {
             <div>
               <h2 className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">Near-peer network</h2>
               <p className="text-xs text-halo-mist-body">
-                Students and early-career peers shaping their paths.
+                Students and early-career peers shaping their paths. Profiles built from public sources, not accounts.
               </p>
             </div>
           </div>
@@ -844,6 +931,8 @@ export default function DiscoverPage() {
           </div>
         </div>
       )}
+
+      <InviteModal open={inviteOpen} onClose={() => setInviteOpen(false)} />
 
       {/* Request modal (live mentors only) */}
       {modalMentor && (

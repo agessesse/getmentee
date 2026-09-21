@@ -63,9 +63,21 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
 
     fetchMessages();
 
-    // Realtime subscription
+    /*
+      Realtime subscription.
+
+      The channel name carries a per-mount suffix. removeChannel() is
+      asynchronous, so when this component remounts quickly — switching threads,
+      or arriving from the dashboard's "Continue the conversation" — a channel
+      with the same name can still be registered and already joined. Calling
+      .on() on a joined channel throws
+      "cannot add `postgres_changes` callbacks for realtime:messages:<id>",
+      which was appearing in the console on every such navigation. A unique
+      name per mount means each mount always gets a fresh channel; the old one
+      is still torn down by the cleanup below.
+    */
     const channel = supabase
-      .channel(`messages:${mentorshipId}`)
+      .channel(`messages:${mentorshipId}:${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages', filter: `mentorship_id=eq.${mentorshipId}` },
@@ -245,6 +257,7 @@ export default function ChatWindow({ mentorshipId, currentUserId, currentUserRol
         />
         <button
           type="submit"
+          aria-label="Send message"
           disabled={!input.trim() || sending}
           className="bg-halo-purple text-white rounded-full p-2 hover:bg-halo-purple-d transition-colors disabled:opacity-40"
         >

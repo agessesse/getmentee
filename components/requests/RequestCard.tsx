@@ -110,10 +110,13 @@ export default function RequestCard({
         </div>
       )}
 
-      {/* Goals */}
+      {/* Goals. A mentee reading their own sent request was being told these
+          were "their goals", meaning the mentor's. They are the student's. */}
       {goals && (
         <div className="text-sm text-halo-heather bg-halo-veil rounded-lg px-3 py-2">
-          <span className="font-medium text-halo-purple-d">Their goals: </span>
+          <span className="font-medium text-halo-purple-d">
+            {userRole === 'mentor' ? 'Hoping to: ' : 'What you asked for: '}
+          </span>
           {goals}
         </div>
       )}

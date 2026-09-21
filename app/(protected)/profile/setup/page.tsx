@@ -173,6 +173,25 @@ export default function ProfileSetupPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [role, setRole] = useState<'mentor' | 'mentee' | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileComplete, setProfileComplete] = useState(false);
+  /*
+    Whether this person already has a row in mentor_profiles / mentee_profiles.
+
+    It decides insert vs update below, and it must not be guessed: an upsert
+    cannot be used here. Migration 0017 replaced table-level UPDATE on these
+    tables with column-level grants (so a mentor cannot award themselves a
+    rating or a verified badge). PostgreSQL requires table-level UPDATE for
+    INSERT ... ON CONFLICT DO UPDATE, so every upsert has been failing with
+    42501 "permission denied for table mentor_profiles" since that migration:
+    saving a profile silently did nothing, and a new user could never set
+    profile_complete, which left them redirected to this page forever.
+
+    Verified against the live database: plain UPDATE of the granted columns is
+    allowed, INSERT of your own row is allowed (RLS rejects anyone else's), and
+    only the upsert is denied. So this splits the two cases and keeps 0017's
+    column grants exactly as they are — no migration, no widened privilege.
+  */
+  const [roleRowExists, setRoleRowExists] = useState(false);
   const [step, setStep] = useState<Step>(1);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -228,7 +247,8 @@ export default function ProfileSetupPage() {
         .eq('id', uid)
         .single();
 
-      setRole(profile?.role as 'mentor' | 'mentee');
+      const myRole = profile?.role as 'mentor' | 'mentee';
+      setRole(myRole);
       if (profile?.first_name) setFirstName(profile.first_name);
       if (profile?.last_name) setLastName(profile.last_name);
       if (profile?.headline) setHeadline(profile.headline);
@@ -236,6 +256,56 @@ export default function ProfileSetupPage() {
       if (profile?.university) setUniversity(profile.university);
       if (profile?.graduation_year) setGraduationYear(String(profile.graduation_year));
       if (profile?.linkedin_url) setLinkedinUrl(profile.linkedin_url);
+
+      /*
+        Load what the person already wrote.
+
+        This page only ever read the `profiles` row, so someone returning from
+        the sidebar's My Profile saw their bio, expertise, goals and timezone
+        as empty fields — and the save at the end is an upsert, so walking
+        through the three steps and pressing save overwrote all of it with
+        blanks. Nothing warned them. Hydrating the role row fixes the display
+        and removes the data loss with it.
+      */
+      if (myRole === 'mentor') {
+        const { data: mp } = await supabase
+          .from('mentor_profiles')
+          .select('bio, expertise_tags, goals, years_experience, weekly_hours, timezone, company, title, industry, profile_complete')
+          .eq('id', uid)
+          .maybeSingle();
+        if (mp) {
+          setRoleRowExists(true);
+          setProfileComplete(!!mp.profile_complete);
+          if (mp.bio) setBio(mp.bio);
+          if (mp.expertise_tags?.length) setExpertiseTags(mp.expertise_tags);
+          if (mp.goals?.length) setGoalsMentor(mp.goals);
+          if (mp.years_experience) setYearsExperience(String(mp.years_experience));
+          if (mp.weekly_hours) setWeeklyHours(String(mp.weekly_hours));
+          if (mp.timezone) setTimezone(mp.timezone);
+          if (mp.company) setCompany(mp.company);
+          if (mp.title) setTitle(mp.title);
+          if (mp.industry) setIndustry(mp.industry);
+        }
+      } else {
+        const { data: mp } = await supabase
+          .from('mentee_profiles')
+          .select('bio, interest_tags, goals, experience_level, preferred_format, timezone, major, career_interests, industries_of_interest, profile_complete')
+          .eq('id', uid)
+          .maybeSingle();
+        if (mp) {
+          setRoleRowExists(true);
+          setProfileComplete(!!mp.profile_complete);
+          if (mp.bio) setMenteeBio(mp.bio);
+          if (mp.interest_tags?.length) setInterestTags(mp.interest_tags);
+          if (mp.goals?.length) setGoalsMentee(mp.goals);
+          if (mp.experience_level) setExperienceLevel(mp.experience_level);
+          if (mp.preferred_format) setPreferredFormat(mp.preferred_format);
+          if (mp.timezone) setMenteeTimezone(mp.timezone);
+          if (mp.major) setMajor(mp.major);
+          if (mp.career_interests?.length) setCareerInterests(mp.career_interests);
+          if (mp.industries_of_interest?.length) setIndustriesOfInterest(mp.industries_of_interest);
+        }
+      }
 
       setLoading(false);
     }
@@ -262,8 +332,7 @@ export default function ProfileSetupPage() {
       if (profileErr) throw new Error(profileErr.message);
 
       if (role === 'mentor') {
-        const { error: mpErr } = await supabase.from('mentor_profiles').upsert({
-          id: userId,
+        const fields = {
           bio: bio.trim() || null,
           expertise_tags: expertiseTags,
           goals: goalsMentor,
@@ -274,11 +343,16 @@ export default function ProfileSetupPage() {
           title: title.trim() || null,
           industry: industry || null,
           profile_complete: true,
-        });
+        };
+        // Only these columns are written either way, so everything the form
+        // does not ask about — availability, capacity, rating, verification —
+        // keeps whatever it already had.
+        const { error: mpErr } = roleRowExists
+          ? await supabase.from('mentor_profiles').update(fields).eq('id', userId)
+          : await supabase.from('mentor_profiles').insert({ id: userId, ...fields });
         if (mpErr) throw new Error(mpErr.message);
       } else {
-        const { error: mpErr } = await supabase.from('mentee_profiles').upsert({
-          id: userId,
+        const fields = {
           bio: menteeBio.trim() || null,
           interest_tags: interestTags,
           goals: goalsMentee,
@@ -289,7 +363,10 @@ export default function ProfileSetupPage() {
           career_interests: careerInterests,
           industries_of_interest: industriesOfInterest,
           profile_complete: true,
-        });
+        };
+        const { error: mpErr } = roleRowExists
+          ? await supabase.from('mentee_profiles').update(fields).eq('id', userId)
+          : await supabase.from('mentee_profiles').insert({ id: userId, ...fields });
         if (mpErr) throw new Error(mpErr.message);
       }
 
@@ -332,11 +409,19 @@ export default function ProfileSetupPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">Complete your profile</h1>
+        {/* Someone who finished this months ago is not "completing" anything;
+            they came from the sidebar's My Profile to change something. */}
+        <h1 className="font-display font-normal text-[2rem] leading-tight text-halo-ink">
+          {profileComplete ? 'Your profile' : 'Complete your profile'}
+        </h1>
         <p className="text-halo-mist-body mt-1 text-sm">
-          {role === 'mentor'
-            ? 'Help mentees understand your background and what you offer.'
-            : 'Help mentors understand your goals so they can guide you better.'}
+          {profileComplete
+            ? role === 'mentor'
+              ? 'What students see when they find you.'
+              : 'What mentors see when you ask to work with them.'
+            : role === 'mentor'
+              ? 'Help students understand your background and what you can help with.'
+              : 'Help mentors understand what you are hoping to learn.'}
         </p>
       </div>
 
