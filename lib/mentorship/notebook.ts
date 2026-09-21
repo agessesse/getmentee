@@ -12,10 +12,14 @@ import { createClient } from '@/lib/supabase/client';
  * mentee's notebook, or the reverse.
  *
  * WHY THIS TABLE. It was created for session intelligence (0010) and nothing
- * in the app writes to it. The alternatives were worse: sessions.prep_mentee,
- * prep_mentor and mentor_recap exist, but 0017 withheld the UPDATE grant on
- * them, so any write is rejected, and a new table would need a migration
- * applied to production before anything could be tried.
+ * else in the app writes to it. The alternative columns — sessions.prep_mentee,
+ * prep_mentor and mentor_recap — were unwritable when this was built, because
+ * 0017 revoked UPDATE on sessions and left them out of the re-grant; 0023
+ * restores that grant. They stay unused all the same: both prep columns are
+ * readable by the other party, and these notes are private by design. A mentor
+ * must be able to write "he freezes on technicals" without the student seeing
+ * it. What either person chooses to share goes through the shared surfaces
+ * below.
  *
  * SHAPE. The structured notebook is stored in the jsonb `action_items` column
  * under { kind: 'mentable-notebook', v: 1 }. The readable columns are filled
