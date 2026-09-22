@@ -149,7 +149,7 @@ export default function MentorPage() {
                   eyebrow="Before you say yes"
                   heading={<>What a request<br className="hidden sm:block" /> actually contains.</>}
                   id="request-heading"
-                  lead="Students on Mentable answer two questions before they can send anything: what they are trying to accomplish, and why they picked you. Both arrive attached to their profile."
+                  lead="A student answers two questions before they can send anything: what they are trying to accomplish, and why they picked you. Both arrive attached to their profile."
                   className="max-w-md"
                 />
 
@@ -234,7 +234,7 @@ export default function MentorPage() {
                   heading={<>One place, and<br />it is still there<br />in three weeks.</>}
                   id="after-heading"
                   tone="deep"
-                  lead="A mentorship on Mentable is a record, not a thread. What they are working toward, what you said last time, what is still outstanding, and when you next speak all sit in the same view."
+                  lead="A mentorship here is a record, not a thread. What they are working toward, what you said last time, what is still outstanding, and when you next speak all sit in the same view."
                   className="max-w-md"
                 />
 
