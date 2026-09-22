@@ -1,4 +1,6 @@
 import { trackEvent } from '@/lib/analytics';
+import { trackPublicEvent } from '@/lib/public-analytics';
+import { PUBLIC_EVENTS, type PublicEvent } from '@/lib/public-events';
 
 /**
  * Landing-page conversion instrumentation.
@@ -24,8 +26,27 @@ export function trackLandingEvent(
     | 'product_demo_interacted'
     | 'product_demo_stage_viewed'
     | 'landing_carousel_interacted'
-    | 'opportunity_fund_clicked',
+    | 'opportunity_fund_clicked'
+    // Founding cohort funnel. Subject to the same limitation as everything
+    // above: an anonymous visitor writes nothing, so these record only for the
+    // minority of applicants who already have an account.
+    | 'cohort_cta_clicked'
+    | 'cohort_application_started'
+    | 'cohort_application_submitted'
+    | 'founding_mentor_cta_clicked',
   metadata: Record<string, string | number | boolean> = {}
 ): void {
   void trackEvent(event, 'mentee', { metadata });
+
+  /*
+    The four acquisition events also go to the anonymous path, because the
+    call above records nothing for a logged-out visitor (see the note at the
+    top). A signed-in visitor produces both rows; that is intended, and the two
+    tables answer different questions — one is a user's own activity, the other
+    is how many strangers reached the funnel.
+  */
+  if ((PUBLIC_EVENTS as readonly string[]).includes(event)) {
+    const surface = typeof metadata.cta === 'string' ? metadata.cta : undefined;
+    trackPublicEvent(event as PublicEvent, surface);
+  }
 }
