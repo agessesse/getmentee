@@ -329,7 +329,7 @@ export default function ProfileSetupPage() {
         graduation_year: graduationYear ? parseInt(graduationYear) : null,
         linkedin_url: linkedinUrl.trim() || null,
       }).eq('id', userId);
-      if (profileErr) throw new Error(profileErr.message);
+      if (profileErr) throw profileErr;
 
       if (role === 'mentor') {
         const fields = {
@@ -350,7 +350,7 @@ export default function ProfileSetupPage() {
         const { error: mpErr } = roleRowExists
           ? await supabase.from('mentor_profiles').update(fields).eq('id', userId)
           : await supabase.from('mentor_profiles').insert({ id: userId, ...fields });
-        if (mpErr) throw new Error(mpErr.message);
+        if (mpErr) throw mpErr;
       } else {
         const fields = {
           bio: menteeBio.trim() || null,
@@ -367,13 +367,27 @@ export default function ProfileSetupPage() {
         const { error: mpErr } = roleRowExists
           ? await supabase.from('mentee_profiles').update(fields).eq('id', userId)
           : await supabase.from('mentee_profiles').insert({ id: userId, ...fields });
-        if (mpErr) throw new Error(mpErr.message);
+        if (mpErr) throw mpErr;
       }
 
       void trackEvent('profile_setup_completed', role);
       router.push('/dashboard');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong');
+      /*
+        What the person sees, and what we see, are different on purpose.
+
+        Supabase errors carry the table name, the column privilege that was
+        missing and the SQL state — "permission denied for table
+        mentor_profiles" was reaching the screen of someone trying to update
+        their bio. It tells them nothing they can act on and describes the
+        inside of the database. The full error still goes to the console, with
+        its code, details and hint intact, so a failure is no harder to debug.
+
+        This is only for the save path. Validation messages above ("First name
+        is required") are written for the person and are shown as they are.
+      */
+      console.error('[profile] save failed', e);
+      setError('We couldn’t save your changes. Please try again.');
       setSaving(false);
     }
   };
