@@ -10,11 +10,25 @@ import InteractionCue from '@/components/marketing/InteractionCue';
 // top of a milestone label.
 const MENTOR_T = 0.15;
 
+/*
+  The four things a mentor can actually change.
+
+  These used to read Clarity, Preparation, Introduction, Opportunity — two of
+  which were repeated word for word in the outcomes grid further down the page,
+  and two of which described things happening TO the student: someone vouches,
+  a door opens.
+
+  The sequence now ends on judgment rather than growth. Growth was the weakest
+  of the four: broader than the three before it, and true of almost anything.
+  Judgment names what mentorship is actually for — the point where the student
+  needs the mentor less, not more. A mentor who leaves someone dependent has
+  not finished the job.
+*/
 const NODES = [
-  { t: 0.36, label: 'Clarity',      note: 'Know what the path actually looks like.' },
-  { t: 0.56, label: 'Preparation',  note: 'Show up ready to make the time count.' },
-  { t: 0.75, label: 'Introduction', note: 'Someone vouches, because they know your work.' },
-  { t: 0.92, label: 'Opportunity',  note: 'A door you could not have found alone.' },
+  { t: 0.36, label: 'Guidance',    note: 'Someone who has already done it tells you how it actually works.' },
+  { t: 0.56, label: 'Preparation', note: 'You do the work already knowing what the work is.' },
+  { t: 0.75, label: 'Opportunity', note: 'You know an opening when you see one, and you are ready for it.' },
+  { t: 0.92, label: 'Judgment',    note: 'The next decision is one you can make on your own.' },
 ];
 
 const W = 720;
@@ -169,19 +183,27 @@ export default function TrajectoryViz() {
       aria-labelledby="trajectory-heading"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr,1.2fr] gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,1.15fr] gap-10 lg:gap-14 items-center">
 
           <div>
             <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
-              The difference
+              One person, one decision
             </p>
             <h2
               id="trajectory-heading"
               className="font-display text-white leading-[1.05] mb-4"
-              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)', textWrap: 'balance' }}
             >
-              What changes when<br />experience is passed forward.
+              What changes when someone ahead of you helps you see further.
             </h2>
+
+            {/* The honest version of the claim, said once, before the chart:
+                a mentor cannot hand anyone an outcome. */}
+            <p className="text-halo-lavender font-light text-[15px] leading-relaxed mb-5 max-w-sm">
+              A mentor can&apos;t decide where you end up. They can tell you what they
+              learned the hard way and let you use it. What you do with it is still
+              yours.
+            </p>
 
             {/* Reserved height: the hint is replaced in place by the hovered
                 node's note, so nothing below it ever shifts. */}
@@ -224,7 +246,7 @@ export default function TrajectoryViz() {
               a screen reader navigate into the markers.
             */
             role="group"
-            aria-label="A chart comparing an unmentored path, which stays flat, against a mentored path that bends upward through clarity, preparation, introduction, and opportunity."
+            aria-label="A chart comparing a path without mentorship, which stays flat, against a mentored path that bends upward through guidance, preparation, opportunity, and judgment."
           >
             <defs>
               <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">

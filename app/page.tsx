@@ -12,6 +12,7 @@ import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import Flywheel from '@/components/marketing/Flywheel';
+import BothDirections from '@/components/marketing/BothDirections';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import HeroPin from '@/components/marketing/HeroPin';
@@ -28,14 +29,6 @@ import CtaButton from '@/components/marketing/CtaButton';
 // label versus body, and the numbering gives the eye a reading order.
 // "Opportunity" was dropped because its line described a precondition
 // ("an introduction only helps if you are ready") rather than an outcome.
-const OUTCOMES = [
-  { label: 'Clarity',        body: 'See what the work is actually like before you spend years on it.' },
-  { label: 'Preparation',    body: 'Both people walk in knowing what the time is for.' },
-  { label: 'Accountability', body: 'Both people can see what was promised and what got done.' },
-  { label: 'Reciprocity',    body: 'Learn from someone ahead. Later, teach someone coming up.' },
-];
-
-
 const FUND_ITEMS = [
   { icon: Shirt, label: 'Professional Attire', detail: 'Interview suit, tailoring, footwear' },
   { icon: Users, label: 'Networking', detail: 'Coffee chats, industry events' },
@@ -136,19 +129,26 @@ export default function LandingPage() {
                 together, and handles everything after the introduction.
               </p>
 
+              {/*
+                "Find your mentor" pointed at signup, and signup delivers a
+                student into a mentor list where nobody can currently receive a
+                request. The ask now matches what actually exists: a first
+                cohort you apply to, and a mentor path that explains what
+                taking part means before asking for a signup.
+              */}
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
-                  href="/signup?role=mentee"
-                  onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_find_your_mentor' })}
+                  href="/founding-cohort"
+                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero' })}
                 >
-                  Find your mentor
+                  Apply to the founding cohort
                 </CtaButton>
                 <CtaButton
-                  href="/signup?role=mentor"
-                  onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'hero_become_a_mentor' })}
+                  href="/mentor"
+                  onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'hero' })}
                   variant="secondary"
                 >
-                  Become a mentor
+                  Become a founding mentor
                 </CtaButton>
               </div>
             </div>
@@ -191,37 +191,11 @@ export default function LandingPage() {
       {/* ── 07. Flywheel ─────────────────────────────────────────────────────── */}
       <Flywheel />
 
-      {/* ── 08. Outcomes ─────────────────────────────────────────────────────── */}
-      <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-veil border-t border-halo-rule" aria-labelledby="outcomes-heading">
-        <div className="max-w-6xl mx-auto">
-          <Rise kind="heading" as="h2">
-            <span
-              id="outcomes-heading"
-              className="block font-display text-halo-ink leading-[1.05] mb-12 max-w-xl"
-              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
-            >
-              What comes out of it.
-            </span>
-          </Rise>
-
-          {/* 0.12s apart, the reference's card stagger. */}
-          <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 lg:gap-x-10 gap-y-10">
-            {OUTCOMES.map((o, i) => (
-              <Rise key={o.label} kind="heading" delay={i * 0.12} as="li" className="border-t border-halo-rule pt-5">
-                <span className="block text-[12px] font-semibold tabular-nums text-halo-purple-d mb-3">
-                  0{i + 1}
-                </span>
-                <h3 className="font-display text-halo-ink text-[26px] leading-none mb-2.5">
-                  {o.label}
-                </h3>
-                <p className="text-halo-heather text-[15px] leading-relaxed">
-                  {o.body}
-                </p>
-              </Rise>
-            ))}
-          </ol>
-        </div>
-      </section>
+      {/* ── 08. Both directions ──────────────────────────────────────────────── */}
+      {/* Closes the three-part sequence that runs 06 → 07 → 08: what one person
+          can change for another, how far that reaches, and what each of them is
+          left holding. */}
+      <BothDirections />
 
       {/*
         ── 09. Opportunity Fund ──────────────────────────────────────────────
@@ -249,11 +223,13 @@ export default function LandingPage() {
                 </h2>
               </Rise>
               <p className="text-halo-lavender leading-relaxed mb-4 font-light text-[15px] max-w-md">
-                For students with demonstrated financial need, we&apos;re building a
-                fund to remove the practical barriers between guidance and action.
+                For students with demonstrated financial need, we want to remove the
+                practical barriers between guidance and action: the suit, the train fare,
+                the coffee. This is the part of Mentable that does not exist yet.
               </p>
               <p className="text-halo-lavender text-[14px] leading-relaxed mb-7">
-                In pilot. We&apos;re building partnerships to fund the first cohort.
+                Not funded yet. We&apos;re looking for the partners to pay for the first
+                grants, and we&apos;d rather say that than imply the money is already there.
               </p>
               {/*
                 The student's closing ask, inside the one section that is
@@ -265,22 +241,22 @@ export default function LandingPage() {
               */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                 <CtaButton
-                  href="/signup?role=mentee"
-                  onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'fund_find_your_mentor' })}
+                  href="/founding-cohort"
+                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'fund' })}
                   size="md"
                   ground="deep"
                 >
-                  Find your mentor
+                  Apply to the founding cohort
                 </CtaButton>
-                <CtaButton
-                  href="/signup?role=mentee"
-                  onClick={() => trackLandingEvent('opportunity_fund_clicked')}
-                  variant="secondary"
-                  size="sm"
-                  ground="deep"
-                >
-                  Learn about the Opportunity Fund
-                </CtaButton>
+                {/*
+                  There was a second button here reading "Learn about the
+                  Opportunity Fund" that pointed at /signup?role=mentee. It
+                  promised information and delivered a signup form, and the
+                  only page about the fund is behind authentication — a dead
+                  end for exactly the visitor it was written for. The section's
+                  own words now carry the explanation, and the fund keeps one
+                  ask rather than competing with the cohort for attention.
+                */}
               </div>
             </div>
 
@@ -322,21 +298,21 @@ export default function LandingPage() {
           </Rise>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
-              href="/signup?role=mentee"
-              onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_find_your_mentor' })}
+              href="/founding-cohort"
+              onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final' })}
             >
-              Find your mentor
+              Apply to the founding cohort
             </CtaButton>
             <CtaButton
-              href="/signup?role=mentor"
-              onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'final_i_want_to_mentor' })}
+              href="/mentor"
+              onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'final' })}
               variant="secondary"
             >
-              I want to mentor
+              Become a founding mentor
             </CtaButton>
           </div>
           <p className="text-halo-mist-body text-sm mt-6">
-            Free to join. Know someone who should be here?{' '}
+            No cost to take part. Know someone who should be here?{' '}
             <button
               onClick={() => setInviteOpen(true)}
               className="tap-target text-halo-purple-d underline underline-offset-2 hover:text-halo-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded-sm"
