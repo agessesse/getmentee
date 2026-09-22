@@ -9,6 +9,7 @@ import {
   Newsreader,
   IBM_Plex_Sans,
 } from 'next/font/google';
+import { originForMetadata } from '@/lib/site';
 
 // ── The old system. Still loaded because the signed-in portal renders in it:
 // the <body> below carries `font-sans`, which every protected route inherits.
@@ -50,7 +51,7 @@ const plexSans = IBM_Plex_Sans({
 // emits relative image URLs no social scraper can resolve, so the
 // summary_large_image card below rendered empty. Set NEXT_PUBLIC_APP_URL in
 // the deployment environment.
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const siteUrl = originForMetadata();
 
 /*
   Runs while the HTML is still being parsed, before the first paint.
@@ -77,21 +78,32 @@ document.documentElement.classList.add(${JSON.stringify(INTRO_COVER_CLASS)});
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: '/' },
+  /*
+    What a stranger sees when the link is pasted into iMessage, Instagram or
+    LinkedIn. The old description said Mentable "connects ambitious students
+    with experienced professionals", present tense, which described a working
+    marketplace rather than the thing that exists. These say what it is and
+    that it is early, because the first people we want are the ones who find
+    that interesting rather than disqualifying.
+  */
   title: 'Mentable: find someone worth learning from',
   description:
-    'Mentable connects ambitious students with experienced professionals who have walked the path ahead. Find a mentor, set goals, and follow through.',
+    'Good mentorship mostly depends on luck. Mentable is being built to make it depend on that less. We’re early, and looking for the first students and mentors to build it with us.',
   openGraph: {
     title: 'Mentable: find someone worth learning from',
     description:
-      'Teachable. Coachable. Ready to grow. A mentorship platform built around real relationships, goals, and follow-through.',
+      'Good mentorship mostly depends on luck. We’re building Mentable to make it depend on that less — and looking for the first students and mentors to build it with us.',
     type: 'website',
     siteName: 'Mentable',
+    // Next only emits og:url when it is given one; without it a scraper falls
+    // back to whatever URL it happened to fetch, including query strings.
+    url: '/',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Mentable: find someone worth learning from',
     description:
-      'Teachable. Coachable. Ready to grow. A mentorship platform built around real relationships, goals, and follow-through.',
+      'Good mentorship mostly depends on luck. We’re building Mentable to make it depend on that less — and looking for the first students and mentors to build it with us.',
   },
 };
 

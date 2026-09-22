@@ -73,7 +73,7 @@ export default function MenteePage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-                  <CtaButton href="/signup?role=mentee">Find your mentor</CtaButton>
+                  <CtaButton href="/founding-cohort">Apply to the founding cohort</CtaButton>
                   <CtaButton href="#journey-heading" variant="secondary">
                     See how it works
                   </CtaButton>
@@ -213,8 +213,8 @@ export default function MenteePage() {
                   ))}
                 </ul>
 
-                <CtaButton href="/signup?role=mentee" size="md" ground="deep" className="mt-9">
-                  Find your mentor
+                <CtaButton href="/founding-cohort" size="md" ground="deep" className="mt-9">
+                  Apply to the founding cohort
                 </CtaButton>
               </div>
 
@@ -349,7 +349,7 @@ export default function MenteePage() {
               Say what you are trying to do, and start with one person who has already done it.
             </p>
 
-            <CtaButton href="/signup?role=mentee">Find your mentor</CtaButton>
+            <CtaButton href="/founding-cohort">Apply to the founding cohort</CtaButton>
 
             <p className="text-halo-mist-body text-sm mt-6">
               Free to join. Already have an account?{' '}

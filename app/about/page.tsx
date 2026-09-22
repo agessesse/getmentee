@@ -129,7 +129,7 @@ export default function AboutPage() {
                 id="founder-heading"
                 className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-8"
               >
-                A note from the founder
+                A note from the founders
               </h2>
 
               <div className="pl-5 sm:pl-7 border-l-2 border-halo-purple/40">
@@ -161,12 +161,35 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="mt-8 pl-5 sm:pl-7">
-                <p className="text-[15px] font-semibold text-halo-ink">Abel Gessesse</p>
-                <p className="text-[14px] text-halo-mist-body font-light mt-0.5">
-                  Founder &middot; UNC-Chapel Hill &rsquo;28
-                </p>
+              {/*
+                Two names, because there are two of us building it. The note
+                above is written in one voice and stays that way — a jointly
+                authored paragraph would read as a press release — but the page
+                should not leave a visitor thinking Mentable has one founder.
+              */}
+              <div className="mt-8 pl-5 sm:pl-7 flex flex-wrap gap-x-10 gap-y-4">
+                <div>
+                  <p className="text-[15px] font-semibold text-halo-ink">Abel Gessesse</p>
+                  <p className="text-[14px] text-halo-mist-body font-light mt-0.5">
+                    Co-founder &middot; UNC-Chapel Hill &rsquo;28
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[15px] font-semibold text-halo-ink">Pablo Ortega Navarro</p>
+                  <p className="text-[14px] text-halo-mist-body font-light mt-0.5">
+                    Co-founder
+                  </p>
+                </div>
               </div>
+
+              <p className="mt-6 pl-5 sm:pl-7 text-[15px] text-halo-heather leading-relaxed max-w-xl">
+                We&apos;re building Mentable now, in the open, and we&apos;re at the stage
+                where the first few relationships will decide what it becomes.{' '}
+                <a href="/founding-cohort" className="text-halo-purple-d font-medium hover:text-halo-ink">
+                  The founding cohort
+                </a>{' '}
+                is how you get in early.
+              </p>
             </div>
           </div>
         </section>
@@ -332,9 +355,9 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-              <CtaButton href="/signup?role=mentee">Find your mentor</CtaButton>
+              <CtaButton href="/founding-cohort">Apply to the founding cohort</CtaButton>
               <CtaButton href="/signup?role=mentor" variant="secondary">
-                Become a mentor
+                Become a founding mentor
               </CtaButton>
             </div>
           </div>

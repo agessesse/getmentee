@@ -79,16 +79,26 @@ export default function HeroPair() {
 
   const lit = hover ?? demo;
 
+  /*
+    The eyebrows used to read "Willing to teach" and "Ready to learn" over two
+    named, photographed people. The first is a statement of intent that
+    Christopher has not made to us — his profile is `status: 'sourced'`, built
+    from public information — and it appeared in the first thing anyone sees.
+    "Further along" and "Earlier on" describe the same pairing without putting
+    words in either person's mouth, and they echo the sentence the page makes
+    further down: someone ahead of you helps you see further.
+  */
   const cards = [
     {
       id: 'mentor' as const,
-      eyebrow: 'Willing to teach',
+      eyebrow: 'Further along',
       name: MENTOR.name,
       sub: MENTOR.title,
       photo: MENTOR.headshot,
       pos: MENTOR.imagePosition ?? '50% 5%',
       reveal: (MENTOR.helpsWith ?? []).slice(0, 2),
-      revealLabel: 'Can help with',
+      // Their expertise, not an offer of their time.
+      revealLabel: 'Experience in',
       onOpen: () => {
         trackLandingEvent('mentor_card_opened', { name: MENTOR.name, surface: 'hero' });
         setPreview({ kind: 'mentor', data: MENTOR });
@@ -97,7 +107,7 @@ export default function HeroPair() {
     },
     {
       id: 'student' as const,
-      eyebrow: 'Ready to learn',
+      eyebrow: 'Earlier on',
       name: `${STUDENT.firstName} ${STUDENT.lastName}`,
       sub: 'UNC Kenan-Flagler',
       photo: STUDENT.image ?? '',

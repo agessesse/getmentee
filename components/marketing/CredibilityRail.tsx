@@ -38,10 +38,16 @@ const MENTOR_AFFILIATIONS: RailItem[] = [
 export default function CredibilityRail() {
   return (
     <LogoRail
-      eyebrow="Our mentors have studied and worked at"
+      /*
+        Was "Our mentors have studied and worked at". Nobody in this rail is
+        our mentor: every profile behind it is `status: 'sourced'`, with no
+        account and no agreement to mentor here. The institutions are real and
+        the people are real; the possessive was the false part.
+      */
+      eyebrow="Experience represented by the people helping shape Mentable"
       items={MENTOR_AFFILIATIONS}
       direction="right"
-      srLabel="Where mentors on Mentable studied and worked:"
+      srLabel="Where the professionals helping shape Mentable studied and worked:"
     />
   );
 }

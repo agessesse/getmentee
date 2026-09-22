@@ -95,8 +95,14 @@ export default function MatchExample() {
         </div>
       </div>
 
+      {/*
+        Said "Christopher is a real mentor on Mentable". He is a real person —
+        the profile is built from public information — but he is
+        `status: 'sourced'` in data/people.ts, with no account and no agreement
+        to mentor here, so "on Mentable" was the false half of the sentence.
+      */}
       <figcaption className="text-[12px] text-halo-mist-body mt-3 leading-relaxed">
-        An example match. Christopher is a real mentor on Mentable. The reasons attached to
+        An example match, using a real person&apos;s public profile. The reasons attached to
         him are generated from your own profile, so yours will say something different.
       </figcaption>
     </figure>

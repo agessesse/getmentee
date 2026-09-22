@@ -149,9 +149,16 @@ export default function LogoRail({
         the rail.
       */}
       <div className="px-6 lg:px-10">
+        {/*
+          Said "Where people on Mentable studied and worked", which was the
+          same claim the eyebrows above used to make: nobody in either rail has
+          a Mentable account. It now describes the people it is actually drawn
+          from, and keeps the non-endorsement sentence, which matters more now
+          that the site is about to be shared publicly.
+        */}
         <p className="text-[11px] text-halo-mist-body font-light mt-5 max-w-6xl mx-auto">
-          Where people on Mentable studied and worked. Not partners or customers of
-          Mentable.
+          Where the people helping shape Mentable studied and worked. These institutions and
+          employers are not partners, customers or endorsers of Mentable.
         </p>
       </div>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Copy, Check, Share2 } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
+import { CANONICAL_SITE } from '@/lib/site';
 
 interface InviteModalProps {
   open: boolean;
@@ -16,16 +17,13 @@ interface InviteModalProps {
   receive a request, and it was pointing at https://getmentee.com/signup — a
   domain that does not resolve (verified: connection timeout, while
   https://mentable.co/signup returns 200). Every mentor invited with this text
-  hit nothing. It now comes from the same environment variable the metadata,
-  sitemap and robots file use, with the real domain as the fallback, so it can
-  never drift from the site again and never carries a localhost URL.
+  hit nothing. Pointing it at NEXT_PUBLIC_APP_URL was not the fix either: that
+  variable is set to the Vercel deployment alias in production, so the invite
+  then told people to sign up at getmentee.vercel.app. A message a human copies
+  into an email should always carry the address Mentable is known by, on every
+  deployment, which is what lib/site.ts holds.
 */
-const CANONICAL_SITE = 'https://mentable.co';
-const configured = process.env.NEXT_PUBLIC_APP_URL;
-// A person copies this text into an email to someone they respect, so it must
-// never carry a development URL. NEXT_PUBLIC_APP_URL is http://localhost:3000
-// in local work, so anything local falls back to the real site.
-const SIGNUP_URL = `${configured && !/localhost|127\.0\.0\.1/.test(configured) ? configured : CANONICAL_SITE}/signup`;
+const SIGNUP_URL = `${CANONICAL_SITE}/signup`;
 
 const INVITE_MESSAGE = `I've been building a mentorship platform called Mentable that connects ambitious students with professionals who have already traveled their path.
 

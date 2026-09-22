@@ -142,16 +142,40 @@ export default function MenteeCarousel() {
       <section className="py-16 sm:py-20 bg-halo-veil" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-4">
-            Ready to learn
+            Why we&apos;re building it
           </p>
           <h2
             id="mentees-heading"
             className="font-display text-halo-ink leading-[1.05]"
             style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
           >
-            Students who come prepared<br className="hidden sm:block" />{' '}
-            and follow through.
+            Built around students who know<br className="hidden sm:block" />{' '}
+            what mentorship can change.
           </h2>
+
+          {/*
+            The section used to be headed "Ready to learn" over "Students who
+            come prepared and follow through", above a carousel labelled
+            "Students on Mentable". Every one of these people is `status:
+            'sourced'` in data/people.ts — a profile we built from public
+            information, not an account. Several are juniors and seniors who
+            found their own mentors, navigated recruiting and landed strong
+            opportunities years before Mentable existed.
+
+            Presenting them as Mentable's students borrowed those outcomes.
+            What is actually true is narrower and still worth saying: their
+            experience of mentorship is the reason we think this should exist.
+          */}
+          <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mt-5">
+            These are students whose own experiences with mentorship shaped the thinking
+            behind Mentable — people who can point to a conversation that changed what they
+            understood about a path.
+          </p>
+          <p className="text-[13px] text-halo-mist-body leading-relaxed max-w-xl mt-3">
+            Their mentorship, academic and career experiences predate Mentable. Being shown
+            here doesn&apos;t mean Mentable produced any of it, or that they are Mentable
+            members.
+          </p>
         </div></div>
 
         {/* Same shape as the mentor section: claim, proof, people. */}
@@ -162,7 +186,7 @@ export default function MenteeCarousel() {
           keyOf={(p) => p.slug}
           idleDirection={-1}
           frozen={preview !== null}
-          label="Students on Mentable"
+          label="Students whose experience shaped Mentable"
           renderItem={(person, { hovered, onHoverChange, interactive }) => (
             <MenteeCard
               person={person}
@@ -180,12 +204,12 @@ export default function MenteeCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <CtaButton
-            href="/signup?role=mentee"
-            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'create_your_profile' })}
+            href="/founding-cohort"
+            onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'mentee_carousel' })}
             variant="outline"
             size="md"
           >
-            Create your profile
+            Apply to the founding cohort
           </CtaButton>
         </div></div>
       </section>

@@ -89,7 +89,7 @@ function MentorCard({
             }}
           >
             <p className="font-ui text-[10px] font-semibold text-white/75 uppercase tracking-[0.12em] mb-1.5">
-              Can help with
+              Experience in
             </p>
             {(mentor.helpsWith ?? []).slice(0, 2).map((tag) => (
               <p key={tag} className="text-[12px] font-medium text-white leading-snug">
@@ -132,7 +132,7 @@ export default function MentorCarousel() {
       <section className="py-16 sm:py-20 bg-halo-ivory" aria-labelledby="mentor-carousel-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-4">
-            Willing to teach
+            The people we&apos;re building this with
           </p>
           <h2
             id="mentor-carousel-heading"
@@ -142,6 +142,21 @@ export default function MentorCarousel() {
             People who learned it the hard way,<br className="hidden sm:block" />{' '}
             so the next person doesn&apos;t have to.
           </h2>
+
+          {/*
+            "Willing to teach" was a statement about these people's intentions
+            that none of them has made to us. Every profile here is
+            `status: 'sourced'` in data/people.ts — assembled from public
+            information, with no account and no agreement to mentor through
+            Mentable. The eyebrow and the note below now say what is true: this
+            is the kind of experience we are building around, and we are in the
+            middle of asking them.
+          */}
+          <p className="text-[13px] text-halo-mist-body leading-relaxed max-w-xl mt-5">
+            These profiles are built from public information about people whose paths show
+            the kind of experience worth passing on. They are not yet Mentable mentors, and
+            appearing here isn&apos;t an endorsement of Mentable.
+          </p>
         </div></div>
 
         {/*
@@ -158,7 +173,7 @@ export default function MentorCarousel() {
           // moving in opposite directions rather than an unexplained mix.
           idleDirection={1}
           frozen={preview !== null}
-          label="Mentors on Mentable"
+          label="Professionals whose experience shaped Mentable"
           renderItem={(mentor, { hovered, onHoverChange, interactive }) => (
             <MentorCard
               mentor={mentor}
@@ -182,12 +197,12 @@ export default function MentorCarousel() {
             before the very last section, which previously carried the only one.
           */}
           <CtaButton
-            href="/signup?role=mentor"
-            onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'become_a_mentor' })}
+            href="/mentor"
+            onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'mentor_carousel' })}
             variant="outline"
             size="md"
           >
-            Become a mentor
+            Become a founding mentor
           </CtaButton>
         </div></div>
       </section>

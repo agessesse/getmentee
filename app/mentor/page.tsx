@@ -76,7 +76,7 @@ export default function MentorPage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-                  <CtaButton href="/signup?role=mentor">Become a mentor</CtaButton>
+                  <CtaButton href="/signup?role=mentor">Become a founding mentor</CtaButton>
                   <CtaButton href="#request-heading" variant="secondary">
                     See what a request contains
                   </CtaButton>
@@ -85,6 +85,28 @@ export default function MentorPage() {
                 <p className="text-halo-mist-body text-sm mt-6">
                   No cost, and no obligation to accept anyone.
                 </p>
+
+                {/*
+                  The CTA above now says "founding mentor", so the page has to
+                  say what that currently means. Mentable is pre-launch: the
+                  honest version is a small number of students, chosen
+                  deliberately, and a product still being shaped around what
+                  happens. Saying so is also the filter — the mentors worth
+                  having at this stage are the ones that appeals to.
+                */}
+                <div className="mt-8 border-l-2 border-halo-lavender pl-5 max-w-lg">
+                  <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-2">
+                    What founding means right now
+                  </p>
+                  <p className="text-[15px] text-halo-heather leading-relaxed">
+                    Mentable is early. We&apos;re assembling the first group of mentors and a
+                    small first cohort of students, deliberately small so nobody is
+                    overwhelmed and every relationship is a real one. You set when
+                    you&apos;re free, you see what a student is trying to do before you
+                    decide, and you can say no. What you tell us in the first few months is
+                    what the product gets built around.
+                  </p>
+                </div>
               </div>
 
               <div className="hidden lg:block">
@@ -223,7 +245,7 @@ export default function MentorPage() {
                 </p>
 
                 <CtaButton href="/signup?role=mentor" size="md" ground="deep" className="mt-9">
-                  Become a mentor
+                  Become a founding mentor
                 </CtaButton>
               </div>
 
@@ -377,7 +399,7 @@ export default function MentorPage() {
               if it fits.
             </p>
 
-            <CtaButton href="/signup?role=mentor">Become a mentor</CtaButton>
+            <CtaButton href="/signup?role=mentor">Become a founding mentor</CtaButton>
 
             <p className="text-halo-mist-body text-sm mt-6">
               Already have an account?{' '}

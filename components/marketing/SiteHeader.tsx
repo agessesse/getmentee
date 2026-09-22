@@ -117,11 +117,19 @@ export default function SiteHeader() {
             >
               Sign in
             </Link>
+            {/*
+              Was "Get started" → /signup, the one CTA present on every public
+              page. Signup currently delivers a student into a mentor list where
+              nobody can receive a request, so the most-seen button on the site
+              was also its most reliable dead end. It points at the cohort page
+              instead, which states the stage plainly and carries the mentor
+              path at the bottom for anyone who isn't a student.
+            */}
             <Link
-              href="/signup"
+              href="/founding-cohort"
               className="bg-halo-purple text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-halo-purple-d active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
-              Get started
+              Apply
             </Link>
           </div>
         </div>

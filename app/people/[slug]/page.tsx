@@ -234,12 +234,24 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
         <h2 className="font-display text-white text-[1.6rem] sm:text-[1.9rem] leading-tight mb-3">
           Find a mentor like {person.firstName}.
         </h2>
+        {/*
+          This said "{firstName} has been invited to join Mentable" and promised
+          "we will introduce you to someone who has done it". Neither was true:
+          every profile in data/people.ts is `status: 'sourced'`, meaning a
+          record we built from public information with no invitation sent and no
+          account, and Mentable cannot promise an introduction to anybody. The
+          status line is now driven by the data rather than asserted, and the
+          promise is gone.
+        */}
         <p className="text-halo-lavender text-[15px] font-light leading-relaxed max-w-md mb-6">
-          {person.firstName} has been invited to join Mentable. Tell us what you
-          are working toward and we will introduce you to someone who has done it.
+          {person.status === 'active'
+            ? `${person.firstName} is on Mentable.`
+            : `${person.firstName} isn’t on Mentable yet — this profile is built from public information.`}{' '}
+          We&apos;re putting together a first group of students and the mentors who agree to
+          work with them.
         </p>
-        <CtaButton href="/signup?role=mentee" size="md" ground="deep">
-  Find your mentor
+        <CtaButton href="/founding-cohort" size="md" ground="deep">
+  Apply to the founding cohort
 </CtaButton>
       </div>
     </div>

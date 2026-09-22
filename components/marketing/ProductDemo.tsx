@@ -349,6 +349,19 @@ export default function ProductDemo() {
             </p>
 
             {/*
+              Said once, up front. Everything in the window to the right is
+              illustrative: the names, the messages and the goals are fixtures
+              written for this demo, not activity on Mentable. The panel itself
+              already says "Nothing is sent from this preview" at the point of
+              action; this is the same fact stated before someone starts
+              clicking rather than after.
+            */}
+            <p className="text-[13px] text-halo-mist-body leading-relaxed mb-7 max-w-md">
+              A preview of the real product, running on example data. The people and
+              conversations in it are illustrative.
+            </p>
+
+            {/*
               role="tablist" on the <ol> overrides the element's own list
               semantics, which orphaned all four <li> children and left each
               role="tab" without the tablist parent it requires. The list markup
@@ -416,13 +429,13 @@ export default function ProductDemo() {
             </ol>
 
             <CtaButton
-              href="/signup"
-              onClick={() => trackLandingEvent('landing_cta_clicked', { cta: 'start_building_your_mentorship' })}
+              href="/founding-cohort"
+              onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'product_demo' })}
               variant="secondary"
               size="md"
               className="mt-7"
             >
-              Start building your mentorship
+              Apply to the founding cohort
             </CtaButton>
           </div>
 
