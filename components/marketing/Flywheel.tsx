@@ -35,12 +35,18 @@ interface Geo {
   C: { x: number; y: number };
   R: number;
   reached: { x: number; y: number; r: number }[];
-  bud: { x: number; y: number; r: number };
+  /**
+   * Cycles that begin because the first one did. The first is the mentee who
+   * later helps someone; the second is that person's own. Two is enough to
+   * show the direction of travel, and stopping at two keeps it an illustration
+   * of how impact can move rather than a claim that it doubles.
+   */
+  buds: { x: number; y: number; r: number }[];
 }
 
 const WIDE: Geo = {
-  vb: '0 0 440 300',
-  maxW: '440px',
+  vb: '0 0 500 300',
+  maxW: '480px',
   C: { x: 148, y: 148 },
   R: 80,
   // Kept clear of the ring's own node labels, which sit radially outside it.
@@ -52,11 +58,14 @@ const WIDE: Geo = {
     { x: 308, y: 220, r: 2.4 },
     { x: 344, y: 174, r: 2.2 },
   ],
-  bud: { x: 396, y: 148, r: 30 },
+  buds: [
+    { x: 386, y: 148, r: 28 },
+    { x: 456, y: 148, r: 17 },
+  ],
 };
 
 const NARROW: Geo = {
-  vb: '0 0 300 440',
+  vb: '0 0 300 470',
   maxW: '320px',
   C: { x: 150, y: 132 },
   R: 84,
@@ -69,7 +78,10 @@ const NARROW: Geo = {
     { x: 206, y: 266, r: 2.4 },
     { x: 170, y: 316, r: 2.2 },
   ],
-  bud: { x: 150, y: 374, r: 34 },
+  buds: [
+    { x: 150, y: 362, r: 30 },
+    { x: 150, y: 432, r: 18 },
+  ],
 };
 
 function nodePos(g: Geo, i: number, total: number) {
@@ -96,9 +108,9 @@ function labelPos(g: Geo, i: number, total: number) {
   } as const;
 }
 
-function budNode(g: Geo, i: number) {
+function budNode(bud: { x: number; y: number; r: number }, i: number) {
   const a = (i / 4) * Math.PI * 2 - Math.PI / 2;
-  return { x: g.bud.x + g.bud.r * Math.cos(a), y: g.bud.y + g.bud.r * Math.sin(a) };
+  return { x: bud.x + bud.r * Math.cos(a), y: bud.y + bud.r * Math.sin(a) };
 }
 
 export default function Flywheel() {
@@ -163,6 +175,23 @@ export default function Flywheel() {
   // it simply appears rather than fading in.
   const motion = !prefersReduced;
 
+  /*
+    Where the closing line is allowed to appear.
+
+    Pinned, it is the payoff: you walk the cycle and it lands at Return. But
+    unpinned — a phone, or reduced motion — there is no walk, the stages wait
+    to be tapped, and the strongest sentence in the section was sitting at
+    opacity 0 for the visitors least likely to go looking for it. So it is
+    held back only where holding it back buys something.
+
+    Gated on mount rather than on `pinned` alone: useWideViewport starts false,
+    so keying straight off it would render the line on a desktop first paint
+    and then fade it out on hydration.
+  */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const revealed = isReturn || (mounted && !pinned);
+
   return (
     <div ref={pinRef} style={pinned ? { height: '230vh' } : undefined}>
     <section
@@ -172,23 +201,35 @@ export default function Flywheel() {
       aria-labelledby="flywheel-heading"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Not an even split. The text column carries a 48px headline and the
+            diagram column was running half-empty at 1024; giving the words the
+            larger share fixes the wrap at the narrowest two-column width and
+            tightens the whitespace around the ring at the same time. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-12 lg:gap-16 items-center">
 
           <div>
             <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-5">
-              The compounding effect
+              ROI · Return on Impact
             </p>
             <h2
               id="flywheel-heading"
               className="font-display text-halo-ink leading-[1.05] mb-4"
-              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
+              style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)', textWrap: 'balance' }}
             >
-              One mentor reaches<br />further than one person.
+              {/*
+                No hard break, and balance rather than a breakpoint exception —
+                the same treatment section 06's headline already uses. The one
+                addition is a non-breaking space inside "someone else's": left
+                to itself, balance split that phrase and line two read "becomes
+                someone", which lands as a different sentence than the one
+                being written.
+              */}
+              Your experience becomes someone&nbsp;else&apos;s starting point.
             </h2>
 
             <p className="text-halo-mist-body font-light text-[15px] leading-relaxed mb-5 max-w-sm">
-              Help someone take their next step, and the impact doesn&apos;t stop
-              when they take it.
+              One mentor reaches further than one person. Help someone take their
+              next step, and the effect doesn&apos;t stop when they take it.
             </p>
 
             {/* The copy has to describe the interaction that is actually
@@ -222,15 +263,15 @@ export default function Flywheel() {
                 anything once you have watched it close. */}
             <p
               className="text-[15px] text-halo-ink font-medium mt-6 max-w-sm leading-relaxed transition-opacity duration-500 motion-reduce:transition-none"
-              style={{ opacity: isReturn ? 1 : 0 }}
+              style={{ opacity: revealed ? 1 : 0 }}
             >
-              A mentor doesn&apos;t just help one person. They help everyone that
-              person goes on to help.
+              The return isn&apos;t what comes back to you. It&apos;s what keeps
+              moving forward.
             </p>
           </div>
 
           {/* The wheel */}
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
             {/*
               Same trap as TrajectoryViz: role="img" makes the whole subtree a
               single leaf, so the four focusable stage markers inside were
@@ -241,7 +282,7 @@ export default function Flywheel() {
               className="w-full h-auto"
               style={{ maxWidth: g.maxW }}
               role="group"
-              aria-label="A four-stage cycle — learn, grow, impact, return — which reaches outward: at the impact stage the people that growth touches appear beyond the ring, and at the return stage a second, smaller cycle begins beside it, belonging to someone the first mentor never met."
+              aria-label="An illustration of a four-stage cycle: learn, grow, impact, return. At the impact stage, the people that growth touches appear beyond the ring. At the return stage, two further cycles begin beside it, each smaller than the last, belonging to people the first mentor never met."
             >
               {/*
                 Everything from here to the ring is the compounding, and it is
@@ -265,18 +306,25 @@ export default function Flywheel() {
 
                 {/* Stage 4 — the next cycle, beginning without the first mentor. */}
                 <g style={{ opacity: isReturn ? 1 : 0.14, transition: motion ? 'opacity 800ms ease 120ms' : undefined }}>
-                  <circle cx={g.bud.x} cy={g.bud.y} r={g.bud.r} fill="none" stroke="#E2DDE8" strokeWidth="1.5" />
-                  {[0, 1, 2, 3].map((i) => {
-                    const n = budNode(g, i);
-                    return (
-                      <circle
-                        key={i}
-                        cx={n.x} cy={n.y} r={i === 0 ? 6 : 4.5}
-                        fill={i === 0 ? '#785AF7' : '#ffffff'}
-                        stroke="#D9CFFB" strokeWidth="1.5"
-                      />
-                    );
-                  })}
+                  {/* Each generation is smaller and quieter than the one
+                      before it, so the eye reads distance rather than decay. */}
+                  {g.buds.map((bud, gen) => (
+                    <g key={gen} opacity={gen === 0 ? 1 : 0.62}>
+                      <circle cx={bud.x} cy={bud.y} r={bud.r} fill="none" stroke="#E2DDE8" strokeWidth="1.5" />
+                      {[0, 1, 2, 3].map((i) => {
+                        const n = budNode(bud, i);
+                        const lead = i === 0;
+                        return (
+                          <circle
+                            key={i}
+                            cx={n.x} cy={n.y} r={lead ? (gen === 0 ? 6 : 4) : gen === 0 ? 4.5 : 3}
+                            fill={lead ? '#785AF7' : '#ffffff'}
+                            stroke="#D9CFFB" strokeWidth="1.5"
+                          />
+                        );
+                      })}
+                    </g>
+                  ))}
                 </g>
               </g>
 
@@ -308,9 +356,22 @@ export default function Flywheel() {
                     tabIndex={0}
                     role="button"
                     aria-label={`Stage ${i + 1}: ${s.verb}. ${s.line}`}
+                    className="halo-svg-focus"
                     style={{ cursor: 'pointer' }}
                   >
                     <circle cx={x} cy={y} r="26" fill="transparent" />
+                    {/* Sits outside the largest marker state (r 17) with a
+                        clear gap, so the ring reads as a ring rather than a
+                        border, and never changes the marker's own geometry. */}
+                    <circle
+                      className="halo-svg-focus-ring"
+                      cx={x} cy={y} r="23"
+                      fill="none"
+                      stroke="#4717CA"
+                      strokeWidth="2"
+                      opacity="0"
+                      style={{ pointerEvents: 'none' }}
+                    />
                     <circle
                       cx={x} cy={y}
                       r={isActive ? 17 : 13}
@@ -383,6 +444,17 @@ export default function Flywheel() {
                 ↻ begins again
               </text>
             </svg>
+
+            {/*
+              Two sentences, in the shape section 06 already uses ("Illustrative.
+              Mentorship changes what is reachable. It does not guarantee an
+              outcome."). The longer version explained why we had not put a
+              number here, which is internal reasoning: it told the visitor what
+              we were worried about instead of what the drawing means.
+            */}
+            <p className="text-[12.5px] text-halo-mist-body font-light leading-relaxed mt-5 max-w-sm text-center">
+              Illustrative. This shows how impact can travel, not how often it does.
+            </p>
           </div>
 
         </div>

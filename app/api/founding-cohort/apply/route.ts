@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getServiceRoleKey } from '@/lib/supabase/service-key';
+import { notifyAdmins } from '@/lib/notify';
+import { CANONICAL_SITE } from '@/lib/site';
 
 /**
  * POST /api/founding-cohort/apply
@@ -25,9 +27,46 @@ const LIMITS = {
   essay: 2000,
 } as const;
 
-const ESSAY_FIELDS = ['learning', 'why_mentor', 'tried', 'thirty_min', 'good_use', 'field', 'worth_it'] as const;
+/*
+  The three written answers, and which column each lands in.
 
-type Body = Partial<Record<'full_name' | 'email' | 'school' | 'year' | (typeof ESSAY_FIELDS)[number], unknown>>;
+  The form used to ask seven questions with six optional; it now asks three and
+  requires all of them. The database columns keep their original names rather
+  than being renamed by a migration, because renaming a column to match a
+  question wording is a schema change in exchange for nothing. The mapping is
+  recorded here so the two never drift apart silently.
+
+    working_toward  ->  learning      what the student is working toward
+    help_with       ->  why_mentor    what they want help thinking through
+    already_done    ->  tried         what they have already done themselves
+
+  thirty_min, good_use, field and worth_it are no longer collected. The columns
+  remain, nullable and empty, so existing rows keep their answers.
+*/
+/*
+  School and stage are required as well as the three answers. They are context
+  for deciding what kind of mentorship would help, never selection criteria:
+  nothing in review ranks a school, and the list below carries no prestige
+  order. `year` is validated against a fixed list because the form offers a
+  list; a value outside it means the request did not come from the form.
+*/
+const YEARS = [
+  'First year',
+  'Sophomore',
+  'Junior',
+  'Senior',
+  'Graduate student',
+  'Recent graduate',
+  'Other',
+] as const;
+
+const ANSWERS = [
+  { field: 'working_toward', column: 'learning', min: 80 },
+  { field: 'help_with', column: 'why_mentor', min: 80 },
+  { field: 'already_done', column: 'tried', min: 80 },
+] as const;
+
+type Body = Partial<Record<'full_name' | 'email' | 'school' | 'year' | (typeof ANSWERS)[number]['field'], unknown>>;
 
 const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
 
@@ -79,33 +118,48 @@ export async function POST(req: NextRequest) {
 
   const full_name = str(body.full_name);
   const email = str(body.email).toLowerCase();
-  const learning = str(body.learning);
 
   if (!full_name) return NextResponse.json({ error: 'Please add your name.' }, { status: 400 });
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: 'Please add an email address we can reply to.' }, { status: 400 });
   }
-  if (!learning) {
-    return NextResponse.json({ error: 'Please tell us what you’re trying to learn or figure out.' }, { status: 400 });
-  }
   if (full_name.length > LIMITS.full_name || email.length > LIMITS.email) {
     return NextResponse.json({ error: 'That name or email is longer than we can store.' }, { status: 400 });
   }
 
-  const row: Record<string, string | null> = {
-    full_name,
-    email,
-    school: str(body.school).slice(0, LIMITS.school) || null,
-    year: str(body.year).slice(0, LIMITS.year) || null,
-  };
-  for (const f of ESSAY_FIELDS) {
-    const value = str(body[f]);
+  const school = str(body.school);
+  const year = str(body.year);
+
+  if (!school) {
+    return NextResponse.json({ error: 'Please add where you study.' }, { status: 400 });
+  }
+  if (school.length > LIMITS.school) {
+    return NextResponse.json({ error: 'That school name is longer than we can store.' }, { status: 400 });
+  }
+  if (!(YEARS as readonly string[]).includes(year)) {
+    return NextResponse.json({ error: 'Please choose where you are right now.' }, { status: 400 });
+  }
+
+  const row: Record<string, string | null> = { full_name, email, school, year };
+
+  // All three answers are required here as well as in the browser: the form is
+  // public, and a client-side check is a courtesy rather than a control.
+  for (const a of ANSWERS) {
+    const value = str(body[a.field]);
+    if (!value) {
+      return NextResponse.json({ error: 'Please answer all three questions.' }, { status: 400 });
+    }
+    if (value.length < a.min) {
+      return NextResponse.json(
+        { error: 'Could you say a little more? A sentence or two for each answer is plenty.' },
+        { status: 400 },
+      );
+    }
     if (value.length > LIMITS.essay) {
       return NextResponse.json({ error: 'One of your answers is longer than the form allows.' }, { status: 400 });
     }
-    row[f] = value || null;
+    row[a.column] = value;
   }
-  row.learning = learning;
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
   const { error } = await admin.from('cohort_applications').insert(row);
@@ -131,6 +185,16 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
+
+  /*
+    Awaited, so a serverless instance cannot be frozen before the request goes
+    out, but it can only ever resolve: notifyAdmins swallows its own failures.
+    The message deliberately carries nothing about the applicant.
+  */
+  await notifyAdmins(
+    'New founding cohort application. Review in Mentable Admin:',
+    `${CANONICAL_SITE}/admin/applications`,
+  );
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

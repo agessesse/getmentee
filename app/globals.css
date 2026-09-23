@@ -277,3 +277,20 @@ html.intro-cover body::before {
   background: #0A0A0F;
   animation: introCoverFailsafe 0s linear 6s forwards;
 }
+
+/* ── Keyboard focus for SVG stage markers ──
+   Tailwind's ring-* utilities are box-shadows, which SVG shapes do not render,
+   so the four focusable markers in the Return on Impact diagram fell back to
+   the browser's default blue rectangle: visible, but the only piece of the
+   site not wearing Halo purple.
+
+   The indicator is a circle already present in the marker's own group at
+   opacity 0, so showing it costs no layout and moves nothing. Keyed on
+   :focus-visible, matching the focus-visible:ring-halo-purple treatment used
+   everywhere else, so a mouse click leaves no ring behind. */
+.halo-svg-focus:focus {
+  outline: none;
+}
+.halo-svg-focus:focus-visible .halo-svg-focus-ring {
+  opacity: 1;
+}

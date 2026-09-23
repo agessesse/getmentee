@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
+import { PUBLIC_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
@@ -134,8 +134,28 @@ function MenteeCard({
   );
 }
 
+/*
+  The section is headed "students whose experiences shaped the thinking behind
+  Mentable". Someone building Mentable is a different claim, so founders are
+  filtered out rather than presented as part of the evidence for their own
+  product.
+*/
+const CAROUSEL_PEOPLE = PUBLIC_NEAR_PEERS.filter((p) => !p.isFounder);
+
 export default function MenteeCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
+
+  /*
+    Nobody approved, no section.
+
+    The heading says "built around students who know what mentorship can
+    change" and the rail underneath is about the schools those students attend.
+    Both are claims about people, so with nobody approved to show, the honest
+    move is for the section to disappear rather than stand as a heading over an
+    empty shell. The homepage reads as a complete page without it, and the
+    moment someone is approved it returns exactly as it was.
+  */
+  if (CAROUSEL_PEOPLE.length === 0) return null;
 
   return (
     <>
@@ -168,7 +188,7 @@ export default function MenteeCarousel() {
           */}
           <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mt-5">
             These are students whose own experiences with mentorship shaped the thinking
-            behind Mentable — people who can point to a conversation that changed what they
+            behind Mentable. People who can point to a conversation that changed what they
             understood about a path.
           </p>
           <p className="text-[13px] text-halo-mist-body leading-relaxed max-w-xl mt-3">
@@ -182,7 +202,7 @@ export default function MenteeCarousel() {
         <SchoolRail />
 
         <CarouselShell
-          items={SOURCED_NEAR_PEERS}
+          items={CAROUSEL_PEOPLE}
           keyOf={(p) => p.slug}
           idleDirection={-1}
           frozen={preview !== null}
@@ -190,7 +210,7 @@ export default function MenteeCarousel() {
           renderItem={(person, { hovered, onHoverChange, interactive }) => (
             <MenteeCard
               person={person}
-              index={SOURCED_NEAR_PEERS.indexOf(person)}
+              index={CAROUSEL_PEOPLE.indexOf(person)}
               hovered={hovered}
               onHoverChange={onHoverChange}
               interactive={interactive}

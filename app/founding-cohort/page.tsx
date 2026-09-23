@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Apply to the Mentable founding cohort',
     description:
-      'We’re looking for the first students to build this with us. No prestige required — just something you want to understand and the willingness to prepare.',
+      'We’re looking for the first students to build this with us. You don’t need prestige or a network, just something you want to understand and the willingness to prepare.',
     type: 'website',
     siteName: 'Mentable',
   },
@@ -82,9 +82,16 @@ export default function FoundingCohortPage() {
               we’re starting with a small group of students and the mentors who agree to
               work with them.
             </p>
+            {/*
+              This said "You don't need a good résumé to apply", which was meant
+              to remove a barrier and instead announced a low bar. The bar is
+              real, it is just not the one most places use: not what you have
+              already done, but how seriously you intend to use someone's time.
+            */}
             <p className="text-[17px] text-halo-heather leading-relaxed max-w-xl mb-8">
-              You don’t need a good résumé to apply. You need something you actually want to
-              understand, and the willingness to prepare for the conversation.
+              You don’t need to have it figured out, and you don’t need a network or a
+              long résumé. You do need something you genuinely want to understand, and the
+              willingness to prepare, take feedback and follow through.
             </p>
             <a
               href="#apply"
@@ -107,7 +114,7 @@ export default function FoundingCohortPage() {
               each said you’d do, and help preparing before you talk.
             </p>
             <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl">
-              Good mentorship mostly depends on luck right now — on knowing someone, or on
+              Good mentorship mostly depends on luck right now. On knowing someone, or on
               being the kind of person who finds it easy to ask. We’re trying to make it
               depend on that a little less.{' '}
               <Link href="/" className="text-halo-purple-d font-medium hover:text-halo-ink">
@@ -146,8 +153,10 @@ export default function FoundingCohortPage() {
             </h2>
             <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mb-6">
               Students who are curious about something specific, willing to prepare, open to
-              being told they’re wrong, and likely to follow through on what they said
-              they’d do.
+              being told they’re wrong, and likely to do the thing they said they would.
+              A first year with no internships and no idea how any of it works can be an
+              excellent founding mentee. Someone who expects a mentor to do the work for
+              them is not.
             </p>
             {/*
               Stated plainly, because the people most helped by mentorship are
@@ -210,8 +219,8 @@ export default function FoundingCohortPage() {
               Apply
             </h2>
             <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mb-3">
-              Seven short questions. Only the first one is required, and there are no right
-              answers — we’re trying to understand how you think about this, not test you.
+              Three questions, plus your name and email. There are no right answers. We are
+              trying to understand what you want and how you think about getting there.
             </p>
             <p className="text-[15px] text-halo-mist-body leading-relaxed max-w-xl mb-9">
               We read every application ourselves, so give us a few days to reply.

@@ -14,6 +14,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface Mentor {
+  /**
+   * Permission to appear on the public site. Absent means no. Kept separate
+   * from every other fact about this person, exactly as in data/people.ts.
+   */
+  publicUse?: 'approved';
   /** Full display name including credential if applicable */
   name: string;
   /** One or two initials for the fallback avatar */
@@ -271,3 +276,11 @@ export const FEATURED_MENTORS: Mentor[] = [
     menteesMentored: null,
   },
 ];
+
+
+/**
+ * The marketing carousels and the hero may only show mentors who have agreed
+ * to appear. Empty today, and the components handle that.
+ */
+export const PUBLIC_FEATURED_MENTORS: Mentor[] =
+  FEATURED_MENTORS.filter((m) => m.publicUse === 'approved');

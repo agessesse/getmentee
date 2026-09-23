@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
+import { PUBLIC_FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import CarouselShell from '@/components/marketing/CarouselShell';
 import ProfileCardShell from '@/components/marketing/ProfileCardShell';
@@ -127,6 +127,10 @@ function MentorCard({
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
 
+  // Same rule as the student section: a heading about people, with no people
+  // approved to show, is worse than no section.
+  if (PUBLIC_FEATURED_MENTORS.length === 0) return null;
+
   return (
     <>
       <section className="py-16 sm:py-20 bg-halo-ivory" aria-labelledby="mentor-carousel-heading">
@@ -166,7 +170,7 @@ export default function MentorCarousel() {
         <CredibilityRail />
 
         <CarouselShell
-          items={FEATURED_MENTORS}
+          items={PUBLIC_FEATURED_MENTORS}
           keyOf={(m) => m.name}
           // Rightward, matching CredibilityRail above it. The students section
           // mirrors this and drifts left, so the two rosters read as a pair
@@ -177,7 +181,7 @@ export default function MentorCarousel() {
           renderItem={(mentor, { hovered, onHoverChange, interactive }) => (
             <MentorCard
               mentor={mentor}
-              index={FEATURED_MENTORS.indexOf(mentor)}
+              index={PUBLIC_FEATURED_MENTORS.indexOf(mentor)}
               hovered={hovered}
               onHoverChange={onHoverChange}
               interactive={interactive}

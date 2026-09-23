@@ -13,7 +13,7 @@ import {
   Search, Star, Clock, MapPin, Building2, Bookmark, BookmarkCheck,
   ChevronDown, SlidersHorizontal, X, GraduationCap, Users, Mail, UserPlus,
 } from 'lucide-react';
-import { SOURCED_MENTORS, SOURCED_NEAR_PEERS, type SourcedProfile, type SourcedNearPeer } from '@/data/people';
+import { SOURCED_MENTORS, SOURCED_NEAR_PEERS, isPubliclyApproved, type SourcedProfile, type SourcedNearPeer } from '@/data/people';
 import InviteModal from '@/components/marketing/InviteModal';
 
 // ─── Filter taxonomy ──────────────────────────────────────────────────────────
@@ -152,12 +152,21 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <Link
-              href={`/people/${person.slug}`}
-              className="text-sm font-semibold text-halo-ink hover:text-halo-purple-d transition-colors block truncate"
-            >
-              {fullName}
-            </Link>
+            {/*
+              Linked only for someone who has approved public use. Their
+              /people page 404s otherwise, and a card that looks clickable and
+              leads nowhere is worse than a card that does not.
+            */}
+            {isPubliclyApproved(person.slug) ? (
+              <Link
+                href={`/people/${person.slug}`}
+                className="text-sm font-semibold text-halo-ink hover:text-halo-purple-d transition-colors block truncate"
+              >
+                {fullName}
+              </Link>
+            ) : (
+              <p className="text-sm font-semibold text-halo-ink truncate">{fullName}</p>
+            )}
             {(person.title || person.organization) && (
               <p className="text-xs text-halo-mist-body mt-0.5 truncate">
                 {[person.title, person.organization].filter(Boolean).join(' · ')}
@@ -205,12 +214,14 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
           Not on Mentable yet. This profile comes from public sources so you can see who is out there.
           {' '}{person.firstName} can&apos;t receive requests until they join.
         </p>
-        <Link
-          href={`/people/${person.slug}`}
-          className="block text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
-        >
-          View profile
-        </Link>
+        {isPubliclyApproved(person.slug) && (
+          <Link
+            href={`/people/${person.slug}`}
+            className="block text-center py-2 rounded-xl border border-halo-rule text-xs font-medium text-halo-heather hover:border-halo-purple hover:text-halo-ink transition-all"
+          >
+            View profile
+          </Link>
+        )}
       </div>
     </div>
   );
@@ -221,12 +232,15 @@ function SourcedMentorCard({ person }: { person: SourcedProfile }) {
 function NearPeerCard({ person }: { person: SourcedNearPeer }) {
   const fullName = `${person.firstName} ${person.lastName}`;
   const initials = `${person.firstName[0]}${person.lastName[0]}`;
+  // The whole card was a link to a page that only exists for someone who has
+  // approved public use. It stays a card when there is nowhere to go.
+  const linked = isPubliclyApproved(person.slug);
+  const shell = `bg-white rounded-2xl border border-halo-rule p-5 flex items-start gap-4${
+    linked ? ' hover:border-halo-lavender hover:shadow-sm transition-all' : ''
+  }`;
 
-  return (
-    <Link
-      href={`/people/${person.slug}`}
-      className="bg-white rounded-2xl border border-halo-rule hover:border-halo-lavender hover:shadow-sm transition-all p-5 flex items-start gap-4"
-    >
+  const body = (
+    <>
       <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-halo-lavender/50">
         {person.image ? (
           <Image
@@ -257,7 +271,15 @@ function NearPeerCard({ person }: { person: SourcedNearPeer }) {
           ))}
         </div>
       </div>
+    </>
+  );
+
+  return linked ? (
+    <Link href={`/people/${person.slug}`} className={shell}>
+      {body}
     </Link>
+  ) : (
+    <div className={shell}>{body}</div>
   );
 }
 

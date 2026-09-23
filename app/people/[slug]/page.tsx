@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { isPubliclyApproved } from '@/data/people';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Link as LinkIcon, MapPin, GraduationCap, Briefcase, Award, ExternalLink } from 'lucide-react';
@@ -11,10 +12,11 @@ import CtaButton from '@/components/marketing/CtaButton';
 // ─── Static params (build-time) ───────────────────────────────────────────────
 
 export function generateStaticParams() {
-  const { SOURCED_MENTORS, SOURCED_NEAR_PEERS } = require('@/data/people');
+  // Approved people only. Anything else is not a page.
+  const { PUBLIC_MENTORS, PUBLIC_NEAR_PEERS } = require('@/data/people');
   return [
-    ...(SOURCED_MENTORS as SourcedProfile[]).map((p) => ({ slug: p.slug })),
-    ...(SOURCED_NEAR_PEERS as SourcedNearPeer[]).map((p) => ({ slug: p.slug })),
+    ...(PUBLIC_MENTORS as SourcedProfile[]).map((p) => ({ slug: p.slug })),
+    ...(PUBLIC_NEAR_PEERS as SourcedNearPeer[]).map((p) => ({ slug: p.slug })),
   ];
 }
 
@@ -420,7 +422,9 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
 // cluster in which none could rank for the person's own name.
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const result = getPersonBySlug(params.slug);
-  if (!result) return { title: 'Profile not found' };
+  // Name, bio and photograph all go into the metadata, so an unapproved person
+  // would be published to every social scraper by the head of a 404 page.
+  if (!result || !isPubliclyApproved(params.slug)) return { title: 'Profile not found' };
 
   const p = result.data;
   const name = `${p.firstName} ${p.lastName}`;
@@ -461,7 +465,13 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 
 export default function PersonPage({ params }: { params: { slug: string } }) {
   const result = getPersonBySlug(params.slug);
-  if (!result) notFound();
+  /*
+    Not found, and not approved, are the same answer here. generateStaticParams
+    already builds only approved pages, but dynamicParams would happily render
+    any other slug on demand, so the page refuses as well. The two checks are
+    not redundant: one decides what is built, the other decides what is served.
+  */
+  if (!result || !isPubliclyApproved(params.slug)) notFound();
 
   // These are the pages search engines actually send strangers to, and they
   // rendered with no header, no footer and no <main> — a person arriving from a

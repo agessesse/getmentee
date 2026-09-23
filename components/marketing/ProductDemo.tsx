@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { Circle, CheckCircle2, ArrowRight, ArrowLeft, Calendar, Target, Send, Search, MousePointerClick } from 'lucide-react';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import CtaButton from '@/components/marketing/CtaButton';
@@ -15,10 +14,20 @@ const STAGES = [
 
 type StageId = (typeof STAGES)[number]['id'];
 
+/*
+  The mentor shown inside the demo.
+
+  This used to be a real, named person with his photograph, in a panel of
+  invented messages and goals. The section is labelled as example data, but
+  attaching a real face and name to fabricated activity is the one thing the
+  label cannot make true, and he has not approved public use. The demo now uses
+  an unmistakably generic stand-in: no photograph, no invented identity, and
+  nothing a reader could mistake for a person taking part.
+*/
 const MENTOR = {
-  name: 'Christopher Floyd, CFA',
-  role: 'Head of Institutional Sales · Bondway.ai',
-  photo: '/people/christopher-floyd.jpg',
+  name: 'Example mentor',
+  role: 'Fixed income and capital markets',
+  initials: 'EM',
   helps: ['Fixed Income', 'Capital Markets'],
 };
 
@@ -60,7 +69,7 @@ function Discover({ onPick }: { onPick: () => void }) {
         className="w-full flex items-center gap-4 p-3.5 bg-white rounded-xl border border-halo-purple/45 ring-1 ring-halo-purple/10 shadow-sm hover:border-halo-purple hover:ring-halo-purple/30 hover:shadow-md active:scale-[0.99] transition-all text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
       >
         <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-none bg-halo-bone">
-          <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="56px" />
+          <span className="w-full h-full flex items-center justify-center bg-halo-lavender/60 text-halo-purple-d font-semibold text-[12px]">{MENTOR.initials}</span>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[14px] font-semibold text-halo-ink truncate">{MENTOR.name}</p>
@@ -116,7 +125,7 @@ function Request({ onSend }: { onSend: () => void }) {
     <div className="space-y-4">
       <div className="flex items-center gap-3 pb-3.5 border-b border-halo-rule">
         <div className="relative w-9 h-9 rounded-full overflow-hidden flex-none bg-halo-bone">
-          <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="36px" />
+          <span className="w-full h-full flex items-center justify-center bg-halo-lavender/60 text-halo-purple-d font-semibold text-[12px]">{MENTOR.initials}</span>
         </div>
         <div className="min-w-0">
           <p className="text-[12px] font-semibold text-halo-ink truncate">{MENTOR.name}</p>
@@ -219,7 +228,7 @@ function Session() {
         <p className="font-ui text-[10px] font-semibold text-halo-purple-d uppercase tracking-[0.12em] mb-3">Upcoming session</p>
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none ring-2 ring-halo-deep-rule">
-            <Image src={MENTOR.photo} alt="" fill className="object-cover" style={{ objectPosition: '50% 5%' }} sizes="40px" />
+            <span className="w-full h-full flex items-center justify-center bg-halo-lavender/60 text-halo-purple-d font-semibold text-[12px]">{MENTOR.initials}</span>
           </div>
           <div className="min-w-0">
             <p className="text-[12px] font-semibold text-white truncate">{MENTOR.name}</p>

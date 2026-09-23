@@ -13,6 +13,7 @@ import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import Flywheel from '@/components/marketing/Flywheel';
 import BothDirections from '@/components/marketing/BothDirections';
+import { HERO_HAS_PAIR } from '@/components/marketing/HeroPair';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import HeroPin from '@/components/marketing/HeroPin';
@@ -65,7 +66,17 @@ export default function LandingPage() {
       <HeroPin>
       <section className="w-full pt-8 pb-16 sm:pb-20 lg:pb-[clamp(3rem,8vh,6rem)] px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-12 lg:gap-16 items-center">
+          {/*
+            The second column holds the pair of profile cards, which only
+            render for people who have approved public use. When nobody has,
+            HeroPair returns null and a reserved 400px column would leave the
+            hero looking like something failed to load. `HERO_HAS_PAIR` decides
+            the grid instead, so the hero is either two columns with the cards
+            or one full-width editorial column, and both are deliberate.
+          */}
+          <div className={`grid grid-cols-1 gap-12 lg:gap-16 items-center${
+            HERO_HAS_PAIR ? ' lg:grid-cols-[1fr,400px]' : ''
+          }`}>
             {/* Outer block rises 20px, the headline inside it a further 30px,
                 both on load rather than on scroll: this is the first thing on
                 screen, so there is nothing to scroll into view. */}
@@ -136,6 +147,24 @@ export default function LandingPage() {
                 cohort you apply to, and a mentor path that explains what
                 taking part means before asking for a signup.
               */}
+              {/*
+                The one thing the hero was missing, and it belongs above the
+                buttons rather than below them.
+
+                A first-time visitor met an aphorism, a standfirst and a button
+                reading "Apply to the founding cohort" before the page had used
+                the word "founding" or said what stage Mentable is at. They were
+                being asked to apply to something undefined. This says who it is
+                for and where we actually are, in the two lines before the ask,
+                so the context arrives before the decision instead of under it
+                where a 900px viewport cuts it off.
+              */}
+              <p className="text-halo-heather text-[15px] leading-relaxed mb-7 max-w-md">
+                For students who want to learn from someone further along, and for
+                professionals willing to be that person. Mentable is being built right now,
+                and we&apos;re putting together the first group of both.
+              </p>
+
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
                   href="/founding-cohort"
@@ -151,11 +180,14 @@ export default function LandingPage() {
                   Become a founding mentor
                 </CtaButton>
               </div>
+
             </div>
 
-            <div className="hidden lg:block">
-              <HeroPair />
-            </div>
+            {HERO_HAS_PAIR && (
+              <div className="hidden lg:block">
+                <HeroPair />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -188,7 +220,10 @@ export default function LandingPage() {
       {/* ── 06. Trajectory ───────────────────────────────────────────────────── */}
       <TrajectoryViz />
 
-      {/* ── 07. Flywheel ─────────────────────────────────────────────────────── */}
+      {/* ── 07. Return on Impact ─────────────────────────────────────────────── */}
+      {/* The old "compounding effect" section, now named. It was already making
+          the return-on-impact argument; giving it the name means the idea is
+          stated once, well, instead of a fourth section repeating it. */}
       <Flywheel />
 
       {/* ── 08. Both directions ──────────────────────────────────────────────── */}
@@ -296,6 +331,17 @@ export default function LandingPage() {
               Ask someone ahead.<br />Help someone coming up.
             </h2>
           </Rise>
+          {/*
+            The page's last word was the feeling, with no reminder of what the
+            product is. Five sections earlier, 04 answered "why not just text
+            someone" and then the argument moved on to mentorship in general.
+            One sentence here, naming only things that exist: discovery, shared
+            goals and next steps, session prep, and the record of what happened.
+          */}
+          <p className="text-halo-heather text-[16px] leading-relaxed mb-8 max-w-lg">
+            Mentable is how you find each other. It holds the parts that usually get
+            dropped: what you agreed, what to prepare, and what happened last time.
+          </p>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
               href="/founding-cohort"

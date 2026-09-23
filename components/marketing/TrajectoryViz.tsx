@@ -33,6 +33,21 @@ const NODES = [
 
 const W = 720;
 const H = 300;
+
+/*
+  Where each milestone sits horizontally, as a fraction of the chart's width.
+
+  A milestone's x does not depend on `lift` at all; only its y does, and it
+  swings about 175 units as the curve bends. That asymmetry is the whole of the
+  hover bug: scrubbing maps pointer X onto lift, so aiming at a marker
+  horizontally is precisely the gesture that moves it vertically, and it slid
+  out of its own hit area before the pointer could land.
+
+  Knowing the fixed x of each marker lets the scrub yield just before the
+  pointer arrives — see CAPTURE below.
+*/
+const NODE_X_FRAC: number[] = [];
+const CAPTURE = 0.045;
 const START = { x: 60, y: 232 };
 const FLAT_END = { x: 664, y: 208 };
 
@@ -48,6 +63,10 @@ function curvePoint(t: number, lift: number) {
     y: mt * mt * START.y + 2 * mt * t * cy + t * t * ey,
   };
 }
+
+// Filled once, from the same function that places the markers, so the capture
+// zones can never drift out of step with the geometry they belong to.
+if (NODE_X_FRAC.length === 0) NODES.forEach((n) => NODE_X_FRAC.push(curvePoint(n.t, 0).x / W));
 
 function curvePath(lift: number) {
   const cy = 236 - 210 * lift;
@@ -71,6 +90,27 @@ export default function TrajectoryViz() {
   const raf = useRef(0);
   // Set once the pointer takes over, so the entry animation yields to it.
   const scrubbed = useRef(false);
+  /*
+    True while the mouse is resting on a milestone marker.
+
+    THE BUG THIS FIXES. Scrubbing maps pointer X onto `lift`, and `lift` bends
+    the curve, and the markers sit ON the curve — so moving toward a marker
+    moved the marker. The RAF eases `lift` at 0.14 per frame, so it was still
+    settling when the pointer arrived, the marker kept sliding vertically out
+    from under the cursor, pointerleave fired, and the note vanished. Three of
+    the four markers were unreachable by mouse; only Judgment, furthest right
+    where the remaining travel is smallest, reliably worked.
+
+    THE FIX. Entering a marker pins `lift` where it is, so the curve stops dead
+    and the marker cannot escape the pointer. Leaving it hands control back.
+    Mouse only: touch never scrubs, so there is nothing to freeze, and a
+    pointerleave that never arrives on a phone would otherwise strand this flag
+    on and kill scrubbing for good.
+  */
+  const holding = useRef(false);
+  // The rendered lift, readable from an event handler without waiting for the
+  // next render.
+  const liftRef = useRef(0);
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -103,11 +143,13 @@ export default function TrajectoryViz() {
   const scrollProgress = useScrollProgress(pinRef, pinned);
 
   useEffect(() => {
-    if (!pinned) { setLift(1); return; }
+    if (!pinned) { liftRef.current = 1; setLift(1); return; }
     if (scrubbed.current) return;
     // Resolve a little before the pin ends so the finished curve is held for a
     // beat rather than completing on the very last pixel.
-    setLift(Math.min(scrollProgress / 0.78, 1));
+    const next = Math.min(scrollProgress / 0.78, 1);
+    liftRef.current = next;
+    setLift(next);
   }, [scrollProgress, pinned]);
 
   const startLoop = () => {
@@ -117,9 +159,11 @@ export default function TrajectoryViz() {
         const next = prev + (target.current - prev) * 0.14;
         if (Math.abs(target.current - next) < 0.002) {
           raf.current = 0;
+          liftRef.current = target.current;
           return target.current;
         }
         raf.current = requestAnimationFrame(tick);
+        liftRef.current = next;
         return next;
       });
     };
@@ -142,9 +186,30 @@ export default function TrajectoryViz() {
   const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== 'mouse' || reduced) return;
     const { left, width } = e.currentTarget.getBoundingClientRect();
+    const t = (e.clientX - left) / width;
+
+    /*
+      Hand the curve over as the pointer comes alongside a marker.
+
+      Inside a marker's horizontal capture zone the scrub stops writing and the
+      lift is pinned where it stands, so the curve holds still and the marker
+      becomes something you can actually land on. Outside the zones it scrubs
+      exactly as before. The zones are about 0.09 of the width and the markers
+      are 0.165 apart, so they never overlap and the gesture between milestones
+      is untouched — the curve simply rests for a moment at each one.
+    */
+    if (NODE_X_FRAC.some((nx) => Math.abs(t - nx) < CAPTURE)) {
+      if (!holding.current) {
+        holding.current = true;
+        target.current = liftRef.current;
+        startLoop();
+      }
+      return;
+    }
+    holding.current = false;
+
     // Floor at 0.25 so the curve never collapses while being scrubbed.
     scrubbed.current = true;
-    const t = (e.clientX - left) / width;
     target.current = Math.min(Math.max(t, 0.25), 1);
     startLoop();
   };
@@ -153,6 +218,7 @@ export default function TrajectoryViz() {
 
   const handleLeave = () => {
     if (reduced) return;
+    holding.current = false;
     // Settle back to fully resolved rather than collapsing to a flat line.
     target.current = RESTING_LIFT;
     startLoop();
@@ -321,8 +387,21 @@ export default function TrajectoryViz() {
                     tabIndex={0}
                     role="button"
                     aria-label={`${node.label}: ${node.note}`}
-                    onPointerEnter={() => setActiveNode(i)}
-                    onPointerLeave={() => setActiveNode(null)}
+                    onPointerEnter={(e) => {
+                      if (e.pointerType === 'mouse') {
+                        // Stop the curve exactly where it is. Snapping the
+                        // easing target to the current value settles it within
+                        // a frame, so the marker never travels far enough to
+                        // slip out of its own hit area.
+                        holding.current = true;
+                        target.current = liftRef.current;
+                      }
+                      setActiveNode(i);
+                    }}
+                    onPointerLeave={(e) => {
+                      if (e.pointerType === 'mouse') holding.current = false;
+                      setActiveNode(null);
+                    }}
                     onClick={() => setActiveNode(i)}
                     onFocus={() => setActiveNode(i)}
                     onBlur={() => setActiveNode(null)}

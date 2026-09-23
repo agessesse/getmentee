@@ -2,15 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { FEATURED_MENTORS } from '@/data/mentors';
-import { SOURCED_NEAR_PEERS } from '@/data/people';
+import { PUBLIC_FEATURED_MENTORS } from '@/data/mentors';
+import { PUBLIC_NEAR_PEERS } from '@/data/people';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import InteractionCue from '@/components/marketing/InteractionCue';
 import { INTRO_SESSION_KEY } from '@/components/marketing/intro-session';
 
-const MENTOR = FEATURED_MENTORS.find((m) => m.name.startsWith('Christopher Floyd'));
-const STUDENT = SOURCED_NEAR_PEERS.find((p) => p.slug === 'abel-gessesse');
+const MENTOR = PUBLIC_FEATURED_MENTORS.find((m) => m.name.startsWith('Christopher Floyd'));
+const STUDENT = PUBLIC_NEAR_PEERS.find((p) => p.slug === 'abel-gessesse');
+
+/**
+ * Whether the hero has a pair to show. The page reads this to decide its grid,
+ * so a hero with nobody approved is a full-width editorial column rather than
+ * a two-column layout with an empty half.
+ */
+export const HERO_HAS_PAIR = Boolean(MENTOR && STUDENT);
 
 export default function HeroPair() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
@@ -75,6 +82,9 @@ export default function HeroPair() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  // Already returned null when either person was missing; with consent gating
+  // that is now also how the pair behaves when nobody has approved public use.
+  // The hero's text column is sized independently, so the layout holds.
   if (!MENTOR || !STUDENT) return null;
 
   const lit = hover ?? demo;

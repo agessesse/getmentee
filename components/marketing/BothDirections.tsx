@@ -34,7 +34,12 @@ const PAIRS = [
   },
   {
     learner: { label: 'Confidence', body: 'Walk into the moments that matter better prepared.' },
-    mentor:  { label: 'Purpose', body: 'Turn what you learned the hard way into something useful.' },
+    // "Turn what you learned the hard way into something useful" and
+    // Continuity's "watch what you taught keep going" were one idea wearing two
+    // labels. Purpose is now about the lesson being spent again, in the
+    // present, on one person; Continuity is about it outlasting you. Different
+    // axes: value and time.
+    mentor:  { label: 'Purpose', body: 'The lessons that cost you the most get used again.' },
   },
   {
     learner: { label: 'Opportunity', body: 'Know what to pursue, and how to get ready for it.' },
@@ -46,7 +51,10 @@ const PAIRS = [
     // 22 as often as they are 70, and a 24-year-old helping a freshman is not
     // thinking about their legacy. Continuity says the same thing — the thing
     // you taught keeps going — at any age.
-    mentor:  { label: 'Continuity', body: 'Watch what you taught keep going without you.' },
+    // "Watch" also promised a view the product does not have. Mentable cannot
+    // show a mentor what happened after their part ended, and should not write
+    // copy that implies it will.
+    mentor:  { label: 'Continuity', body: 'What you taught outlasts your part in it.' },
   },
 ];
 
@@ -61,7 +69,14 @@ export default function BothDirections() {
       aria-labelledby="both-directions-heading"
     >
       <div className="max-w-4xl mx-auto">
-        <Rise kind="heading" as="h2">
+        {/* Names the tie to section 07. That section says impact keeps moving
+            outward; this one says what it leaves behind on each side. Same
+            argument, second half. */}
+        <Rise kind="heading" as="p" className={`${EYEBROW} text-halo-purple-d mb-5`}>
+          The two returns
+        </Rise>
+
+        <Rise kind="heading" delay={0.04} as="h2">
           <span
             id="both-directions-heading"
             className="block font-display text-halo-ink leading-[1.05] mb-4 max-w-xl"
@@ -72,7 +87,8 @@ export default function BothDirections() {
         </Rise>
 
         <Rise kind="heading" delay={0.08} as="p" className="text-halo-mist-body font-light text-[15px] leading-relaxed mb-12 max-w-md">
-          The same relationship changes two people in different ways.
+          What travels outward starts between two people, and it doesn&apos;t leave
+          them the same thing. Not every time, but this is what it can be.
         </Rise>
 
         {/* On a phone the two columns become one, so the pairing has to be

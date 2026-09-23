@@ -28,51 +28,70 @@ interface Question {
   name: string;
   label: string;
   hint?: string;
-  rows?: number;
-  required?: boolean;
+  rows: number;
+  min: number;
 }
 
+/*
+  Three questions, all required.
+
+  It was seven, six of them optional, which produced the worst of both worlds:
+  a wall long enough to put off a thoughtful first year, and a form a careless
+  applicant could clear in nine words. Fewer questions that everyone has to
+  answer gives more signal and less friction at the same time.
+
+  Each one earns its place by being hard to answer generically:
+
+    working_toward  a goal you do not have cannot be faked into specificity.
+    help_with       naming what you are actually unsure about requires knowing
+                    what you do not know, which is the whole skill.
+    already_done    the single strongest predictor in the set. Effort already
+                    spent is a fact about the past, and someone expecting a
+                    mentor to do the work has nothing to write here.
+
+  Deliberately NOT asked: "why do you want a mentor", which anyone can answer
+  well without revealing anything, and questions about internships, firms or
+  achievements, which would select for the head start we exist to reduce.
+
+  The minimums are one considered sentence, not an essay. High enough that
+  "idk" fails, low enough that nobody pads.
+*/
 const QUESTIONS: Question[] = [
   {
-    name: 'learning',
-    label: 'What are you trying to learn or figure out right now?',
-    hint: 'Plain language is fine. "I don’t know what consulting actually is" is a real answer.',
+    name: 'working_toward',
+    label: 'What are you working toward right now?',
+    hint: 'A goal, a decision you are stuck on, or something you are trying to understand. It does not have to be a career plan.',
     rows: 4,
-    required: true,
+    min: 80,
   },
   {
-    name: 'why_mentor',
-    label: 'Why would talking to someone a few steps ahead of you be useful?',
-    rows: 3,
+    name: 'help_with',
+    label: 'What would you want a mentor\u2019s help thinking through?',
+    hint: 'The part you cannot work out on your own is the useful answer here.',
+    rows: 4,
+    min: 80,
   },
   {
-    name: 'tried',
-    label: 'What have you already done to try to answer this yourself?',
-    hint: 'Reading, classes, clubs, asking around, anything. There is no wrong amount.',
-    rows: 3,
-  },
-  {
-    name: 'thirty_min',
-    label: 'If you had thirty minutes with someone two to ten years ahead of you, what would you want to understand?',
-    rows: 3,
-  },
-  {
-    name: 'good_use',
-    label: 'What does making good use of someone’s time look like to you?',
-    rows: 3,
-  },
-  {
-    name: 'field',
-    label: 'Is there a particular field, path, or transition you’re trying to understand?',
-    hint: 'Optional. "Not sure yet" is an honest answer and not a bad one.',
-    rows: 2,
-  },
-  {
-    name: 'worth_it',
-    label: 'What would make this worth it even if it didn’t lead to an internship, a job, or an introduction?',
-    rows: 3,
+    name: 'already_done',
+    label: 'What have you already done on your own to move toward it?',
+    hint: 'Reading, classes, clubs, side projects, conversations, applications, anything. Small counts. Being honest that it is early counts too.',
+    rows: 4,
+    min: 80,
   },
 ];
+
+const MAX = 1200;
+
+/** Kept in step with the same list in the apply route. */
+const YEARS = [
+  'First year',
+  'Sophomore',
+  'Junior',
+  'Senior',
+  'Graduate student',
+  'Recent graduate',
+  'Other',
+] as const;
 
 const FIELD =
   'w-full px-3.5 py-2.5 bg-white border border-halo-rule rounded-xl text-[15px] text-halo-ink placeholder:text-halo-mist ' +
@@ -97,7 +116,39 @@ export default function CohortApplication() {
     setError(null);
     setState('sending');
 
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    /*
+      The form carries noValidate so the browser's own bubbles do not fire, and
+      validation happens here instead: one specific message naming the field,
+      and focus moved to it. A generic "please fill in all fields" would make
+      someone hunt for which one.
+    */
+    const say = (message: string, field: string) => {
+      setError(message);
+      setState('idle');
+      requestAnimationFrame(() => {
+        (form.querySelector(`#${field}`) as HTMLElement | null)?.focus();
+      });
+    };
+
+    if (!String(data.full_name ?? '').trim()) return say('Please add your name.', 'full_name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(data.email ?? '').trim())) {
+      return say('Please add an email address we can reply to.', 'email');
+    }
+    if (!String(data.school ?? '').trim()) return say('Please add where you study.', 'school');
+    if (!String(data.year ?? '').trim()) return say('Please choose where you are right now.', 'year');
+    for (const q of QUESTIONS) {
+      const value = String(data[q.name] ?? '').trim();
+      if (!value) return say(`Please answer: ${q.label}`, q.name);
+      if (value.length < q.min) {
+        return say(
+          `Could you say a little more about "${q.label}"? A sentence or two is plenty.`,
+          q.name,
+        );
+      }
+    }
 
     try {
       const res = await fetch('/api/founding-cohort/apply', {
@@ -121,7 +172,7 @@ export default function CohortApplication() {
       setState('done');
       requestAnimationFrame(() => doneRef.current?.focus());
     } catch {
-      setError('That didn’t send — you may be offline. Your answers are still here, so you can try again.');
+      setError('That didn’t send. You may be offline. Your answers are still here, so you can try again.');
       setState('idle');
       requestAnimationFrame(() => errorRef.current?.focus());
     }
@@ -135,7 +186,7 @@ export default function CohortApplication() {
         className="bg-white border border-halo-rule rounded-2xl px-6 py-8 sm:px-8 sm:py-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
       >
         <h3 className="font-display text-[1.75rem] leading-tight text-halo-ink mb-3">
-          Thanks — we’ve got it.
+          Thanks, we’ve got it.
         </h3>
         <p className="text-[15px] text-halo-heather leading-relaxed max-w-lg mb-2">
           We read every application ourselves, so a reply takes a few days rather than a few
@@ -166,16 +217,50 @@ export default function CohortApplication() {
         </div>
         <div>
           <label htmlFor="school" className="block text-[13px] font-semibold text-halo-ink mb-1.5">
-            School <span className="font-normal text-halo-mist-body">(optional)</span>
+            School
           </label>
-          <input id="school" name="school" autoComplete="organization" className={FIELD} />
+          <input id="school" name="school" required maxLength={160} autoComplete="organization" className={FIELD} />
         </div>
         <div>
           <label htmlFor="year" className="block text-[13px] font-semibold text-halo-ink mb-1.5">
-            Year <span className="font-normal text-halo-mist-body">(optional)</span>
+            Where you are
           </label>
-          <input id="year" name="year" placeholder="First year, sophomore, recent grad…" className={FIELD} />
+          {/*
+            A list rather than a text box. Stage is context for deciding what
+            kind of mentorship would help, and a free-text field produces forty
+            spellings of the same four answers. It asks where someone is, not
+            when they graduate: the two come apart for transfers, part-time
+            students and anyone taking time out, and guessing one from the other
+            would put a wrong fact in our own database.
+          */}
+          <select id="year" name="year" required defaultValue="" className={FIELD}>
+            <option value="" disabled>Choose one</option>
+            {YEARS.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
         </div>
+      </div>
+
+      {/*
+        Said once, right before the questions, because this is the moment
+        someone decides what voice to write in. It is an invitation, not a
+        warning: nothing here forbids spellcheck, grammar tools or assistive
+        technology, and there is no checkbox to tick. The questions themselves
+        do most of the work, since none of them can be answered well without
+        knowing something only the applicant knows.
+      */}
+      <div className="rounded-2xl bg-halo-veil border border-halo-lavender px-5 py-4 sm:px-6 sm:py-5">
+        <p className="text-[15px] text-halo-ink leading-relaxed">
+          <span className="font-semibold">Write these in your own words.</span> We want to
+          get to know you, not a polished version of you that a chatbot wrote. We are not
+          judging your writing. We care about how you think, what you actually want, and
+          whether you are ready to put the work in.
+        </p>
+        <p className="text-[14px] text-halo-heather leading-relaxed mt-2">
+          Spellcheck and editing your own answers are completely fine. Specific and honest
+          beats polished and impressive.
+        </p>
       </div>
 
       <ol className="space-y-7">
@@ -184,7 +269,6 @@ export default function CohortApplication() {
             <label htmlFor={q.name} className="block text-[15px] font-semibold text-halo-ink mb-1">
               <span className="text-halo-purple-d tabular-nums mr-2">{String(i + 1).padStart(2, '0')}</span>
               {q.label}
-              {!q.required && <span className="font-normal text-halo-mist-body"> (optional)</span>}
             </label>
             {q.hint && (
               <p id={`${q.name}-hint`} className="text-[13px] text-halo-mist-body mb-2 leading-relaxed">
@@ -194,8 +278,10 @@ export default function CohortApplication() {
             <textarea
               id={q.name}
               name={q.name}
-              rows={q.rows ?? 3}
-              required={q.required}
+              rows={q.rows}
+              required
+              minLength={q.min}
+              maxLength={MAX}
               aria-describedby={q.hint ? `${q.name}-hint` : undefined}
               className={`${FIELD} resize-y`}
             />

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SOURCED_MENTORS, SOURCED_NEAR_PEERS } from '@/data/people';
+import { PUBLIC_MENTORS, PUBLIC_NEAR_PEERS } from '@/data/people';
 import { originForMetadata } from '@/lib/site';
 
 const siteUrl = originForMetadata();
@@ -7,7 +7,10 @@ const siteUrl = originForMetadata();
 // Derived from the same source that drives generateStaticParams, so the
 // sitemap cannot drift from what is actually prerendered.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const people = [...SOURCED_MENTORS, ...SOURCED_NEAR_PEERS].map((p) => ({
+  // Approved people only. An unapproved profile is not reachable, so listing
+  // it here would hand search engines a set of 404s and publish the names in
+  // the sitemap itself.
+  const people = [...PUBLIC_MENTORS, ...PUBLIC_NEAR_PEERS].map((p) => ({
     url: `${siteUrl}/people/${p.slug}`,
     changeFrequency: 'monthly' as const,
     priority: 0.6,

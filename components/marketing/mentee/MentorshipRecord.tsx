@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Calendar, CheckCircle2, Circle, Target } from 'lucide-react';
 
 /**
@@ -17,7 +16,7 @@ import { Calendar, CheckCircle2, Circle, Target } from 'lucide-react';
  * the headline, the sentence and the two buttons; this idea returns at full
  * width in the sections below, so nothing is lost on a phone.
  *
- * The mentor is Christopher Floyd, whose title, employer and areas are the
+ * The mentor is a generic example rather than a real person: the identity is
  * verified fields already in data/mentors.ts. The goal, session and action
  * items are illustrative, which is what the "Example" label says.
  */
@@ -41,17 +40,10 @@ export default function MentorshipRecord() {
         {/* Who */}
         <div className="flex items-center gap-3.5">
           <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-none bg-halo-bone">
-            <Image
-              src="/people/christopher-floyd.jpg"
-              alt=""
-              fill
-              className="object-cover"
-              style={{ objectPosition: '50% 5%' }}
-              sizes="48px"
-            />
+            <span className="w-full h-full flex items-center justify-center bg-halo-lavender/60 text-halo-purple-d font-semibold text-[13px]">EM</span>
           </div>
           <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-halo-ink truncate">Christopher Floyd, CFA</p>
+            <p className="text-[14px] font-semibold text-halo-ink truncate">Example mentor</p>
             <p className="text-[11px] text-halo-mist-body font-light truncate">
               Head of Institutional Sales &middot; Bondway.ai
             </p>

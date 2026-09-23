@@ -19,6 +19,31 @@
 
 export type ProfileStatus = 'sourced' | 'invited' | 'active';
 
+/**
+ * Permission to appear on the public site.
+ *
+ * SEPARATE FROM EVERYTHING ELSE, DELIBERATELY. This codebase tracks four
+ * different facts about a person and none of them implies another:
+ *
+ *   status: 'sourced'      a profile we built from public information
+ *   publicUse: 'approved'  this person has told us we may publish them
+ *   is_founding_mentor     they agreed to take part in the first group
+ *   status: 'active'       they have an account and can be reached
+ *
+ * Someone can be sourced without approving anything, approve public use
+ * without being a founding mentor, and be a founding mentor without being
+ * active yet. Collapsing any two of these into one flag is how a site starts
+ * claiming things about people that are not true.
+ *
+ * FAILS CLOSED. The field is optional and the only accepted value is
+ * 'approved', so the absence of an answer is treated as "no". Forgetting to
+ * set it hides someone; it can never publish them by accident.
+ *
+ * Nobody carries it today. That is not an oversight: it is the honest state
+ * until each person has actually said yes.
+ */
+export type PublicUse = 'approved';
+
 export interface EducationItem {
   institution: string;
   degree?: string;
@@ -54,6 +79,8 @@ export interface SourcedProfile {
   linkedInUrl?: string;
   status: ProfileStatus;
   is_founding_mentor: boolean;
+  /** Set only once this person has agreed to appear publicly. See PublicUse. */
+  publicUse?: PublicUse;
 }
 
 /**
@@ -124,6 +151,14 @@ export interface SourcedNearPeer {
    * by name, by type doc, and by how it renders.
    */
   prototype_scenario?: string;
+
+  /**
+   * Someone building Mentable rather than a student whose experience informed
+   * it. Kept out of the student carousel, which is framed as the latter.
+   */
+  isFounder?: boolean;
+  /** Set only once this person has agreed to appear publicly. See PublicUse. */
+  publicUse?: PublicUse;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -714,10 +749,29 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     status: 'sourced',
   },
   {
+    /*
+      Pablo Ortega Navarro, co-founder.
+
+      The surname was 'N.' with a note that it was unverified, and the record
+      sat among students whose experience shaped Mentable, with a fictional
+      prototype scenario attached like every other near-peer entry. Abel has
+      confirmed this record is his co-founder, which changes two things.
+
+      The scenario is gone. Illustrative fiction is defensible on a sourced
+      profile where it is fenced and labelled; on a founder's own profile it is
+      the company inventing a story about one of the people running it, and no
+      amount of labelling makes that worth doing.
+
+      `isFounder` keeps him out of the student carousel, where being presented
+      as one of the students whose experience informed the idea would misstate
+      his role now. The profile page itself stays, so no link breaks.
+
+      Still unconfirmed and therefore unchanged: whether Pablo wants a public
+      profile at all. Identity being confirmed is not consent to be published.
+    */
     slug: 'pablo-n',
     firstName: 'Pablo',
-    lastName: 'N.',
-    // Full last name not yet verified — placeholder until confirmed
+    lastName: 'Ortega Navarro',
     school: 'Queens University of Charlotte',
     expectedGraduation: '2028',
     bio: 'Student building a path in finance and career development.',
@@ -725,9 +779,8 @@ export const SOURCED_NEAR_PEERS: SourcedNearPeer[] = [
     portraitPosition: '50% 30%',
     interestTags: ['Finance', 'Career Development', 'Leadership'],
     linkedInUrl: 'https://www.linkedin.com/in/pabloon/',
-    prototype_scenario:
-      'A student who has to create their own visibility rather than wait for recruiters to arrive could use Mentable to reach someone who made the same climb, and work from a plan with dates on it rather than from encouragement alone.',
     status: 'sourced',
+    isFounder: true,
   },
 ];
 
@@ -749,4 +802,52 @@ export function getPersonBySlug(
   const peer = getNearPeerBySlug(slug);
   if (peer) return { type: 'near-peer', data: peer };
   return null;
+}
+
+
+// ─── Public surfaces ──────────────────────────────────────────────────────────
+
+/**
+ * The only two collections a public page may render.
+ *
+ * Every public surface imports from here rather than filtering for itself, so
+ * there is one predicate to audit instead of six. Both are empty today, and
+ * the pages that use them are built to look finished when they are.
+ *
+ * ── NEXT PRIVACY HARDENING TASK ─────────────────────────────────────────────
+ *
+ * Move non-public people data out of client-reachable homepage modules so
+ * consent-gated records are not shipped in the public JS bundle.
+ *
+ * WHAT IS AND IS NOT TRUE TODAY. The consent gate works: nobody carries
+ * publicUse 'approved', both derived lists are empty, and no unapproved name
+ * renders anywhere in the homepage markup. Verified against the production
+ * build, not just the source.
+ *
+ * WHAT IS STILL WRONG. app/page.tsx and several marketing components are
+ * 'use client', so this module is bundled into the public homepage chunk
+ * (static/chunks/app/page-*.js). Seven sourced names are therefore fetchable
+ * by anyone who opens that file, even though nothing displays them. Filtering
+ * at render time is not the same as not shipping the data, and this file
+ * should not be reachable from a client component at all.
+ *
+ * THE FIX, WHEN THERE IS TIME TO TEST IT. Either split the sourced records
+ * into a server-only module that the client tree cannot import, or restructure
+ * the homepage so the people-rendering sections are server components fed
+ * only the approved subset. Deliberately deferred rather than attempted
+ * immediately before a deploy, where a restructure carries more regression
+ * risk than the exposure it removes.
+ */
+export const PUBLIC_MENTORS: SourcedProfile[] =
+  SOURCED_MENTORS.filter((p) => p.publicUse === 'approved');
+
+export const PUBLIC_NEAR_PEERS: SourcedNearPeer[] =
+  SOURCED_NEAR_PEERS.filter((p) => p.publicUse === 'approved');
+
+/** True only for someone who has agreed to appear publicly. */
+export function isPubliclyApproved(slug: string): boolean {
+  return (
+    PUBLIC_MENTORS.some((p) => p.slug === slug) ||
+    PUBLIC_NEAR_PEERS.some((p) => p.slug === slug)
+  );
 }

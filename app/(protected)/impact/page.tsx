@@ -29,6 +29,19 @@ import { displayName, firstName } from '@/lib/display-name';
  * Every line comes from a row: mentorships, sessions marked completed, goals
  * marked completed, and the request that started the relationship. Nothing is
  * estimated and nothing is attributed to a student who did not do it.
+ *
+ * ON CAUSATION. The timeline says what happened and when, in that order, and
+ * stops there. "You talked with Jordan" and "Jordan reached a goal" are both
+ * rows; "Jordan reached a goal because of you" is not, and the product has no
+ * way to know it. Sequence is not evidence, and a page that quietly turned one
+ * into the other would be flattering the mentor with something it made up.
+ *
+ * WHAT WOULD BE NEEDED FOR MORE. The public site draws impact travelling
+ * outward: a student helped, who later helps someone else. Nothing in this
+ * schema can show that. It would need a student's own later mentorships linked
+ * back to the one that preceded them, and a student's explicit say-so that the
+ * link may be shown to their former mentor. Neither exists, so this page does
+ * not hint at it.
  */
 
 interface Student {
@@ -270,9 +283,14 @@ export default function ImpactPage() {
 
       {moments.length > 0 && (
         <section aria-labelledby="moments-heading">
-          <h2 id="moments-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink mb-3">
-            What has happened
+          <h2 id="moments-heading" className="font-display font-normal text-[1.375rem] leading-tight text-halo-ink">
+            What has moved forward
           </h2>
+          <p className="text-[13.5px] text-halo-mist-body leading-relaxed mt-1.5 mb-3">
+            In order, from your mentorships, the conversations you held, and the goals your
+            students marked reached. It records what happened. It doesn&apos;t claim you
+            caused it.
+          </p>
           <ul className="bg-white rounded-2xl border border-halo-rule divide-y divide-halo-rule overflow-hidden">
             {moments.map((m) => {
               const Icon = m.kind === 'goal' ? Target : m.kind === 'start' ? Users : MessageSquare;
@@ -286,6 +304,24 @@ export default function ImpactPage() {
             })}
           </ul>
         </section>
+      )}
+
+      {/*
+        The one piece of meaning on the page, and it is held back until a
+        student has actually reached something, so it is never shown to an
+        empty record. It is not a metric and does not become one.
+
+        This used to carry the homepage's line as well ("the return isn't what
+        comes back to you"). Said in both places it started to sound like a
+        slogan the company repeats rather than something it means, so the full
+        line lives on the public page, where it is the argument, and this is
+        the quieter half of it: the specific thing, about this mentor.
+      */}
+      {goalsReached > 0 && (
+        <p className="text-[15px] text-halo-ink leading-relaxed border-t border-halo-rule pt-6">
+          Something you worked out a while ago is now useful to someone near the start
+          of it.
+        </p>
       )}
     </div>
   );

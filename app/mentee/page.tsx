@@ -80,7 +80,8 @@ export default function MenteePage() {
                 </div>
 
                 <p className="text-halo-mist-body text-sm mt-6">
-                  Free to join. You do not need to know anyone first.
+                  Free to join. You do not need to know anyone first. You do need to show up
+                  prepared and follow through.
                 </p>
               </div>
 
@@ -223,11 +224,14 @@ export default function MenteePage() {
           </div>
         </section>
 
-        {/* ── 07. Why it compounds ───────────────────────────────────────── */}
+        {/* ── 07. Why it gets better ─────────────────────────────────────── */}
+        {/* Renamed off "compounds". That word now belongs to Return on Impact
+            on the homepage, which is about reach beyond the relationship. This
+            section is the opposite scale: what accumulates inside one. */}
         <section className="py-20 sm:py-24 px-6 lg:px-10" aria-labelledby="compound-heading">
           <div className="max-w-6xl mx-auto">
             <SectionIntro
-              eyebrow="Why it compounds"
+              eyebrow="Why it gets better"
               heading="The fifth conversation is better than the first."
               id="compound-heading"
               lead="Not because the mentor tries harder. Because by then they know things about you that nobody can learn about a stranger in thirty minutes."

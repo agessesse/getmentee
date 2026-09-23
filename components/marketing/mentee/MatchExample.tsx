@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
 
 /**
@@ -9,7 +8,7 @@ import { Sparkles } from 'lucide-react';
  * reasons it scored them, so a student never has to guess why a name appeared.
  * The four reason shapes the product can produce are "Works in <industry>",
  * "Specializes in <interest>", "<university> alum" and "Covers <tag>". The
- * three below are those shapes filled from Christopher Floyd's verified record
+ * three below are those shapes filled with example values rather than a person
  * in data/mentors.ts: his areas, and the university in his education history.
  *
  * Deliberately one card. A wall of profiles would make the same claim a
@@ -36,18 +35,11 @@ export default function MatchExample() {
         <div className="p-5 sm:p-6">
           <div className="flex items-start gap-4">
             <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-none bg-halo-bone">
-              <Image
-                src="/people/christopher-floyd.jpg"
-                alt=""
-                fill
-                className="object-cover"
-                style={{ objectPosition: '50% 5%' }}
-                sizes="64px"
-              />
+              <span className="w-full h-full flex items-center justify-center bg-halo-lavender/60 text-halo-purple-d font-semibold text-[13px]">EM</span>
             </div>
             <div className="min-w-0">
               <p className="text-[16px] font-semibold text-halo-ink leading-snug">
-                Christopher Floyd, CFA
+                Example mentor
               </p>
               <p className="text-[13px] text-halo-mist-body font-light leading-snug mt-0.5">
                 Head of Institutional Sales &middot; Bondway.ai
@@ -102,8 +94,8 @@ export default function MatchExample() {
         to mentor here, so "on Mentable" was the false half of the sentence.
       */}
       <figcaption className="text-[12px] text-halo-mist-body mt-3 leading-relaxed">
-        An example match, using a real person&apos;s public profile. The reasons attached to
-        him are generated from your own profile, so yours will say something different.
+        An example match. The reasons attached to a mentor are generated from your own
+        profile, so yours will say something different.
       </figcaption>
     </figure>
   );

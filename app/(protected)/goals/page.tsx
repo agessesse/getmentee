@@ -536,6 +536,23 @@ export default function GoalsPage() {
                 </section>
               );
             })}
+
+          {/*
+            The other half of the return-on-impact idea, said once, to the
+            person on the receiving end of it.
+
+            It is deliberately gated on a reached goal rather than shown to
+            every mentee: asking someone to think about helping the next person
+            before they have got anywhere themselves is pressure, not
+            reciprocity. There is no button, no prompt and no follow-up. It is
+            a sentence, and it is allowed to just sit there.
+          */}
+          {role === 'mentee' && goals.some((g) => g.status === 'completed') && (
+            <p className="text-[15px] text-halo-heather leading-relaxed border-t border-halo-rule pt-6">
+              Someone made time for you to get here. When you&apos;re further along, there
+              will be someone behind you who could use the same.
+            </p>
+          )}
         </div>
       )}
     </div>
