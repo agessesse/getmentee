@@ -275,6 +275,48 @@ export const FEATURED_MENTORS: Mentor[] = [
     whyLabel: 'Founder perspective',
     menteesMentored: null,
   },
+  /*
+    George and Bob are deliberately minimal entries.
+
+    Everything the other cards carry — title, company, prior employers, what
+    someone can help with, a bio — was written from career information already
+    verified and recorded in this file. For these two the repository holds
+    their name, their headshot and their LinkedIn URL, and nothing else. So
+    those three things are all that is set.
+
+    title and company use the '—' sentinel this file already defines for
+    unverified, which MentorCard reads to hide the line entirely rather than
+    printing a dash. shortBio and whyIMentor are empty strings for the same
+    reason: the preview modal hides the statement block when it has nothing,
+    and an invented sentence would be exactly the claim this file exists to
+    avoid. Fill them in when the information is confirmed, not before.
+  */
+  {
+    name: 'George A. Metz Jr., MS, PCC',
+    initials: 'GM',
+    title: '—',
+    company: '—',
+    headshot: '/people/george-metz.png',
+    accentColor: '#2d3668',
+    linkedInUrl: 'https://www.linkedin.com/in/george-a-metz-jr-ms-pcc-0b5a891b/',
+    shortBio: '',
+    whyIMentor: '',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
+  {
+    name: 'Bob Salvin',
+    initials: 'BS',
+    title: '—',
+    company: '—',
+    headshot: '/people/bob-salvin.jpg',
+    accentColor: '#3d4a8f',
+    linkedInUrl: 'https://www.linkedin.com/in/bobsalvin/',
+    shortBio: '',
+    whyIMentor: '',
+    whyLabel: 'Founder perspective',
+    menteesMentored: null,
+  },
 ];
 
 
