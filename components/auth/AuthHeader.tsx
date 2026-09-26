@@ -54,10 +54,10 @@ export default function AuthHeader() {
 
   // The action you are not currently performing. On forgot-password neither
   // page is "current", so signing in is the useful way out.
-  const onSignup = pathname?.startsWith('/signup');
+  const onSignup = pathname?.startsWith('/signup') || pathname?.startsWith('/apply');
   const altAction = onSignup
     ? { href: '/login', label: 'Sign in' }
-    : { href: '/signup', label: 'Create account' };
+    : { href: '/apply', label: 'Apply' };
 
   return (
     <header className="sticky top-0 z-50 bg-halo-ivory/95 backdrop-blur-sm border-b border-halo-rule">

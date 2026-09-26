@@ -126,7 +126,7 @@ export default function SiteHeader() {
               path at the bottom for anyone who isn't a student.
             */}
             <Link
-              href="/founding-cohort"
+              href="/apply"
               className="bg-halo-purple text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-halo-purple-d active:scale-[0.97] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
               Apply

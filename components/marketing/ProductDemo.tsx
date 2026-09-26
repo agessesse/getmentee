@@ -438,13 +438,13 @@ export default function ProductDemo() {
             </ol>
 
             <CtaButton
-              href="/founding-cohort"
+              href="/apply?role=mentee"
               onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'product_demo' })}
               variant="secondary"
               size="md"
               className="mt-7"
             >
-              Apply to the founding cohort
+              Apply as a mentee
             </CtaButton>
           </div>
 

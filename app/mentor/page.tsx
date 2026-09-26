@@ -76,7 +76,7 @@ export default function MentorPage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-                  <CtaButton href="/signup?role=mentor">Become a founding mentor</CtaButton>
+                  <CtaButton href="/apply?role=mentor">Apply as a mentor</CtaButton>
                   <CtaButton href="#request-heading" variant="secondary">
                     See what a request contains
                   </CtaButton>
@@ -244,8 +244,8 @@ export default function MentorPage() {
                   that makes the next conversation easy.
                 </p>
 
-                <CtaButton href="/signup?role=mentor" size="md" ground="deep" className="mt-9">
-                  Become a founding mentor
+                <CtaButton href="/apply?role=mentor" size="md" ground="deep" className="mt-9">
+                  Apply as a mentor
                 </CtaButton>
               </div>
 
@@ -399,7 +399,7 @@ export default function MentorPage() {
               if it fits.
             </p>
 
-            <CtaButton href="/signup?role=mentor">Become a founding mentor</CtaButton>
+            <CtaButton href="/apply?role=mentor">Apply as a mentor</CtaButton>
 
             <p className="text-halo-mist-body text-sm mt-6">
               Already have an account?{' '}

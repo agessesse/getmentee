@@ -30,11 +30,11 @@ export default function SchoolRail() {
       // Was "Our students study at". They are not our students — they are
       // students whose experience of mentorship informed this, several of whom
       // graduated or found their own mentors before Mentable existed.
-      eyebrow="Where the students helping shape Mentable study"
+      eyebrow="Where the students on this page study"
       items={MENTEE_SCHOOLS}
       direction="left"
       ground="veil"
-      srLabel="Schools attended by the students helping shape Mentable:"
+      srLabel="Schools attended by the students shown on this page:"
     />
   );
 }

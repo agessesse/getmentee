@@ -23,7 +23,9 @@ interface InviteModalProps {
   into an email should always carry the address Mentable is known by, on every
   deployment, which is what lib/site.ts holds.
 */
-const SIGNUP_URL = `${CANONICAL_SITE}/signup`;
+// Points at the mentor application. /signup still redirects here, so
+// invitations already sent with the old URL keep working.
+const SIGNUP_URL = `${CANONICAL_SITE}/apply?role=mentor`;
 
 const INVITE_MESSAGE = `I've been building a mentorship platform called Mentable that connects ambitious students with professionals who have already traveled their path.
 

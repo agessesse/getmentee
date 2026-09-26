@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { PUBLIC_FEATURED_MENTORS } from '@/data/mentors';
-import { PUBLIC_NEAR_PEERS } from '@/data/people';
+import { FEATURED_MENTORS } from '@/data/mentors';
+import { SOURCED_NEAR_PEERS } from '@/data/people';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import { trackLandingEvent } from '@/lib/landing-analytics';
 import InteractionCue from '@/components/marketing/InteractionCue';
 import { INTRO_SESSION_KEY } from '@/components/marketing/intro-session';
 
-const MENTOR = PUBLIC_FEATURED_MENTORS.find((m) => m.name.startsWith('Christopher Floyd'));
-const STUDENT = PUBLIC_NEAR_PEERS.find((p) => p.slug === 'abel-gessesse');
+const MENTOR = FEATURED_MENTORS.find((m) => m.name.startsWith('Christopher Floyd'));
+const STUDENT = SOURCED_NEAR_PEERS.find((p) => p.slug === 'abel-gessesse');
 
 /**
  * Whether the hero has a pair to show. The page reads this to decide its grid,

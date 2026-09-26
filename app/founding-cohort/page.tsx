@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/marketing/SiteHeader';
 import SiteFooter from '@/components/marketing/SiteFooter';
-import CohortApplication from '@/components/marketing/CohortApplication';
 
 export const metadata: Metadata = {
   title: 'Mentable founding cohort: apply to be one of the first students',
@@ -97,7 +96,7 @@ export default function FoundingCohortPage() {
               href="#apply"
               className="inline-flex items-center gap-2 bg-halo-purple text-white text-[15px] font-semibold px-6 py-3 rounded-xl shadow-sm hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
-              Apply to the founding cohort
+              Apply as a mentee
             </a>
           </div>
         </section>
@@ -219,13 +218,25 @@ export default function FoundingCohortPage() {
               Apply
             </h2>
             <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mb-3">
-              Three questions, plus your name and email. There are no right answers. We are
-              trying to understand what you want and how you think about getting there.
+              Five short questions, plus your name and email. There are no right answers.
+              We are trying to understand what you want and how you think about getting
+              there.
             </p>
             <p className="text-[15px] text-halo-mist-body leading-relaxed max-w-xl mb-9">
               We read every application ourselves, so give us a few days to reply.
             </p>
-            <CohortApplication />
+            {/*
+              The form used to live here, which meant two mentee applications
+              existed: this one, and whatever "Apply" in the nav pointed at.
+              There is now one application at /apply, and this page links into
+              it with the role already chosen so nobody is asked twice.
+            */}
+            <a
+              href="/apply?role=mentee"
+              className="inline-flex items-center gap-2 bg-halo-purple text-white text-[15px] font-semibold px-6 py-3 rounded-xl shadow-sm hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
+            >
+              Apply as a mentee
+            </a>
           </div>
         </section>
 
@@ -243,7 +254,7 @@ export default function FoundingCohortPage() {
               href="/mentor"
               className="inline-flex items-center gap-2 border border-halo-rule bg-white text-halo-ink text-[15px] font-medium px-5 py-2.5 rounded-xl hover:border-halo-purple transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             >
-              Become a founding mentor
+              Become a mentor
             </Link>
           </div>
         </section>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { PUBLIC_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
+import { SOURCED_NEAR_PEERS, type SourcedNearPeer } from '@/data/people';
 import { companyFaviconUrl, schoolFaviconUrl } from '@/lib/logos';
 import LogoChip from '@/components/ui/LogoChip';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
@@ -140,22 +140,10 @@ function MenteeCard({
   filtered out rather than presented as part of the evidence for their own
   product.
 */
-const CAROUSEL_PEOPLE = PUBLIC_NEAR_PEERS.filter((p) => !p.isFounder);
+const CAROUSEL_PEOPLE = SOURCED_NEAR_PEERS.filter((p) => !p.isFounder);
 
 export default function MenteeCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
-
-  /*
-    Nobody approved, no section.
-
-    The heading says "built around students who know what mentorship can
-    change" and the rail underneath is about the schools those students attend.
-    Both are claims about people, so with nobody approved to show, the honest
-    move is for the section to disappear rather than stand as a heading over an
-    empty shell. The homepage reads as a complete page without it, and the
-    moment someone is approved it returns exactly as it was.
-  */
-  if (CAROUSEL_PEOPLE.length === 0) return null;
 
   return (
     <>
@@ -224,12 +212,12 @@ export default function MenteeCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <CtaButton
-            href="/founding-cohort"
+            href="/apply?role=mentee"
             onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'mentee_carousel' })}
             variant="outline"
             size="md"
           >
-            Apply to the founding cohort
+            Apply as a mentee
           </CtaButton>
         </div></div>
       </section>

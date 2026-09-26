@@ -1,18 +1,32 @@
-import { Suspense } from 'react';
-import { SignupForm } from '@/components/auth/signup-form';
+import { redirect } from 'next/navigation';
 
-export const metadata = {
-  title: 'Create Account - Mentable',
-  description: 'Join the Mentable network',
-};
-
-export default function SignupPage() {
-  // SignupForm reads ?role= with useSearchParams so the landing page CTAs can
-  // carry the visitor's choice through. Next requires that read to sit inside a
-  // Suspense boundary or the whole route opts out of static rendering.
-  return (
-    <Suspense fallback={<div className="w-full max-w-lg mx-auto min-h-[420px]" />}>
-      <SignupForm />
-    </Suspense>
-  );
+/**
+ * /signup — kept as a redirect, no longer a registration form.
+ *
+ * WHY IT IS NOT DELETED. Mentable has exactly two public entry concepts now:
+ * Apply, for people who are not members, and Sign in, for people who are.
+ * Open registration was a third, and it quietly made approval meaningless:
+ * anyone could create an account without ever applying, and the account had
+ * no connection to the application the same person may have already filled
+ * in. Accounts are now created only by /activate, from an approved
+ * application.
+ *
+ * But the URL has been handed out. InviteModal generated mentor invitations
+ * pointing at mentable.co/signup, and those messages are already in people's
+ * inboxes; the old public CTAs pointed here too. Deleting the route would
+ * turn every one of them into a 404 for exactly the people we were trying to
+ * reach. So the route survives as a redirect and the form is gone.
+ *
+ * Role intent survives the hop, so someone invited as a mentor still lands on
+ * the mentor application rather than the role selector.
+ */
+export default async function SignupRedirect({
+  searchParams,
+}: {
+  searchParams: Promise<{ role?: string | string[] }>;
+}) {
+  const params = await searchParams;
+  const raw = Array.isArray(params.role) ? params.role[0] : params.role;
+  const role = raw === 'mentor' || raw === 'mentee' ? raw : null;
+  redirect(role ? `/apply?role=${role}` : '/apply');
 }

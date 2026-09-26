@@ -252,8 +252,8 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
           We&apos;re putting together a first group of students and the mentors who agree to
           work with them.
         </p>
-        <CtaButton href="/founding-cohort" size="md" ground="deep">
-  Apply to the founding cohort
+        <CtaButton href="/apply?role=mentee" size="md" ground="deep">
+  Apply as a mentee
 </CtaButton>
       </div>
     </div>
@@ -407,7 +407,7 @@ function NearPeerProfileView({ person }: { person: SourcedNearPeer }) {
           {person.firstName} is figuring out a path you have already walked. An
           hour a month is enough to change which doors they know about.
         </p>
-        <CtaButton href="/signup?role=mentor" size="md" ground="deep">
+        <CtaButton href="/apply?role=mentor" size="md" ground="deep">
   I want to mentor
 </CtaButton>
       </div>

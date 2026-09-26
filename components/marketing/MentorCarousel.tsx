@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { PUBLIC_FEATURED_MENTORS, type Mentor } from '@/data/mentors';
+import { FEATURED_MENTORS, type Mentor } from '@/data/mentors';
 import ProfilePreviewModal, { type PreviewTarget } from '@/components/marketing/ProfilePreviewModal';
 import CarouselShell from '@/components/marketing/CarouselShell';
 import ProfileCardShell from '@/components/marketing/ProfileCardShell';
@@ -127,10 +127,6 @@ function MentorCard({
 export default function MentorCarousel() {
   const [preview, setPreview] = useState<PreviewTarget | null>(null);
 
-  // Same rule as the student section: a heading about people, with no people
-  // approved to show, is worse than no section.
-  if (PUBLIC_FEATURED_MENTORS.length === 0) return null;
-
   return (
     <>
       <section className="py-16 sm:py-20 bg-halo-ivory" aria-labelledby="mentor-carousel-heading">
@@ -170,18 +166,18 @@ export default function MentorCarousel() {
         <CredibilityRail />
 
         <CarouselShell
-          items={PUBLIC_FEATURED_MENTORS}
+          items={FEATURED_MENTORS}
           keyOf={(m) => m.name}
           // Rightward, matching CredibilityRail above it. The students section
           // mirrors this and drifts left, so the two rosters read as a pair
           // moving in opposite directions rather than an unexplained mix.
           idleDirection={1}
           frozen={preview !== null}
-          label="Professionals whose experience shaped Mentable"
+          label="Professionals whose paths show the kind of experience Mentable is built around"
           renderItem={(mentor, { hovered, onHoverChange, interactive }) => (
             <MentorCard
               mentor={mentor}
-              index={PUBLIC_FEATURED_MENTORS.indexOf(mentor)}
+              index={FEATURED_MENTORS.indexOf(mentor)}
               hovered={hovered}
               onHoverChange={onHoverChange}
               interactive={interactive}
@@ -206,7 +202,7 @@ export default function MentorCarousel() {
             variant="outline"
             size="md"
           >
-            Become a founding mentor
+            Become a mentor
           </CtaButton>
         </div></div>
       </section>

@@ -1,6 +1,7 @@
 import { requireAdmin, rows } from '@/lib/supabase/admin';
 import { Panel, Empty, Tag } from '@/components/admin/ui';
 import { writingSignal } from '@/lib/cohort/writing-signal';
+import ApproveApplicant from '@/components/admin/ApproveApplicant';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,10 +21,22 @@ export const dynamic = 'force-dynamic';
 
 interface Application {
   id: string;
+  role: 'mentee' | 'mentor';
   full_name: string;
   email: string;
   school: string | null;
   year: string | null;
+  title: string | null;
+  organization: string | null;
+  linkedin_url: string | null;
+  expertise: string | null;
+  who_help: string | null;
+  why_mentoring: string | null;
+  good_relationship: string | null;
+  involvement: string | null;
+  timely: string | null;
+  good_mentee: string | null;
+  user_id: string | null;
   learning: string | null;      // what they are working toward
   why_mentor: string | null;    // what they want help thinking through
   tried: string | null;         // what they have already done
@@ -31,10 +44,20 @@ interface Application {
   created_at: string;
 }
 
-const QUESTIONS: { key: keyof Application; label: string }[] = [
+/* One list per role, matching what each application actually asked. */
+const MENTEE_Q: { key: keyof Application; label: string }[] = [
   { key: 'learning', label: 'What are you working toward right now?' },
-  { key: 'why_mentor', label: 'What would you want a mentor’s help thinking through?' },
-  { key: 'tried', label: 'What have you already done on your own to move toward it?' },
+  { key: 'why_mentor', label: 'What would you want a mentor’s help with?' },
+  { key: 'timely', label: 'Why is mentorship useful to you right now?' },
+  { key: 'tried', label: 'What have you already done on your own?' },
+  { key: 'good_mentee', label: 'What would make you good to mentor?' },
+];
+
+const MENTOR_Q: { key: keyof Application; label: string }[] = [
+  { key: 'why_mentor', label: 'What could you genuinely help someone with?' },
+  { key: 'who_help', label: 'Who are you most interested in helping?' },
+  { key: 'why_mentoring', label: 'Why are you interested in mentoring?' },
+  { key: 'good_relationship', label: 'What does a useful mentoring relationship look like?' },
 ];
 
 const SIGNAL_TONE = { low: 'green', unclear: 'neutral', elevated: 'amber' } as const;
@@ -48,7 +71,7 @@ export default async function AdminApplications() {
   const apps = await rows<Application>(
     db
       .from('cohort_applications')
-      .select('id, full_name, email, school, year, learning, why_mentor, tried, status, created_at')
+      .select('id, role, full_name, email, school, year, title, organization, linkedin_url, expertise, learning, why_mentor, tried, timely, good_mentee, who_help, why_mentoring, good_relationship, involvement, status, user_id, created_at')
       .order('created_at', { ascending: false }),
   );
 
@@ -71,7 +94,9 @@ export default async function AdminApplications() {
         </Panel>
       ) : (
         apps.map((a) => {
-          const signal = writingSignal([a.learning, a.why_mentor, a.tried]);
+          const mentor = a.role === 'mentor';
+          const questions = mentor ? MENTOR_Q : MENTEE_Q;
+          const signal = writingSignal(questions.map((q) => a[q.key] as string | null));
           return (
             <Panel
               key={a.id}
@@ -91,10 +116,35 @@ export default async function AdminApplications() {
                   </a>
                   {a.school && <span>{a.school}</span>}
                   {a.year && <span>{a.year}</span>}
+                  {a.title && <span>{a.title}</span>}
+                  {a.organization && <span>{a.organization}</span>}
+                  {a.linkedin_url && (
+                    <a href={a.linkedin_url.startsWith('http') ? a.linkedin_url : `https://${a.linkedin_url}`}
+                       target="_blank" rel="noopener noreferrer"
+                       className="text-halo-purple-d hover:text-halo-ink">LinkedIn</a>
+                  )}
+                  <Tag tone={mentor ? 'amber' : 'green'}>{a.role}</Tag>
                   <Tag tone="neutral">{a.status}</Tag>
                 </div>
 
-                {QUESTIONS.map((q) => (
+                {mentor && a.expertise && (
+                  <div>
+                    <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body mb-1">
+                      Areas of experience
+                    </p>
+                    <p className="text-[14px] text-halo-ink leading-relaxed">{a.expertise}</p>
+                  </div>
+                )}
+                {mentor && a.involvement && (
+                  <div>
+                    <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body mb-1">
+                      Involvement that feels realistic
+                    </p>
+                    <p className="text-[14px] text-halo-ink leading-relaxed">{a.involvement}</p>
+                  </div>
+                )}
+
+                {questions.map((q) => (
                   <div key={q.key as string}>
                     <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body mb-1">
                       {q.label}
@@ -110,6 +160,14 @@ export default async function AdminApplications() {
                   reviewer should form a view from the writing and then see
                   this, not the other way round.
                 */}
+                <div className="border-t border-halo-rule pt-4">
+                  <ApproveApplicant
+                    applicationId={a.id}
+                    status={a.status}
+                    activated={Boolean(a.user_id)}
+                  />
+                </div>
+
                 <div className="border-t border-halo-rule pt-3">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-mist-body">

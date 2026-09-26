@@ -40,8 +40,8 @@ export default function NotFound() {
             <CtaButton href="/">
   Back to Mentable
 </CtaButton>
-            <CtaButton href="/founding-cohort" variant="secondary">
-  Apply to the founding cohort
+            <CtaButton href="/apply?role=mentee" variant="secondary">
+  Apply as a mentee
 </CtaButton>
           </div>
         </div>

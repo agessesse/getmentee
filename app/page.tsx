@@ -167,17 +167,17 @@ export default function LandingPage() {
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
-                  href="/founding-cohort"
+                  href="/apply?role=mentee"
                   onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero' })}
                 >
-                  Apply to the founding cohort
+                  Apply as a mentee
                 </CtaButton>
                 <CtaButton
                   href="/mentor"
                   onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'hero' })}
                   variant="secondary"
                 >
-                  Become a founding mentor
+                  Become a mentor
                 </CtaButton>
               </div>
 
@@ -276,12 +276,12 @@ export default function LandingPage() {
               */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                 <CtaButton
-                  href="/founding-cohort"
+                  href="/apply?role=mentee"
                   onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'fund' })}
                   size="md"
                   ground="deep"
                 >
-                  Apply to the founding cohort
+                  Apply as a mentee
                 </CtaButton>
                 {/*
                   There was a second button here reading "Learn about the
@@ -344,17 +344,17 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
-              href="/founding-cohort"
+              href="/apply?role=mentee"
               onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final' })}
             >
-              Apply to the founding cohort
+              Apply as a mentee
             </CtaButton>
             <CtaButton
               href="/mentor"
               onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'final' })}
               variant="secondary"
             >
-              Become a founding mentor
+              Become a mentor
             </CtaButton>
           </div>
           <p className="text-halo-mist-body text-sm mt-6">

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
+import { trackLandingEvent } from '@/lib/landing-analytics';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 /**
@@ -22,17 +23,29 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /*
+    If a role came along for the ride — an old link, or someone bounced here
+    from a role-specific CTA — hand it back to /apply rather than making them
+    answer the same question again.
+  */
+  const roleParam = searchParams.get('role');
+  const applyHref =
+    roleParam === 'mentor' || roleParam === 'mentee' ? `/apply?role=${roleParam}` : '/apply';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
+    trackLandingEvent('login_started');
     const { error } = await signIn(email, password);
     if (error) {
       setError(error);
       setLoading(false);
     } else {
+      trackLandingEvent('login_succeeded');
       sessionStorage.setItem('mentee_signin_transition', '1');
       router.push('/dashboard');
     }
@@ -158,13 +171,20 @@ export function LoginForm() {
           )}
         </button>
 
+        {/*
+          Was "Don't have an account? Sign up", pointing at open registration.
+          There is no public registration any more: the only way in is an
+          application we approved, so offering "Sign up" here promised a door
+          that does not exist. Secondary by weight — body text under the
+          button, never a second button beside it.
+        */}
         <p className="text-center text-sm text-halo-heather">
-          Don&apos;t have an account?{' '}
+          New to Mentable?{' '}
           <Link
-            href="/signup"
-            className="tap-target inline-block text-halo-heather font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
+            href={applyHref}
+            className="tap-target inline-block text-halo-purple-d font-medium hover:underline py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded"
           >
-            Sign up
+            Apply to join
           </Link>
         </p>
       </form>

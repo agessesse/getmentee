@@ -30,8 +30,8 @@ export default function SiteFooter() {
             <Link href="/login" className="tap-target hover:text-white transition-colors">
               Sign in
             </Link>
-            <Link href="/signup" className="tap-target hover:text-white transition-colors">
-              Create account
+            <Link href="/apply" className="tap-target hover:text-white transition-colors">
+              Apply
             </Link>
             <Link href="/privacy" className="tap-target hover:text-white transition-colors">
               Privacy

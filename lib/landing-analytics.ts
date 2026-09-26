@@ -33,7 +33,22 @@ export function trackLandingEvent(
     | 'cohort_cta_clicked'
     | 'cohort_application_started'
     | 'cohort_application_submitted'
-    | 'founding_mentor_cta_clicked',
+    | 'founding_mentor_cta_clicked'
+    /* The rest of the funnel, added once outreach made the bottom of it the
+       part that mattered. These all reach public_events, so they record for
+       logged-out visitors too. */
+    | 'public_page_view'
+    | 'apply_cta_clicked'
+    | 'apply_started'
+    | 'role_selected'
+    | 'application_step_completed'
+    | 'application_submitted'
+    | 'login_started'
+    | 'login_succeeded'
+    | 'account_activation_started'
+    | 'account_activated'
+    | 'onboarding_completed'
+    | 'first_meaningful_action',
   metadata: Record<string, string | number | boolean> = {}
 ): void {
   void trackEvent(event, 'mentee', { metadata });
@@ -46,7 +61,16 @@ export function trackLandingEvent(
     is how many strangers reached the funnel.
   */
   if ((PUBLIC_EVENTS as readonly string[]).includes(event)) {
-    const surface = typeof metadata.cta === 'string' ? metadata.cta : undefined;
+    /*
+      One bounded string describing where this happened. `cta` for a button
+      position, `role` for which path, and both together as 'mentor:2' for a
+      step, which is how abandonment gets measured without touching a single
+      word anyone typed.
+    */
+    const parts = [metadata.role, metadata.cta, metadata.step]
+      .filter((v) => typeof v === 'string' || typeof v === 'number')
+      .map(String);
+    const surface = parts.length ? parts.join(':').slice(0, 60) : undefined;
     trackPublicEvent(event as PublicEvent, surface);
   }
 }

@@ -72,11 +72,21 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
       // Redirect to profile setup if not yet complete (skip if already there)
       if (pathname !== '/profile/setup') {
         const table = profileData.role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles';
+        /*
+          maybeSingle, not single.
+
+          A brand-new member has no row in mentor_profiles or mentee_profiles
+          yet — that row is created when they finish setup. single() treats
+          "no rows" as an error and PostgREST answers 406, so the first
+          authenticated request every new member made logged a console error
+          and a failed request. The redirect below was already correct for a
+          missing row; only the way we asked for it was wrong.
+        */
         const { data: extProfile } = await supabase
           .from(table)
           .select('profile_complete')
           .eq('id', session.user.id)
-          .single();
+          .maybeSingle();
 
         if (!extProfile || !extProfile.profile_complete) {
           router.replace('/profile/setup');

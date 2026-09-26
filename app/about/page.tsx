@@ -185,7 +185,7 @@ export default function AboutPage() {
               <p className="mt-6 pl-5 sm:pl-7 text-[15px] text-halo-heather leading-relaxed max-w-xl">
                 We&apos;re building Mentable now, in the open, and we&apos;re at the stage
                 where the first few relationships will decide what it becomes.{' '}
-                <a href="/founding-cohort" className="text-halo-purple-d font-medium hover:text-halo-ink">
+                <a href="/apply?role=mentee" className="text-halo-purple-d font-medium hover:text-halo-ink">
                   The founding cohort
                 </a>{' '}
                 is how you get in early.
@@ -355,9 +355,9 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-              <CtaButton href="/founding-cohort">Apply to the founding cohort</CtaButton>
-              <CtaButton href="/signup?role=mentor" variant="secondary">
-                Become a founding mentor
+              <CtaButton href="/apply?role=mentee">Apply as a mentee</CtaButton>
+              <CtaButton href="/apply?role=mentor" variant="secondary">
+                Apply as a mentor
               </CtaButton>
             </div>
           </div>

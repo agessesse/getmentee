@@ -157,7 +157,7 @@ export default function LogoRail({
           that the site is about to be shared publicly.
         */}
         <p className="text-[11px] text-halo-mist-body font-light mt-5 max-w-6xl mx-auto">
-          Where the people helping shape Mentable studied and worked. These institutions and
+          Where the people shown on this page studied and worked. These institutions and
           employers are not partners, customers or endorsers of Mentable.
         </p>
       </div>

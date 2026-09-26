@@ -43,11 +43,18 @@ export default function CredibilityRail() {
         our mentor: every profile behind it is `status: 'sourced'`, with no
         account and no agreement to mentor here. The institutions are real and
         the people are real; the possessive was the false part.
+
+        Then it read "the people helping shape Mentable", which contradicted
+        the disclaimer three lines above it on the same screen — that these
+        profiles are built from public information and that appearing here is
+        not an endorsement. Someone who has not agreed to anything is not
+        helping shape the product. The label now describes only what the rail
+        actually shows: where the people on this page studied and worked.
       */
-      eyebrow="Experience represented by the people helping shape Mentable"
+      eyebrow="Where the people on this page studied and worked"
       items={MENTOR_AFFILIATIONS}
       direction="right"
-      srLabel="Where the professionals helping shape Mentable studied and worked:"
+      srLabel="Institutions and employers where the people shown on this page studied and worked:"
     />
   );
 }
