@@ -64,7 +64,7 @@ export default function LandingPage() {
         is one sticky container, no scroll listener and no measurement.
       */}
       <HeroPin>
-      <section className="w-full pt-8 pb-16 sm:pb-20 lg:pb-[clamp(3rem,8vh,6rem)] px-6 lg:px-10" aria-labelledby="hero-heading">
+      <section className="w-full pt-5 pb-16 sm:pb-20 lg:pb-[clamp(2rem,5vh,4rem)] px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           {/*
             The second column holds the pair of profile cards, which only
@@ -85,7 +85,7 @@ export default function LandingPage() {
 
               <h1
                 id="hero-heading"
-                className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-7 max-w-3xl"
+                className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-5 max-w-3xl"
               >
                 Find someone<br />
                 worth learning from.<br />
@@ -125,8 +125,8 @@ export default function LandingPage() {
                 heading on the site.
               */}
               <p
-                className="font-display text-halo-heather leading-[1.45] max-w-xl mb-10"
-                style={{ fontSize: 'clamp(1.2rem, 1.9vw, 1.5rem)' }}
+                className="font-display text-halo-heather leading-[1.4] max-w-xl mb-6"
+                style={{ fontSize: 'clamp(1.15rem, 1.75vw, 1.4rem)' }}
               >
                 People{' '}
                 <span className="font-medium text-halo-purple-d">
@@ -136,8 +136,8 @@ export default function LandingPage() {
                 <span className="font-medium text-halo-purple-d">
                   ready to learn
                 </span>
-                {' '}rarely know how to find each other. Mentable brings them
-                together, and handles everything after the introduction.
+                {' '}rarely find each other. Mentable connects them, then gives the
+                relationship structure after the introduction.
               </p>
 
               {/*
@@ -159,10 +159,8 @@ export default function LandingPage() {
                 so the context arrives before the decision instead of under it
                 where a 900px viewport cuts it off.
               */}
-              <p className="text-halo-heather text-[15px] leading-relaxed mb-7 max-w-md">
-                For students who want to learn from someone further along, and for
-                professionals willing to be that person. Mentable is being built right now,
-                and we&apos;re putting together the first group of both.
+              <p className="text-halo-mist-body text-[15px] leading-relaxed mb-6 max-w-md">
+                We&apos;re building it now, and putting together the first group of both.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">

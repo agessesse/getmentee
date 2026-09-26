@@ -276,30 +276,53 @@ export const FEATURED_MENTORS: Mentor[] = [
     menteesMentored: null,
   },
   /*
-    George and Bob are deliberately minimal entries.
+    George and Bob were added after the original ten and filled in afterwards.
 
-    Everything the other cards carry — title, company, prior employers, what
-    someone can help with, a bio — was written from career information already
-    verified and recorded in this file. For these two the repository holds
-    their name, their headshot and their LinkedIn URL, and nothing else. So
-    those three things are all that is set.
+    Their title, company and bio are sourced the same way every other record
+    here was: from public information that could be tied to this specific
+    person, not to a name. What could not be tied is simply absent — see the
+    note above George's entry for exactly what was left out and why.
 
-    title and company use the '—' sentinel this file already defines for
-    unverified, which MentorCard reads to hide the line entirely rather than
-    printing a dash. shortBio and whyIMentor are empty strings for the same
-    reason: the preview modal hides the statement block when it has nothing,
-    and an invented sentence would be exactly the claim this file exists to
-    avoid. Fill them in when the information is confirmed, not before.
+    whyIMentor is empty for both. Every other one on this file is either a
+    mentor's own approved words or editorial copy Abel wrote, and neither
+    exists yet for these two. The preview modal hides the block rather than
+    showing an empty heading.
+  */
+  /*
+    George's title, organisation and bio come from his own website,
+    georgeametz.com, and nowhere else.
+
+    HOW IT WAS TIED TO THIS RECORD. LinkedIn profile URLs keep their trailing
+    id when the vanity slug changes. Posts under the id in linkedInUrl below
+    (0b5a891b) announce georgeametz.com as the author's own site, so the site
+    and this record are the same person. That mattered: there are several
+    people with this name online, and name matching alone would not have been
+    evidence of anything.
+
+    WHAT IS DELIBERATELY ABSENT. No school and no school logo: his site states
+    no education and nothing else could be tied to this id. No organisation
+    logo: synergyemerge.com resolves but serves no readable content, so its
+    ownership could not be confirmed and a logo would have been a guess.
+
+    ON THE CREDENTIAL IN THE NAME. The name here reads "MS, PCC". His own site
+    and his current LinkedIn slug both present him as ACC, a different ICF
+    credential level. The name is left exactly as supplied rather than
+    rewritten unilaterally, but it should be confirmed with him before this
+    goes further — see the pass report.
   */
   {
     name: 'George A. Metz Jr., MS, PCC',
     initials: 'GM',
-    title: '—',
-    company: '—',
+    title: 'Connectivity & Leadership Coach',
+    company: 'Synergy Emerge',
     headshot: '/people/george-metz.png',
     accentColor: '#2d3668',
     linkedInUrl: 'https://www.linkedin.com/in/george-a-metz-jr-ms-pcc-0b5a891b/',
-    shortBio: '',
+    // Both stated on his own site: "leadership coaching" and "personalized
+    // coaching for early career professionals".
+    helpsWith: ['Leadership', 'Early-career growth'],
+    shortBio:
+      'George is a leadership coach who works on intergenerational connectivity, helping multi-generational teams create environments where people connect and lead with intention. Through Synergy Emerge he coaches early-career professionals and builds leadership development programmes for organisations and teams.',
     whyIMentor: '',
     whyLabel: 'Founder perspective',
     menteesMentored: null,
@@ -307,12 +330,21 @@ export const FEATURED_MENTORS: Mentor[] = [
   {
     name: 'Bob Salvin',
     initials: 'BS',
-    title: '—',
-    company: '—',
+    title: 'Founder',
+    company: 'Salvin Dental Specialties',
     headshot: '/people/bob-salvin.jpg',
     accentColor: '#3d4a8f',
     linkedInUrl: 'https://www.linkedin.com/in/bobsalvin/',
-    shortBio: '',
+    priorCompanies: ['North Carolina State University', 'Queens University of Charlotte'],
+    // Both entailed by the company he founded and ran, not inferred about him
+    // personally. Nothing here claims he offers either through Mentable.
+    helpsWith: ['Entrepreneurship', 'Building a business'],
+    shortBio:
+      'Bob founded Salvin Dental Specialties in 1981 and built it from selling dental products out of his car into a globally recognized dental surgical products business. An NC State alumnus and longtime Charlotte civic leader, he has served on the Queens University of Charlotte Board of Trustees and is a recipient of the Ernst & Young Entrepreneur of the Year award.',
+    // Left empty deliberately. Every other whyIMentor on this file is either a
+    // mentor's own approved words or editorial copy Abel wrote; neither exists
+    // for Bob, and inventing a motivation for a real person is the one thing
+    // this file will not do. The modal hides the block when it is empty.
     whyIMentor: '',
     whyLabel: 'Founder perspective',
     menteesMentored: null,

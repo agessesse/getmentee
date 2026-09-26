@@ -83,18 +83,27 @@ function stepsFor(role: Role): Step[] {
   ];
 }
 
-const ROLE_CARDS: { role: Role; title: string; body: string; points: string[] }[] = [
+const ROLE_CARDS: { role: Role; title: string; points: string[] }[] = [
   {
     role: 'mentee',
     title: 'I want to find a mentor',
-    body: 'You are a student or recent graduate trying to work something out, and you would like to talk to someone who has already done it.',
-    points: ['Five short questions', 'No résumé, no GPA, no network needed'],
+    // Three scannable facts, not a paragraph. The first says who it is for,
+    // the second how long it takes, the third removes the barrier most
+    // students assume is there.
+    points: [
+      'Student or recent graduate',
+      'Five short questions',
+      'No résumé, GPA, or network required',
+    ],
   },
   {
     role: 'mentor',
     title: 'I want to become a mentor',
-    body: 'You are further along, and you are willing to answer the questions you once had to work out the hard way.',
-    points: ['Four short questions', 'You choose who you take on, and you can say no'],
+    points: [
+      'Further along and willing to share what you learned',
+      'Four short questions',
+      'You choose who you take on, and can say no',
+    ],
   },
 ];
 
@@ -106,24 +115,26 @@ const ROLE_CARDS: { role: Role; title: string; body: string; points: string[] }[
 */
 function Preamble() {
   return (
-    <div className="mb-9">
-      <p className="text-[17px] text-halo-heather leading-relaxed max-w-xl">
-        Mentable pairs students with people a few steps ahead of them, and gives the
-        relationship somewhere to live afterwards: shared goals, preparation before a
-        conversation, and a record of what you each said you would do.
-      </p>
-      <p className="text-[15px] text-halo-mist-body leading-relaxed max-w-xl mt-3">
-        We are early and starting small, so we read every application ourselves.
-      </p>
+    <div className="mb-7">
       {/*
-        The wrong-door case, answered before someone fills in an application
-        they do not need. A returning member who cannot find Sign in will
-        apply again, and a second application from an existing member is the
-        one duplicate this funnel can actually produce. Deliberately quiet:
-        one line of body text, not a second button competing with Start.
+        One short paragraph, not three.
+
+        This used to run two paragraphs and a sign-in line before the two
+        cards, which pushed the actual decision to y=583 and off the bottom of
+        a 1366x768 laptop entirely. Someone arriving here already clicked
+        something that said "apply"; they need to know what they are joining
+        and which path is theirs, and nothing else above the fold.
       */}
-      <p className="text-[14.5px] text-halo-mist-body leading-relaxed mt-4">
-        Already have a Mentable account?{' '}
+      <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl">
+        Mentable pairs students with people a few steps ahead, and gives the
+        relationship structure after the introduction. We&apos;re starting small, so we
+        read every application ourselves.
+      </p>
+      {/* The wrong-door case. Subordinate on purpose: a returning member who
+          cannot find Sign in will file a second application, but this must not
+          compete with the two cards below it. */}
+      <p className="text-[13.5px] text-halo-mist-body leading-relaxed mt-2.5">
+        Already have an account?{' '}
         <Link href="/login" className="text-halo-purple-d font-medium hover:text-halo-ink underline underline-offset-2">
           Sign in
         </Link>
@@ -341,8 +352,8 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
         >
           How would you like to take part?
         </h2>
-        <p className="text-[16px] text-halo-heather leading-relaxed max-w-lg mb-8">
-          The application is different for each, so this is the only thing we need first.
+        <p className="text-[15px] text-halo-mist-body leading-relaxed max-w-lg mb-5">
+          The application is different for each.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -355,22 +366,27 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
                 setRole(c.role);
                 setStep(0);
               }}
-              className="group text-left bg-white border border-halo-rule rounded-2xl p-6 sm:p-7 transition-all hover:border-halo-purple hover:shadow-[0_6px_24px_-12px_rgba(120,90,247,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
+              className="group flex flex-col text-left bg-white border border-halo-rule rounded-2xl p-6 transition-all hover:border-halo-purple hover:shadow-[0_6px_24px_-12px_rgba(120,90,247,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
             >
-              <h3 className="font-display text-[1.375rem] leading-snug text-halo-ink mb-2.5">
+              <h3 className="font-display text-[1.375rem] leading-snug text-halo-ink mb-3.5">
                 {c.title}
               </h3>
-              <p className="text-[15px] text-halo-heather leading-relaxed mb-5">{c.body}</p>
-              <ul className="space-y-1.5 mb-6">
+              <ul className="space-y-2 mb-6">
                 {c.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-2 text-[14px] text-halo-mist-body leading-snug">
+                  <li key={pt} className="flex items-start gap-2 text-[14.5px] text-halo-heather leading-snug">
                     <Check className="w-3.5 h-3.5 text-halo-purple-d flex-none mt-[3px]" aria-hidden="true" />
                     {pt}
                   </li>
                 ))}
               </ul>
-              <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-halo-purple-d group-hover:gap-2.5 transition-all">
-                Start
+              {/*
+                mt-auto pins this to the bottom so both cards' actions line up
+                regardless of how long the points run. It reads as a button
+                rather than a text link, because the whole card is the control
+                and the affordance should look like one.
+              */}
+              <span className="mt-auto inline-flex items-center justify-center gap-2 w-full bg-halo-veil border border-halo-lavender text-halo-purple-d text-[15px] font-semibold px-5 py-2.5 rounded-xl transition-colors group-hover:bg-halo-purple group-hover:border-halo-purple group-hover:text-white">
+                Start this application
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </span>
             </button>

@@ -1,29 +1,36 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useScrollProgress, useReducedMotion, useWideViewport } from '@/lib/useScrollProgress';
-import InteractionCue from '@/components/marketing/InteractionCue';
-
-// Nodes sit along the mentored curve as fractions of its length.
-// The mentor enters early, at MENTOR_T; the milestones follow. Keeping these
-// spaced apart matters — an earlier layout put the mentor marker directly on
-// top of a milestone label.
-const MENTOR_T = 0.15;
+import { useReducedMotion } from '@/lib/useScrollProgress';
 
 /*
-  The four things a mentor can actually change.
+  The trajectory comparison.
 
-  These used to read Clarity, Preparation, Introduction, Opportunity — two of
-  which were repeated word for word in the outcomes grid further down the page,
-  and two of which described things happening TO the student: someone vouches,
-  a door opens.
+  WHAT THIS REPLACED, AND WHY. The previous version was a scrub toy: pointer X
+  drove how far the curve bent, the four milestones only revealed their meaning
+  on hover, and a line of copy had to explain the gesture ("Move across the
+  path to see what changes"). Three things were wrong with that. The argument
+  was gated behind a gesture nobody was told about until they had already
+  missed it; the milestones sat on a curve that moved while you aimed at them,
+  so landing on one was genuinely hard; and a section whose whole job is to be
+  understood could be scrolled past without ever resolving.
 
-  The sequence now ends on judgment rather than growth. Growth was the weakest
-  of the four: broader than the three before it, and true of almost anything.
-  Judgment names what mentorship is actually for — the point where the student
-  needs the mentor less, not more. A mentor who leaves someone dependent has
-  not finished the job.
+  It now reads at rest. Two labelled paths, a mentor marked where they enter,
+  four effects named on the curve, and every one of those effects spelled out
+  in a list beside the chart that is visible without touching anything.
+  Hovering or focusing a marker highlights its row and vice versa, which is
+  depth rather than the price of admission.
+
+  The curve still draws itself, once, when the section comes into view. That is
+  a one-shot entrance, not a scroll scrub: it cannot leave the chart half-drawn
+  and it needs nothing from the visitor. Under reduced motion it is simply
+  drawn.
+
+  The horizontal capture-zone fix the old version needed is gone because the
+  bug it fixed cannot happen any more. Markers no longer move once the curve
+  has settled, so nothing can slide out from under the pointer.
 */
+
 const NODES = [
   { t: 0.36, label: 'Guidance',    note: 'Someone who has already done it tells you how it actually works.' },
   { t: 0.56, label: 'Preparation', note: 'You do the work already knowing what the work is.' },
@@ -31,23 +38,11 @@ const NODES = [
   { t: 0.92, label: 'Judgment',    note: 'The next decision is one you can make on your own.' },
 ];
 
+/** Where the mentor joins the mentored path. */
+const MENTOR_T = 0.15;
+
 const W = 720;
 const H = 300;
-
-/*
-  Where each milestone sits horizontally, as a fraction of the chart's width.
-
-  A milestone's x does not depend on `lift` at all; only its y does, and it
-  swings about 175 units as the curve bends. That asymmetry is the whole of the
-  hover bug: scrubbing maps pointer X onto lift, so aiming at a marker
-  horizontally is precisely the gesture that moves it vertically, and it slid
-  out of its own hit area before the pointer could land.
-
-  Knowing the fixed x of each marker lets the scrub yield just before the
-  pointer arrives — see CAPTURE below.
-*/
-const NODE_X_FRAC: number[] = [];
-const CAPTURE = 0.045;
 const START = { x: 60, y: 232 };
 const FLAT_END = { x: 664, y: 208 };
 
@@ -64,10 +59,6 @@ function curvePoint(t: number, lift: number) {
   };
 }
 
-// Filled once, from the same function that places the markers, so the capture
-// zones can never drift out of step with the geometry they belong to.
-if (NODE_X_FRAC.length === 0) NODES.forEach((n) => NODE_X_FRAC.push(curvePoint(n.t, 0).x / W));
-
 function curvePath(lift: number) {
   const cy = 236 - 210 * lift;
   const ey = 208 - 168 * lift;
@@ -75,103 +66,46 @@ function curvePath(lift: number) {
 }
 
 export default function TrajectoryViz() {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = useReducedMotion();
   const [lift, setLift] = useState(0);
-  const [reduced, setReduced] = useState(false);
-  const [coarse, setCoarse] = useState(false);
-  // Rendered width of the SVG, used to keep label size constant across
-  // viewports. A fixed breakpoint multiplier over-scaled tablets badly.
+  const [active, setActive] = useState<number | null>(null);
   const [svgW, setSvgW] = useState(700);
-  const [activeNode, setActiveNode] = useState<number | null>(null);
-
-  // Target lift lives in a ref; a RAF loop eases the rendered value toward it
-  // so pointer movement never drives a render at pointer frequency.
-  const target = useRef(0);
-  const raf = useRef(0);
-  // Set once the pointer takes over, so the entry animation yields to it.
-  const scrubbed = useRef(false);
-  /*
-    True while the mouse is resting on a milestone marker.
-
-    THE BUG THIS FIXES. Scrubbing maps pointer X onto `lift`, and `lift` bends
-    the curve, and the markers sit ON the curve — so moving toward a marker
-    moved the marker. The RAF eases `lift` at 0.14 per frame, so it was still
-    settling when the pointer arrived, the marker kept sliding vertically out
-    from under the cursor, pointerleave fired, and the note vanished. Three of
-    the four markers were unreachable by mouse; only Judgment, furthest right
-    where the remaining travel is smallest, reliably worked.
-
-    THE FIX. Entering a marker pins `lift` where it is, so the curve stops dead
-    and the marker cannot escape the pointer. Leaving it hands control back.
-    Mouse only: touch never scrubs, so there is nothing to freeze, and a
-    pointerleave that never arrives on a phone would otherwise strand this flag
-    on and kill scrubbing for good.
-  */
-  const holding = useRef(false);
-  // The rendered lift, readable from an event handler without waiting for the
-  // next render.
-  const liftRef = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const cq = window.matchMedia('(pointer: coarse)');
-    const onChange = () => { setReduced(mq.matches); setCoarse(cq.matches); };
-    onChange();
-    mq.addEventListener('change', onChange);
-    cq.addEventListener('change', onChange);
-    return () => { mq.removeEventListener('change', onChange); cq.removeEventListener('change', onChange); };
-  }, []);
-
   /*
-    The curve is drawn by scrolling.
-
-    It used to play a fixed 1100ms ease the first time the section came into
-    view, which meant the most literal idea on the page, a trajectory bending
-    upward, was disconnected from the one gesture the visitor was already
-    making. Now the section pins for a short range and the lift is a pure
-    function of how far through that range you are: stop halfway and the curve
-    stops halfway, scroll back and it comes back down.
-
-    Pointer scrubbing still wins. Once `scrubbed` is set the mouse owns the
-    value, exactly as before, and scroll stops writing to it.
+    Draw once, on first view. An IntersectionObserver rather than a scroll
+    position, so the chart is never a function of how far through a pinned
+    range someone happens to be, and it always ends up fully drawn.
   */
-  const pinRef = useRef<HTMLDivElement>(null);
-  const prefersReduced = useReducedMotion();
-  const wide = useWideViewport(768);
-  const pinned = wide && !prefersReduced;
-  const scrollProgress = useScrollProgress(pinRef, pinned);
-
   useEffect(() => {
-    if (!pinned) { liftRef.current = 1; setLift(1); return; }
-    if (scrubbed.current) return;
-    // Resolve a little before the pin ends so the finished curve is held for a
-    // beat rather than completing on the very last pixel.
-    const next = Math.min(scrollProgress / 0.78, 1);
-    liftRef.current = next;
-    setLift(next);
-  }, [scrollProgress, pinned]);
+    if (prefersReduced) { setLift(1); return; }
+    const el = sectionRef.current;
+    if (!el) { setLift(1); return; }
+    let raf = 0;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        const start = performance.now();
+        const DURATION = 1100;
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / DURATION, 1);
+          // easeOutCubic: quick to read, settles gently.
+          setLift(1 - Math.pow(1 - t, 3));
+          if (t < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => { io.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, [prefersReduced]);
 
-  const startLoop = () => {
-    if (raf.current) return;
-    const tick = () => {
-      setLift((prev) => {
-        const next = prev + (target.current - prev) * 0.14;
-        if (Math.abs(target.current - next) < 0.002) {
-          raf.current = 0;
-          liftRef.current = target.current;
-          return target.current;
-        }
-        raf.current = requestAnimationFrame(tick);
-        liftRef.current = next;
-        return next;
-      });
-    };
-    raf.current = requestAnimationFrame(tick);
-  };
-
-  useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
-
+  // The viewBox is a fixed 720 units wide, so anything inside it shrinks in
+  // proportion to the rendered width. Scaling by 700/width holds glyphs at a
+  // near-constant on-screen size from a 342px phone to a 1000px desktop.
   useEffect(() => {
     const el = svgRef.current;
     if (!el) return;
@@ -183,69 +117,15 @@ export default function TrajectoryViz() {
     return () => ro.disconnect();
   }, []);
 
-  const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== 'mouse' || reduced) return;
-    const { left, width } = e.currentTarget.getBoundingClientRect();
-    const t = (e.clientX - left) / width;
-
-    /*
-      Hand the curve over as the pointer comes alongside a marker.
-
-      Inside a marker's horizontal capture zone the scrub stops writing and the
-      lift is pinned where it stands, so the curve holds still and the marker
-      becomes something you can actually land on. Outside the zones it scrubs
-      exactly as before. The zones are about 0.09 of the width and the markers
-      are 0.165 apart, so they never overlap and the gesture between milestones
-      is untouched — the curve simply rests for a moment at each one.
-    */
-    if (NODE_X_FRAC.some((nx) => Math.abs(t - nx) < CAPTURE)) {
-      if (!holding.current) {
-        holding.current = true;
-        target.current = liftRef.current;
-        startLoop();
-      }
-      return;
-    }
-    holding.current = false;
-
-    // Floor at 0.25 so the curve never collapses while being scrubbed.
-    scrubbed.current = true;
-    target.current = Math.min(Math.max(t, 0.25), 1);
-    startLoop();
-  };
-
-  const RESTING_LIFT = 1;
-
-  const handleLeave = () => {
-    if (reduced) return;
-    holding.current = false;
-    // Settle back to fully resolved rather than collapsing to a flat line.
-    target.current = RESTING_LIFT;
-    startLoop();
-  };
-
-  // The viewBox is a fixed 720 units wide, so anything inside it shrinks in
-  // proportion to the rendered width. Scaling by 700/width holds glyphs at a
-  // near-constant on-screen size from a 342px phone to a 1000px desktop.
   const k = Math.min(2.2, Math.max(0.85, 700 / svgW));
   const narrow = svgW < 480;
-  // The hint has served its purpose the moment the user touches the chart.
-  const showHint = !reduced && !coarse && lift > 0.9 && !scrubbed.current && activeNode === null;
   const mentorPt = curvePoint(MENTOR_T, lift);
-  const active = activeNode !== null ? NODES[activeNode] : null;
+  const endPt = curvePoint(1, lift);
 
   return (
-    /*
-      The pin range. Roughly one extra screen of scroll, which is a single
-      trackpad flick, and every pixel of it is reversible. Below 768px and under
-      reduced motion the wrapper is a plain div with no height and the section
-      behaves exactly as it did before.
-    */
-    <div ref={pinRef} style={pinned ? { height: '190vh' } : undefined}>
     <section
-      className={`py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep overflow-hidden${
-        pinned ? ' sticky top-0 min-h-screen flex items-center' : ''
-      }`}
+      ref={sectionRef}
+      className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep overflow-hidden"
       aria-labelledby="trajectory-heading"
     >
       <div className="max-w-6xl mx-auto">
@@ -265,29 +145,54 @@ export default function TrajectoryViz() {
 
             {/* The honest version of the claim, said once, before the chart:
                 a mentor cannot hand anyone an outcome. */}
-            <p className="text-halo-lavender font-light text-[15px] leading-relaxed mb-5 max-w-sm">
+            <p className="text-halo-lavender font-light text-[15px] leading-relaxed mb-7 max-w-sm">
               A mentor can&apos;t decide where you end up. They can tell you what they
               learned the hard way and let you use it. What you do with it is still
               yours.
             </p>
 
-            {/* Reserved height: the hint is replaced in place by the hovered
-                node's note, so nothing below it ever shifts. */}
-            <div className="relative min-h-[62px]">
-              <InteractionCue
-                tone="deep"
-                icon={coarse ? 'click' : 'browse'}
-                retired={!!active}
-                durationMs={200}
-                hover={coarse ? 'Tap each point to see what changes.' : 'Move across the path to see what changes.'}
-              />
-              <p
-                className="absolute inset-x-0 top-0 text-halo-lavender font-light text-[14px] transition-opacity duration-200"
-                style={{ opacity: active ? 1 : 0 }}
-              >
-                {active?.note ?? ' '}
-              </p>
-            </div>
+            {/*
+              The four effects, in full, at rest.
+
+              This is the change that makes the section work. These sentences
+              used to exist only inside a hover state on a moving target, which
+              meant the argument was invisible to anyone who did not discover
+              the gesture. They are now simply the content. Pointing at a
+              marker highlights the matching row, and pointing at a row
+              highlights the marker, but neither is required to read any of it.
+            */}
+            <ol className="border-t border-white/15">
+              {NODES.map((node, i) => (
+                <li key={node.label}>
+                  <button
+                    type="button"
+                    onMouseEnter={() => setActive(i)}
+                    onMouseLeave={() => setActive(null)}
+                    onFocus={() => setActive(i)}
+                    onBlur={() => setActive(null)}
+                    className="w-full text-left flex items-baseline gap-3 py-2.5 border-b border-white/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-lavender rounded-sm"
+                  >
+                    <span
+                      className="font-ui text-[10.5px] font-semibold tabular-nums transition-colors"
+                      style={{ color: active === i ? '#ffffff' : 'rgba(217,207,251,0.6)' }}
+                    >
+                      0{i + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span
+                        className="font-semibold text-[14.5px] transition-colors"
+                        style={{ color: active === i ? '#ffffff' : '#D9CFFB' }}
+                      >
+                        {node.label}
+                      </span>
+                      <span className="text-halo-lavender/85 font-light text-[14px] leading-snug">
+                        {' — '}{node.note}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
 
             <p className="text-[11px] text-halo-lavender font-light mt-6 max-w-xs leading-relaxed">
               Illustrative. Mentorship changes what is reachable. It does not
@@ -295,146 +200,134 @@ export default function TrajectoryViz() {
             </p>
           </div>
 
-        <div
-          ref={wrapRef}
-          onPointerMove={handleMove}
-          onPointerLeave={handleLeave}
-          className="relative"
-        >
-          <svg
-            ref={svgRef}
-            viewBox={narrow ? `0 -10 ${W} ${H + 40}` : `0 14 ${W} ${H - 32}`}
-            className="w-full h-auto block"
-            /*
-              Was role="img". An image is a single leaf node to assistive tech,
-              so the four focusable stage markers inside it were unreachable
-              nested interactives. role="group" keeps the description and lets
-              a screen reader navigate into the markers.
-            */
-            role="group"
-            aria-label="A chart comparing a path without mentorship, which stays flat, against a mentored path that bends upward through guidance, preparation, opportunity, and judgment."
-          >
-            <defs>
-              <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stopColor="#D9CFFB" />
-                <stop offset="100%" stopColor="#FBFAF8" />
-              </linearGradient>
-            </defs>
+          <div className="relative">
+            <svg
+              ref={svgRef}
+              viewBox={narrow ? `0 -10 ${W} ${H + 40}` : `0 14 ${W} ${H - 32}`}
+              className="w-full h-auto block"
+              /*
+                role="group", not role="img": an image is a single leaf node to
+                assistive tech, so the focusable markers inside would be
+                unreachable nested interactives.
+              */
+              role="group"
+              aria-label="A chart comparing two paths from the same starting point. One stays flat and is labelled on your own. The other bends upward after a mentor joins, passing through guidance, preparation, opportunity and judgment."
+            >
+              <defs>
+                <linearGradient id="traj-grad" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#D9CFFB" />
+                  <stop offset="100%" stopColor="#FBFAF8" />
+                </linearGradient>
+              </defs>
 
-            {/* Unmentored baseline — always visible, deliberately inert */}
-            <path
-              d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
-              stroke="#5B2BD6"
-              strokeWidth={1.5 * k}
-              strokeDasharray="5 6"
-              fill="none"
-            />
-            <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#D9CFFB" fontSize={11 * k} fontWeight="500">
-              without mentorship
-            </text>
-
-            {/* Mentored curve */}
-            <path
-              d={curvePath(lift)}
-              stroke="url(#traj-grad)"
-              strokeWidth={2.5 * k}
-              fill="none"
-              strokeLinecap="round"
-              style={{ opacity: 0.25 + lift * 0.75 }}
-            />
-
-            {/* One-shot gesture hint: a dot traces the path the cursor should
-                follow. Removed permanently once the user engages. */}
-            {showHint && (
-              <circle
-                r={5 * k}
-                fill="#ffffff"
-                className="traj-hint"
-                style={{ offsetPath: `path("${curvePath(1)}")`, offsetRotate: '0deg' }}
-                aria-hidden="true"
+              {/* The unmentored baseline. Always fully drawn, so the
+                  comparison exists from the first frame rather than arriving
+                  with the animation. */}
+              <path
+                d={`M ${START.x} ${START.y} L ${FLAT_END.x} ${FLAT_END.y}`}
+                stroke="#5B2BD6"
+                strokeWidth={1.5 * k}
+                strokeDasharray="5 6"
+                fill="none"
               />
-            )}
-
-            {/* Origin — the student */}
-            <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
-            <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#D9CFFB" fontSize={11 * k} fontWeight="600">
-              You
-            </text>
-
-            {/* The mentor enters as the curve lifts */}
-            <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
-              <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#4717CA" stroke="#ffffff" strokeWidth={2 * k} />
-              <text x={mentorPt.x} y={mentorPt.y - 16 * k} textAnchor="middle" fill="#ffffff" fontSize={11 * k} fontWeight="600">
-                Mentor
+              {/* Renamed from "without mentorship". The two paths are now a
+                  matched pair of plain-language labels, which is what makes
+                  the comparison legible at a glance. */}
+              <text x={FLAT_END.x} y={FLAT_END.y + 22 * k} textAnchor="end" fill="#D9CFFB" fontSize={11.5 * k} fontWeight="600">
+                On your own
               </text>
-            </g>
 
-            {/* Milestones appear in order as the curve resolves */}
-            {NODES.map((node, i) => {
-              const p = curvePoint(node.t, lift);
-              const reveal = Math.max(0, Math.min(1, (lift - node.t * 0.62) / 0.2));
-              const isActive = activeNode === i;
-              return (
-                <g key={node.label} style={{ opacity: reveal }}>
-                  {/* Generous transparent hit area: the visible dot is far
-                      smaller than a comfortable touch target. r=23 rather than
-                      22 because the viewBox-to-CSS scale puts 22 at 42.8px
-                      rendered, just under the 44px minimum. */}
-                  <circle
-                    cx={p.x} cy={p.y} r={23 * k}
-                    fill="transparent"
-                    style={{ cursor: 'pointer' }}
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`${node.label}: ${node.note}`}
-                    onPointerEnter={(e) => {
-                      if (e.pointerType === 'mouse') {
-                        // Stop the curve exactly where it is. Snapping the
-                        // easing target to the current value settles it within
-                        // a frame, so the marker never travels far enough to
-                        // slip out of its own hit area.
-                        holding.current = true;
-                        target.current = liftRef.current;
-                      }
-                      setActiveNode(i);
-                    }}
-                    onPointerLeave={(e) => {
-                      if (e.pointerType === 'mouse') holding.current = false;
-                      setActiveNode(null);
-                    }}
-                    onClick={() => setActiveNode(i)}
-                    onFocus={() => setActiveNode(i)}
-                    onBlur={() => setActiveNode(null)}
-                  />
-                  <circle
-                    cx={p.x}
-                    cy={p.y}
-                    r={(isActive ? 7 : 4.5) * k}
-                    fill={isActive ? '#ffffff' : '#D9CFFB'}
-                    style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
-                  />
-                  {(!narrow || i === 0 || i === NODES.length - 1) && (
-                    <text
-                      x={p.x}
-                      y={p.y - 16 * k}
-                      textAnchor={narrow && i === NODES.length - 1 ? 'end' : 'middle'}
+              {/* The mentored curve */}
+              <path
+                d={curvePath(lift)}
+                stroke="url(#traj-grad)"
+                strokeWidth={2.5 * k}
+                fill="none"
+                strokeLinecap="round"
+                style={{ opacity: 0.25 + lift * 0.75 }}
+              />
+              {/* Below the curve, not above it: the last milestone's label
+                  ("Judgment") sits above the line at almost the same x, and
+                  the two collided. The flat path's label is likewise below
+                  its line, so the pair now reads as a matched set. */}
+              <text
+                x={endPt.x}
+                y={endPt.y + 26 * k}
+                textAnchor="end"
+                fill="#ffffff"
+                fontSize={11.5 * k}
+                fontWeight="600"
+                style={{ opacity: lift }}
+              >
+                With guidance
+              </text>
+
+              {/* Origin — the student */}
+              <circle cx={START.x} cy={START.y} r={6 * k} fill="#ffffff" />
+              <text x={START.x} y={START.y + 26 * k} textAnchor="middle" fill="#D9CFFB" fontSize={11 * k} fontWeight="600">
+                You
+              </text>
+
+              {/* Where the mentor joins */}
+              <g style={{ opacity: Math.max(0, (lift - 0.18) / 0.5) }}>
+                <circle cx={mentorPt.x} cy={mentorPt.y} r={7 * k} fill="#4717CA" stroke="#ffffff" strokeWidth={2 * k} />
+                <text x={mentorPt.x} y={mentorPt.y - 16 * k} textAnchor="middle" fill="#ffffff" fontSize={11 * k} fontWeight="600">
+                  Mentor
+                </text>
+              </g>
+
+              {NODES.map((node, i) => {
+                const p = curvePoint(node.t, lift);
+                const isActive = active === i;
+                return (
+                  <g key={node.label} style={{ opacity: lift }}>
+                    {/* Generous, forgiving hit area. The visible dot is far
+                        smaller than a comfortable target, and since the curve
+                        no longer moves under the pointer, landing on one is
+                        now simply a matter of being near it. */}
+                    <circle
+                      cx={p.x} cy={p.y} r={26 * k}
+                      fill="transparent"
+                      style={{ cursor: 'pointer' }}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`${node.label}: ${node.note}`}
+                      onMouseEnter={() => setActive(i)}
+                      onMouseLeave={() => setActive(null)}
+                      onClick={() => setActive(i)}
+                      onFocus={() => setActive(i)}
+                      onBlur={() => setActive(null)}
+                    />
+                    <circle
+                      cx={p.x} cy={p.y}
+                      r={(isActive ? 7.5 : 4.5) * k}
                       fill={isActive ? '#ffffff' : '#D9CFFB'}
-                      fontSize={10.5 * k}
-                      fontWeight="600"
-                      style={{ pointerEvents: 'none' }}
-                    >
-                      {node.label}
-                    </text>
-                  )}
-                </g>
-              );
-            })}
-          </svg>
-        </div>
+                      style={{ transition: 'r 180ms ease, fill 180ms ease', pointerEvents: 'none' }}
+                    />
+                    {/* Every milestone is labelled on the chart. On a narrow
+                        viewport only the first and last fit without colliding,
+                        and the list beside the chart carries all four anyway. */}
+                    {(!narrow || i === 0 || i === NODES.length - 1) && (
+                      <text
+                        x={p.x}
+                        y={p.y - 16 * k}
+                        textAnchor={narrow && i === NODES.length - 1 ? 'end' : 'middle'}
+                        fill={isActive ? '#ffffff' : '#D9CFFB'}
+                        fontSize={10.5 * k}
+                        fontWeight="600"
+                        style={{ pointerEvents: 'none', transition: 'fill 180ms ease' }}
+                      >
+                        {node.label}
+                      </text>
+                    )}
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
 
         </div>
       </div>
     </section>
-    </div>
   );
 }

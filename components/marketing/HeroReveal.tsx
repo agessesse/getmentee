@@ -27,7 +27,7 @@ export default function HeroReveal() {
   const shown = (n: number) => step >= n;
 
   return (
-    <div className="mb-9 pb-7 border-b border-halo-rule/80 max-w-lg">
+    <div className="mb-6 pb-5 border-b border-halo-rule/80 max-w-lg">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
         <span
           className="font-display text-halo-ink text-[26px] sm:text-[30px] leading-none motion-safe:transition-all motion-safe:duration-500"

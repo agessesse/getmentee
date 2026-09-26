@@ -58,15 +58,15 @@ export default async function ApplyPage({
     <div className="font-body min-h-screen bg-halo-ivory flex flex-col overflow-x-clip">
       <SiteHeader />
 
-      <main id="main-content" className="flex-1 py-14 sm:py-16 lg:py-20 px-6 lg:px-10">
+      <main id="main-content" className="flex-1 py-10 sm:py-12 lg:py-14 px-6 lg:px-10">
         <div className="max-w-2xl mx-auto">
-          <header className="mb-7">
-            <p className="font-ui text-[11px] font-semibold uppercase tracking-[0.14em] text-halo-purple-d mb-4">
+          <header className="mb-6">
+            <p className="font-ui text-[11px] font-semibold uppercase tracking-[0.14em] text-halo-purple-d mb-3">
               Apply
             </p>
             <h1
-              className="font-display text-halo-ink leading-[1.05] tracking-tight mb-4"
-              style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', textWrap: 'balance' }}
+              className="font-display text-halo-ink leading-[1.05] tracking-tight"
+              style={{ fontSize: 'clamp(1.875rem, 4vw, 2.5rem)', textWrap: 'balance' }}
             >
               Join the first group.
             </h1>
