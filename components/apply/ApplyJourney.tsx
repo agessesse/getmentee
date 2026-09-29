@@ -74,12 +74,12 @@ function stepsFor(role: Role): Step[] {
     { id: 'about', short: 'You', title: 'About you',
       lead: 'The basics. Where you study and what stage you are at help us understand what kind of mentorship would actually help.',
       fields: basics },
-    { id: 'goal', short: 'Goal', title: 'What you are working toward',
+    { id: 'goal', short: 'Direction', title: 'What you are working toward',
       lead: 'There are no right answers here. We are trying to understand what you want and why now.',
-      fields: [qs[0], qs[1], qs[2]] },
-    { id: 'effort', short: 'Effort', title: 'What you have already done',
+      fields: [choices[0], qs[0], qs[1], qs[2]] },
+    { id: 'now', short: 'Where you are', title: 'Where you are right now',
       lead: 'This matters more than anything else you will write. Specific and honest beats polished and impressive.',
-      fields: [qs[3], qs[4]] },
+      fields: [qs[3], qs[4], choices[1]] },
   ];
 }
 
@@ -144,10 +144,17 @@ function Preamble() {
   );
 }
 
-export default function ApplyJourney({ initialRole }: { initialRole: Role | null }) {
+export default function ApplyJourney({
+  initialRole,
+  cohortSlug,
+}: {
+  initialRole: Role | null;
+  /** Which cohort this application belongs to, if the CTA carried one. */
+  cohortSlug?: string | null;
+}) {
   const [role, setRole] = useState<Role | null>(initialRole);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [problem, setProblem] = useState<{ field: string; message: string } | null>(null);
   const [state, setState] = useState<'idle' | 'sending' | 'done'>('idle');
   const [formError, setFormError] = useState<string | null>(null);
@@ -186,11 +193,14 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
   /* ── URL, so Back / refresh / a pasted link all behave ─────────────────── */
   useEffect(() => {
     if (fromPop.current) { fromPop.current = false; return; }
-    const url = role ? `/apply?role=${role}${step > 0 ? `&step=${step}` : ''}` : '/apply';
+    const c = cohortSlug ? `&cohort=${cohortSlug}` : '';
+    const url = role
+      ? `/apply?role=${role}${step > 0 ? `&step=${step}` : ''}${c}`
+      : `/apply${cohortSlug ? `?cohort=${cohortSlug}` : ''}`;
     if (url === window.location.pathname + window.location.search) return;
     // Choosing a role or moving a step is a place you can come back to.
     window.history.pushState({ role, step }, '', url);
-  }, [role, step]);
+  }, [role, step, cohortSlug]);
 
   /*
     The URL is the source of truth on Back, not history.state.
@@ -226,16 +236,16 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
     if (role) window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [step, role, state]);
 
-  const set = useCallback((name: string, value: string) => {
+  const set = useCallback((name: string, value: string | string[]) => {
     if (!started.current) {
       started.current = true;
       // Kept alongside the new name so the existing series does not break.
       trackLandingEvent('cohort_application_started');
-      trackLandingEvent('apply_started', { role: role ?? 'unknown' });
+      trackLandingEvent('apply_started', { role: role ?? 'unknown', ...(cohortSlug ? { cohort: cohortSlug } : {}) });
     }
     setAnswers((a) => ({ ...a, [name]: value }));
     setProblem((p) => (p?.field === name ? null : p));
-  }, [role]);
+  }, [role, cohortSlug]);
 
   const focusField = (name: string) =>
     requestAnimationFrame(() => document.getElementById(name)?.focus());
@@ -274,7 +284,7 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
       const res = await fetch('/api/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role, ...answers }),
+        body: JSON.stringify({ role, cohort_slug: cohortSlug ?? undefined, ...answers }),
       });
       const json = (await res.json().catch(() => ({}))) as { error?: string; field?: string };
       if (!res.ok) {
@@ -283,7 +293,7 @@ export default function ApplyJourney({ initialRole }: { initialRole: Role | null
         return;
       }
       trackLandingEvent('cohort_application_submitted');
-      trackLandingEvent('application_submitted', { role });
+      trackLandingEvent('application_submitted', { role, ...(cohortSlug ? { cohort: cohortSlug } : {}) });
       setState('done');
       requestAnimationFrame(() => doneRef.current?.focus());
     } catch {
@@ -529,11 +539,13 @@ function FieldControl({
   field, value, onChange, invalid, message,
 }: {
   field: Field | Question;
-  value: string;
-  onChange: (v: string) => void;
+  value: string | string[];
+  onChange: (v: string | string[]) => void;
   invalid: boolean;
   message: string | null;
 }) {
+  const text = typeof value === 'string' ? value : '';
+  const picked = Array.isArray(value) ? value : value ? [value] : [];
   const q = 'rows' in field ? (field as Question) : null;
   const describedBy = [field.hint ? `${field.name}-hint` : null, message ? `${field.name}-err` : null]
     .filter(Boolean).join(' ') || undefined;
@@ -552,20 +564,28 @@ function FieldControl({
 
       {field.options ? (
         /* A fixed list, rendered as real buttons rather than a select, so the
-           choices are readable without opening anything. Radio semantics are
-           kept for assistive tech. */
-        <div role="radiogroup" aria-labelledby={`${field.name}-label`} className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+           choices are readable without opening anything. Radio semantics for a
+           single choice, checkbox semantics when several are allowed. */
+        <div
+          role={field.multi ? 'group' : 'radiogroup'}
+          aria-labelledby={`${field.name}-label`}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+        >
           <span id={`${field.name}-label`} className="sr-only">{field.label}</span>
           {field.options.map((opt, i) => {
-            const on = value === opt;
+            const on = field.multi ? picked.includes(opt) : text === opt;
             return (
               <button
                 key={opt}
                 type="button"
-                role="radio"
+                role={field.multi ? 'checkbox' : 'radio'}
                 aria-checked={on}
                 id={i === 0 ? field.name : undefined}
-                onClick={() => onChange(opt)}
+                onClick={() =>
+                  field.multi
+                    ? onChange(on ? picked.filter((x) => x !== opt) : [...picked, opt])
+                    : onChange(opt)
+                }
                 className={`text-left text-[14.5px] leading-snug px-4 py-3 rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-1 ${
                   on
                     ? 'bg-halo-veil border-halo-purple text-halo-ink font-medium'
@@ -584,7 +604,7 @@ function FieldControl({
             name={field.name}
             rows={q.rows}
             maxLength={q.max}
-            value={value}
+            value={text}
             onChange={(e) => onChange(e.target.value)}
             aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
@@ -593,11 +613,11 @@ function FieldControl({
           {/* Only once there is something to count. A counter on an empty box
               reads as a length requirement, which is the opposite of what the
               minimums are for. */}
-          {value.length > 0 && (
+          {text.length > 0 && (
             <p className="text-[12px] text-halo-mist-body mt-1.5 tabular-nums">
-              {value.length < q.min
-                ? `A little more — about ${q.min - value.length} more characters.`
-                : `${value.length} / ${q.max}`}
+              {text.length < q.min
+                ? `A little more, about ${q.min - text.length} more characters.`
+                : `${text.length} / ${q.max}`}
             </p>
           )}
         </>
@@ -613,7 +633,7 @@ function FieldControl({
             : 'off'
           }
           maxLength={field.max}
-          value={value}
+          value={text}
           placeholder={field.placeholder}
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={invalid || undefined}
@@ -636,7 +656,7 @@ function ReviewStep({
   role, answers, onEdit, headingRef,
 }: {
   role: Role;
-  answers: Record<string, string>;
+  answers: Record<string, string | string[]>;
   onEdit: (name: string) => void;
   headingRef: React.Ref<HTMLHeadingElement>;
 }) {
@@ -660,7 +680,13 @@ function ReviewStep({
           <div key={f.name} className="border-b border-halo-rule py-4 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_1fr] gap-x-6 gap-y-1.5">
             <dt className="text-[13.5px] font-semibold text-halo-mist-body leading-snug">{f.label}</dt>
             <dd className="text-[15px] text-halo-ink leading-relaxed whitespace-pre-line min-w-0">
-              {answers[f.name]?.trim() || <span className="text-halo-mist">Not answered</span>}
+              {(() => {
+                const v = answers[f.name];
+                const shown = Array.isArray(v) ? v.join(', ') : (v ?? '').trim();
+                // An optional question left blank reads "Not answered", which
+                // is a legitimate state here, not a gap to nag about.
+                return shown || <span className="text-halo-mist">Not answered</span>;
+              })()}
               <button
                 type="button"
                 onClick={() => onEdit(f.name)}

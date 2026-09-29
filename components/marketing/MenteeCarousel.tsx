@@ -150,7 +150,7 @@ export default function MenteeCarousel() {
       <section className="py-16 sm:py-20 bg-halo-veil" aria-labelledby="mentees-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-4">
-            Why we&apos;re building it
+            The people we&apos;re building it around
           </p>
           <h2
             id="mentees-heading"
@@ -212,12 +212,12 @@ export default function MenteeCarousel() {
 
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mt-8">
           <CtaButton
-            href="/apply?role=mentee"
+            href="/apply?role=mentee&cohort=cohort-001"
             onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'mentee_carousel' })}
             variant="outline"
             size="md"
           >
-            Apply as a mentee
+            Apply to Cohort 001
           </CtaButton>
         </div></div>
       </section>

@@ -36,6 +36,33 @@ const INDUSTRIES = [
 
 const INTEREST_TAGS = FINANCE_EXPERTISE;
 
+/*
+  What a mentor can help someone navigate.
+
+  Distinct from expertise tags on purpose. Expertise says what you know;
+  this says what a student can bring you. A request is built on the second
+  one: "I have a superday in three weeks" needs a person who has sat on that
+  side of the table, not a person tagged with a subject.
+
+  Situations, not skills, and phrased the way a student would describe their
+  own problem. Stored in mentor_profiles.can_help_with. Nothing ranks or
+  scores it; it is there so matching has something real to read later.
+*/
+const CAN_HELP_WITH = [
+  'Investment banking recruiting',
+  'Markets and trading recruiting',
+  'Technical interview preparation',
+  'Behavioral interviews',
+  'Networking and cold outreach',
+  'Coffee chats',
+  'Resume positioning',
+  'Choosing between finance paths',
+  'Internship decision-making',
+  'First-generation recruiting experience',
+  'Starting as an analyst',
+  'Early career decisions',
+];
+
 const GOAL_OPTIONS_MENTOR = [
   'Break into IB', 'Ace superday interviews', 'Build modeling skills',
   'PE recruiting', 'LBO modeling', 'VC career path', 'Investment thesis',
@@ -216,6 +243,7 @@ export default function ProfileSetupPage() {
   // Mentor step 3
   const [expertiseTags, setExpertiseTags] = useState<string[]>([]);
   const [goalsMentor, setGoalsMentor] = useState<string[]>([]);
+  const [canHelpWith, setCanHelpWith] = useState<string[]>([]);
   const [weeklyHours, setWeeklyHours] = useState('');
   const [timezone, setTimezone] = useState('America/New_York');
 
@@ -270,7 +298,7 @@ export default function ProfileSetupPage() {
       if (myRole === 'mentor') {
         const { data: mp } = await supabase
           .from('mentor_profiles')
-          .select('bio, expertise_tags, goals, years_experience, weekly_hours, timezone, company, title, industry, profile_complete')
+          .select('bio, expertise_tags, goals, can_help_with, years_experience, weekly_hours, timezone, company, title, industry, profile_complete')
           .eq('id', uid)
           .maybeSingle();
         if (mp) {
@@ -279,6 +307,7 @@ export default function ProfileSetupPage() {
           if (mp.bio) setBio(mp.bio);
           if (mp.expertise_tags?.length) setExpertiseTags(mp.expertise_tags);
           if (mp.goals?.length) setGoalsMentor(mp.goals);
+          if (mp.can_help_with?.length) setCanHelpWith(mp.can_help_with);
           if (mp.years_experience) setYearsExperience(String(mp.years_experience));
           if (mp.weekly_hours) setWeeklyHours(String(mp.weekly_hours));
           if (mp.timezone) setTimezone(mp.timezone);
@@ -336,6 +365,7 @@ export default function ProfileSetupPage() {
           bio: bio.trim() || null,
           expertise_tags: expertiseTags,
           goals: goalsMentor,
+          can_help_with: canHelpWith,
           years_experience: parseInt(yearsExperience) || 0,
           weekly_hours: parseInt(weeklyHours) || 0,
           timezone: timezone || null,
@@ -544,6 +574,12 @@ export default function ProfileSetupPage() {
           <>
             <Field label="Expertise tags" hint={`Select up to 8 skills you can help with (${expertiseTags.length}/8 selected)`}>
               <TagPicker options={FINANCE_EXPERTISE} value={expertiseTags} onChange={setExpertiseTags} max={8} />
+            </Field>
+            <Field
+              label="Can help navigate"
+              hint={`Situations a student could bring you (${canHelpWith.length}/6 selected)`}
+            >
+              <TagPicker options={CAN_HELP_WITH} value={canHelpWith} onChange={setCanHelpWith} max={6} />
             </Field>
             <Field label="Goals I help mentees achieve" hint={`Select up to 5 (${goalsMentor.length}/5 selected)`}>
               <TagPicker options={GOAL_OPTIONS_MENTOR} value={goalsMentor} onChange={setGoalsMentor} max={5} />

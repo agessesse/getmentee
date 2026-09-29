@@ -132,7 +132,7 @@ export default function MentorCarousel() {
       <section className="py-16 sm:py-20 bg-halo-ivory" aria-labelledby="mentor-carousel-heading">
         <div className="px-6 lg:px-10"><div className="max-w-6xl mx-auto mb-9">
           <p className="font-ui text-[11px] font-semibold text-halo-purple-d uppercase tracking-[0.14em] mb-4">
-            The people we&apos;re building this with
+            People willing to pass it forward
           </p>
           <h2
             id="mentor-carousel-heading"

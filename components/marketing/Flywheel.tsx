@@ -224,12 +224,13 @@ export default function Flywheel() {
                 someone", which lands as a different sentence than the one
                 being written.
               */}
-              Your experience becomes someone&nbsp;else&apos;s starting point.
+              It doesn&apos;t end with you.
             </h2>
 
             <p className="text-halo-mist-body font-light text-[15px] leading-relaxed mb-5 max-w-sm">
-              One mentor reaches further than one person. Help someone take their
-              next step, and the effect doesn&apos;t stop when they take it.
+              One opportunity doesn&apos;t have to stop with one person. Someone shares
+              what they know, a student carries it forward, and eventually becomes the
+              person someone else needed.
             </p>
 
             {/* The copy has to describe the interaction that is actually

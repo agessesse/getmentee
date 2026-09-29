@@ -34,11 +34,23 @@ export const metadata: Metadata = {
 export default async function ApplyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ role?: string | string[] }>;
+  searchParams: Promise<{ role?: string | string[]; cohort?: string | string[] }>;
 }) {
   const params = await searchParams;
   const raw = Array.isArray(params.role) ? params.role[0] : params.role;
   const initialRole = isRole(raw) ? raw : null;
+
+  /*
+    Cohort context, carried in the URL from whichever CTA sent them.
+
+    Validated against a slug shape here rather than trusted: it reaches a
+    database lookup on the server, and an unknown slug simply resolves to no
+    cohort rather than failing the application.
+  */
+  const rawCohort = Array.isArray(params.cohort) ? params.cohort[0] : params.cohort;
+  const cohortSlug = typeof rawCohort === 'string' && /^[a-z0-9-]{1,80}$/.test(rawCohort)
+    ? rawCohort
+    : null;
 
   /*
     Someone who is already a member does not need an application.
@@ -72,7 +84,7 @@ export default async function ApplyPage({
             </h1>
           </header>
 
-          <ApplyJourney initialRole={initialRole} />
+          <ApplyJourney initialRole={initialRole} cohortSlug={cohortSlug} />
         </div>
       </main>
 

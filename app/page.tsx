@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Shirt, Users, Plane, GraduationCap } from 'lucide-react';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import SiteHeader from '@/components/marketing/SiteHeader';
 import HeroReveal from '@/components/marketing/HeroReveal';
@@ -11,6 +10,7 @@ import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
+import CohortOne from '@/components/marketing/CohortOne';
 import Flywheel from '@/components/marketing/Flywheel';
 import BothDirections from '@/components/marketing/BothDirections';
 import { HERO_HAS_PAIR } from '@/components/marketing/HeroPair';
@@ -24,18 +24,6 @@ import CtaButton from '@/components/marketing/CtaButton';
 
 // Four outcomes, weighted: two carry the section, each with one supporting
 // idea. Six equally sized cards read as filler and blunted all of them.
-// Four peer outcomes. The previous split rendered two of them at 48px navy-900
-// and two at 24px navy-800, which implied Clarity outranked Accountability.
-// Nothing justified that, so the tiering is gone: hierarchy now comes from
-// label versus body, and the numbering gives the eye a reading order.
-// "Opportunity" was dropped because its line described a precondition
-// ("an introduction only helps if you are ready") rather than an outcome.
-const FUND_ITEMS = [
-  { icon: Shirt, label: 'Professional Attire', detail: 'Interview suit, tailoring, footwear' },
-  { icon: Users, label: 'Networking', detail: 'Coffee chats, industry events' },
-  { icon: Plane, label: 'Travel', detail: 'Interviews, career fairs, office visits' },
-  { icon: GraduationCap, label: 'Career Development', detail: 'Certifications, prep resources' },
-];
 
 export default function LandingPage() {
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -87,57 +75,37 @@ export default function LandingPage() {
                 id="hero-heading"
                 className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-5 max-w-3xl"
               >
-                Find someone<br />
-                worth learning from.<br />
-                Become someone<br />
-                worth learning from.
+                Talent is everywhere.<br />
+                Access isn&apos;t.
               </h1>
 
               {/*
-                The thesis. The headline was "The Right Mentor Can Change Your
-                Trajectory", which only a student could see themselves in. It now
-                claims the relationship for both people, in the same three short
-                lines so the hero keeps its shape. The standfirst then says the
-                actual problem, that the two rarely find each other, and keeps
-                "everything after the introduction", which answers the question
-                every visitor arrives with: "is this just a list of names?"
+                The thesis, sharpened.
 
-                Teacher first, learner second, matching the order of the pair of
-                cards beside it and of the two roster sections below.
+                The headline was "Find someone worth learning from. Become
+                someone worth learning from." True, and it described the
+                relationship well, but it never said what problem Mentable
+                exists for. Two students with the same ability do not start in
+                the same place, and the difference is usually who they already
+                know. That is the sentence the company is built on, so it is
+                the sentence at the top.
 
-                Note it does NOT say "luck". The Problem section below opens
-                "Right now, mentorship mostly depends on luck", and a hero that
-                says it first turns that heading into an echo of itself.
-              */}
-              {/*
-                The standfirst, not body copy.
-
-                It was set in Plex at font-light, the same face and weight as
-                every paragraph further down the page, which made the most
-                important sentence on the site look like the least important
-                one. It is now Newsreader at 400, the face the headline above it
-                uses, one step down in size with a wider measure and looser
-                leading. Serif headline into serif standfirst into sans body is
-                the ordinary editorial order, and it is the order the rest of
-                this page already follows; the hero was the exception.
-
-                No font was added. Newsreader is already loaded for every
-                heading on the site.
+                The standfirst stays deliberately career-agnostic. Finance is
+                Cohort 001, not the brand: a visitor who reads the hero and
+                concludes Mentable is a finance product has misread it, and
+                every future cohort would need this page rewritten.
               */}
               <p
                 className="font-display text-halo-heather leading-[1.4] max-w-xl mb-6"
                 style={{ fontSize: 'clamp(1.15rem, 1.75vw, 1.4rem)' }}
               >
-                People{' '}
-                <span className="font-medium text-halo-purple-d">
-                  willing to teach
-                </span>
-                {' '}and people{' '}
-                <span className="font-medium text-halo-purple-d">
-                  ready to learn
-                </span>
-                {' '}rarely find each other. Mentable connects them, then gives the
-                relationship structure after the introduction.
+                Two people can have the same{' '}
+                <span className="font-medium text-halo-purple-d">ability</span>
+                {' '}and nothing like the same{' '}
+                <span className="font-medium text-halo-purple-d">access</span>.
+                Mentable connects students with people who have already walked
+                the path, and gives the relationship structure after the
+                introduction.
               </p>
 
               {/*
@@ -159,16 +127,29 @@ export default function LandingPage() {
                 so the context arrives before the decision instead of under it
                 where a 900px viewport cuts it off.
               */}
-              <p className="text-halo-mist-body text-[15px] leading-relaxed mb-6 max-w-md">
-                We&apos;re building it now, and putting together the first group of both.
-              </p>
+              {/*
+                The launch signal. Deliberately a rule and two short lines
+                rather than a banner: it has to be findable without competing
+                with the headline, and it must not read as promotion. No
+                countdown, no seat counter, no application count. The only
+                number is ten, and ten is true.
+              */}
+              <div className="border-l-2 border-halo-lavender pl-4 mb-6 max-w-md">
+                <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-purple-d mb-1">
+                  Cohort 001 · Finance · UNC-Chapel Hill
+                </p>
+                <p className="text-halo-mist-body text-[14.5px] leading-relaxed">
+                  Applications are open for our first cohort: ten sophomores, ten mentors,
+                  one semester.
+                </p>
+              </div>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
-                  href="/apply?role=mentee"
+                  href="/apply?role=mentee&cohort=cohort-001"
                   onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero' })}
                 >
-                  Apply as a mentee
+                  Apply to Cohort 001
                 </CtaButton>
                 <CtaButton
                   href="/mentor"
@@ -204,7 +185,13 @@ export default function LandingPage() {
       {/* ── 02. Problem ──────────────────────────────────────────────────────── */}
       <ProblemSection />
 
-      {/* ── 03. The two rosters ──────────────────────────────────────────────── */}
+      {/* ── 03. Cohort 001 ───────────────────────────────────────────────────── */}
+      {/* The first proof. Sits directly after the problem, so "same ability,
+          different access" is answered by something concrete and small rather
+          than by more argument. */}
+      <CohortOne />
+
+      {/* ── 04. The two rosters ──────────────────────────────────────────────── */}
       {/* Willing to teach, then ready to learn. Each section now carries its own
           proof rail inside it, under the heading it is evidence for, instead of
           sitting in a separate bordered band above it. The two sections are told
@@ -212,10 +199,10 @@ export default function LandingPage() {
       <MentorCarousel />
       <MenteeCarousel />
 
-      {/* ── 04. Product ──────────────────────────────────────────────────────── */}
+      {/* ── 05. Product ──────────────────────────────────────────────────────── */}
       <ProductDemo />
 
-      {/* ── 06. Trajectory ───────────────────────────────────────────────────── */}
+      {/* ── 06. The access gap ───────────────────────────────────────────────── */}
       <TrajectoryViz />
 
       {/* ── 07. Return on Impact ─────────────────────────────────────────────── */}
@@ -231,88 +218,22 @@ export default function LandingPage() {
       <BothDirections />
 
       {/*
-        ── 09. Opportunity Fund ──────────────────────────────────────────────
-        No scroll handoff on this one. It used to scale and fade to 70% as the
-        closing section arrived, which read as the band greying out rather than
-        as depth, and the fund is not the thing to dim.
+        ── Opportunity Fund: removed from the homepage sequence ──────────────
+
+        Not deleted. The section is about paying for recruiting costs for
+        students with demonstrated financial need, and it is honest that the
+        fund is not funded yet.
+
+        It comes out of the homepage because it introduces a second, different
+        definition of under-resourced. Cohort 001 is about access to people:
+        who you can ask, what you get told early, which mistakes you avoid. A
+        section immediately below it about household finances asks a visitor to
+        hold two theses at once, and promises a programme Mentable has not
+        built. When the fund exists, this comes back.
+
+        The component's markup lives in git history at a620521 and the
+        /opportunity-fund concept can return as its own page.
       */}
-      <section
-        className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-deep"
-        aria-labelledby="fund-heading"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <div>
-              <Rise kind="heading" as="p" className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
-                A Mentable initiative
-              </Rise>
-              <Rise kind="heading" delay={0.1}>
-                <h2
-                  id="fund-heading"
-                  className="font-display text-white leading-[1.08] mb-5"
-                  style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
-                >
-                  Preparation shouldn&apos;t<br />depend on a budget.
-                </h2>
-              </Rise>
-              <p className="text-halo-lavender leading-relaxed mb-4 font-light text-[15px] max-w-md">
-                For students with demonstrated financial need, we want to remove the
-                practical barriers between guidance and action: the suit, the train fare,
-                the coffee. This is the part of Mentable that does not exist yet.
-              </p>
-              <p className="text-halo-lavender text-[14px] leading-relaxed mb-7">
-                Not funded yet. We&apos;re looking for the partners to pay for the first
-                grants, and we&apos;d rather say that than imply the money is already there.
-              </p>
-              {/*
-                The student's closing ask, inside the one section that is
-                deliberately about students. The final CTA below speaks to both
-                sides, so this is the student's more specific next step.
-
-                Ordered ask-then-read: the button is the commitment, the fund
-                link is the lower-commitment alternative for anyone not ready.
-              */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-                <CtaButton
-                  href="/apply?role=mentee"
-                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'fund' })}
-                  size="md"
-                  ground="deep"
-                >
-                  Apply as a mentee
-                </CtaButton>
-                {/*
-                  There was a second button here reading "Learn about the
-                  Opportunity Fund" that pointed at /signup?role=mentee. It
-                  promised information and delivered a signup form, and the
-                  only page about the fund is behind authentication — a dead
-                  end for exactly the visitor it was written for. The section's
-                  own words now carry the explanation, and the fund keeps one
-                  ask rather than competing with the cohort for attention.
-                */}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {FUND_ITEMS.map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <Rise
-                    key={item.label}
-                    kind="row"
-                    delay={(i % 3) * 0.08}
-                    className="bg-halo-deep-panel border border-halo-deep-rule rounded-xl p-4 hover:border-halo-lavender/50 hover:bg-white/[0.14] transition-colors"
-                  >
-                    <Icon className="w-5 h-5 text-halo-lavender mb-3" aria-hidden="true" />
-                    <p className="text-[14px] font-semibold text-white leading-tight">{item.label}</p>
-                    <p className="text-[12px] text-halo-lavender mt-1 leading-snug">{item.detail}</p>
-                  </Rise>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
 
 
       {/* ── 10. Final CTA ────────────────────────────────────────────────────── */}
@@ -339,13 +260,14 @@ export default function LandingPage() {
           <p className="text-halo-heather text-[16px] leading-relaxed mb-8 max-w-lg">
             Mentable is how you find each other. It holds the parts that usually get
             dropped: what you agreed, what to prepare, and what happened last time.
+            Cohort 001 starts with ten of each.
           </p>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
-              href="/apply?role=mentee"
+              href="/apply?role=mentee&cohort=cohort-001"
               onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final' })}
             >
-              Apply as a mentee
+              Apply to Cohort 001
             </CtaButton>
             <CtaButton
               href="/mentor"

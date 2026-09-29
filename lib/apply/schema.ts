@@ -37,6 +37,17 @@ export interface Field {
   max: number;
   /** Fixed list of allowed values; renders as a choice rather than an input. */
   options?: readonly string[];
+  /** With `options`, allows several answers. Stored as a text[] column. */
+  multi?: boolean;
+  /**
+   * Answerable but not required.
+   *
+   * Used for exactly one question: who a student already goes to for career
+   * advice. That is the access question, and a student with nobody to name
+   * is precisely the person this cohort exists for. Forcing an answer would
+   * turn it into a test they can fail.
+   */
+  optional?: boolean;
 }
 
 /** A written answer. */
@@ -74,11 +85,45 @@ export const INVOLVEMENT = [
   'Open to an ongoing mentorship',
 ] as const;
 
+/* ── Finance paths for Cohort 001 ───────────────────────────────────────────
+   Kept in step with the career_pathways seed in migration 0029. A static list
+   rather than a database read: the form is public, career_pathways is
+   service-role only, and opening a table to render eight strings would be the
+   wrong trade. "Still exploring" is listed as a real answer, not a fallback,
+   because a sophomore who has not chosen yet is the expected applicant. */
+export const FINANCE_PATHS = [
+  'Investment Banking',
+  'Sales & Trading / Markets',
+  'Asset Management',
+  'Private Equity',
+  'Wealth Management',
+  'Corporate Finance',
+  'Consulting',
+  'Still exploring',
+] as const;
+
+/* Who a student can already turn to. Ordered roughly from the access most
+   students inherit to the access they do not, with an honest last option. */
+export const ADVICE_SOURCES = [
+  'Family',
+  'Friends or classmates',
+  'Professors or advisors',
+  'Older students',
+  'Alumni',
+  'A professional mentor',
+  'Nobody consistently',
+] as const;
+
 export const MENTEE_BASICS: Field[] = [
   { name: 'full_name', column: 'full_name', label: 'Your name', max: 120, placeholder: 'First and last' },
   { name: 'email', column: 'email', label: 'Email', type: 'email', max: 320, placeholder: 'you@university.edu' },
   { name: 'school', column: 'school', label: 'Where you study', max: 160, placeholder: 'Your school or university' },
   { name: 'year', column: 'year', label: 'Where you are right now', max: 40, options: YEARS },
+  {
+    name: 'major', column: 'major', label: 'Major or intended major', max: 160,
+    placeholder: 'e.g. Economics, or undecided',
+    hint: 'Undecided is a real answer.',
+  },
 ];
 
 export const MENTOR_BASICS: Field[] = [
@@ -140,10 +185,10 @@ export const MENTEE_QUESTIONS: Question[] = [
     rows: 4, min: 80, max: MAX_ANSWER,
   },
   {
-    name: 'good_mentee', column: 'good_mentee',
-    label: 'What would make you good to mentor?',
-    hint: 'Preparation, following through, taking feedback, asking real questions. Say what is actually true of you.',
-    rows: 3, min: 60, max: MAX_ANSWER,
+    name: 'hardest', column: 'hardest',
+    label: 'What’s hardest to figure out right now?',
+    hint: 'The thing you cannot get a straight answer to. Timelines, what a job actually involves, how people got in, what you should be doing this semester.',
+    rows: 4, min: 60, max: MAX_ANSWER,
   },
 ];
 
@@ -178,6 +223,30 @@ export const MENTOR_QUESTIONS: Question[] = [
   },
 ];
 
+/*
+  Which finance paths a student is exploring, and who they can already ask.
+
+  Both are choices rather than essays because neither is a test. The first is
+  multi-select because a sophomore exploring three things is the normal case;
+  the second is optional because "nobody consistently" is the answer this
+  cohort was built for, and a student should never have to perform a lack of
+  access to be taken seriously.
+*/
+export const MENTEE_CHOICES: Field[] = [
+  {
+    name: 'finance_paths', column: 'finance_paths',
+    label: 'Which finance paths are you exploring?',
+    hint: 'Pick as many as apply. You are not committing to any of them.',
+    max: 400, options: FINANCE_PATHS, multi: true,
+  },
+  {
+    name: 'advice_source', column: 'advice_source',
+    label: 'Who do you currently go to for career advice?',
+    hint: 'Optional, and there is no right answer. It helps us understand what kind of guidance would actually add something.',
+    max: 400, options: ADVICE_SOURCES, multi: true, optional: true,
+  },
+];
+
 export const MENTOR_CHOICE: Field = {
   name: 'involvement', column: 'involvement',
   label: 'What level of involvement feels realistic?',
@@ -187,7 +256,7 @@ export const MENTOR_CHOICE: Field = {
 
 export const basicsFor = (role: Role) => (role === 'mentor' ? MENTOR_BASICS : MENTEE_BASICS);
 export const questionsFor = (role: Role) => (role === 'mentor' ? MENTOR_QUESTIONS : MENTEE_QUESTIONS);
-export const choicesFor = (role: Role): Field[] => (role === 'mentor' ? [MENTOR_CHOICE] : []);
+export const choicesFor = (role: Role): Field[] => (role === 'mentor' ? [MENTOR_CHOICE] : MENTEE_CHOICES);
 
 /** Every field the form collects for a role, in the order it is asked. */
 export const allFieldsFor = (role: Role): Field[] => [
@@ -211,6 +280,7 @@ export function validate(
 
   for (const f of basicsFor(role)) {
     const v = get(f.name);
+    if (!v && f.optional) continue;
     if (!v) return { field: f.name, message: `Please add ${f.label.toLowerCase()}.` };
     if (v.length > f.max) return { field: f.name, message: `${f.label} is too long.` };
     if (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
@@ -236,9 +306,22 @@ export function validate(
   }
 
   for (const c of choicesFor(role)) {
-    const v = get(c.name);
-    if (!v) return { field: c.name, message: `Please choose ${c.label.toLowerCase()}.` };
-    if (c.options && !(c.options as readonly string[]).includes(v)) {
+    // A multi-select arrives as an array; everything else as a string.
+    const raw = data[c.name];
+    const values = Array.isArray(raw)
+      ? raw.filter((x): x is string => typeof x === 'string').map((x) => x.trim()).filter(Boolean)
+      : get(c.name) ? [get(c.name)] : [];
+
+    if (values.length === 0) {
+      if (c.optional) continue;
+      return { field: c.name, message: `Please choose ${c.label.toLowerCase()}.` };
+    }
+    if (!c.multi && values.length > 1) {
+      return { field: c.name, message: `Please choose one option for ${c.label.toLowerCase()}.` };
+    }
+    // Every value must come off the offered list. Anything else means the
+    // submission did not come from the form.
+    if (c.options && values.some((v) => !(c.options as readonly string[]).includes(v))) {
       return { field: c.name, message: `Please choose ${c.label.toLowerCase()}.` };
     }
   }
@@ -247,9 +330,19 @@ export function validate(
 }
 
 /** Form field names mapped onto their database columns, for the route. */
-export function toColumns(role: Role, data: Record<string, unknown>): Record<string, string> {
-  const row: Record<string, string> = { role };
+export function toColumns(role: Role, data: Record<string, unknown>): Record<string, unknown> {
+  const row: Record<string, unknown> = { role };
   for (const f of allFieldsFor(role)) {
+    if (f.multi) {
+      const raw = data[f.name];
+      const values = Array.isArray(raw)
+        ? raw.filter((x): x is string => typeof x === 'string').map((x) => x.trim()).filter(Boolean)
+        : typeof raw === 'string' && raw.trim() ? [raw.trim()] : [];
+      // Omitted rather than written as [], so an unanswered optional question
+      // is null in the database and not an empty answer.
+      if (values.length) row[f.column] = values;
+      continue;
+    }
     const v = typeof data[f.name] === 'string' ? (data[f.name] as string).trim() : '';
     if (v) row[f.column] = f.name === 'email' ? v.toLowerCase() : v;
   }

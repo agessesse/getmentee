@@ -62,12 +62,17 @@ export function trackLandingEvent(
   */
   if ((PUBLIC_EVENTS as readonly string[]).includes(event)) {
     /*
-      One bounded string describing where this happened. `cta` for a button
-      position, `role` for which path, and both together as 'mentor:2' for a
-      step, which is how abandonment gets measured without touching a single
-      word anyone typed.
+      One bounded string describing where this happened. `cohort` for which
+      cohort, `cta` for a button position, `role` for which path, and those
+      together as 'cohort-001:mentee:2' for a step, which is how abandonment
+      gets measured without touching a single word anyone typed.
+
+      Deliberately no new event names for Cohort 001. The funnel questions are
+      the same questions ("how many started, how many finished"); the only new
+      dimension is which cohort, and a dimension belongs in a property rather
+      than in four more entries on the allowlist.
     */
-    const parts = [metadata.role, metadata.cta, metadata.step]
+    const parts = [metadata.cohort, metadata.role, metadata.cta, metadata.step]
       .filter((v) => typeof v === 'string' || typeof v === 'number')
       .map(String);
     const surface = parts.length ? parts.join(':').slice(0, 60) : undefined;

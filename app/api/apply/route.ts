@@ -18,10 +18,9 @@ import { isRole, validate, toColumns } from '@/lib/apply/schema';
  * Validation runs here as well as in the form, from the same lib/apply/schema
  * definitions, because a form is a convenience and never a control.
  *
- * REQUIRES MIGRATION 0026. The mentor columns and the role column do not exist
- * until it is applied. Written but deliberately not applied in this pass, so a
- * mentor submission will fail against the current production schema — see the
- * handover notes. Student submissions are unaffected either way.
+ * Migrations 0026 (role and mentor columns) and 0029 (cohort context and the
+ * Cohort 001 questions) are both applied in production. A cohort slug arriving
+ * from a CTA is resolved to an id here rather than trusted from the client.
  */
 
 const recent = new Map<string, number[]>();
@@ -80,7 +79,31 @@ export async function POST(req: NextRequest) {
   }
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
-  const { error } = await admin.from('cohort_applications').insert(toColumns(role, body));
+
+  /*
+    Resolve the cohort, if the application carried one.
+
+    The client sends a slug, never an id: a slug is a public, guessable,
+    harmless string, and resolving it here means the browser cannot attach an
+    application to an arbitrary row. An unknown or closed slug resolves to
+    null and the application is still accepted, because losing a real
+    application over a bad query parameter would be the worse failure.
+  */
+  let cohortId: string | null = null;
+  const slug = typeof body.cohort_slug === 'string' ? body.cohort_slug.trim() : '';
+  if (slug && /^[a-z0-9-]{1,80}$/.test(slug)) {
+    const { data: cohort } = await admin
+      .from('cohorts')
+      .select('id, status')
+      .eq('slug', slug)
+      .maybeSingle();
+    if (cohort && cohort.status === 'open') cohortId = cohort.id as string;
+  }
+
+  const row = toColumns(role, body);
+  if (cohortId) row.cohort_id = cohortId;
+
+  const { error } = await admin.from('cohort_applications').insert(row);
 
   if (error) {
     /*

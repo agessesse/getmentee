@@ -252,7 +252,7 @@ function MentorProfileView({ person }: { person: SourcedProfile }) {
           We&apos;re putting together a first group of students and the mentors who agree to
           work with them.
         </p>
-        <CtaButton href="/apply?role=mentee" size="md" ground="deep">
+        <CtaButton href="/apply?role=mentee&cohort=cohort-001" size="md" ground="deep">
   Apply as a mentee
 </CtaButton>
       </div>

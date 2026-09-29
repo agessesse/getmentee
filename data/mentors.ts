@@ -304,11 +304,12 @@ export const FEATURED_MENTORS: Mentor[] = [
     logo: synergyemerge.com resolves but serves no readable content, so its
     ownership could not be confirmed and a logo would have been a guess.
 
-    ON THE CREDENTIAL IN THE NAME. The name here reads "MS, PCC". His own site
-    and his current LinkedIn slug both present him as ACC, a different ICF
-    credential level. The name is left exactly as supplied rather than
-    rewritten unilaterally, but it should be confirmed with him before this
-    goes further — see the pass report.
+    ON THE CREDENTIAL IN THE NAME. Confirmed by Abel: PCC is correct. Worth
+    recording why this was ever in doubt, so nobody re-opens it from the same
+    evidence: his own site and his current LinkedIn slug both present him as
+    ACC, which is a different ICF level. Public sources disagreed with the
+    name we were given, the name we were given turned out to be right, and a
+    web search was not the thing that settled it.
   */
   {
     name: 'George A. Metz Jr., MS, PCC',

@@ -133,7 +133,7 @@ export default function TrajectoryViz() {
 
           <div>
             <p className="font-ui text-[11px] font-semibold text-halo-lavender uppercase tracking-[0.14em] mb-5">
-              One person, one decision
+              The access gap
             </p>
             <h2
               id="trajectory-heading"
@@ -146,9 +146,9 @@ export default function TrajectoryViz() {
             {/* The honest version of the claim, said once, before the chart:
                 a mentor cannot hand anyone an outcome. */}
             <p className="text-halo-lavender font-light text-[15px] leading-relaxed mb-7 max-w-sm">
-              A mentor can&apos;t decide where you end up. They can tell you what they
-              learned the hard way and let you use it. What you do with it is still
-              yours.
+              Mentorship doesn&apos;t create talent. It changes how quickly someone can
+              turn talent into informed action, because the person across from them
+              already knows what the next six months look like.
             </p>
 
             {/*

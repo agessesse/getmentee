@@ -9,7 +9,7 @@ const SIDES = [
     who: 'Student',
     line: 'I don’t know who to ask.',
     detail:
-      'The people worth asking seem too busy, and there is no way to tell who would actually say yes.',
+      'Some students already know someone who has done the job. The rest work out the timeline, the expectations and the mistakes on their own, usually late.',
   },
   {
     id: 'professional',
@@ -41,8 +41,24 @@ export default function ProblemSection() {
           className="font-display text-halo-ink leading-[1.06] text-center mb-8 mx-auto max-w-2xl"
           style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
         >
-          Right now, mentorship<br className="hidden sm:block" /> mostly depends on luck.
+          Same ability.<br className="hidden sm:block" /> Different access.
         </h2>
+
+        {/*
+          The gap, said plainly once.
+
+          The heading used to be "mentorship mostly depends on luck", which
+          named the symptom. The cause is that the information a student needs
+          early travels through people, and not everybody starts within reach
+          of those people. Kept to two sentences: this section's job is the
+          two voices below it, not an essay.
+        */}
+        <p className="text-center text-halo-heather text-[16px] leading-relaxed max-w-xl mx-auto mb-8">
+          Recruiting timelines, what a job actually involves, which mistakes cost you a
+          year. Some students hear all of it at home or from someone a few years ahead.
+          Others are expected to work it out alone, and being just as capable does not
+          make that any faster.
+        </p>
 
         <div className="flex justify-center mb-8">
           <InteractionCue
@@ -98,7 +114,7 @@ export default function ProblemSection() {
         <div className="flex flex-col items-center mt-10" aria-hidden="true">
           <div className="w-px h-8 bg-gradient-to-b from-gray-200 to-gray-300" />
           <p className="font-ui text-[10px] font-bold text-halo-mist-body uppercase tracking-[0.16em] py-2.5">
-            Luck
+            Who you know
           </p>
           <div className="w-px h-8 bg-gradient-to-b from-halo-rule to-halo-ink" />
         </div>
@@ -107,7 +123,7 @@ export default function ProblemSection() {
           Mentable
         </p>
         <p className="text-center text-halo-mist-body font-light text-[15px] mt-2.5 max-w-sm mx-auto leading-relaxed">
-          Mentable replaces the luck with a process.
+          Mentable makes that introduction something other than luck.
         </p>
       </div>
     </section>
