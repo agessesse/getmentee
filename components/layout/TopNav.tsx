@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bell, Menu, ChevronDown, Check, ClipboardList, ClipboardCheck, MessageSquare, Calendar, CalendarX, Target, TrendingUp } from 'lucide-react';
+import { Bell, ChevronDown, Check, ClipboardList, ClipboardCheck, MessageSquare, Calendar, CalendarX, Target, TrendingUp } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
-import Wordmark from '@/components/ui/Wordmark';
+import ProgramIdentity from '@/components/app/ProgramIdentity';
+import type { TenantIdentity } from '@/lib/theme/identity';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
 import { notificationHref } from '@/lib/notifications';
@@ -19,7 +20,8 @@ interface TopNavProps {
     email: string;
     avatar_url: string | null;
   };
-  onMenuClick: () => void;
+  role: 'mentor' | 'mentee';
+  tenant: TenantIdentity | null;
 }
 
 interface Notification {
@@ -46,7 +48,23 @@ const NOTIF_ICONS: Record<string, React.ComponentType<{ className?: string }>> =
   review_received:        TrendingUp,
 };
 
-export default function TopNav({ user, onMenuClick }: TopNavProps) {
+/** Reachable, but not worth a quarter of the primary navigation. */
+const SECONDARY: Record<'mentor' | 'mentee', { href: string; label: string }[]> = {
+  mentee: [
+    { href: '/discover', label: 'Find a mentor' },
+    { href: '/requests', label: 'Requests' },
+    { href: '/learn', label: 'Learn' },
+    { href: '/profile/setup', label: 'Edit profile' },
+  ],
+  mentor: [
+    { href: '/requests', label: 'Requests' },
+    { href: '/impact', label: 'Your mentoring' },
+    { href: '/learn', label: 'Learn' },
+    { href: '/profile/setup', label: 'Edit profile' },
+  ],
+};
+
+export default function TopNav({ user, role, tenant }: TopNavProps) {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notifDropdown, setNotifDropdown] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -133,22 +151,19 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
 
   return (
     <header className="sticky top-0 z-10 h-16 bg-halo-ivory/85 backdrop-blur-md border-b border-halo-rule flex items-center justify-between px-4 lg:px-8 flex-shrink-0">
-      {/* Mobile hamburger, with the lockup beside it: the sidebar that carries
-          it on desktop is off-canvas here. */}
-      <div className="flex items-center gap-3 lg:hidden">
-        <button
-          onClick={onMenuClick}
-          className="text-halo-heather hover:text-halo-ink transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded-lg"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <Link href="/dashboard" className="text-halo-ink rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple">
-          <Wordmark size="sm" />
+      {/*
+        No hamburger. Mobile navigation is the bottom bar, so this space
+        carries the identity instead: on a phone the programme name is the
+        only place the institution appears, since the side panel that holds
+        it on desktop is not rendered at all below lg.
+      */}
+      <div className="flex items-center min-w-0 lg:hidden">
+        <Link href="/dashboard" className="block min-w-0 text-halo-ink rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple">
+          <ProgramIdentity tenant={tenant} compact />
         </Link>
       </div>
 
-      <div className="flex-1" />
+      <div className="flex-1 min-w-0" />
 
       <div className="flex items-center gap-2">
         {/* Notifications */}
@@ -248,13 +263,23 @@ export default function TopNav({ user, onMenuClick }: TopNavProps) {
                 <p className="text-sm font-semibold text-halo-ink">{fullName}</p>
                 <p className="text-xs text-halo-mist-body truncate mt-0.5">{user.email}</p>
               </div>
-              <Link
-                href="/profile/setup"
-                onClick={() => setUserDropdown(false)}
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-halo-heather hover:bg-halo-veil transition-colors"
-              >
-                Edit Profile
-              </Link>
+              {/*
+                Everything that lost its place when primary navigation went
+                from eleven items to four. These are real destinations and
+                still reachable; they are simply not things a person goes to
+                repeatedly, so they live where products have always kept the
+                long tail rather than occupying a quarter of the nav.
+              */}
+              {SECONDARY[role].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setUserDropdown(false)}
+                  className="flex items-center gap-2.5 px-4 py-2 text-sm text-halo-heather hover:bg-halo-veil transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               <div className="border-t border-halo-rule mt-1 pt-1">
                 <button
                   onClick={handleSignOut}

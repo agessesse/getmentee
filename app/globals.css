@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ──────────────────────────────────────────────────────────────────────────
+   Halo design tokens: the Mentable default theme.
+
+   These are the same literal values tailwind.config.ts used to hold inline,
+   moved here as "R G B" channel triplets so a tenant can override them on a
+   subtree. Channels rather than hex because Tailwind composes them as
+   rgb(var(--token) / <alpha-value>), which is what keeps every existing
+   opacity modifier (bg-halo-veil/60, bg-halo-ink/40) working unchanged.
+
+   THE PLATFORM'S OWN PALETTE IS LITERAL AND IS NEVER DERIVED. An
+   organisation supplies four colours and lib/theme/derive.ts computes a token
+   set from them; Mentable does not go through that path. So improving the
+   derivation can never quietly restyle the product itself.
+
+   Mentable's three brand tokens resolve to the existing purple pair:
+   brand and brand-line are purple (4.37:1 on ivory, legal as a >=3:1
+   indicator, never as text) and brand-text is purple-d (8.97:1).
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* grounds */
+  --halo-ivory: 251 250 248;        /* #FBFAF8 */
+  --halo-veil: 242 238 248;         /* #F2EEF8 */
+  --halo-bone: 234 229 240;         /* #EAE5F0 */
+  --halo-rule: 226 221 232;         /* #E2DDE8 */
+  /* text */
+  --halo-ink: 21 19 26;             /* #15131A */
+  --halo-heather: 90 83 102;        /* #5A5366 */
+  --halo-mist-body: 107 100 120;    /* #6B6478 */
+  --halo-mist-strong: 124 116 136;  /* #7C7488 */
+  --halo-mist: 154 147 168;         /* #9A93A8 */
+  /* the action accent */
+  --halo-purple: 120 90 247;        /* #785AF7 */
+  --halo-purple-d: 71 23 202;       /* #4717CA */
+  --halo-lavender: 217 207 251;     /* #D9CFFB */
+  /* institutional identity */
+  --halo-brand: 120 90 247;         /* #785AF7 */
+  --halo-brand-line: 120 90 247;    /* #785AF7, 4.37:1 — clears the 3:1 indicator floor */
+  --halo-brand-text: 71 23 202;     /* #4717CA, 8.97:1 */
+  /* dark surfaces */
+  --halo-deep: 71 23 202;           /* #4717CA */
+  --halo-black: 10 10 15;           /* #0A0A0F */
+}
+
+
 @layer base {
   html {
     scroll-behavior: smooth;

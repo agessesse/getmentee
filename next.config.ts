@@ -5,6 +5,21 @@ const nextConfig: NextConfig = {
   // Responses carried no security headers, and advertised the framework
   // and version via X-Powered-By.
   poweredByHeader: false,
+  async redirects() {
+    return [
+      /*
+        The Opportunity Fund is removed from the active product: it was never
+        funded (opportunity_funds has no rows), nothing used it, and it had
+        already been taken off the homepage. A redirect rather than a 404
+        because the path was in the signed-in navigation for months and will
+        be in somebody's history and bookmarks. The code is recoverable from
+        git history; no migration drops the tables, because erasing every
+        trace of a feature is a bigger risk than leaving two empty tables.
+      */
+      { source: '/opportunities', destination: '/dashboard', permanent: false },
+      { source: '/opportunities/:path*', destination: '/dashboard', permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

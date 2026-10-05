@@ -86,56 +86,67 @@ const config: Config = {
           hover: '#166534',
         },
         /*
-         * Halo. Added alongside navy/cream/accent rather than replacing them:
-         * the portal shares this file and needs the real navy values, and
-         * `navy-900` is not even a one-to-one swap because it is BOTH ink
-         * (text-navy-900) and a dark ground (bg-navy-900). One token cannot
-         * become two colours.
+         * TENANT THEMING. Every value below is a CSS custom property holding
+         * "R G B" channels, consumed as rgb(var(...) / <alpha-value>) so that
+         * opacity modifiers (bg-halo-veil/60, bg-halo-ink/40) keep working
+         * exactly as before. The defaults live in app/globals.css on :root and
+         * are the same literal hexes this block used to hold, so Mentable's own
+         * appearance is byte-identical. An organisation with a theme overrides
+         * the properties on the app shell subtree, and every component written
+         * against these names re-themes with no edit.
          *
-         * THREE BANS, measured, not assumed. The source system assigns these
-         * colours to roles they cannot carry:
+         * THE THREE BANS SURVIVE THE MOVE, because they are properties of the
+         * ROLE, not of one palette, and lib/theme/derive.ts enforces the same
+         * floors by measurement for any tenant:
          *
-         *   mist        #9A93A8  2.83:1 on ivory. Fails even the 3.0 non-text
-         *                        floor. DECORATION ONLY, never text, no size.
-         *                        The spec assigns it to numerals: numerals are
-         *                        text, so they use mist-body or darker.
-         *   mist-strong #7C7488  4.27:1 on ivory. Fails 4.5. The spec assigns
-         *                        it to eyebrows and labels. Legal for icons and
-         *                        borders (>=3:1) and nothing else.
-         *   purple      #785AF7  4.37:1 on ivory. Fails 4.5 as text. It is a
-         *                        button FILL, a ring, and a hover state. Inline
-         *                        links and the hero accent phrase use purple-d
-         *                        (8.97:1).
+         *   mist          decoration only, never text, no size
+         *   mist-strong   icons and borders only (>=3:1)
+         *   purple        a FILL, a ring and a hover state; accent TEXT uses
+         *                 purple-d, or brand-text in the new shell
          *
-         * Button labels stay pure white. White on purple is 4.56:1; ivory on
-         * purple is about 4.45:1, which is under the line.
+         * Button labels stay pure white: the derivation guarantees the action
+         * fill carries white at >=4.5:1 for every tenant.
          */
         halo: {
           // grounds
-          ivory: '#FBFAF8',
-          veil: '#F2EEF8',
-          bone: '#EAE5F0',
-          rule: '#E2DDE8',
+          ivory: 'rgb(var(--halo-ivory) / <alpha-value>)',
+          veil: 'rgb(var(--halo-veil) / <alpha-value>)',
+          bone: 'rgb(var(--halo-bone) / <alpha-value>)',
+          rule: 'rgb(var(--halo-rule) / <alpha-value>)',
           // text
-          ink: '#15131A',
-          heather: '#5A5366',
-          'mist-body': '#6B6478',
-          'mist-strong': '#7C7488',
-          mist: '#9A93A8',
-          // the only accent
-          purple: '#785AF7',
-          'purple-d': '#4717CA',
-          lavender: '#D9CFFB',
-          'lav-wash': 'rgba(124,93,255,0.06)',
-          // dark surfaces. `deep` is the purple band, `black` the structural
-          // one. deep-panel and deep-rule exist because the source system has
-          // no ramp between the ground and its text, and the fund cards and
-          // hairlines that sit on the band need somewhere to live. Surfaces
-          // only, never text.
-          deep: '#4717CA',
-          'deep-panel': 'rgba(251,250,248,0.08)',
-          'deep-rule': 'rgba(251,250,248,0.18)',
-          black: '#0A0A0F',
+          ink: 'rgb(var(--halo-ink) / <alpha-value>)',
+          heather: 'rgb(var(--halo-heather) / <alpha-value>)',
+          'mist-body': 'rgb(var(--halo-mist-body) / <alpha-value>)',
+          'mist-strong': 'rgb(var(--halo-mist-strong) / <alpha-value>)',
+          mist: 'rgb(var(--halo-mist) / <alpha-value>)',
+          // the action accent
+          purple: 'rgb(var(--halo-purple) / <alpha-value>)',
+          'purple-d': 'rgb(var(--halo-purple-d) / <alpha-value>)',
+          lavender: 'rgb(var(--halo-lavender) / <alpha-value>)',
+          'lav-wash': 'rgb(var(--halo-purple) / 0.06)',
+          /*
+           * INSTITUTIONAL IDENTITY, new in the tenant-theming pass.
+           *
+           * One accent colour cannot be a 2px indicator, a button fill and
+           * body text at once. Carolina Blue is 1.9:1 on white: fine as a
+           * progress fill, illegible as a label. So identity is three tokens
+           * at three contrast floors, and the shell picks by role.
+           *
+           *   brand       no floor. Fills, surfaces, progress, selection.
+           *   brand-line  >=3:1.   Indicators, icons, meaningful borders.
+           *   brand-text  >=4.5:1. Accent text and links.
+           *
+           * For Mentable all three resolve to the existing purple pair, so
+           * nothing changes; for a tenant they are measured and darkened.
+           */
+          brand: 'rgb(var(--halo-brand) / <alpha-value>)',
+          'brand-line': 'rgb(var(--halo-brand-line) / <alpha-value>)',
+          'brand-text': 'rgb(var(--halo-brand-text) / <alpha-value>)',
+          // dark surfaces. Surfaces only, never text.
+          deep: 'rgb(var(--halo-deep) / <alpha-value>)',
+          'deep-panel': 'rgb(var(--halo-ivory) / 0.08)',
+          'deep-rule': 'rgb(var(--halo-ivory) / 0.18)',
+          black: 'rgb(var(--halo-black) / <alpha-value>)',
         },
       },
     },

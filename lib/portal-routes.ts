@@ -21,7 +21,6 @@ const APP_SEGMENTS = [
   '/mentorships',
   '/messages',
   '/networking',
-  '/opportunities',
   '/profile',
   '/requests',
   '/schedule',

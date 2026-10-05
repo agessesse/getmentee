@@ -16,7 +16,8 @@
     "type-check": "tsc --noEmit",
     "test": "tsx scripts/test-next-action.ts",
     "test:e2e": "playwright test",
-    "seed:demo": "tsx scripts/seed-demo.ts"
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "test:shell": "tsx scripts/test-theme-nav.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",

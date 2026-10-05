@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mentable for Carolina</title>
+<link rel="stylesheet" href="_brand.css">
+<style>
+  /* One page, Letter, and genuinely one page. Everything below is sized so
+     the whole argument lands on a single sheet someone can hold. */
+  @page { size: Letter; margin: 0; }
+  body { width: 8.5in; height: 11in; padding: 0.62in 0.72in; font-size: 9.6pt; line-height: 1.45; }
+
+  header { display:flex; justify-content:space-between; align-items:baseline;
+           border-bottom:1.5px solid var(--ink); padding-bottom:9px; margin-bottom:16px; }
+  .wordmark { font-family:var(--display); font-size:19pt; }
+  .thesis { font-family:var(--display); font-size:11pt; color:var(--heather); font-style:italic; }
+
+  h1 { font-size:25pt; line-height:1.06; margin:0 0 9px; max-width:7in; }
+  .standfirst { font-family:var(--display); font-size:11.6pt; line-height:1.42;
+                color:var(--heather); max-width:6.5in; margin:0 0 17px; }
+
+  h2 { font-size:12.5pt; margin:0 0 6px; }
+  section { margin-bottom:14px; }
+  p { margin:0 0 7px; }
+
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:0 26px; }
+  .flow { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; margin:10px 0 4px; }
+  .step { border:1px solid var(--rule); border-radius:7px; padding:8px 9px; background:#fff; }
+  .step .n { font-family:var(--display); font-size:13pt; color:var(--purple-d); line-height:1; }
+  .step .l { font-size:8.3pt; font-weight:600; margin-top:3px; }
+  .step .d { font-size:7.6pt; color:var(--mist); line-height:1.32; margin-top:2px; }
+
+  ul { margin:0; padding-left:15px; }
+  li { margin-bottom:3.5px; }
+
+  .learn { background:var(--veil); border:1px solid var(--rule); border-radius:9px; padding:11px 13px; }
+  .learn ul { columns:2; column-gap:24px; }
+
+  footer { position:absolute; bottom:0.55in; left:0.72in; right:0.72in;
+           border-top:1px solid var(--rule); padding-top:8px;
+           display:flex; justify-content:space-between; font-size:8pt; color:var(--mist); }
+  .ask { font-family:var(--display); font-size:11.5pt; color:var(--ink); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="wordmark">Mentable</span>
+  <span class="thesis">Talent is everywhere. Access isn’t.</span>
+</header>
+
+<h1>Carolina already has the people.<br>What’s missing is the infrastructure between them.</h1>
+
+<p class="standfirst">
+  Thousands of Carolina alumni would take a call from a student. Thousands of students
+  would benefit from one. The difficult part has never been goodwill. It is finding the
+  right person, giving the conversation a reason to happen, and keeping the relationship
+  going after it.
+</p>
+
+<section>
+  <h2>What Mentable does</h2>
+  <div class="flow">
+    <div class="step"><div class="n">01</div><div class="l">Activate</div><div class="d">Bring alumni and students into one place by invitation.</div></div>
+    <div class="step"><div class="n">02</div><div class="l">Match</div><div class="d">Pair on what a student needs and where an alum can genuinely help.</div></div>
+    <div class="step"><div class="n">03</div><div class="l">Structure</div><div class="d">Goals, conversations and next steps live with the relationship.</div></div>
+    <div class="step"><div class="n">04</div><div class="l">Accountability</div><div class="d">Each conversation ends with something specific to do.</div></div>
+    <div class="step"><div class="n">05</div><div class="l">Measure</div><div class="d">Program leads see participation and momentum, never private messages.</div></div>
+  </div>
+</section>
+
+<div class="cols">
+  <section>
+    <h2>How a Carolina deployment could work</h2>
+    <ul class="heather">
+      <li>Alumni volunteer and say what they can actually help someone navigate.</li>
+      <li>Students apply or are invited into a named program.</li>
+      <li>Matches are made deliberately, by a person, at this size.</li>
+      <li>Every relationship gets goals, sessions and agreed next steps.</li>
+      <li>Program leads see whether it is working without reading conversations.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>One layer, several communities</h2>
+    <p class="heather">A single installation can run more than one program at once, each
+    with its own participants and its own lead:</p>
+    <ul class="heather">
+      <li>Alumni and current students</li>
+      <li>Family business</li>
+      <li>Entrepreneurship</li>
+      <li>Finance and competitive recruiting</li>
+      <li>First-generation students</li>
+      <li>Veterans</li>
+    </ul>
+  </section>
+</div>
+
+<section class="learn">
+  <h2>What Carolina would learn</h2>
+  <ul class="heather">
+    <li>Who actually participates, on both sides</li>
+    <li>Whether matches turn into conversations</li>
+    <li>Whether students follow through between them</li>
+    <li>Where relationships stall, early enough to intervene</li>
+    <li>What participants say they got out of it</li>
+    <li>Whether students come back later as mentors</li>
+  </ul>
+</section>
+
+<section>
+  <h2>A possible pilot</h2>
+  <p class="heather">
+    Start deliberately small: one program, one semester, a number of pairs small enough
+    that every match is made by hand and every relationship is watched closely. The point
+    of a first program is not scale. It is finding out what actually happens, with enough
+    structure to know.
+  </p>
+</section>
+
+<footer>
+  <span class="ask">What would it take to make mentorship part of the Carolina experience?</span>
+  <span>mentable.co</span>
+</footer>
+
+</body>
+</html>

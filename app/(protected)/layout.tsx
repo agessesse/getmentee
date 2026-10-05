@@ -1,143 +1,111 @@
-'use client';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { resolveParticipantContext, themeStyle } from '@/lib/theme/resolve';
+import AppShell from '@/components/app/AppShell';
+import { PATH_HEADER } from '@/lib/path-header';
 
-import { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import Sidebar from '@/components/layout/Sidebar';
-import TopNav from '@/components/layout/TopNav';
-import Wordmark from '@/components/ui/Wordmark';
-import RouteArrive from '@/components/layout/RouteArrive';
-import SignInTransition from '@/components/auth/SignInTransition';
-import { ProfileProvider } from '@/lib/profile-context';
+/**
+ * The authenticated shell.
+ *
+ * NOW A SERVER COMPONENT, and that is the change this pass turns on.
+ *
+ * It used to be a client component that, on every single navigation, mounted,
+ * showed a full-screen loading wordmark, called getSession(), fetched the
+ * profile, fetched the role profile, and only then rendered the page. Two
+ * round trips and a flash of an empty screen between every click.
+ *
+ * Resolving it on the server fixes that, and it is also the only way tenant
+ * theming can work at all. An institution's colours are read with the service
+ * role from tables the browser has no grant on, and they have to be in the
+ * first byte of HTML. Resolved in the client, every themed participant would
+ * watch the application load in Mentable purple and then repaint navy.
+ *
+ * WHAT IS CHECKED, AND IN WHAT ORDER
+ *
+ *   1. getUser(), not getSession(). getSession() reads the cookie and
+ *      believes it; getUser() verifies it against the auth server. On the
+ *      server, where the answer gates a service-role read below, that
+ *      difference is the whole point.
+ *   2. The profile row must exist.
+ *   3. The profile-setup gate, skipped on the setup page itself.
+ *   4. Institutional context, derived only from the caller's own membership.
+ *
+ * Middleware already refuses anonymous requests to every path in this group,
+ * so step 1 is defence in depth rather than the only lock.
+ */
 
-interface Profile {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  role: 'mentor' | 'mentee';
-  avatar_url: string | null;
-}
+// Per-request: the session, the profile and the tenant are all caller-specific
+// and must never be cached at the edge and served to somebody else.
+export const dynamic = 'force-dynamic';
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  // The sign-in arrival lives here rather than on the dashboard. The dashboard
-  // only mounts after the profile check below resolves, which left the loading
-  // screen visible for most of a second before the arrival cut in over it.
-  // Mounted at the layout, it covers that wait instead of following it.
-  const [showSignIn, setShowSignIn] = useState(false);
+export default async function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
 
-  useEffect(() => {
-    if (sessionStorage.getItem('mentee_signin_transition')) {
-      sessionStorage.removeItem('mentee_signin_transition');
-      setShowSignIn(true);
-    }
-  }, []);
-  const router = useRouter();
-  const pathname = usePathname();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
 
-  useEffect(() => {
-    async function init() {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+  /*
+    `email` is deliberately NOT selected. Migration 0018 revokes column-level
+    SELECT on profiles.email so it cannot be read through the API at all;
+    without that, the permissive profiles policy from 0016 let any
+    authenticated account read every user's address. The session already
+    carries it, which is the correct source.
+  */
+  const { data: profileData } = await supabase
+    .from('profiles')
+    .select('id, first_name, last_name, role, avatar_url')
+    .eq('id', user.id)
+    .maybeSingle();
 
-      if (!session) {
-        router.replace('/login');
-        return;
-      }
+  if (!profileData) redirect('/login');
 
-      // `email` is deliberately NOT selected here. Migration 0018 revokes
-      // column-level SELECT on profiles.email so it cannot be read through the
-      // API at all — without that, the permissive profiles policy from 0016
-      // let any authenticated account read every user's email address.
-      // The address is on the session already, which is the correct source.
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, role, avatar_url')
-        .eq('id', session.user.id)
-        .single();
+  const role = profileData.role as 'mentor' | 'mentee';
 
-      if (!profileData) {
-        router.replace('/login');
-        return;
-      }
+  /*
+    The setup gate.
 
-      setProfile({
-        ...(profileData as Omit<Profile, 'email'>),
-        email: session.user.email ?? '',
-      });
+    An empty pathname means the header did not arrive, which should not
+    happen because middleware matches every route in this group. If it ever
+    does, skip the gate rather than guess: redirecting on an unknown path
+    would send the setup page to itself forever. This gate is presentation,
+    not access control, so failing open costs nothing.
+  */
+  const pathname = (await headers()).get(PATH_HEADER) ?? '';
+  if (pathname && pathname !== '/profile/setup') {
+    // maybeSingle, not single: a brand-new member has no role-profile row
+    // yet, and single() answers 406 for no rows.
+    const { data: ext } = await supabase
+      .from(role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles')
+      .select('profile_complete')
+      .eq('id', user.id)
+      .maybeSingle();
 
-      // Redirect to profile setup if not yet complete (skip if already there)
-      if (pathname !== '/profile/setup') {
-        const table = profileData.role === 'mentor' ? 'mentor_profiles' : 'mentee_profiles';
-        /*
-          maybeSingle, not single.
+    if (!ext?.profile_complete) redirect('/profile/setup');
+  }
 
-          A brand-new member has no row in mentor_profiles or mentee_profiles
-          yet — that row is created when they finish setup. single() treats
-          "no rows" as an error and PostgREST answers 406, so the first
-          authenticated request every new member made logged a console error
-          and a failed request. The redirect below was already correct for a
-          missing row; only the way we asked for it was wrong.
-        */
-        const { data: extProfile } = await supabase
-          .from(table)
-          .select('profile_complete')
-          .eq('id', session.user.id)
-          .maybeSingle();
+  /*
+    Institutional context, or null.
 
-        if (!extProfile || !extProfile.profile_complete) {
-          router.replace('/profile/setup');
-          return;
-        }
-      }
-
-      setLoading(false);
-    }
-
-    init();
-  }, [router, pathname]);
+    Null is the ordinary case and stays the ordinary case: all ten current
+    mentorships have cohort_id NULL and every one is a valid individual
+    relationship. Those people get the Mentable default, unthemed, exactly as
+    before. Nothing about this resolution reads a URL, a parameter or a
+    header, so a tenant identity cannot be asked for, only belonged to.
+  */
+  const tenant = await resolveParticipantContext(user.id);
 
   return (
-    <>
-      {showSignIn && <SignInTransition onComplete={() => setShowSignIn(false)} />}
-      {loading ? (
-        <div className="flex h-screen flex-col items-center justify-center gap-5 bg-halo-ivory font-body">
-          <Wordmark size="lg" className="halo-breathe text-halo-ink" />
-          <span className="sr-only">Loading</span>
-        </div>
-      ) : profile ? (
-        <ProfileProvider profile={profile}>
-          <div className="flex h-screen bg-halo-ivory text-halo-ink font-body overflow-hidden">
-            <Sidebar
-              role={profile.role}
-              open={sidebarOpen}
-              onClose={() => setSidebarOpen(false)}
-              firstName={profile.first_name}
-              lastName={profile.last_name}
-            />
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-              <TopNav
-                user={profile}
-                onMenuClick={() => setSidebarOpen(true)}
-              />
-              <main id="main-content" className="flex-1 overflow-y-auto">
-                {/*
-                  Every arrival replays the homepage hero's entrance: the page is
-                  fully visible from the first frame and only settles the last
-                  20px into place. No opacity, so nothing is hidden while data
-                  loads.
-                */}
-                <RouteArrive className="p-4 sm:p-6 lg:p-10">
-                  {children}
-                </RouteArrive>
-              </main>
-            </div>
-          </div>
-        </ProfileProvider>
-      ) : null}
-    </>
+    <AppShell
+      profile={{ ...profileData, role, email: user.email ?? '' }}
+      tenant={tenant}
+      themeVars={themeStyle(tenant)}
+    >
+      {children}
+    </AppShell>
   );
 }

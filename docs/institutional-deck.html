@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mentable · Institutional Partnership</title>
+<link rel="stylesheet" href="_brand.css">
+<style>
+  /* 13.33in x 7.5in = 16:9. One .slide per printed page. */
+  @page { size: 13.33in 7.5in; margin: 0; }
+  body { background:#fff; }
+  .slide {
+    width:13.33in; height:7.5in; padding:0.85in 1.0in;
+    position:relative; page-break-after:always; overflow:hidden;
+    background:var(--ivory); display:flex; flex-direction:column; justify-content:center;
+  }
+  .slide:last-child { page-break-after:avoid; }
+  .slide.dark { background:var(--deep); color:#fff; }
+  .slide.dark h1,.slide.dark h2 { color:#fff; }
+  .slide.dark .heather,.slide.dark .muted { color:var(--lavender); }
+  .slide.dark .eyebrow { color:var(--lavender); }
+  .slide.veil { background:var(--veil); }
+
+  h1 { font-size:46pt; line-height:1.03; margin:0 0 18px; }
+  h2 { font-size:32pt; line-height:1.06; margin:0 0 16px; }
+  .lead { font-family:var(--display); font-size:17pt; line-height:1.4; color:var(--heather); max-width:8.2in; }
+  .eyebrow { margin-bottom:20px; }
+  .n { position:absolute; bottom:0.5in; right:1.0in; font-size:9pt; color:var(--mist); }
+  .slide.dark .n { color:rgba(217,207,251,.6); }
+
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:12px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:8px; }
+  .card { border:1px solid var(--rule); border-radius:11px; padding:18px 20px; background:#fff; }
+  .slide.dark .card { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); }
+  .card h3 { font-size:17pt; margin:0 0 7px; }
+  .card p { font-size:11.5pt; line-height:1.42; color:var(--heather); margin:0; }
+  .slide.dark .card p { color:var(--lavender); }
+
+  .flow { display:flex; align-items:stretch; gap:10px; margin-top:22px; }
+  .flow .s { flex:1; border:1px solid var(--rule); border-radius:10px; padding:16px 15px; background:#fff; }
+  .slide.dark .flow .s { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18); }
+  .flow .s .k { font-family:var(--display); font-size:15pt; margin-bottom:5px; }
+  .flow .s .v { font-size:10.5pt; line-height:1.38; color:var(--heather); }
+  .slide.dark .flow .s .v { color:var(--lavender); }
+
+  ul.big { margin:10px 0 0; padding-left:20px; }
+  ul.big li { font-size:14pt; line-height:1.6; color:var(--heather); margin-bottom:5px; }
+  .slide.dark ul.big li { color:var(--lavender); }
+
+  .chain { display:flex; align-items:center; gap:14px; margin-top:26px; flex-wrap:wrap; }
+  .chain .node { border:1.5px solid var(--lavender); border-radius:999px; padding:9px 17px;
+                 font-size:12pt; font-weight:500; background:#fff; }
+  .slide.dark .chain .node { background:rgba(255,255,255,.1); border-color:rgba(217,207,251,.5); color:#fff; }
+  .chain .arr { color:var(--purple); font-size:14pt; }
+
+  table { width:100%; border-collapse:collapse; margin-top:14px; }
+  th,td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--rule); font-size:11.5pt; }
+  th { font-size:9pt; text-transform:uppercase; letter-spacing:.12em; color:var(--mist); font-weight:600; }
+  td.m { font-family:var(--display); font-size:15pt; color:var(--ink); }
+
+  .note { font-size:9.5pt; color:var(--mist); margin-top:22px; max-width:8in; line-height:1.45; }
+  .q { font-family:var(--display); font-size:21pt; line-height:1.3; color:var(--ink); margin-top:4px; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide">
+  <p class="eyebrow">Mentable</p>
+  <h1>Talent is everywhere.<br>Access isn’t.</h1>
+  <p class="lead">Mentable connects people with those who have already walked the path
+  ahead of them, and gives the relationship structure after the introduction.</p>
+  <span class="n">1</span>
+</section>
+
+<!-- 2 -->
+<section class="slide veil">
+  <p class="eyebrow">The resource already exists</p>
+  <h2>Universities are sitting on the thing<br>students need most.</h2>
+  <p class="lead">Alumni who would genuinely take the call. Students who would act on it.
+  A shared institution that makes the first message easy to send.</p>
+  <p class="lead" style="margin-top:14px;color:var(--ink);">Most of those relationships
+  still never happen.</p>
+  <span class="n">2</span>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <p class="eyebrow">The problem isn’t goodwill</p>
+  <h2>Five places it breaks.</h2>
+  <div class="grid3">
+    <div class="card"><h3>Finding</h3><p>A student cannot tell who would say yes, so they ask nobody.</p></div>
+    <div class="card"><h3>Asking</h3><p>The first message is the hardest one, and most are never sent.</p></div>
+    <div class="card"><h3>Purpose</h3><p>A friendly chat with no question wastes an hour of goodwill.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:22px;">
+    <div class="card"><h3>Following through</h3><p>Advice given in October is forgotten by November without a record.</p></div>
+    <div class="card"><h3>Knowing</h3><p>Nobody can say whether the program produced a single conversation.</p></div>
+  </div>
+  <span class="n">3</span>
+</section>
+
+<!-- 4 -->
+<section class="slide dark">
+  <p class="eyebrow">What Mentable does</p>
+  <h2>Infrastructure around the relationship.</h2>
+  <div class="flow">
+    <div class="s"><div class="k">Activate</div><div class="v">Invite both sides into one place.</div></div>
+    <div class="s"><div class="k">Match</div><div class="v">Pair on need and on where someone can really help.</div></div>
+    <div class="s"><div class="k">Structure</div><div class="v">Goals, conversations and a shared record.</div></div>
+    <div class="s"><div class="k">Accountability</div><div class="v">Every conversation ends with a next step.</div></div>
+    <div class="s"><div class="k">Measure</div><div class="v">Participation and momentum, not surveillance.</div></div>
+  </div>
+  <p class="note" style="color:rgba(217,207,251,.75);">The relationship still belongs to the two people in it. Mentable holds everything around it.</p>
+  <span class="n">4</span>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <p class="eyebrow">For the student</p>
+  <h2>What changes when someone<br>a few steps ahead helps.</h2>
+  <ul class="big">
+    <li><strong>Clarity</strong> — what the path actually looks like, not what it looks like from outside</li>
+    <li><strong>Preparation</strong> — doing the work already knowing what the work is</li>
+    <li><strong>Context</strong> — the timeline, the unwritten parts, the mistakes that cost a year</li>
+    <li><strong>Accountability</strong> — someone expecting them to have done the thing</li>
+    <li><strong>Access</strong> — one real relationship where there were none</li>
+  </ul>
+  <p class="note">Mentable does not promise internships, interviews or offers, and no part of
+  the product claims to. It changes how quickly ability turns into informed action.</p>
+  <span class="n">5</span>
+</section>
+
+<!-- 6 -->
+<section class="slide veil">
+  <p class="eyebrow">For the alum</p>
+  <h2>Giving back, made specific.</h2>
+  <div class="grid2">
+    <div>
+      <ul class="big">
+        <li>Who am I helping, and why me?</li>
+        <li>What do they actually need?</li>
+        <li>Have they prepared?</li>
+        <li>What happened after we spoke?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>The alternative</h3>
+      <p>An open inbox, cold requests from strangers, no context, no sense of whether any
+      of it mattered. Most alumni say yes once and are never asked well again.</p>
+    </div>
+  </div>
+  <p class="note">Mentors say what they can help someone navigate. Requests arrive with
+  context. Nobody is asked to be a careers service.</p>
+  <span class="n">6</span>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <p class="eyebrow">For the institution</p>
+  <h2>One layer. Many communities.</h2>
+  <div class="chain">
+    <span class="node">Organization</span><span class="arr">→</span>
+    <span class="node">Programs</span><span class="arr">→</span>
+    <span class="node">Cohorts</span><span class="arr">→</span>
+    <span class="node">Mentorships</span>
+  </div>
+  <div class="grid3" style="margin-top:26px;">
+    <div class="card"><h3>Alumni and students</h3><p>The general case, across any school or class year.</p></div>
+    <div class="card"><h3>Family business</h3><p>A specific community with a specific question.</p></div>
+    <div class="card"><h3>First generation</h3><p>Students without inherited professional context.</p></div>
+  </div>
+  <p class="note">Each program has its own participants and its own lead. A program lead
+  administers their program and nothing else.</p>
+  <span class="n">7</span>
+</section>
+
+<!-- 8 -->
+<section class="slide veil">
+  <p class="eyebrow">The Carolina opportunity</p>
+  <h2>Few places have this much<br>willingness to give back.</h2>
+  <p class="lead">Carolina’s alumni identity is unusually strong, and that is the scarce
+  input. The software is the easy part; a community that actually answers is not.</p>
+  <p class="lead" style="margin-top:16px;color:var(--ink);">The question is whether that
+  willingness can be turned into relationships reliably enough to count on.</p>
+  <p class="note">Mentable has no agreement with UNC-Chapel Hill. This is a conversation
+  about whether it is worth exploring one.</p>
+  <span class="n">8</span>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <p class="eyebrow">How a pilot could work</p>
+  <h2>Start small enough to learn something.</h2>
+  <div class="flow">
+    <div class="s"><div class="k">Recruit</div><div class="v">A handful of alumni who say yes.</div></div>
+    <div class="s"><div class="k">Invite</div><div class="v">Students into one named program.</div></div>
+    <div class="s"><div class="k">Match</div><div class="v">By hand, because the numbers allow it.</div></div>
+    <div class="s"><div class="k">Run</div><div class="v">One semester of real relationships.</div></div>
+    <div class="s"><div class="k">Learn</div><div class="v">What worked, what stalled, what to change.</div></div>
+  </div>
+  <p class="note">Mentable’s own first cohort is ten students and ten mentors over one
+  semester, for exactly this reason. Scale is the second problem.</p>
+  <span class="n">9</span>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <p class="eyebrow">What a program lead can see</p>
+  <h2>Enough to run it. Not enough<br>to intrude on it.</h2>
+  <div class="grid2">
+    <div>
+      <table>
+        <tr><th>Visible</th><th></th></tr>
+        <tr><td>Participants, mentors, mentees</td><td class="m">●</td></tr>
+        <tr><td>Matches made, still waiting</td><td class="m">●</td></tr>
+        <tr><td>Conversations held and upcoming</td><td class="m">●</td></tr>
+        <tr><td>Goals and next steps completed</td><td class="m">●</td></tr>
+        <tr><td>Relationships quiet 30+ days</td><td class="m">●</td></tr>
+      </table>
+    </div>
+    <div class="card" style="align-self:start;">
+      <h3>Never visible</h3>
+      <p>Messages between a mentor and a student. Not as a setting that is switched off,
+      but as something the software does not provide. Administrators have no database
+      access to message content at all.</p>
+    </div>
+  </div>
+  <p class="note">No engagement scores, no rankings, no leaderboards. Counts of things
+  that did or did not happen.</p>
+  <span class="n">10</span>
+</section>
+
+<!-- 11 -->
+<section class="slide dark">
+  <p class="eyebrow">Return on Impact</p>
+  <h2>It doesn’t end with you.</h2>
+  <div class="chain">
+    <span class="node">Alum</span><span class="arr">→</span>
+    <span class="node">Student</span><span class="arr">→</span>
+    <span class="node">Early career</span><span class="arr">→</span>
+    <span class="node">Mentor</span><span class="arr">→</span>
+    <span class="node">Next student</span>
+  </div>
+  <p class="lead" style="margin-top:28px;">One opportunity doesn’t have to stop with one
+  person. Someone shares what they know, a student carries it forward, and eventually
+  becomes the person someone else needed.</p>
+  <p class="note" style="color:rgba(217,207,251,.75);">Illustrative. This is the model
+  Mentable is built to enable, not a measured result. Mentable is early and has no
+  completed cycle to report.</p>
+  <span class="n">11</span>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <p class="eyebrow">The conversation</p>
+  <h1 style="font-size:38pt;">What would it take to make<br>mentorship part of the<br>Carolina experience?</h1>
+  <div class="grid3" style="margin-top:26px;">
+    <div class="card"><h3>Who first?</h3><p>Which community would benefit most, and is small enough to start with?</p></div>
+    <div class="card"><h3>What is success?</h3><p>What would make this obviously worth continuing a year from now?</p></div>
+    <div class="card"><h3>What must a pilot prove?</h3><p>What would we need to see before anyone commits further?</p></div>
+  </div>
+  <span class="n">12</span>
+</section>
+
+</body>
+</html>

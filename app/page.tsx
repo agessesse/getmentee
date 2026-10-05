@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import SiteHeader from '@/components/marketing/SiteHeader';
 import HeroReveal from '@/components/marketing/HeroReveal';
@@ -277,6 +278,23 @@ export default function LandingPage() {
               Become a mentor
             </CtaButton>
           </div>
+          {/*
+            The institutional door, as one line rather than a section.
+
+            A university programme lead is a real but much rarer visitor than
+            a student, and the homepage belongs to the student. One sentence
+            after the two CTAs is enough for someone who came looking; a
+            section would have told everyone else they were in the wrong
+            place.
+          */}
+          <p className="text-halo-heather text-[15px] mt-7 max-w-lg leading-relaxed">
+            Running mentorship for a university, company or community?{' '}
+            <Link href="/organizations" className="text-halo-purple-d font-medium hover:text-halo-ink underline underline-offset-2">
+              Mentable can power your program
+            </Link>
+            .
+          </p>
+
           <p className="text-halo-mist-body text-sm mt-6">
             No cost to take part. Know someone who should be here?{' '}
             <button

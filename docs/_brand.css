@@ -1,0 +1,20 @@
+/* Mentable document system. Shared by all three institutional documents so
+   they read as one set: same faces, same palette, same rules as the site. */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+:root{
+  --ivory:#FBFAF8; --veil:#F2EEF8; --rule:#E2DDE8; --ink:#15131A;
+  --heather:#4A4458; --mist:#6E6880; --purple:#785AF7; --purple-d:#4717CA;
+  --lavender:#D9CFFB; --deep:#3B1EA8;
+  --display:'Newsreader',Georgia,serif; --body:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;}
+h1,h2,h3,.display{font-family:var(--display);font-weight:400;letter-spacing:-0.01em;}
+.eyebrow{font-size:9.5pt;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--purple-d);}
+.rule{border:0;border-top:1px solid var(--rule);margin:0;}
+a{color:var(--purple-d);}
+.muted{color:var(--mist);}
+.heather{color:var(--heather);}
+@page{margin:0;}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Bookmark, Calendar, Clock, Lightbulb, Search } from 'lucide-react';
+import { ArrowRight, Bookmark, Calendar, Clock, Search } from 'lucide-react';
 import { useProfile } from '@/lib/profile-context';
 import Avatar from '@/components/ui/Avatar';
 import SinceYouWereHere from '@/components/dashboard/SinceYouWereHere';
@@ -242,25 +242,6 @@ export default function MenteeDashboard() {
               </Link>
             </div>
 
-            <Link
-              href="/opportunities"
-              className="group flex items-start gap-4 bg-white rounded-2xl border border-halo-rule p-5 hover:border-halo-lavender hover:shadow-sm transition-all"
-            >
-              <span className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Lightbulb className="w-5 h-5 text-amber-600" aria-hidden="true" />
-              </span>
-              <span className="flex-1 min-w-0">
-                <span className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-halo-ink">Opportunity Fund</span>
-                  <span className="text-[11px] font-semibold font-ui uppercase tracking-[0.14em] text-amber-600 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
-                    Pilot
-                  </span>
-                </span>
-                <span className="block text-xs text-halo-mist-body mt-0.5 leading-relaxed">
-                  Professional-development funding for students with demonstrated financial need. Attire, travel, networking, and more.
-                </span>
-              </span>
-            </Link>
           </section>
         </>
       )}

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mentable Institutional Platform — Product Requirements &amp; Deployment Plan</title>
+<link rel="stylesheet" href="_brand.css">
+<style>
+  @page { size: Letter; margin: 0.7in 0.75in; }
+  body { font-size:10pt; line-height:1.5; }
+  .cover { height:9.2in; display:flex; flex-direction:column; justify-content:center; page-break-after:always; }
+  .cover h1 { font-size:34pt; line-height:1.05; margin:0 0 14px; }
+  .cover .sub { font-family:var(--display); font-size:14pt; color:var(--heather); max-width:6in; }
+  .cover .meta { margin-top:44px; font-size:9.5pt; color:var(--mist); border-top:1px solid var(--rule); padding-top:12px; }
+
+  h2 { font-size:17pt; margin:26px 0 9px; padding-bottom:5px; border-bottom:1.5px solid var(--ink); page-break-after:avoid; }
+  h3 { font-size:12pt; margin:16px 0 5px; page-break-after:avoid; }
+  p { margin:0 0 8px; color:var(--heather); }
+  ul,ol { margin:0 0 9px; padding-left:17px; color:var(--heather); }
+  li { margin-bottom:3px; }
+  code { font-family:ui-monospace,Menlo,monospace; font-size:8.8pt; background:var(--veil);
+         padding:1px 4px; border-radius:3px; color:var(--ink); }
+  table { width:100%; border-collapse:collapse; margin:9px 0 13px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--rule);
+          font-size:9pt; vertical-align:top; color:var(--heather); }
+  th { font-size:8pt; text-transform:uppercase; letter-spacing:.1em; color:var(--mist);
+       font-weight:600; border-bottom:1.5px solid var(--rule); }
+  td strong, th:first-child { color:var(--ink); }
+  .box { background:var(--veil); border:1px solid var(--rule); border-radius:8px;
+         padding:11px 14px; margin:11px 0; }
+  .box p:last-child { margin-bottom:0; }
+  .tag { display:inline-block; font-size:7.5pt; font-weight:600; text-transform:uppercase;
+         letter-spacing:.09em; padding:2px 7px; border-radius:99px; border:1px solid var(--rule); }
+  .p0{background:#FDE8E8;border-color:#F5B5B5;color:#8A1C1C;}
+  .p1{background:var(--veil);border-color:var(--lavender);color:var(--purple-d);}
+  .p2{background:#fff;color:var(--mist);}
+  .done{background:#E6F4EA;border-color:#A8D5B5;color:#1B5E2A;}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <p class="eyebrow">Internal · Product &amp; Engineering</p>
+  <h1>Mentable Institutional Platform</h1>
+  <p class="sub">Product requirements and deployment plan for running mentorship
+  programs inside universities, companies and communities, on the mentorship engine
+  that is already in production.</p>
+  <div class="meta">
+    Written against the live codebase and database, October 2026 ·
+    Schema state: migration 0030 applied · mentable.co
+  </div>
+</section>
+
+<h2>1. Executive summary</h2>
+<p>Mentable already runs real mentorship: 45 profiles, 10 active relationships, 42 messages,
+38 sessions, 27 goals and 14 requests in production. The institutional work does not replace
+any of that. It adds a tenancy layer above it so one installation can run several named
+programs for several organizations, and gives program leads enough visibility to run a
+program without being able to read the conversations inside it.</p>
+<p>Migration 0029 had already built most of the tenancy model to support Cohort 001.
+Migration 0030 therefore renames one table, adds four, and adds two columns, rather than
+introducing a parallel organizations system. The result is multi-tenant and verified
+isolated, with 26 automated security checks passing.</p>
+
+<h2>2. Production baseline</h2>
+<table>
+  <tr><th>Table</th><th>Rows</th><th>Role</th></tr>
+  <tr><td><code>profiles</code></td><td>45</td><td>26 mentors, 19 mentees, 2 demo</td></tr>
+  <tr><td><code>mentorships</code></td><td>10</td><td>All individual; all <code>cohort_id IS NULL</code></td></tr>
+  <tr><td><code>messages</code></td><td>42</td><td>Private to the two participants</td></tr>
+  <tr><td><code>sessions</code></td><td>38</td><td>Scheduled and completed conversations</td></tr>
+  <tr><td><code>mentorship_goals</code></td><td>27</td><td>Shared goals</td></tr>
+  <tr><td><code>mentorship_requests</code></td><td>14</td><td>Mentee-initiated</td></tr>
+  <tr><td><code>action_items</code></td><td>2</td><td>Agreed next steps</td></tr>
+  <tr><td><code>notifications</code></td><td>31</td><td>In-product only</td></tr>
+</table>
+
+<h2>3. What migration 0029 already solved</h2>
+<p>The audit found that the institutional model largely existed under narrower names.
+Building <code>organizations</code>, <code>program_members</code> and
+<code>program_applications</code> as new tables would have duplicated deployed, working
+schema.</p>
+<table>
+  <tr><th>Concept</th><th>Existing table</th><th>Decision</th></tr>
+  <tr><td>Tenant</td><td><code>institutions</code></td><td>Renamed to <code>organizations</code></td></tr>
+  <tr><td>Program</td><td><code>programs</code></td><td>Reused unchanged</td></tr>
+  <tr><td>Program instance</td><td><code>cohorts</code></td><td>Reused unchanged</td></tr>
+  <tr><td>Membership</td><td><code>cohort_memberships</code></td><td>Reused unchanged</td></tr>
+  <tr><td>Applications</td><td><code>cohort_applications</code></td><td>Reused; already has <code>cohort_id</code></td></tr>
+  <tr><td>Matching inputs</td><td><code>career_pathways</code>, <code>mentor_profiles.can_help_with</code></td><td>Reused</td></tr>
+  <tr><td>Token security</td><td><code>activation_tokens</code></td><td>Pattern reused for invitations</td></tr>
+</table>
+
+<h2>4. Architecture</h2>
+<p><code>organizations → programs → cohorts → cohort_memberships</code>, with
+<code>mentorships</code> optionally scoped to a cohort. Cohort sits <em>above</em>
+mentorship: membership says who belongs, pairing stays where it already worked.</p>
+
+<h3>Backward compatibility</h3>
+<div class="box">
+  <p><strong>The guarantee:</strong> <code>mentorships.cohort_id IS NULL</code> means an
+  ordinary Mentable relationship, behaving exactly as before. All 10 production
+  mentorships are in this state and were not modified. <code>origin</code> defaults to
+  <code>'requested'</code>, which is accurate for every existing row.</p>
+</div>
+
+<h3>Three authorities, deliberately separate</h3>
+<table>
+  <tr><th>Authority</th><th>Source</th><th>Scope</th></tr>
+  <tr><td><strong>Platform admin</strong></td><td><code>profiles.is_admin</code></td><td>Mentable-wide. Applications, inquiries, reports.</td></tr>
+  <tr><td><strong>Organization admin</strong></td><td><code>organization_members</code></td><td>One organization. Roles: owner, admin, viewer.</td></tr>
+  <tr><td><strong>Program admin</strong></td><td><code>program_admins</code></td><td>Specific programs inside one organization.</td></tr>
+</table>
+<p>None implies another. An organization owner is not a platform admin; a program lead for
+Family Business does not inherit the whole university. <code>is_admin</code> is not
+user-writable (migration 0015 revoked the column grant), so platform admin can only be
+granted by direct SQL.</p>
+
+<h3>Role and permission matrix</h3>
+<table>
+  <tr><th>Capability</th><th>Owner</th><th>Admin</th><th>Viewer</th><th>Program admin</th></tr>
+  <tr><td>See organization overview</td><td>✓</td><td>✓</td><td>✓</td><td>Their programs only</td></tr>
+  <tr><td>See cohort participants</td><td>✓</td><td>✓</td><td>✓</td><td>Their programs only</td></tr>
+  <tr><td>See engagement metrics</td><td>✓</td><td>✓</td><td>✓</td><td>Their programs only</td></tr>
+  <tr><td>Invite participants</td><td>✓</td><td>✓</td><td>—</td><td>Their programs only</td></tr>
+  <tr><td>Read private messages</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+  <tr><td>Reach <code>/admin</code></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2>5. Database changes (migration 0030)</h2>
+<table>
+  <tr><th>Change</th><th>Detail</th></tr>
+  <tr><td>Rename</td><td><code>institutions → organizations</code>; <code>programs.institution_id → organization_id</code>. <code>ALTER TABLE RENAME</code> preserves oid, rows, indexes and FKs.</td></tr>
+  <tr><td>Column</td><td><code>organizations.kind</code> — university, company, nonprofit, veterans, association, foundation, other</td></tr>
+  <tr><td>New</td><td><code>organization_members</code> (org, profile, role; unique per pair)</td></tr>
+  <tr><td>New</td><td><code>program_admins</code> (program, profile; unique per pair)</td></tr>
+  <tr><td>New</td><td><code>program_invitations</code> (SHA-256 token, cohort, email, role, expiry, accepted/revoked)</td></tr>
+  <tr><td>New</td><td><code>organization_inquiries</code> (public form submissions, status workflow)</td></tr>
+  <tr><td>Columns</td><td><code>mentorships.cohort_id</code> (nullable FK), <code>mentorships.origin</code> (requested / suggested / admin_created)</td></tr>
+  <tr><td>Indexes</td><td>member-by-profile, admin-by-profile, invitation-by-cohort and by email, partial index on <code>mentorships.cohort_id</code></td></tr>
+  <tr><td>Bootstrap</td><td>First platform admin set by email in the migration, resolving the zero-admin production gap</td></tr>
+</table>
+
+<h3>RLS strategy</h3>
+<p>All five new tables: RLS enabled, <strong>zero policies, zero grants</strong> to
+<code>anon</code> or <code>authenticated</code>. They are reachable only through
+service-role server routes that resolve the caller's membership first. This matches every
+table added since migration 0024 and is the reason cross-tenant isolation is enforceable
+rather than aspirational.</p>
+
+<h2>6. Privacy boundary</h2>
+<div class="box">
+  <p><strong><code>lib/org/metrics.ts</code> never reads <code>messages</code>.</strong>
+  Not filtered, not counted, not joined. Activity is derived from sessions, goals and
+  action items — the structural record of a relationship rather than its content. An
+  administrator can see that a relationship has gone quiet for 30 days without seeing a
+  word of it. This is covered by an automated test that fails if the string
+  <code>from('messages')</code> ever appears in that module.</p>
+</div>
+<p>No composite "engagement score" or "relationship health index" exists. Those compress
+several real facts into one number nobody can act on and invite comparing people. The
+metrics are counts of things that did or did not happen.</p>
+
+<h2>7. Matching</h2>
+<p>No separate matching engine and no <code>program_matches</code> table. An
+administrator creating a match is creating a <code>mentorship</code>; the only thing the
+existing row could not express was where it came from, which <code>origin</code> now
+records.</p>
+<ul>
+  <li><strong>Mentee request</strong> — existing <code>mentorship_requests</code> flow, unchanged. <span class="tag done">shipped</span></li>
+  <li><strong>Admin-created</strong> — mentorship inserted directly, <code>origin='admin_created'</code>. <span class="tag p1">schema ready, UI P1</span></li>
+  <li><strong>Suggested</strong> — proposed pairing requiring acceptance. <span class="tag p1">P1</span></li>
+</ul>
+
+<h2>8. Invitations</h2>
+<p>Reuses the activation-token contract already in production: 32 random bytes, stored
+only as SHA-256, single use, 14-day expiry, bound to the invited address. Supports
+<code>mentee</code>, <code>mentor</code> and <code>program_admin</code>, so delegating a
+program uses the same audited, expiring path as inviting a student rather than a second
+mechanism. Redemption at <code>/invite</code> writes membership first and burns the token
+last, so a mid-failure leaves a working link rather than a locked-out participant.</p>
+<p><strong>Delivery is manual.</strong> Mentable does not send participant mail. The admin
+UI states this on the screen rather than implying an email was sent.</p>
+
+<h2>9. Routes delivered</h2>
+<table>
+  <tr><th>Route</th><th>Access</th><th>Purpose</th></tr>
+  <tr><td><code>/organizations</code></td><td>Public</td><td>Institutional landing page and inquiry form</td></tr>
+  <tr><td><code>/organization</code></td><td>Org member</td><td>Organizations this account administers</td></tr>
+  <tr><td><code>/organization/[orgId]</code></td><td>Org member</td><td>Programs, cohorts, rolled-up engagement</td></tr>
+  <tr><td><code>/organization/[orgId]/cohort/[cohortId]</code></td><td>Org/program admin</td><td>Participants, relationships, invitations</td></tr>
+  <tr><td><code>/invite</code></td><td>Token</td><td>Accept a program invitation</td></tr>
+  <tr><td><code>/admin/inquiries</code></td><td>Platform admin</td><td>Inbound institutional interest</td></tr>
+  <tr><td><code>POST /api/org/invite</code></td><td>Org/program admin</td><td>Mint an invitation</td></tr>
+  <tr><td><code>POST /api/org/inquiry</code></td><td>Public, throttled</td><td>Store an inquiry</td></tr>
+</table>
+
+<h2>10. Security verification</h2>
+<p>26 automated checks, all passing, against the live database:</p>
+<ul>
+  <li>Anonymous clients denied (42501) on all seven institutional tables, read and write</li>
+  <li>Org A admin cannot resolve access in Org B</li>
+  <li>Viewer resolves but cannot mutate</li>
+  <li>Delegated program admin is not org-wide and cannot reach a sibling program</li>
+  <li>Cross-tenant cohort guard: a cohort in Org B does not resolve for an Org A admin</li>
+  <li>Organization admin is not a platform admin; exactly one platform admin exists</li>
+  <li>Invitations store only the hash; the raw token matches no row</li>
+  <li>Used invitations cannot be replayed; expired invitations are detectable</li>
+  <li>Metrics module provably never queries <code>messages</code></li>
+  <li>Anonymous clients cannot grant themselves organization membership</li>
+</ul>
+
+<h2>11. Priorities</h2>
+<table>
+  <tr><th>Item</th><th>State</th></tr>
+  <tr><td>Tenancy schema, RLS, isolation</td><td><span class="tag done">shipped</span></td></tr>
+  <tr><td>Org admin: overview, cohort detail, engagement</td><td><span class="tag done">shipped</span></td></tr>
+  <tr><td>Invitations: mint, redeem, expire, revoke</td><td><span class="tag done">shipped</span></td></tr>
+  <tr><td>Public <code>/organizations</code> and inquiry flow</td><td><span class="tag done">shipped</span></td></tr>
+  <tr><td>Admin-created match UI</td><td><span class="tag p0">P0</span></td></tr>
+  <tr><td>Participant-facing program identity on dashboard</td><td><span class="tag p0">P0</span></td></tr>
+  <tr><td>Automated invitation and applicant email</td><td><span class="tag p0">P0</span></td></tr>
+  <tr><td>Create program / cohort from the UI</td><td><span class="tag p1">P1</span></td></tr>
+  <tr><td>Rematch, pause, remove participant</td><td><span class="tag p1">P1</span></td></tr>
+  <tr><td>Suggested matches</td><td><span class="tag p1">P1</span></td></tr>
+  <tr><td>Participant-reported outcome surveys</td><td><span class="tag p1">P1</span></td></tr>
+  <tr><td>Configurable application form builder</td><td><span class="tag p2">P2</span></td></tr>
+  <tr><td>CSV export, SSO, billing, CRM, calendar</td><td><span class="tag p2">P2</span></td></tr>
+</table>
+
+<h2>12. Deliberately not built</h2>
+<p>Form builder, SSO, billing, outcome surveys, AI matching, CRM and calendar
+integrations, advanced exports, custom branding, automated program communications, and
+nested organization hierarchies. None is blocked by the schema; each was left out because
+Mentable has no usage that would tell us the right shape for it.</p>
+
+<h2>13. Pilot deployment</h2>
+<ol>
+  <li>Create the organization and set its first owner (SQL, two inserts)</li>
+  <li>Create a program and a cohort</li>
+  <li>Invite mentors and students; send links manually</li>
+  <li>Participants accept, landing in the existing mentorship product</li>
+  <li>Match by hand; relationships use the existing goals, sessions and action items</li>
+  <li>Program lead watches participation and momentum at <code>/organization</code></li>
+</ol>
+<p>Steps 1 and 2 are SQL today, which is acceptable for a first pilot where Mentable sets
+the program up, and is the first P1 to remove.</p>
+
+<h2>14. Risks</h2>
+<table>
+  <tr><th>Risk</th><th>Mitigation</th></tr>
+  <tr><td>Manual email delivery does not scale past a pilot</td><td>P0. Transactional email is the single largest operational gap.</td></tr>
+  <tr><td>Program setup requires engineering</td><td>P1 admin UI; acceptable while Mentable runs the first deployments.</td></tr>
+  <tr><td>Institution expects message visibility</td><td>Stated publicly on <code>/organizations</code> and in the admin UI. A boundary to sell, not apologise for.</td></tr>
+  <tr><td>Matching quality at scale</td><td>Manual matching is correct at pilot size and buys the data a real model would need.</td></tr>
+  <tr><td>Outcome attribution</td><td>Activity, engagement and self-reported outcomes are reported separately. Mentable does not claim to cause employment outcomes.</td></tr>
+</table>
+
+<h2>15. Production readiness</h2>
+<table>
+  <tr><th>Area</th><th>State</th></tr>
+  <tr><td>Multi-tenant isolation</td><td>Production ready — 26 checks passing</td></tr>
+  <tr><td>Privacy boundary</td><td>Production ready — enforced at the database</td></tr>
+  <tr><td>Org admin read surface</td><td>Production ready</td></tr>
+  <tr><td>Invitations</td><td>Pilot ready — delivery is manual</td></tr>
+  <tr><td>Program setup</td><td>Pilot ready — SQL, not UI</td></tr>
+  <tr><td>Matching</td><td>Pilot ready — by hand</td></tr>
+  <tr><td>Outcome measurement</td><td>Needs work — nothing collects self-reported outcomes yet</td></tr>
+  <tr><td>Billing, SSO, integrations</td><td>Not started, not blocked</td></tr>
+</table>
+
+</body>
+</html>

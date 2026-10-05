@@ -1,10 +1,11 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { PATH_HEADER } from '@/lib/path-header';
 
 // Every first path segment under app/(protected)/ EXCEPT /people, which is
-// public by design. These had drifted: /goals, /impact, /mentee and
-// /opportunities were in the route group but missing here, so they served 200
-// to anonymous visitors instead of redirecting.
+// public by design. These had drifted once: /goals, /impact and /mentee were
+// in the route group but missing here, so they served 200 to anonymous
+// visitors instead of redirecting.
 // scripts/check-protected-routes.ts fails the build if they diverge again.
 // /mentee and /mentor are public marketing pages, but the protected route
 // group also owns /mentee/[id] and /mentor/[id]. So those two segments are
@@ -26,7 +27,6 @@ const PROTECTED_PATHS = [
   '/mentorships',
   '/messages',
   '/networking',
-  '/opportunities',
   '/profile',
   '/requests',
   '/schedule',
@@ -34,13 +34,28 @@ const PROTECTED_PATHS = [
 ];
 
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  const pathname = request.nextUrl.pathname;
+
+  /*
+    Forward the path so server components can see it. A layout is not told
+    where it is, and the protected layout needs that for one thing only: the
+    profile-setup gate must redirect from everywhere except the setup page.
+    Rebuilt rather than hoisted, because request.cookies.set() below mutates
+    the request's own headers and a snapshot taken now would lose the
+    refreshed session cookie.
+  */
+  const forwarded = () => {
+    const h = new Headers(request.headers);
+    h.set(PATH_HEADER, pathname);
+    return h;
+  };
+
+  let response = NextResponse.next({ request: { headers: forwarded() } });
 
   // Decide whether this path needs a session BEFORE building the client and
   // calling the auth server. getClaims() previously ran on every request, so
   // the marketing page and /people/* each paid for a round trip whose result
   // was then discarded.
-  const pathname = request.nextUrl.pathname;
   const isProtected = PROTECTED_PATHS.some((p) =>
     PROTECTED_SUBPATHS_ONLY.has(p)
       ? pathname.startsWith(p + '/')
@@ -63,7 +78,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          response = NextResponse.next({ request });
+          response = NextResponse.next({ request: { headers: forwarded() } });
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
