@@ -71,7 +71,14 @@ export function LoginForm() {
         <h1 className="font-display text-halo-ink text-[2rem] leading-tight mb-1.5">
           Welcome back
         </h1>
-        <p className="text-halo-heather text-sm">Sign in to your Mentable account.</p>
+        {/*
+          Says what is on the other side of the button rather than restating
+          the button. Both audiences in one line: a participant continuing a
+          mentorship, and a programme lead coming back to their organisation.
+        */}
+        <p className="text-halo-heather text-sm">
+          Continue your mentorship or manage your program.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

@@ -121,5 +121,71 @@ check('tenant resolution never reads messages', /from\(\s*['"]messages['"]/.test
 const metricsSrc = require('fs').readFileSync('lib/org/metrics.ts', 'utf8') as string;
 check('org metrics still never read messages', /from\(\s*['"]messages['"]/.test(metricsSrc), false);
 
+// ── 6. Pass 2: the workspace's authorization story ──────────────────────────
+/*
+  These are source assertions, not runtime ones, and that is deliberate.
+  The security property of the workspace is "it never constructs a
+  privileged client", which is a fact about the code rather than about any
+  particular request. A runtime test could only show that one call was safe;
+  this shows that an unsafe one cannot be written without failing the build.
+*/
+console.log('workspace authorization');
+const read = (f: string) => require('fs').readFileSync(f, 'utf8') as string;
+
+const wsData = read('lib/mentorship/workspace-data.ts');
+const wsActions = read('app/(protected)/mentorship/[id]/actions.ts');
+
+for (const [name, src] of [['workspace-data', wsData], ['workspace actions', wsActions]] as const) {
+  // The service role bypasses RLS. Neither file may reach for it.
+  check(`${name} never imports the service key`, /service-key|SERVICE_ROLE/.test(src), false);
+  check(`${name} never creates a service client`, /createClient\s*\(\s*url/.test(src), false);
+  // Both must read through the user's own session, so RLS applies.
+  check(`${name} uses the user-scoped server client`, src.includes("from '@/lib/supabase/server'"), true);
+}
+
+// The workspace renders an institution's name. It must never read a message.
+check('workspace never reads message content into the page',
+  /from\('messages'\)[\s\S]{0,200}select\([^)]*content[^)]*\)[\s\S]{0,120}order/.test(wsData), true);
+check('workspace authorizes on participation, not on admin role',
+  /mentor_id === user\.id/.test(wsData) && /mentee_id === user\.id/.test(wsData), true);
+check('workspace treats non-participant as not_found',
+  /return \{ ok: false, reason: 'not_found' \}/.test(wsData), true);
+check('no organization or program authority is consulted by the workspace',
+  /organization_members|program_admins|is_admin/.test(wsData), false);
+
+// A mentor's private notes must not reach the mentee.
+check('mentor notes are gated on the viewer being the mentor',
+  /mentorNotes: viewerIsMentor \? mentorNotes : null/.test(wsData), true);
+// Each side writes only its own half of the prep object.
+check('prep writes are split by role', /isMentor\s*\n?\s*\?\s*\{ \.\.\.current, mentor:/.test(wsActions), true);
+
+console.log('carolina preview');
+const previewLayout = read('app/(protected)/preview/layout.tsx');
+const fixture = read('lib/preview/carolina-fixture.ts');
+check('preview is gated on platform admin', /is_admin/.test(previewLayout), true);
+check('preview hides itself from non-admins (404, not 403)', /notFound\(\)/.test(previewLayout), true);
+// The whole safety argument: the fixture touches no database at all.
+check('preview fixture imports no supabase client', /supabase/i.test(fixture), false);
+// Call syntax, not prose: the file's own comments discuss inserts, and a
+// bare word match flagged the explanation of why there are none.
+check('preview fixture performs no writes', /\.(insert|update|upsert|delete)\s*\(/.test(fixture), false);
+check('preview accepts no caller-supplied identity',
+  /searchParams[\s\S]{0,200}(userId|profileId|mentorshipId|organizationId)/.test(
+    read('app/(protected)/preview/carolina/[role]/page.tsx')), false);
+check('preview carries the Carolina disclaimer', previewLayout.includes('CAROLINA_TENANT.notice'), true);
+check('fixture disclaimer names the absence of an agreement',
+  /no agreement with UNC-Chapel Hill/.test(fixture), true);
+
+console.log('password recovery');
+const authCtx = read('lib/auth-context.tsx');
+check('recovery no longer redirects to /login', /redirectTo: `\$\{window\.location\.origin\}\/login`/.test(authCtx), false);
+check('recovery redirects to the page that can set a password',
+  /redirectTo: `\$\{window\.location\.origin\}\/reset-password`/.test(authCtx), true);
+const resetForm = read('components/auth/reset-password-form.tsx');
+check('recovery page can actually set a password', /updateUser\(\{ password \}\)/.test(resetForm), true);
+check('recovery handles the PKCE code flow', /exchangeCodeForSession/.test(resetForm), true);
+check('recovery handles the implicit token flow', /setSession\(\{ access_token, refresh_token \}\)/.test(resetForm), true);
+check('recovery clears the token from the address bar', /replaceState/.test(resetForm), true);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

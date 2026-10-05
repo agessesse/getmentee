@@ -1,0 +1,192 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { createClient } from '@/lib/supabase/server';
+
+/**
+ * The workspace's writes.
+ *
+ * EVERY ONE USES THE USER-SCOPED CLIENT. The service role is never
+ * constructed in this file, so RLS applies to all of it: "Parties can update
+ * action items in their mentorship", "Parties can insert mentorship goals",
+ * "Parties can update their sessions". An administrator who is not in the
+ * relationship cannot write to it, and nothing here has to remember to check
+ * that, because the privileged path does not exist.
+ *
+ * Each action re-reads the mentorship first. That is not the security check
+ * (RLS is), it is how a caller gets a clean failure instead of a silent
+ * no-op: an UPDATE that matches no rows under RLS succeeds with zero rows
+ * affected, which looks identical to success from the client.
+ */
+
+type Result = { ok: true } | { ok: false; error: string };
+
+async function assertParticipant(mentorshipId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { supabase, user: null, ok: false as const };
+
+  const { data } = await supabase
+    .from('mentorships')
+    .select('id, mentee_id, mentor_id')
+    .eq('id', mentorshipId)
+    .maybeSingle();
+
+  const ok = Boolean(data && (data.mentee_id === user.id || data.mentor_id === user.id));
+  return { supabase, user, ok, mentorship: data };
+}
+
+/** Tick or untick a commitment. Either party may, for either owner. */
+export async function setCommitmentDone(
+  mentorshipId: string,
+  itemId: string,
+  done: boolean,
+): Promise<Result> {
+  const { supabase, ok } = await assertParticipant(mentorshipId);
+  if (!ok) return { ok: false, error: 'Not found.' };
+
+  const { error } = await supabase
+    .from('action_items')
+    .update({ is_completed: done, completed_at: done ? new Date().toISOString() : null })
+    .eq('id', itemId)
+    .eq('mentorship_id', mentorshipId);
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}
+
+/** Add something the two of them are working toward. */
+export async function addGoal(
+  mentorshipId: string,
+  title: string,
+  description: string,
+): Promise<Result> {
+  const clean = title.trim();
+  if (!clean) return { ok: false, error: 'Give it a name first.' };
+  if (clean.length > 160) return { ok: false, error: 'Keep it under 160 characters.' };
+
+  const { supabase, user, ok } = await assertParticipant(mentorshipId);
+  if (!ok || !user) return { ok: false, error: 'Not found.' };
+
+  const { error } = await supabase.from('mentorship_goals').insert({
+    mentorship_id: mentorshipId,
+    created_by: user.id,
+    title: clean,
+    description: description.trim() || null,
+    status: 'active',
+  });
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}
+
+/** Mark something reached. */
+export async function completeGoal(mentorshipId: string, goalId: string): Promise<Result> {
+  const { supabase, ok } = await assertParticipant(mentorshipId);
+  if (!ok) return { ok: false, error: 'Not found.' };
+
+  const { error } = await supabase
+    .from('mentorship_goals')
+    .update({ status: 'completed', completed_at: new Date().toISOString() })
+    .eq('id', goalId)
+    .eq('mentorship_id', mentorshipId);
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}
+
+/** Add a commitment, owned by either party. */
+export async function addCommitment(
+  mentorshipId: string,
+  title: string,
+  ownerId: string,
+  dueDate: string | null,
+): Promise<Result> {
+  const clean = title.trim();
+  if (!clean) return { ok: false, error: 'Say what was promised.' };
+  if (clean.length > 200) return { ok: false, error: 'Keep it under 200 characters.' };
+
+  const { supabase, user, ok, mentorship } = await assertParticipant(mentorshipId);
+  if (!ok || !user || !mentorship) return { ok: false, error: 'Not found.' };
+
+  // The owner must be one of the two people. Without this, a participant
+  // could assign a commitment to an arbitrary profile id.
+  if (ownerId !== mentorship.mentee_id && ownerId !== mentorship.mentor_id) {
+    return { ok: false, error: 'That person is not in this mentorship.' };
+  }
+
+  const { error } = await supabase.from('action_items').insert({
+    mentorship_id: mentorshipId,
+    created_by: user.id,
+    assigned_to: ownerId,
+    title: clean,
+    due_date: dueDate || null,
+  });
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}
+
+/**
+ * Save preparation.
+ *
+ * Progressive: the form calls this per field as the person types and stops,
+ * so nothing is lost and there is no giant submit button at the end. The
+ * whole prep object is rewritten each time, with the OTHER party's half read
+ * back and preserved, because this column holds both halves.
+ */
+export async function savePrep(
+  mentorshipId: string,
+  sessionId: string,
+  fields: { focus?: string; changed?: string; questions?: string[]; notes?: string },
+): Promise<Result> {
+  const { supabase, user, ok, mentorship } = await assertParticipant(mentorshipId);
+  if (!ok || !user || !mentorship) return { ok: false, error: 'Not found.' };
+
+  const isMentor = mentorship.mentor_id === user.id;
+
+  const { data: row } = await supabase
+    .from('sessions')
+    .select('prep')
+    .eq('id', sessionId)
+    .eq('mentorship_id', mentorshipId)
+    .maybeSingle();
+
+  if (!row) return { ok: false, error: 'Not found.' };
+
+  const current = (row.prep ?? {}) as { mentee?: unknown; mentor?: unknown };
+
+  /*
+    Each side writes only its own half. A mentee cannot write the mentor's
+    notes and a mentor cannot rewrite the mentee's questions, even though RLS
+    lets both update the row: the half they are not allowed to touch is
+    copied forward from what was already stored.
+  */
+  const next = isMentor
+    ? { ...current, mentor: { notes: (fields.notes ?? '').slice(0, 4000) } }
+    : {
+        ...current,
+        mentee: {
+          focus: (fields.focus ?? '').slice(0, 500),
+          changed: (fields.changed ?? '').slice(0, 1000),
+          questions: (fields.questions ?? [])
+            .map((q) => q.slice(0, 300))
+            .filter((q) => q.trim() !== '')
+            .slice(0, 8),
+        },
+      };
+
+  const { error } = await supabase
+    .from('sessions')
+    .update({ prep: next })
+    .eq('id', sessionId)
+    .eq('mentorship_id', mentorshipId);
+
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}

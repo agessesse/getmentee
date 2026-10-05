@@ -56,8 +56,8 @@ export default function CohortOne() {
         </Rise>
 
         <Rise kind="heading" delay={0.08} as="p" className="text-halo-heather text-[17px] leading-relaxed max-w-xl mb-8">
-          Ten UNC-Chapel Hill sophomores heading into finance recruiting, paired with ten
-          people who have already done it. One semester.
+          Sophomores heading into finance recruiting, paired with people who have
+          already done it.
         </Rise>
 
         {/* The three facts, as a rule-separated row. Numbers, not features. */}
@@ -73,9 +73,8 @@ export default function CohortOne() {
         </Rise>
 
         <Rise kind="heading" delay={0.16} as="p" className="text-halo-heather text-[16px] leading-relaxed max-w-xl mb-5">
-          Finance is where we start, not what Mentable is. Recruiting begins early and the
-          timeline is unforgiving, which makes sophomore year one of the moments when
-          access to the right person matters most.
+          Finance is where we start, not what Mentable is. Recruiting begins early, which
+          makes sophomore year one of the moments access matters most.
         </Rise>
 
         <Rise kind="heading" delay={0.2} as="p" className="text-halo-ink text-[16px] font-medium leading-relaxed max-w-xl mb-9">

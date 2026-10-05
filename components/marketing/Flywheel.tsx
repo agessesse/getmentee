@@ -228,9 +228,7 @@ export default function Flywheel() {
             </h2>
 
             <p className="text-halo-mist-body font-light text-[15px] leading-relaxed mb-5 max-w-sm">
-              One opportunity doesn&apos;t have to stop with one person. Someone shares
-              what they know, a student carries it forward, and eventually becomes the
-              person someone else needed.
+              Mentable helps communities make that cycle intentional.
             </p>
 
             {/* The copy has to describe the interaction that is actually

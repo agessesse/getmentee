@@ -54,10 +54,8 @@ export default function ProblemSection() {
           two voices below it, not an essay.
         */}
         <p className="text-center text-halo-heather text-[16px] leading-relaxed max-w-xl mx-auto mb-8">
-          Recruiting timelines, what a job actually involves, which mistakes cost you a
-          year. Some students hear all of it at home or from someone a few years ahead.
-          Others are expected to work it out alone, and being just as capable does not
-          make that any faster.
+          Some students hear how it works at home. Others are expected to work it out
+          alone.
         </p>
 
         <div className="flex justify-center mb-8">

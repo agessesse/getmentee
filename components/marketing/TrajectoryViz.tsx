@@ -146,9 +146,8 @@ export default function TrajectoryViz() {
             {/* The honest version of the claim, said once, before the chart:
                 a mentor cannot hand anyone an outcome. */}
             <p className="text-halo-lavender font-light text-[15px] leading-relaxed mb-7 max-w-sm">
-              Mentorship doesn&apos;t create talent. It changes how quickly someone can
-              turn talent into informed action, because the person across from them
-              already knows what the next six months look like.
+              Mentorship doesn&apos;t create talent. It changes how fast talent turns
+              into informed action.
             </p>
 
             {/*

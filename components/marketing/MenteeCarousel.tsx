@@ -175,14 +175,12 @@ export default function MenteeCarousel() {
             experience of mentorship is the reason we think this should exist.
           */}
           <p className="text-[16px] text-halo-heather leading-relaxed max-w-xl mt-5">
-            These are students whose own experiences with mentorship shaped the thinking
-            behind Mentable. People who can point to a conversation that changed what they
-            understood about a path.
+            Students who can point to a conversation that changed what they understood
+            about a path.
           </p>
           <p className="text-[13px] text-halo-mist-body leading-relaxed max-w-xl mt-3">
-            Their mentorship, academic and career experiences predate Mentable. Being shown
-            here doesn&apos;t mean Mentable produced any of it, or that they are Mentable
-            members.
+            Their experience predates Mentable. Being shown here doesn&apos;t mean Mentable
+            produced it, or that they are members.
           </p>
         </div></div>
 

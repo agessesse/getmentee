@@ -153,9 +153,8 @@ export default function MentorCarousel() {
             middle of asking them.
           */}
           <p className="text-[13px] text-halo-mist-body leading-relaxed max-w-xl mt-5">
-            These profiles are built from public information about people whose paths show
-            the kind of experience worth passing on. They are not yet Mentable mentors, and
-            appearing here isn&apos;t an endorsement of Mentable.
+            Built from public information. They are not Mentable mentors, and appearing
+            here isn&apos;t an endorsement.
           </p>
         </div></div>
 

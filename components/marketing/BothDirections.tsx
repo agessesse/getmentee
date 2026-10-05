@@ -87,9 +87,7 @@ export default function BothDirections() {
         </Rise>
 
         <Rise kind="heading" delay={0.08} as="p" className="text-halo-mist-body font-light text-[15px] leading-relaxed mb-12 max-w-md">
-          Before it goes anywhere else, it happens between two people. They do not
-          get the same thing out of it, and neither of them is doing the other a
-          favour. Not every time, but this is what it can be.
+          Neither person is doing the other a favour.
         </Rise>
 
         {/* On a phone the two columns become one, so the pairing has to be

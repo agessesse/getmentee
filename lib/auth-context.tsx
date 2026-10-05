@@ -81,8 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
+    /*
+      THE BUG THIS FIXES. redirectTo pointed at /login, which is a page with
+      an email field and a password field and no way to SET a password. So
+      the recovery link worked perfectly, signed the person in with a
+      recovery session, and dropped them on a form that could not use it.
+      Password reset has been a dead end for every user who tried it.
+
+      /reset-password is the page that can actually finish the job.
+    */
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     return { error: error?.message };
   };

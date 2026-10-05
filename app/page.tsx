@@ -10,6 +10,7 @@ import MentorCarousel from '@/components/marketing/MentorCarousel';
 import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import ProblemSection from '@/components/marketing/ProblemSection';
 import ProductDemo from '@/components/marketing/ProductDemo';
+import HowItWorks from '@/components/marketing/HowItWorks';
 import TrajectoryViz from '@/components/marketing/TrajectoryViz';
 import CohortOne from '@/components/marketing/CohortOne';
 import Flywheel from '@/components/marketing/Flywheel';
@@ -76,90 +77,64 @@ export default function LandingPage() {
                 id="hero-heading"
                 className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-5 max-w-3xl"
               >
-                Talent is everywhere.<br />
-                Access isn&apos;t.
+                Mentorship shouldn&apos;t<br />
+                depend on luck.
               </h1>
 
               {/*
-                The thesis, sharpened.
+                One sentence, and it does the whole job: who it is for
+                (communities), what it does (turns experience into
+                mentorship), and the promise that separates it from an
+                introduction service (that goes somewhere).
 
-                The headline was "Find someone worth learning from. Become
-                someone worth learning from." True, and it described the
-                relationship well, but it never said what problem Mentable
-                exists for. Two students with the same ability do not start in
-                the same place, and the difference is usually who they already
-                know. That is the sentence the company is built on, so it is
-                the sentence at the top.
-
-                The standfirst stays deliberately career-agnostic. Finance is
-                Cohort 001, not the brand: a visitor who reads the hero and
-                concludes Mentable is a finance product has misread it, and
-                every future cohort would need this page rewritten.
+                WHAT THIS REPLACED. A four-line standfirst explaining that two
+                people can have the same ability and not the same access, then
+                a second clause about structure after the introduction. Both
+                true, and both arguments the rest of the page already makes
+                with interface rather than prose. A hero that argues has
+                already lost the thirty seconds it was given.
               */}
               <p
-                className="font-display text-halo-heather leading-[1.4] max-w-xl mb-6"
+                className="font-display text-halo-heather leading-[1.4] max-w-xl mb-7"
                 style={{ fontSize: 'clamp(1.15rem, 1.75vw, 1.4rem)' }}
               >
-                Two people can have the same{' '}
-                <span className="font-medium text-halo-purple-d">ability</span>
-                {' '}and nothing like the same{' '}
-                <span className="font-medium text-halo-purple-d">access</span>.
-                Mentable connects students with people who have already walked
-                the path, and gives the relationship structure after the
-                introduction.
+                Mentable helps communities turn experience into mentorship that
+                goes somewhere.
               </p>
-
-              {/*
-                "Find your mentor" pointed at signup, and signup delivers a
-                student into a mentor list where nobody can currently receive a
-                request. The ask now matches what actually exists: a first
-                cohort you apply to, and a mentor path that explains what
-                taking part means before asking for a signup.
-              */}
-              {/*
-                The one thing the hero was missing, and it belongs above the
-                buttons rather than below them.
-
-                A first-time visitor met an aphorism, a standfirst and a button
-                reading "Apply to the founding cohort" before the page had used
-                the word "founding" or said what stage Mentable is at. They were
-                being asked to apply to something undefined. This says who it is
-                for and where we actually are, in the two lines before the ask,
-                so the context arrives before the decision instead of under it
-                where a 900px viewport cuts it off.
-              */}
-              {/*
-                The launch signal. Deliberately a rule and two short lines
-                rather than a banner: it has to be findable without competing
-                with the headline, and it must not read as promotion. No
-                countdown, no seat counter, no application count. The only
-                number is ten, and ten is true.
-              */}
-              <div className="border-l-2 border-halo-lavender pl-4 mb-6 max-w-md">
-                <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-purple-d mb-1">
-                  Cohort 001 · Finance · UNC-Chapel Hill
-                </p>
-                <p className="text-halo-mist-body text-[14.5px] leading-relaxed">
-                  Applications are open for our first cohort: ten sophomores, ten mentors,
-                  one semester.
-                </p>
-              </div>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
-                  href="/apply?role=mentee&cohort=cohort-001"
-                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero' })}
+                  href="#product"
+                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero_explore' })}
                 >
-                  Apply to Cohort 001
+                  Explore Mentable
                 </CtaButton>
-                <CtaButton
-                  href="/mentor"
-                  onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'hero' })}
-                  variant="secondary"
-                >
-                  Become a mentor
+                <CtaButton href="/organizations" variant="secondary">
+                  For organizations
                 </CtaButton>
               </div>
+
+              {/*
+                Cohort 001 moved BELOW the buttons and lost its paragraph.
+
+                It is a live funnel with real applicants, so removing it would
+                throw away applications; but it is also a detail about where
+                the company is right now, not the thing a first-time visitor
+                needs in order to understand the product. One line, one link.
+              */}
+              <p className="mt-6 text-[14px] text-halo-mist-body">
+                <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-brand-text mr-2">
+                  Now open
+                </span>
+                Cohort 001: ten sophomores, ten mentors, one semester.{' '}
+                <Link
+                  href="/apply?role=mentee&cohort=cohort-001"
+                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero_cohort_line' })}
+                  className="font-medium text-halo-brand-text underline underline-offset-2 hover:text-halo-ink transition-colors"
+                >
+                  Apply
+                </Link>
+              </p>
 
             </div>
 
@@ -202,6 +177,11 @@ export default function LandingPage() {
 
       {/* ── 05. Product ──────────────────────────────────────────────────────── */}
       <ProductDemo />
+
+      {/* ── How it works ─────────────────────────────────────────────────────── */}
+      {/* After the product, not before it: show the thing, then name the
+          sequence it runs on. Reversed, the steps are abstract. */}
+      <HowItWorks />
 
       {/* ── 06. The access gap ───────────────────────────────────────────────── */}
       <TrajectoryViz />
@@ -248,55 +228,29 @@ export default function LandingPage() {
               className="font-display text-halo-ink leading-[1.03] mb-8 max-w-2xl"
               style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)' }}
             >
-              Ask someone ahead.<br />Help someone coming up.
+              Who helped you get here?<br />Help someone coming next.
             </h2>
           </Rise>
           {/*
-            The page's last word was the feeling, with no reminder of what the
-            product is. Five sections earlier, 04 answered "why not just text
-            someone" and then the argument moved on to mentorship in general.
-            One sentence here, naming only things that exist: discovery, shared
-            goals and next steps, session prep, and the record of what happened.
+            The paragraph that used to sit here re-explained the product in
+            the last six lines of a page that had just spent nine sections
+            demonstrating it. By this point the reader either understands
+            Mentable or is not going to. Cut to nothing: the heading is the
+            closing argument and the buttons are the answer.
           */}
-          <p className="text-halo-heather text-[16px] leading-relaxed mb-8 max-w-lg">
-            Mentable is how you find each other. It holds the parts that usually get
-            dropped: what you agreed, what to prepare, and what happened last time.
-            Cohort 001 starts with ten of each.
-          </p>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
               href="/apply?role=mentee&cohort=cohort-001"
               onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final' })}
             >
-              Apply to Cohort 001
+              Find mentorship
             </CtaButton>
-            <CtaButton
-              href="/mentor"
-              onClick={() => trackLandingEvent('founding_mentor_cta_clicked', { cta: 'final' })}
-              variant="secondary"
-            >
-              Become a mentor
+            <CtaButton href="/organizations" variant="secondary">
+              Bring Mentable to your organization
             </CtaButton>
           </div>
-          {/*
-            The institutional door, as one line rather than a section.
-
-            A university programme lead is a real but much rarer visitor than
-            a student, and the homepage belongs to the student. One sentence
-            after the two CTAs is enough for someone who came looking; a
-            section would have told everyone else they were in the wrong
-            place.
-          */}
-          <p className="text-halo-heather text-[15px] mt-7 max-w-lg leading-relaxed">
-            Running mentorship for a university, company or community?{' '}
-            <Link href="/organizations" className="text-halo-purple-d font-medium hover:text-halo-ink underline underline-offset-2">
-              Mentable can power your program
-            </Link>
-            .
-          </p>
-
           <p className="text-halo-mist-body text-sm mt-6">
-            No cost to take part. Know someone who should be here?{' '}
+            Know someone who should be here?{' '}
             <button
               onClick={() => setInviteOpen(true)}
               className="tap-target text-halo-purple-d underline underline-offset-2 hover:text-halo-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple rounded-sm"

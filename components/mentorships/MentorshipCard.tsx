@@ -24,8 +24,6 @@ export default function MentorshipCard({
   partnerFirstName,
   partnerLastName,
   partnerAvatarUrl,
-  partnerId,
-  userRole,
   sessionsCount,
   startedAt,
   status,
@@ -35,17 +33,27 @@ export default function MentorshipCard({
 }: MentorshipCardProps) {
   const fullName = `${partnerFirstName} ${partnerLastName}`;
   const duration = formatDistanceToNow(new Date(startedAt), { addSuffix: false });
-  const profileHref = userRole === 'mentor' ? `/mentee/${partnerId}` : `/mentor/${partnerId}`;
+  /*
+    The card now opens the RELATIONSHIP, not the person's profile.
+
+    Before this pass, every route out of here went to a profile page, a
+    message thread or the scheduler, so there was no way to reach "the
+    mentorship" as a thing, because there was nowhere for it to be. The
+    profile is still reachable from inside the workspace; it is just no
+    longer the primary destination, because a profile is who somebody is and
+    the workspace is what the two of you are doing.
+  */
+  const workspaceHref = `/mentorship/${mentorshipId}`;
 
   return (
     <Card className="flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <Link href={profileHref}>
+          <Link href={workspaceHref}>
             <Avatar src={partnerAvatarUrl} name={fullName} size="lg" />
           </Link>
           <div>
-            <Link href={profileHref} className="font-semibold text-halo-ink hover:text-halo-purple-d transition-colors">
+            <Link href={workspaceHref} className="font-semibold text-halo-ink hover:text-halo-brand-text transition-colors">
               {fullName}
             </Link>
             <p className="text-xs text-halo-mist-body">Mentoring for {duration}</p>
@@ -85,14 +93,14 @@ export default function MentorshipCard({
       )}
 
       <div className="flex gap-2 pt-1 border-t border-halo-rule">
-        <Link href={`/messages?mentorshipId=${mentorshipId}`} className="flex-1">
+        <Link href={workspaceHref} className="flex-1">
           <Button variant="primary" size="sm" className="w-full">
-            <MessageSquare className="h-4 w-4" /> Chat
+            Open mentorship
           </Button>
         </Link>
-        <Link href={`/schedule?mentorshipId=${mentorshipId}`} className="flex-1">
+        <Link href={`/messages?mentorshipId=${mentorshipId}`} className="flex-1">
           <Button variant="secondary" size="sm" className="w-full">
-            <Calendar className="h-4 w-4" /> Schedule
+            <MessageSquare className="h-4 w-4" /> Message
           </Button>
         </Link>
       </div>

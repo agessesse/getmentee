@@ -337,7 +337,7 @@ export default function ProductDemo() {
   }, []);
 
   return (
-    <section className="py-20 sm:py-24 px-6 lg:px-10 bg-halo-veil border-t border-halo-rule" aria-labelledby="product-demo-heading">
+    <section id="product" className="scroll-mt-20 py-20 sm:py-24 px-6 lg:px-10 bg-halo-veil border-t border-halo-rule" aria-labelledby="product-demo-heading">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,1.15fr] gap-10 lg:gap-16 items-start">
 
@@ -351,10 +351,16 @@ export default function ProductDemo() {
               className="font-display text-halo-ink leading-[1.05] mb-5"
               style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
             >
-              Everything after<br />the introduction.
+              One relationship.<br />Built to move forward.
             </h2>
+            {/*
+              Was "Requests, goals, sessions, and follow-up in one place" --
+              four table names and an instruction. The demo beside it already
+              shows what the product does, so the words only have to say what
+              it is for.
+            */}
             <p className="text-halo-mist-body text-[16px] leading-relaxed mb-7 max-w-md">
-              Requests, goals, sessions, and follow-up in one place, for both of you. Click through the four steps.
+              Know what to work on, what to ask, and what happens next.
             </p>
 
             {/*
