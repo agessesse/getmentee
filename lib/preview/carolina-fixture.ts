@@ -144,6 +144,16 @@ export function carolinaWorkspace(viewerRole: 'mentor' | 'mentee'): Workspace {
         targetDate: null,
         completedAt: null,
         createdAt: day(-24),
+        // A SMART goal in the preview, so the label and the breakdown are
+        // both visible in the Carolina walkthrough.
+        smart: {
+          specific: 'Understand how Markets recruiting actually works',
+          measurable: 'I can explain the difference between Sales, Trading and Strategy, and I’ve spoken to someone in each',
+          achievable: 'Sarah can introduce me to two people, and I have time before recruiting opens',
+          relevant: 'I have to choose a track before applications open and I don’t want to guess',
+          timebound: dateOnly(60),
+        },
+        mine: viewerRole === 'mentee',
         relatedOpen: 2,
       },
     ],
@@ -163,7 +173,13 @@ export function carolinaWorkspace(viewerRole: 'mentor' | 'mentee'): Workspace {
       id: 'preview-session',
       at: day(5),
       durationMinutes: 45,
-      videoLink: null,
+      videoLink: 'https://meet.google.com/illustrative-preview',
+      timeZone: 'America/New_York',
+      meetingProvider: 'google_meet',
+      location: null,
+      viewerIsOrganizer: viewerRole === 'mentee',
+      syncStatus: 'synced',
+      inviteStatus: 'sent',
       menteePrep,
       // Private to the mentor, exactly as in the real loader.
       mentorNotes: viewerRole === 'mentor'

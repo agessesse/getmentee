@@ -56,11 +56,20 @@ export async function setCommitmentDone(
   return { ok: true };
 }
 
-/** Add something the two of them are working toward. */
+/**
+ * Add something the two of them are working toward.
+ *
+ * `smart` is the optional breakdown, stored alongside the composed goal
+ * rather than instead of it, so the mentee can come back and edit the
+ * thinking and not only the summary. NULL for an ordinary goal, which is
+ * still the default path.
+ */
 export async function addGoal(
   mentorshipId: string,
   title: string,
   description: string,
+  smart: Record<string, string> | null = null,
+  targetDate: string | null = null,
 ): Promise<Result> {
   const clean = title.trim();
   if (!clean) return { ok: false, error: 'Give it a name first.' };
@@ -75,9 +84,59 @@ export async function addGoal(
     title: clean,
     description: description.trim() || null,
     status: 'active',
+    smart: smart && Object.keys(smart).length ? smart : null,
+    target_date: targetDate || null,
   });
 
   if (error) return { ok: false, error: error.message };
+  revalidatePath(`/mentorship/${mentorshipId}`);
+  return { ok: true };
+}
+
+/**
+ * Edit a goal's SMART breakdown and composed text.
+ *
+ * THE OWNERSHIP RULE, and it is enforced by the database, not here. RLS on
+ * mentorship_goals is "Goal creator can update their goals"
+ * (auth.uid() = created_by). A mentor can read their mentee's goal and talk
+ * about it; they cannot silently rewrite it, because the UPDATE matches no
+ * rows for them. The brief asks that mentors never overwrite a mentee's
+ * goal, and that was already true before this pass.
+ */
+export async function updateGoal(
+  mentorshipId: string,
+  goalId: string,
+  title: string,
+  description: string,
+  smart: Record<string, string> | null,
+  targetDate: string | null,
+): Promise<Result> {
+  const clean = title.trim();
+  if (!clean) return { ok: false, error: 'Give it a name first.' };
+  if (clean.length > 160) return { ok: false, error: 'Keep it under 160 characters.' };
+
+  const { supabase, ok } = await assertParticipant(mentorshipId);
+  if (!ok) return { ok: false, error: 'Not found.' };
+
+  const { data, error } = await supabase
+    .from('mentorship_goals')
+    .update({
+      title: clean,
+      description: description.trim() || null,
+      smart: smart && Object.keys(smart).length ? smart : null,
+      target_date: targetDate || null,
+    })
+    .eq('id', goalId)
+    .eq('mentorship_id', mentorshipId)
+    .select('id');
+
+  if (error) return { ok: false, error: error.message };
+  // Zero rows under RLS means the caller does not own this goal. Say so,
+  // rather than reporting a success that changed nothing.
+  if (!data || data.length === 0) {
+    return { ok: false, error: 'This is your mentee’s goal. You can suggest changes, but only they can edit it.' };
+  }
+
   revalidatePath(`/mentorship/${mentorshipId}`);
   return { ok: true };
 }

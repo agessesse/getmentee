@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { trackEvent } from '@/lib/analytics';
 import Spinner from '@/components/ui/Spinner';
 import { Check, Trash2 } from 'lucide-react';
+import CalendarSettings from '@/components/settings/CalendarSettings';
 
 // -------------------------------------------------------
 // Shared constants
@@ -662,6 +663,13 @@ export default function ProfileSetupPage() {
           )}
         </div>
       </div>
+
+      {/*
+        Calendar connections live here, at the account level, rather than in
+        the mentorship workspace: a mentor connects once and every
+        relationship can schedule.
+      */}
+      <CalendarSettings />
 
       {/* Danger zone */}
       <div className="mt-8 bg-white rounded-2xl border border-red-100 p-6">

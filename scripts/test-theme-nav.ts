@@ -187,5 +187,97 @@ check('recovery handles the PKCE code flow', /exchangeCodeForSession/.test(reset
 check('recovery handles the implicit token flow', /setSession\(\{ access_token, refresh_token \}\)/.test(resetForm), true);
 check('recovery clears the token from the address bar', /replaceState/.test(resetForm), true);
 
+// ── 7. Pass 3: SMART goals ──────────────────────────────────────────────────
+console.log('smart goals');
+import('../lib/mentorship/smart').then(() => {});
+{
+  const { consolidate, toStored, fromStored, isSmartStarted } =
+    require('../lib/mentorship/smart') as typeof import('../lib/mentorship/smart');
+
+  const full = {
+    specific: 'Understand how Markets recruiting actually works',
+    measurable: 'I can explain the difference between Sales, Trading and Strategy',
+    achievable: 'Sarah can introduce me to two people',
+    relevant: 'I have to choose a track before applications open',
+    timebound: '2027-03-01',
+  };
+
+  const c = consolidate(full);
+  check('title is the Specific answer', c.title, full.specific);
+  check('description leads with why it matters', c.description.startsWith('I have to choose a track'), true);
+  check('description lower-cases a lead-in clause', c.description.includes('when I can explain'), true);
+  // A generated sentence must never contain anything the mentee did not write.
+  check('consolidation invents no content',
+    ['Sales, Trading and Strategy', 'two people', 'applications open']
+      .every((frag) => c.description.includes(frag) || c.title.includes(frag)), true);
+
+  check('empty SMART stores as null', toStored({ specific:'', measurable:'', achievable:'', relevant:'', timebound:'' }), null);
+  check('partial SMART stores only what was filled',
+    Object.keys(toStored({ ...full, achievable:'', relevant:'' }) ?? {}).sort(),
+    ['measurable','specific','timebound']);
+  check('round-trips through storage', fromStored(toStored(full)), full);
+  check('garbage reads back as empty', isSmartStarted(fromStored({ nope: 1 })), false);
+  // The default path must stay untouched: a plain goal is not a SMART goal.
+  check('a plain goal is not marked SMART', isSmartStarted(fromStored(null)), false);
+}
+
+// ── 8. Pass 3: scheduling and calendar ──────────────────────────────────────
+console.log('scheduling + calendar');
+const sched = read('app/(protected)/mentorship/[id]/schedule-actions.ts');
+const conns = read('lib/calendar/connections.ts');
+const cfg = read('lib/calendar/config.ts');
+const evts = read('lib/calendar/events.ts');
+const statusRoute = read('app/api/calendar/status/route.ts');
+const connectRoute = read('app/api/calendar/[provider]/connect/route.ts');
+const callbackRoute = read('app/api/calendar/[provider]/callback/route.ts');
+
+// Tokens must never be reachable from a browser bundle.
+for (const [n, src] of [['connections', conns], ['events', evts], ['config', cfg]] as const) {
+  check(`${n} is server-only`, src.includes("import 'server-only'"), true);
+}
+check('status endpoint returns summaries, never tokens',
+  /access_token|refresh_token/.test(statusRoute), false);
+check('status endpoint is scoped to the session, not a supplied id',
+  /searchParams.*profile|body.*profileId/.test(statusRoute), false);
+
+/*
+  Provider must come from the connected account, never from an email domain.
+  Tested against CODE ONLY: both files explain in prose why domains are not
+  authoritative, and a bare word match flagged the explanation.
+*/
+const codeOnly = (src: string) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+check('provider is never inferred from an email domain',
+  /gmail|outlook\.com|hotmail|\.edu/i.test(codeOnly(sched) + codeOnly(conns)), false);
+check('provider is chosen from connections', /pickProvider/.test(sched), true);
+
+// OAuth CSRF.
+check('connect sets a state cookie', /mentable_cal_state_/.test(connectRoute), true);
+check('state is stored hashed', /createHash\('sha256'\)/.test(connectRoute), true);
+check('callback verifies state before exchanging the code',
+  callbackRoute.indexOf('expected !== actual') < callbackRoute.indexOf('grant_type'), true);
+check('redirect_uri comes from config, not the request host',
+  /redirectUri\(provider\)/.test(callbackRoute) && !/request\.headers\.get\('host'\)/.test(callbackRoute), true);
+
+// Honesty: never claim a meeting exists unless the provider confirmed it.
+check('an online meeting rolls back when the provider fails',
+  /if \(needsCalendar\) \{[\s\S]{0,260}\.delete\(\)/.test(sched), true);
+check('cancel does not mark cancelled when the provider refuses',
+  /Could not cancel the calendar invitation\. Nothing was changed\./.test(sched), true);
+check('reschedule updates rather than creating a second event',
+  /updateCalendarEvent/.test(sched) && !/createCalendarEvent[\s\S]{0,80}reschedule/i.test(sched), true);
+check('a non-organizer reschedule is reported as stale, not synced',
+  /organizer_id !== user\.id[\s\S]{0,300}'stale'/.test(sched), true);
+
+// Scopes stay minimal.
+check('google scope is calendar.events, not full calendar',
+  cfg.includes('auth/calendar.events') && !/auth\/calendar['"\s]/.test(cfg), true);
+check('microsoft requests offline_access for refresh', /offline_access/.test(cfg), true);
+
+// Authorization: scheduling is participation-only.
+check('scheduling never uses an org or admin role',
+  /organization_members|program_admins|is_admin/.test(sched), false);
+check('scheduling verifies participation first', /participantContext/.test(sched), true);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

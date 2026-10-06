@@ -120,6 +120,7 @@ export default async function CarolinaRolePreview({
         partnerFirstName={w.partner.firstName}
         prepareHref={`/preview/carolina/${role}?view=prepare`}
         planHref={`/preview/carolina/${role}`}
+        readOnly
       />
 
       <div className="mt-8 space-y-7">

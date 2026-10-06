@@ -48,6 +48,10 @@ export interface WorkspaceGoal extends Goal {
   description: string | null;
   completedAt: string | null;
   createdAt: string;
+  /** The optional SMART breakdown, as stored. */
+  smart: Record<string, string> | null;
+  /** Whether the viewer may edit it. RLS enforces this; the UI reflects it. */
+  mine: boolean;
   /** Commitments created for this goal's relationship, still open. */
   relatedOpen: number;
 }
@@ -81,7 +85,17 @@ export interface NextConversation {
   id: string;
   at: string;
   durationMinutes: number;
+  /** The join URL, from the calendar provider or entered by hand. */
   videoLink: string | null;
+  /** IANA zone the organiser chose, so it renders in their intent. */
+  timeZone: string | null;
+  meetingProvider: 'google_meet' | 'teams' | 'in_person' | 'other' | null;
+  location: string | null;
+  /** True when the viewer created it and therefore owns the calendar event. */
+  viewerIsOrganizer: boolean;
+  /** Whether the external event still matches this row. */
+  syncStatus: string;
+  inviteStatus: string;
   /** The mentee's shared preparation. Visible to both, by design. */
   menteePrep: PrepFields;
   /** The mentor's private notes. NULL unless the viewer is the mentor. */
@@ -132,6 +146,12 @@ interface SessionRow {
   prep_mentee: string | null;
   prep_mentor: string | null;
   prep: unknown;
+  time_zone: string | null;
+  meeting_provider: string | null;
+  location: string | null;
+  organizer_id: string | null;
+  sync_status: string;
+  invite_status: string;
 }
 
 /**
@@ -211,7 +231,7 @@ export async function loadWorkspace(
       .maybeSingle(),
     supabase
       .from('mentorship_goals')
-      .select('id, title, description, status, target_date, completed_at, created_at')
+      .select('id, title, description, status, target_date, completed_at, created_at, created_by, smart')
       .eq('mentorship_id', mentorshipId)
       .order('created_at', { ascending: true }),
     supabase
@@ -221,7 +241,7 @@ export async function loadWorkspace(
       .order('created_at', { ascending: true }),
     supabase
       .from('sessions')
-      .select('id, scheduled_at, duration_minutes, status, notes, video_link, mentor_recap, prep_mentee, prep_mentor, prep')
+      .select('id, scheduled_at, duration_minutes, status, notes, video_link, mentor_recap, prep_mentee, prep_mentor, prep, time_zone, meeting_provider, location, organizer_id, sync_status, invite_status')
       .eq('mentorship_id', mentorshipId)
       .order('scheduled_at', { ascending: true }),
     ms.request_id
@@ -277,6 +297,8 @@ export async function loadWorkspace(
   const upcoming = sessions.filter(
     (s) => new Date(s.scheduled_at).getTime() > now && s.status !== 'cancelled',
   );
+  // Past conversations exclude cancellations too: a meeting that did not
+  // happen is not part of "where have we been".
   const nextRow = upcoming[0] ?? null;
   const lastHeld = held[held.length - 1] ?? null;
   // A past conversation still marked scheduled: somebody has to close it out.
@@ -311,6 +333,8 @@ export async function loadWorkspace(
     targetDate: g.target_date ?? null,
     completedAt: g.completed_at ?? null,
     createdAt: g.created_at,
+    smart: (g.smart as Record<string, string> | null) ?? null,
+    mine: g.created_by === user.id,
     relatedOpen: 0,
   }));
   /*
@@ -324,6 +348,7 @@ export async function loadWorkspace(
   if (activeGoals.length === 1) activeGoals[0].relatedOpen = openItems.length;
 
   const conversations: Conversation[] = past
+    .filter((s) => s.status !== 'cancelled')
     .slice()
     .reverse()
     .map((s, idx) => ({
@@ -345,6 +370,12 @@ export async function loadWorkspace(
       at: nextRow.scheduled_at,
       durationMinutes: nextRow.duration_minutes ?? 60,
       videoLink: nextRow.video_link ?? null,
+      timeZone: nextRow.time_zone ?? null,
+      meetingProvider: (nextRow.meeting_provider as NextConversation['meetingProvider']) ?? null,
+      location: nextRow.location ?? null,
+      viewerIsOrganizer: nextRow.organizer_id === user.id,
+      syncStatus: nextRow.sync_status ?? 'none',
+      inviteStatus: nextRow.invite_status ?? 'none',
       menteePrep,
       /*
         STRIPPED FOR THE MENTEE. Both parties can SELECT the session row, so

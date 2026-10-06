@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { loadWorkspace } from '@/lib/mentorship/workspace-data';
+import { listConnectionSummaries } from '@/lib/calendar/connections';
 import { menteeNextAction, mentorNextAction } from '@/lib/mentorship/next-action';
 import RelationshipHeader from '@/components/workspace/RelationshipHeader';
 import WhatsNext from '@/components/workspace/WhatsNext';
@@ -56,6 +57,14 @@ export default async function MentorshipWorkspace({
   */
   if (!w.ok) notFound();
 
+  /*
+    Which calendars the VIEWER has connected, which decides whether Google
+    Meet and Teams are offered at all. Resolved from their own account, not
+    guessed from anybody's email domain: a .edu address is Google Workspace
+    at one university and Microsoft 365 at the next.
+  */
+  const providers = (await listConnectionSummaries(w.viewerId)).map((c) => c.provider);
+
   // The dominant action comes from the same function the dashboard uses, with
   // a state containing this one relationship. Not a second opinion written
   // next to it: the same 36-state logic, asked a narrower question.
@@ -90,6 +99,12 @@ export default async function MentorshipWorkspace({
         mentorshipId={w.mentorshipId}
         viewerRole={w.viewerRole}
         partnerFirstName={w.partner.firstName}
+        partner={{
+          firstName: w.partner.firstName,
+          fullName: w.partner.fullName,
+          avatarUrl: w.partner.avatarUrl,
+        }}
+        providers={providers}
       />
 
       <div className="mt-8 space-y-7">

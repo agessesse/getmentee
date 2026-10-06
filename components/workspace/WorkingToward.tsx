@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Plus, Check } from 'lucide-react';
+import { Plus, Check, ChevronDown } from 'lucide-react';
 import Section, { Empty } from '@/components/workspace/Section';
-import { addGoal, completeGoal } from '@/app/(protected)/mentorship/[id]/actions';
+import GoalComposer from '@/components/workspace/GoalComposer';
+import { addGoal, completeGoal, updateGoal } from '@/app/(protected)/mentorship/[id]/actions';
+import { SMART_PROMPTS, fromStored } from '@/lib/mentorship/smart';
 import type { WorkspaceGoal } from '@/lib/mentorship/workspace-data';
 
 /**
@@ -35,22 +37,12 @@ export default function WorkingToward({
   readOnly?: boolean;
 }) {
   const [adding, setAdding] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [editing, setEditing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
   const active = goals.filter((g) => g.status === 'active');
   const reached = goals.filter((g) => g.status === 'completed');
-
-  const submit = () => {
-    setError(null);
-    start(async () => {
-      const r = await addGoal(mentorshipId, title, description);
-      if (r.ok) { setTitle(''); setDescription(''); setAdding(false); }
-      else setError(r.error);
-    });
-  };
 
   return (
     <Section
@@ -79,68 +71,99 @@ export default function WorkingToward({
       )}
 
       {adding && (
-        <div className="rounded-2xl border border-halo-rule p-4 mb-4">
-          <label htmlFor="goal-title" className="sr-only">What are you working toward?</label>
-          <input
-            id="goal-title"
-            autoFocus
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Understand Markets recruiting"
-            className="w-full bg-transparent text-[15px] text-halo-ink placeholder:text-halo-mist-strong focus:outline-none"
-          />
-          <label htmlFor="goal-desc" className="sr-only">Why does it matter?</label>
-          <textarea
-            id="goal-desc"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={2}
-            placeholder="What would it mean to get there?"
-            className="mt-2 w-full bg-transparent text-[13.5px] text-halo-heather placeholder:text-halo-mist-strong focus:outline-none resize-none"
-          />
-          {error && <p className="text-[12.5px] text-red-600 mt-1">{error}</p>}
-          <div className="mt-3 flex items-center gap-3">
-            <button
-              onClick={submit}
-              disabled={pending || !title.trim()}
-              className="rounded-xl bg-halo-purple px-4 py-2 text-[13.5px] font-semibold text-white disabled:opacity-40 hover:bg-halo-purple-d transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple focus-visible:ring-offset-2"
-            >
-              {pending ? 'Saving' : 'Add'}
-            </button>
-            <button
-              onClick={() => { setAdding(false); setError(null); }}
-              className="text-[13.5px] text-halo-heather hover:text-halo-ink transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <GoalComposer
+          pending={pending}
+          error={error}
+          onCancel={() => { setAdding(false); setError(null); }}
+          onSave={({ title, description, smart, targetDate }) => {
+            setError(null);
+            start(async () => {
+              const r = await addGoal(mentorshipId, title, description, smart, targetDate);
+              if (r.ok) setAdding(false); else setError(r.error);
+            });
+          }}
+        />
       )}
 
       {readOnly && <PreviewOnly />}
 
       <ul className="space-y-3">
-        {active.map((g) => (
-          <li key={g.id} className="rounded-2xl border border-halo-rule p-4">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="text-[15px] font-medium text-halo-ink leading-snug">{g.title}</p>
-                <p className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-brand-text mt-1.5">
-                  In progress
-                </p>
-                {g.description && (
-                  <p className="text-[13.5px] text-halo-heather leading-relaxed mt-2">{g.description}</p>
-                )}
-                {g.relatedOpen > 0 && (
-                  <p className="text-[12.5px] text-halo-mist-body mt-2">
-                    {g.relatedOpen} open commitment{g.relatedOpen === 1 ? '' : 's'}
-                  </p>
-                )}
+        {active.map((g) =>
+          editing === g.id ? (
+            <li key={g.id}>
+              <GoalComposer
+                mode="smart"
+                initialTitle={g.title}
+                initialDescription={g.description ?? ''}
+                initialSmart={fromStored(g.smart)}
+                pending={pending}
+                error={error}
+                onCancel={() => { setEditing(null); setError(null); }}
+                onSave={({ title, description, smart, targetDate }) => {
+                  setError(null);
+                  start(async () => {
+                    const r = await updateGoal(mentorshipId, g.id, title, description, smart, targetDate);
+                    if (r.ok) setEditing(null); else setError(r.error);
+                  });
+                }}
+              />
+            </li>
+          ) : (
+            <li key={g.id} className="rounded-2xl border border-halo-rule p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-[15px] font-medium text-halo-ink leading-snug">{g.title}</p>
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-1.5">
+                    <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-brand-text">
+                      In progress
+                    </span>
+                    {/*
+                      Subtle, as asked. A goal built with the framework is
+                      worth marking; it is not worth a badge with an icon and
+                      a colour fill competing with the goal itself.
+                    */}
+                    {g.smart && (
+                      <span className="font-ui text-[10px] font-semibold uppercase tracking-[0.12em] text-halo-mist-body border border-halo-rule rounded-full px-2 py-0.5">
+                        SMART goal
+                      </span>
+                    )}
+                    {g.targetDate && (
+                      <span className="text-[12px] text-halo-mist-body">
+                        by {new Date(g.targetDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                  {g.description && (
+                    <p className="text-[13.5px] text-halo-heather leading-relaxed mt-2">{g.description}</p>
+                  )}
+                  {g.relatedOpen > 0 && (
+                    <p className="text-[12.5px] text-halo-mist-body mt-2">
+                      {g.relatedOpen} open commitment{g.relatedOpen === 1 ? '' : 's'}
+                    </p>
+                  )}
+
+                  {/*
+                    The breakdown stays collapsed. The brief is explicit that
+                    the workspace keeps showing a clean goal card rather than
+                    five large fields; the thinking is kept so it can be
+                    revisited, not so it can be re-read every visit.
+                  */}
+                  {g.smart && <SmartDetail smart={g.smart} />}
+
+                  {!readOnly && g.mine && (
+                    <button
+                      onClick={() => { setEditing(g.id); setError(null); }}
+                      className="mt-3 text-[12.5px] font-medium text-halo-brand-text hover:text-halo-ink transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
+                    >
+                      Edit goal
+                    </button>
+                  )}
+                </div>
+                {!readOnly && <GoalDone mentorshipId={mentorshipId} goalId={g.id} />}
               </div>
-              {!readOnly && <GoalDone mentorshipId={mentorshipId} goalId={g.id} />}
-            </div>
-          </li>
-        ))}
+            </li>
+          ),
+        )}
 
         {reached.map((g) => (
           <li key={g.id} className="flex items-start gap-2.5 px-1">
@@ -168,6 +191,42 @@ function GoalDone({ mentorshipId, goalId }: { mentorshipId: string; goalId: stri
     >
       Mark reached
     </button>
+  );
+}
+
+/** The five answers, folded away until asked for. */
+function SmartDetail({ smart }: { smart: Record<string, string> }) {
+  const [open, setOpen] = useState(false);
+  const filled = SMART_PROMPTS.filter((p) => smart[p.key]?.trim());
+  if (filled.length === 0) return null;
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-1 text-[12.5px] font-medium text-halo-heather hover:text-halo-ink transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
+      >
+        {open ? 'Hide the thinking' : 'See the thinking'}
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {open && (
+        <dl className="mt-3 space-y-2.5 border-l-2 border-halo-rule pl-3.5">
+          {filled.map((p) => (
+            <div key={p.key}>
+              <dt className="font-ui text-[10px] font-semibold uppercase tracking-[0.12em] text-halo-mist-body">
+                {p.label}
+              </dt>
+              <dd className="text-[13.5px] text-halo-ink leading-relaxed mt-0.5">
+                {p.kind === 'date'
+                  ? new Date(smart[p.key] + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                  : smart[p.key]}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+    </div>
   );
 }
 
