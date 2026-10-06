@@ -260,8 +260,21 @@ check('redirect_uri comes from config, not the request host',
   /redirectUri\(provider\)/.test(callbackRoute) && !/request\.headers\.get\('host'\)/.test(callbackRoute), true);
 
 // Honesty: never claim a meeting exists unless the provider confirmed it.
+/*
+  Rollback, and the verification of the rollback.
+
+  The original assertion only checked that .delete() was called. Production
+  verification showed that was not enough: sessions had no DELETE policy, so
+  the call matched zero rows, reported no error, and left an unjoinable
+  Google Meet conversation behind. Fixed by migration 0034 plus a .select()
+  on the delete and a cancel fallback, so all three are asserted now.
+*/
 check('an online meeting rolls back when the provider fails',
-  /if \(needsCalendar\) \{[\s\S]{0,260}\.delete\(\)/.test(sched), true);
+  /if \(needsCalendar\) \{[\s\S]*?\.delete\(\)\.eq\('id', created\.id\)\.select\('id'\)/.test(sched), true);
+check('the rollback checks that it actually removed the row',
+  /!removed \|\| removed\.length === 0/.test(sched), true);
+check('a surviving row is cancelled so it cannot surface as What\u2019s next',
+  /removed\.length === 0[\s\S]{0,200}status: 'cancelled'/.test(sched), true);
 check('cancel does not mark cancelled when the provider refuses',
   /Could not cancel the calendar invitation\. Nothing was changed\./.test(sched), true);
 check('reschedule updates rather than creating a second event',

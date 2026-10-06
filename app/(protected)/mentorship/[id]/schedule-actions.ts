@@ -179,9 +179,33 @@ export async function planConversation(
 
   if (!result.ok) {
     if (needsCalendar) {
-      // The link was the point. Undo rather than leave a conversation that
-      // claims to be on Google Meet with nowhere to join.
-      await supabase.from('sessions').delete().eq('id', created.id);
+      /*
+        The link was the point. Undo rather than leave a conversation that
+        claims to be on Google Meet with nowhere to join.
+
+        AND VERIFY THE UNDO. A delete that matches no rows under RLS is not
+        an error in PostgREST, it is a successful statement affecting
+        nothing. That is exactly how this failed in production before 0034:
+        the policy did not exist, the delete reported success, and an
+        unjoinable conversation survived as "What's next".
+
+        .select() makes the outcome observable. If the row is somehow still
+        there, it is cancelled instead, which keeps it out of What's next
+        and out of history. Never leave a Meet or Teams conversation with no
+        way to join it.
+      */
+      const { data: removed } = await supabase
+        .from('sessions').delete().eq('id', created.id).select('id');
+
+      if (!removed || removed.length === 0) {
+        await supabase.from('sessions').update({
+          status: 'cancelled',
+          invite_status: 'failed',
+          sync_status: 'failed',
+          sync_error: `Rollback could not delete the session: ${result.error}`,
+        }).eq('id', created.id);
+      }
+
       return { ok: false, error: result.error, needsReconnect: result.needsReconnect };
     }
     await supabase.from('sessions').update({

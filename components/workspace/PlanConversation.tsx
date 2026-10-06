@@ -4,6 +4,7 @@ import { useState, useEffect, useTransition } from 'react';
 import Avatar from '@/components/ui/Avatar';
 import { Check, Video, MapPin, Users } from 'lucide-react';
 import { planConversation } from '@/app/(protected)/mentorship/[id]/schedule-actions';
+import { wallClockToIso, zoneOptions } from '@/lib/calendar/time';
 
 /**
  * Planning the next conversation, without leaving the relationship.
@@ -222,48 +223,4 @@ function Field({
       {children}
     </div>
   );
-}
-
-/**
- * A wall-clock time in a named zone, as a UTC instant.
- *
- * Done by asking Intl what that zone's offset is ON THAT DATE, rather than
- * applying the browser's current offset. Those differ whenever the organiser
- * is in a different zone from the meeting, and also whenever the meeting is
- * on the far side of a daylight-saving change from today, which is the bug
- * that silently moves half of everybody's March meetings by an hour.
- */
-function wallClockToIso(date: string, time: string, zone: string): string | null {
-  if (!date || !time) return null;
-  const naive = new Date(`${date}T${time}:00Z`);
-  if (Number.isNaN(naive.getTime())) return null;
-  const offset = zoneOffsetMs(naive, zone);
-  return new Date(naive.getTime() - offset).toISOString();
-}
-
-function zoneOffsetMs(instant: Date, zone: string): number {
-  try {
-    const dtf = new Intl.DateTimeFormat('en-US', {
-      timeZone: zone, hour12: false,
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-    });
-    const parts = Object.fromEntries(dtf.formatToParts(instant).map((p) => [p.type, p.value]));
-    const asUtc = Date.UTC(
-      Number(parts.year), Number(parts.month) - 1, Number(parts.day),
-      Number(parts.hour === '24' ? '00' : parts.hour), Number(parts.minute), Number(parts.second),
-    );
-    return asUtc - instant.getTime();
-  } catch {
-    return 0;
-  }
-}
-
-/** The viewer's own zone first, then the common ones. */
-function zoneOptions(current: string): string[] {
-  const common = [
-    'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
-    'Europe/London', 'Europe/Berlin', 'Asia/Kolkata', 'Asia/Singapore', 'Australia/Sydney', 'UTC',
-  ];
-  return [current, ...common.filter((z) => z !== current)];
 }
