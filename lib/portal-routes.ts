@@ -13,6 +13,7 @@
 const APP_SEGMENTS = [
   '/admin',
   '/dashboard',
+  '/cohort',
   '/discover',
   '/goals',
   '/guide',

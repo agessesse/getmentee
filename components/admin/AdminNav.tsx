@@ -6,6 +6,9 @@ import { usePathname } from 'next/navigation';
 // Only areas that are actually backed by data. No placeholder pages.
 const TABS = [
   { href: '/admin', label: 'Overview' },
+  // First after Overview: the cohort is the thing the company is currently
+  // trying to prove, so it is where an operator should land.
+  { href: '/admin/cohort', label: 'Cohort' },
   { href: '/admin/users', label: 'Users' },
   { href: '/admin/mentorships', label: 'Mentorships' },
   { href: '/admin/reports', label: 'Reports' },

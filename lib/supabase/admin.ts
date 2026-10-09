@@ -52,24 +52,31 @@ export async function requireAdmin(): Promise<AdminGate> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { ok: false, reason: 'unauthenticated' };
 
-  // First pass through the caller's own client. RLS lets a user read their own
-  // profile row, and is_admin is not user-writable, so this is trustworthy and
-  // it fails a non-admin closed even when the service key is absent. Without
-  // this ordering a non-admin would see the misconfiguration notice instead of
-  // being turned away.
-  const { data: self } = await supabase
-    .from('profiles')
-    .select('is_admin')
-    .eq('id', user.id)
-    .single();
-  if (!self?.is_admin) return { ok: false, reason: 'forbidden' };
+  /*
+    THE FLAG IS READ WITH THE SERVICE ROLE, and it has to be.
 
+    This used to do a first pass through the caller's own client, on the
+    assumption that "RLS lets a user read their own profile row". It does
+    let them read the ROW -- but migration 0015 revoked the column-level
+    SELECT grant on profiles.is_admin, and PostgREST answers a query that
+    touches an ungranted column with "permission denied for table profiles"
+    rather than returning the row without that field.
+
+    So the first pass returned null for everybody, every admin was refused,
+    and the whole /admin surface was unreachable in production. Verified
+    against the live database: select('id, first_name') succeeds for the
+    same user and session, select('is_admin') does not.
+
+    The security property is unchanged. The user id still comes from
+    getUser(), which verifies the session against the auth server rather
+    than trusting a cookie, and is_admin is still read server-side from the
+    source of truth. What is lost is only the ability to refuse a non-admin
+    before discovering the service key is missing, and that case is still
+    handled: no key means 'misconfigured', which renders a notice and grants
+    nothing.
+  */
   const db = serviceClient();
   if (!db) return { ok: false, reason: 'misconfigured' };
-
-  // Second pass with service-role. The elevated client is only returned after
-  // the flag is confirmed against the source of truth, so a stale or spoofed
-  // client-side read cannot hand out cross-user access.
   const { data, error } = await db
     .from('profiles')
     .select('is_admin')

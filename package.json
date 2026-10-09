@@ -19,7 +19,8 @@
     "seed:demo": "tsx scripts/seed-demo.ts",
     "test:shell": "tsx scripts/test-theme-nav.ts",
     "test:time": "tsx scripts/test-calendar-time.ts",
-    "check:grants": "tsx scripts/check-scheduling-grants.ts"
+    "check:grants": "tsx scripts/check-scheduling-grants.ts",
+    "test:cohort": "tsx scripts/test-cohort.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",

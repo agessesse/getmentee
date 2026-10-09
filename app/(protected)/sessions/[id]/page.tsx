@@ -15,6 +15,7 @@ import Spinner from '@/components/ui/Spinner';
 import { format } from 'date-fns';
 import { FORMER_MEMBER } from '@/lib/display-name';
 import SessionCoach from '@/components/sessions/SessionCoach';
+import InterventionPicker from '@/components/cohort/InterventionPicker';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -28,6 +29,7 @@ interface SessionDetail {
   session_type: string;
   notes: string | null;
   mentor_recap: string | null;
+  intervention: string[] | null;
   video_link: string | null;
   status: string;
   mentor: { first_name: string; last_name: string; avatar_url: string | null };
@@ -129,7 +131,7 @@ export default function SessionDetailPage() {
       const [sessionRes, profileRes, reviewRes] = await Promise.all([
         supabase
           .from('sessions')
-          .select('id, mentorship_id, mentor_id, mentee_id, scheduled_at, duration_minutes, session_type, notes, mentor_recap, video_link, status')
+          .select('id, mentorship_id, mentor_id, mentee_id, scheduled_at, duration_minutes, session_type, notes, mentor_recap, video_link, status, intervention')
           .eq('id', id)
           .single(),
         supabase.from('profiles').select('role').eq('id', uid).single(),
@@ -373,6 +375,17 @@ export default function SessionDetailPage() {
           onAgendaChange={(n) => setNotes(n)}
           onActionItemsChanged={() => loadActionItems(session.mentorship_id)}
         />
+      )}
+
+      {/*
+        Asked at the one moment the answer is already in mind: just after a
+        conversation is marked complete. Not a separate step, not required,
+        and the narrative still lives in the recap above.
+      */}
+      {isCompleted && (
+        <div className="mb-6">
+          <InterventionPicker sessionId={session.id} initial={session.intervention ?? []} />
+        </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

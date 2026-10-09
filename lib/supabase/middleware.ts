@@ -17,6 +17,7 @@ const PROTECTED_SUBPATHS_ONLY = new Set(['/mentee', '/mentor']);
 
 const PROTECTED_PATHS = [
   '/dashboard',
+  '/cohort',
   '/discover',
   '/goals',
   '/guide',
