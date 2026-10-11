@@ -31,12 +31,17 @@ function atLeast(name: string, got: number, floor: number) {
 
 // ── 1. Primary navigation stays small ───────────────────────────────────────
 console.log('navigation size');
-check('student has four destinations', navFor('mentee').length, 4);
-check('mentor has four destinations', navFor('mentor').length, 4);
-check('student labels', navFor('mentee').map((i) => i.label),
-  ['Home', 'Mentorship', 'Goals', 'Messages']);
-check('mentor labels', navFor('mentor').map((i) => i.label),
-  ['Home', 'Mentees', 'Conversations', 'Messages']);
+check('student has five destinations', navFor('mentee').length, 5);
+check('mentor has five destinations', navFor('mentor').length, 5);
+/*
+  Both roles get the SAME five. Role changes emphasis inside a destination,
+  not the set of destinations: two different navigations made the two halves
+  of one product look like two products.
+*/
+check('the two roles see identical destinations',
+  navFor('mentee').map((i) => i.label), navFor('mentor').map((i) => i.label));
+check('the five', navFor('mentee').map((i) => i.label),
+  ['Home', 'Network', 'Relationships', 'Messages', 'Me']);
 
 // ── 2. Active state ─────────────────────────────────────────────────────────
 console.log('active state');
@@ -46,26 +51,28 @@ const active = (items: ReturnType<typeof navFor>, path: string) =>
   items.filter((i) => isNavItemActive(i, path)).map((i) => i.label);
 
 check('/dashboard lights Home only', active(student, '/dashboard'), ['Home']);
-check('/mentorships lights Mentorship', active(student, '/mentorships'), ['Mentorship']);
-// The workspace does not exist until Pass 2; the nav is ready for it now so
-// shipping it does not also require a navigation edit.
-check('/mentorship/<id> lights Mentorship', active(student, '/mentorship/abc-123'), ['Mentorship']);
-check('/discover lights Mentorship', active(student, '/discover'), ['Mentorship']);
-check('/requests lights Mentorship', active(student, '/requests'), ['Mentorship']);
-check('/sessions/<id> lights Mentorship for a student', active(student, '/sessions/x'), ['Mentorship']);
-check('/goals lights Goals', active(student, '/goals'), ['Goals']);
+check('/mentorships lights Relationships', active(student, '/mentorships'), ['Relationships']);
+check('/mentorship/<id> lights Relationships', active(student, '/mentorship/abc-123'), ['Relationships']);
+// Goals and conversations are not destinations; they belong to a
+// relationship and must light the relationship.
+check('/goals lights Relationships', active(student, '/goals'), ['Relationships']);
+check('/sessions/<id> lights Relationships', active(student, '/sessions/x'), ['Relationships']);
+check('/schedule lights Relationships', active(mentor, '/schedule'), ['Relationships']);
+check('/requests lights Relationships', active(student, '/requests'), ['Relationships']);
+// Discovery and other people's profiles belong to Network.
+check('/discover lights Network', active(student, '/discover'), ['Network']);
+check('/mentor/<id> lights Network', active(student, '/mentor/abc'), ['Network']);
+check('/mentee/<id> lights Network', active(mentor, '/mentee/abc'), ['Network']);
 check('/messages lights Messages', active(student, '/messages'), ['Messages']);
-check('/sessions/<id> lights Conversations for a mentor', active(mentor, '/sessions/x'), ['Conversations']);
-check('/schedule lights Conversations for a mentor', active(mentor, '/schedule'), ['Conversations']);
-check('/mentee/<id> lights Mentees', active(mentor, '/mentee/abc'), ['Mentees']);
+check('/me lights Me', active(student, '/me'), ['Me']);
+check('/profile/setup lights Me', active(student, '/profile/setup'), ['Me']);
 
 // A prefix test that lit Home everywhere was the bug this guards against.
 check('/goals does not light Home', active(student, '/goals').includes('Home'), false);
-check('an unknown path lights nothing', active(student, '/profile/setup'), []);
-// /mentorships must not be swallowed by the /mentorship prefix, or the list
-// and the workspace would both light and neither would read as current.
-check('exactly one item is ever active (student)',
-  [...new Set(['/dashboard','/mentorships','/mentorship/x','/goals','/messages','/discover','/sessions/y']
+check('an unknown path lights nothing', active(student, '/learn'), []);
+// Exactly one destination may ever be current.
+check('exactly one item is ever active',
+  [...new Set(['/dashboard','/mentorships','/mentorship/x','/goals','/messages','/discover','/sessions/y','/me','/mentor/z','/schedule']
     .map((p) => active(student, p).length))], [1]);
 
 // ── 3. The contrast guard ───────────────────────────────────────────────────

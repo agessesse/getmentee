@@ -1,10 +1,9 @@
 import {
   Home,
   Handshake,
-  Target,
   MessageSquare,
   Users,
-  CalendarDays,
+  CircleUser,
 } from 'lucide-react';
 
 /**
@@ -49,43 +48,55 @@ export interface AppNavItem {
   workspace is the next pass; naming it here means the nav lights correctly
   the moment it ships rather than needing a second edit then.
 */
-const STUDENT: AppNavItem[] = [
+/*
+  FIVE DESTINATIONS, AND THE SAME FIVE FOR BOTH ROLES.
+
+  Home        what needs me today
+  Network     people I could learn from, or help
+  Relationships  the actual work, per person
+  Messages    talking to them
+  Me          who I am here
+
+  WHAT CHANGED AND WHY. The previous four differed by role: a student saw
+  Goals and a mentor saw Conversations, so the two halves of the same
+  product had different shapes and nothing in the navigation suggested
+  Mentable was a network at all. Goals are not a destination -- they belong
+  to a relationship, and they are on its page. Conversations are not a
+  destination either, for the same reason.
+
+  What was missing was identity and discovery. A product where you cannot
+  see your own profile or find another person is a programme portal, not a
+  network, and no amount of polish elsewhere fixes that.
+
+  Role now changes EMPHASIS INSIDE a destination rather than the set of
+  destinations. A mentor's Relationships lists mentees; a student's lists
+  mentors. Same page, same word, one product.
+*/
+const PRIMARY: AppNavItem[] = [
   { href: '/dashboard', label: 'Home', icon: Home },
   {
-    href: '/mentorships',
-    label: 'Mentorship',
-    icon: Handshake,
-    also: ['/mentorship', '/discover', '/requests', '/sessions', '/schedule', '/mentor'],
+    href: '/network',
+    label: 'Network',
+    icon: Users,
+    also: ['/discover', '/mentor', '/mentee'],
   },
-  { href: '/goals', label: 'Goals', icon: Target },
+  {
+    href: '/mentorships',
+    label: 'Relationships',
+    icon: Handshake,
+    also: ['/mentorship', '/requests', '/sessions', '/schedule', '/goals'],
+  },
   { href: '/messages', label: 'Messages', icon: MessageSquare },
+  { href: '/me', label: 'Me', icon: CircleUser, also: ['/profile'] },
 ];
 
 /*
-  A mentor's second item is the people, not the relationships: they hold
-  several at once and think in names. "Conversations" is the word mentors use
-  for the thing the database calls a session, and it covers both the one being
-  scheduled and the ones already held.
+  Takes the role so call sites do not change and so a future destination can
+  legitimately differ, but today both roles get the same five. That is the
+  point: one product, not two.
 */
-const MENTOR: AppNavItem[] = [
-  { href: '/dashboard', label: 'Home', icon: Home },
-  {
-    href: '/mentorships',
-    label: 'Mentees',
-    icon: Users,
-    also: ['/mentorship', '/requests', '/mentee', '/impact'],
-  },
-  {
-    href: '/schedule',
-    label: 'Conversations',
-    icon: CalendarDays,
-    also: ['/sessions'],
-  },
-  { href: '/messages', label: 'Messages', icon: MessageSquare },
-];
-
-export function navFor(role: 'mentor' | 'mentee'): AppNavItem[] {
-  return role === 'mentor' ? MENTOR : STUDENT;
+export function navFor(_role: 'mentor' | 'mentee'): AppNavItem[] {
+  return PRIMARY;
 }
 
 /**

@@ -162,5 +162,57 @@ console.log('relationship health');
   eq('worst sorts first', healthRank('at_risk') < healthRank('on_track'), true);
 }
 
+// ── Email safety rail ───────────────────────────────────────────────────────
+/*
+  The property worth testing is not that mail sends. It is that mail
+  CANNOT send to a real person by accident. Twenty students are one typo
+  away from a test blast, so the default state of the module must be
+  "refuses", and turning it on must require a named environment change.
+*/
+console.log('email safety');
+{
+  const read = (f: string) => require('fs').readFileSync(f, 'utf8') as string;
+  /*
+    Strip comments before asserting anything about code. These files
+    explain at length that they do NOT do tracking or campaigns, and a bare
+    word match kept flagging the explanation. Third time this exact false
+    positive has appeared across the suites, so it is a helper now.
+  */
+  const codeOnly = (t: string) =>
+    t.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  const src = codeOnly(read('lib/email/send.ts'));
+  const msgs = codeOnly(read('lib/email/messages.ts'));
+
+  eq('email module is server-only', read('lib/email/send.ts').includes("import 'server-only'"), true);
+  eq('sending requires an explicit live flag',
+    /MENTABLE_EMAIL_LIVE === 'true'/.test(src), true);
+  eq('live sending also requires production',
+    /NODE_ENV === 'production' && process\.env\.MENTABLE_EMAIL_LIVE/.test(src), true);
+  eq('non-live sends are restricted to an allowlist',
+    /allowlist\(\)\.includes/.test(src), true);
+  eq('the guard runs before any network call',
+    src.indexOf('maySendTo(email.to)') < src.indexOf('fetch(ENDPOINT'), true);
+  eq('an unconfigured provider refuses rather than throwing',
+    /reason: 'not_configured'/.test(src), true);
+  eq('a provider outage never throws at the caller',
+    /catch \(e\)[\s\S]{0,160}reason: 'failed'/.test(src), true);
+  // No tracking, no campaigns: these are transactional messages only.
+  eq('no tracking or campaign machinery', /open_rate|utm_|campaign|unsubscribe_url|pixel/i.test(src + msgs), false);
+  eq('the api key never reaches a message body', /RESEND_API_KEY/.test(msgs), false);
+  /*
+    Counted from source, not by importing: messages.ts is marked
+    'server-only', which throws the moment a test runner requires it. That
+    guard is doing its job, so the test reads the file instead.
+  */
+  const keys = [...msgs.matchAll(/^  ([a-zA-Z]+): \(/gm)].map((m) => m[1]);
+  eq('nine transactional messages', keys.length, 9);
+  eq('covers the selection decisions both ways',
+    keys.includes('studentSelected') && keys.includes('studentNotSelected'), true);
+  eq('covers the mentor commitment path',
+    keys.includes('mentorInvitation') && keys.includes('mentorCommitted'), true);
+  eq('covers the match introduction', keys.includes('matchIntroduction'), true);
+  eq('covers the endline request', keys.includes('endlineRequest'), true);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

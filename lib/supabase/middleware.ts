@@ -25,6 +25,8 @@ const PROTECTED_PATHS = [
   '/learn',
   '/mentee',
   '/mentor',
+  '/me',
+  '/network',
   '/mentorship',
   '/mentorships',
   '/messages',

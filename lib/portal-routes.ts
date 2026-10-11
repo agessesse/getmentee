@@ -19,6 +19,8 @@ const APP_SEGMENTS = [
   '/guide',
   '/impact',
   '/learn',
+  '/me',
+  '/network',
   '/mentorship',
   '/mentorships',
   '/messages',
