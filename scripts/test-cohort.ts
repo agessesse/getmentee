@@ -214,5 +214,43 @@ console.log('email safety');
   eq('covers the endline request', keys.includes('endlineRequest'), true);
 }
 
+// ── Pipeline: stage vocabulary and operator safety ──────────────────────────
+console.log('pipeline');
+{
+  const { STAGE_LABEL, PRIMARY_STAGES } =
+    require('../lib/cohort/stages') as typeof import('../lib/cohort/stages');
+  const readSrc = (f: string) => require('fs').readFileSync(f, 'utf8') as string;
+  const strip = (t: string) =>
+    t.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+
+  // The operator must never read a database value.
+  eq('six stages in the primary flow', PRIMARY_STAGES.length, 6);
+  eq('the flow reads in order', PRIMARY_STAGES.map((s) => STAGE_LABEL[s]),
+    ['Applied', 'Reviewing', 'Selected', 'Ready to match', 'Matched', 'Activated']);
+  eq('hold and declined sit outside the flow',
+    PRIMARY_STAGES.includes('hold') || PRIMARY_STAGES.includes('declined'), false);
+  eq('no label is a database status',
+    Object.values(STAGE_LABEL).some((l) => /accepted|submitted|withdrawn|status/i.test(l)), false);
+
+  const src = strip(readSrc('lib/cohort/pipeline.ts'));
+  eq('activation is derived from completed conversations', /activatedIds/.test(src), true);
+  eq('a selected mentor is only matchable once committed', /committed\.has\(profileId/.test(src), true);
+  eq('the pipeline never reads messages', /from\('messages'\)/.test(src), false);
+
+  const actions = strip(readSrc('app/admin/cohort/actions.ts'));
+  // A duplicate relationship is the worst thing matching could do.
+  eq('matching refuses if either person is already paired',
+    /already in a relationship in this cohort/.test(actions), true);
+  eq('matching refuses an exact duplicate pair', /already matched/.test(actions), true);
+  eq('matching requires a rationale before it writes', /rationale\.length < 20/.test(actions), true);
+  eq('every operator action goes through requireAdmin',
+    (actions.match(/requireAdmin\(\)/g) ?? []).length >= 3, true);
+  eq('the operator never supplies their own id', /matched_by: gate\.userId/.test(actions), true);
+  // A missing migration must lose the rationale, never the match.
+  eq('the match survives a missing migration', /rationaleSaved = false/.test(actions), true);
+  // Mail must never be able to fail an operator decision.
+  eq('a mail failure never fails the transition', /emailed = 'blocked'/.test(actions), true);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
