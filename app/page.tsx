@@ -77,40 +77,40 @@ export default function LandingPage() {
                 id="hero-heading"
                 className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-5 max-w-3xl"
               >
-                Mentorship shouldn&apos;t<br />
-                depend on luck.
+                The right people are<br />
+                already in your network.
               </h1>
 
               {/*
-                One sentence, and it does the whole job: who it is for
-                (communities), what it does (turns experience into
-                mentorship), and the promise that separates it from an
-                introduction service (that goes somewhere).
+                THE COMPANY SHIFT, IN ONE SENTENCE.
 
-                WHAT THIS REPLACED. A four-line standfirst explaining that two
-                people can have the same ability and not the same access, then
-                a second clause about structure after the introduction. Both
-                true, and both arguments the rest of the page already makes
-                with interface rather than prose. A hero that argues has
-                already lost the thirty seconds it was given.
+                The previous hero said mentorship should not depend on luck,
+                which is true and which put Mentable in the same category as
+                every other mentorship programme. The headline now names the
+                thing an organisation already has and cannot see, and the
+                sentence below says what Mentable does about it.
+
+                "Who should know whom" is the product. Not matching, not
+                mentorship, not AI: the observation that a university with
+                300,000 alumni still cannot tell one sophomore who to call.
               */}
               <p
                 className="font-display text-halo-heather leading-[1.4] max-w-xl mb-7"
                 style={{ fontSize: 'clamp(1.15rem, 1.75vw, 1.4rem)' }}
               >
-                Mentable helps communities turn experience into mentorship that
-                goes somewhere.
+                Mentable helps organizations identify who should know whom, then
+                turns those introductions into relationships.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
                 <CtaButton
-                  href="#product"
-                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero_explore' })}
+                  href="/organizations#talk"
+                  onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero_talk' })}
                 >
-                  Explore Mentable
+                  Talk to us
                 </CtaButton>
-                <CtaButton href="/organizations" variant="secondary">
-                  For organizations
+                <CtaButton href="#product" variant="secondary">
+                  See how it works
                 </CtaButton>
               </div>
 
@@ -122,11 +122,16 @@ export default function LandingPage() {
                 the company is right now, not the thing a first-time visitor
                 needs in order to understand the product. One line, one link.
               */}
+              {/*
+                Cohort 001 is no longer the pitch. It is the evidence: the
+                first place Mentable's matching is being tested on real
+                people, named as such.
+              */}
               <p className="mt-6 text-[14px] text-halo-mist-body">
                 <span className="font-ui text-[10.5px] font-semibold uppercase tracking-[0.14em] text-halo-brand-text mr-2">
-                  Now open
+                  First proving ground
                 </span>
-                Cohort 001: ten sophomores, ten mentors, one semester.{' '}
+                Cohort 001: ten students, ten alumni, one semester.{' '}
                 <Link
                   href="/apply?role=mentee&cohort=cohort-001"
                   onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'hero_cohort_line' })}

@@ -80,19 +80,21 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
   /*
     What a stranger sees when the link is pasted into iMessage, Instagram or
-    LinkedIn. The old description said Mentable "connects ambitious students
-    with experienced professionals", present tense, which described a working
-    marketplace rather than the thing that exists. These say what it is and
-    that it is early, because the first people we want are the ones who find
-    that interesting rather than disqualifying.
+    LinkedIn.
+
+    The previous description was about mentorship depending on luck, which
+    described a programme. This describes the company: organizations have
+    the people already, and cannot see which pairs matter. Present tense
+    about what the software does, with no claim about customers we do not
+    have.
   */
-  title: 'Mentable: find someone worth learning from',
+  title: 'Mentable: who should know whom',
   description:
-    'Good mentorship mostly depends on luck. Mentable is being built to make it depend on that less. We’re early, and looking for the first students and mentors to build it with us.',
+    'Organizations already contain the right people. Mentable identifies who should know whom, then turns those introductions into relationships.',
   openGraph: {
-    title: 'Mentable: find someone worth learning from',
+    title: 'Mentable: who should know whom',
     description:
-      'Good mentorship mostly depends on luck. We’re building Mentable to make it depend on that less — and looking for the first students and mentors to build it with us.',
+      'Organizations already contain the right people. Mentable identifies who should know whom, then turns those introductions into relationships.',
     type: 'website',
     siteName: 'Mentable',
     // Next only emits og:url when it is given one; without it a scraper falls
@@ -101,9 +103,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mentable: find someone worth learning from',
+    title: 'Mentable: who should know whom',
     description:
-      'Good mentorship mostly depends on luck. We’re building Mentable to make it depend on that less — and looking for the first students and mentors to build it with us.',
+      'Organizations already contain the right people. Mentable identifies who should know whom, then turns those introductions into relationships.',
   },
 };
 

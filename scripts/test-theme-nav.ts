@@ -41,7 +41,7 @@ check('mentor has five destinations', navFor('mentor').length, 5);
 check('the two roles see identical destinations',
   navFor('mentee').map((i) => i.label), navFor('mentor').map((i) => i.label));
 check('the five', navFor('mentee').map((i) => i.label),
-  ['Home', 'Network', 'Relationships', 'Messages', 'Me']);
+  ['Home', 'Discover', 'Relationships', 'Messages', 'Me']);
 
 // ── 2. Active state ─────────────────────────────────────────────────────────
 console.log('active state');
@@ -60,9 +60,9 @@ check('/sessions/<id> lights Relationships', active(student, '/sessions/x'), ['R
 check('/schedule lights Relationships', active(mentor, '/schedule'), ['Relationships']);
 check('/requests lights Relationships', active(student, '/requests'), ['Relationships']);
 // Discovery and other people's profiles belong to Network.
-check('/discover lights Network', active(student, '/discover'), ['Network']);
-check('/mentor/<id> lights Network', active(student, '/mentor/abc'), ['Network']);
-check('/mentee/<id> lights Network', active(mentor, '/mentee/abc'), ['Network']);
+check('/discover lights Discover', active(student, '/discover'), ['Discover']);
+check('/mentor/<id> lights Discover', active(student, '/mentor/abc'), ['Discover']);
+check('/mentee/<id> lights Discover', active(mentor, '/mentee/abc'), ['Discover']);
 check('/messages lights Messages', active(student, '/messages'), ['Messages']);
 check('/me lights Me', active(student, '/me'), ['Me']);
 check('/profile/setup lights Me', active(student, '/profile/setup'), ['Me']);

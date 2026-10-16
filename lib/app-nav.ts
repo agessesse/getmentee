@@ -76,7 +76,7 @@ const PRIMARY: AppNavItem[] = [
   { href: '/dashboard', label: 'Home', icon: Home },
   {
     href: '/network',
-    label: 'Network',
+    label: 'Discover',
     icon: Users,
     also: ['/discover', '/mentor', '/mentee'],
   },
