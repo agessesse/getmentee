@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { respondToIntroduction } from '@/app/(protected)/network/actions';
 import Link from 'next/link';
 import { ClipboardList, CheckCircle } from 'lucide-react';
 import RequestCard from '@/components/requests/RequestCard';
@@ -260,21 +261,24 @@ export default function RequestsPage() {
     const supabase = createClient();
 
     if (newStatus === 'approved') {
-      // One transaction: the status flip and the mentorship insert commit or
-      // fail together. Previously these were two separate writes, so a failed
-      // insert left the request approved with no mentorship and no way to
-      // retry, because it was no longer pending.
-      const { error: rpcError } = await supabase.rpc(
-        'approve_mentorship_request',
-        { p_request_id: requestId }
-      );
+      /*
+        THIS WAS BROKEN IN PRODUCTION.
 
-      if (rpcError) {
-        setActionError(
-          rpcError.message.includes('capacity')
-            ? 'You have reached your mentee capacity.'
-            : 'Something went wrong. Please try again.'
-        );
+        It called the RPC approve_mentorship_request(), which migration
+        0018 defines but which is NOT PRESENT in the database — verified
+        by invoking it as an authenticated mentor, which answers "could
+        not find the function". Every mentor who pressed Approve got
+        "Something went wrong", so no request could become a relationship.
+
+        Replaced with a server action that does the same work in the only
+        order RLS permits, and reverts the status if the mentorship insert
+        fails. Restoring the atomic function is still the better fix and
+        the SQL is in the handover; this makes accepting work today.
+      */
+      const result = await respondToIntroduction(requestId, true);
+
+      if (!result.ok) {
+        setActionError(result.error);
         setActionLoadingId(null);
         return;
       }

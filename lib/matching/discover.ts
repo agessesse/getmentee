@@ -29,6 +29,8 @@ import {
 export interface DiscoverView {
   seekerName: string;
   recommendations: Recommendation[];
+  /** Existing introduction state per candidate, so nobody asks twice. */
+  askedByCandidate: Record<string, 'pending' | 'approved' | 'declined'>;
   /** Why there is nothing, when there is nothing. */
   empty: 'no_members' | 'thin_profile' | 'no_overlap' | null;
   /** Real members considered, before scoring. Shown in the empty state. */
@@ -43,13 +45,15 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const [{ data: me }, { data: menteeProfile }, { data: connections }] = await Promise.all([
+  const [{ data: me }, { data: menteeProfile }, { data: connections }, { data: asked }] = await Promise.all([
     supabase.from('public_profiles')
       .select('id, first_name, role, university, location').eq('id', user.id).maybeSingle(),
     supabase.from('mentee_profiles')
       .select('interest_tags, career_interests, industries_of_interest, goals, major').eq('id', user.id).maybeSingle(),
     // RLS scopes this to the caller's own relationships.
     supabase.from('mentorships').select('mentee_id, mentor_id').eq('status', 'active'),
+    // RLS scopes this to requests the caller is part of.
+    supabase.from('mentorship_requests').select('mentor_id, mentee_id, status'),
   ]);
 
   if (!me) return null;
@@ -124,9 +128,16 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
 
   const recommendations = recommend(seeker, candidates, alreadyConnected);
 
+  const askedByCandidate: Record<string, 'pending' | 'approved' | 'declined'> = {};
+  for (const r of asked ?? []) {
+    if (r.mentee_id !== user.id) continue;
+    askedByCandidate[r.mentor_id as string] = r.status as 'pending' | 'approved' | 'declined';
+  }
+
   return {
     seekerName: seeker.firstName,
     recommendations,
+    askedByCandidate,
     empty: recommendations.length === 0 ? emptyReason(seeker, candidates.length) : null,
     candidatePool: candidates.length,
   };

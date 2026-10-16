@@ -129,6 +129,29 @@ console.log('no fabricated precision');
   eq('no reason renders a percentage', r.reasons.some((x) => /%|\bscore\b|\bmatch\b\s*\d/i.test(x.text)), false);
 }
 
+// ── The outreach draft is addressed to the right person ────────────────────
+/*
+  A real bug caught in production verification: the opener is advice to the
+  SEEKER, and pasting it into a message produced "Hi David — I wanted to ask
+  how David would approach it starting from where you are now." Wrong
+  person, name twice, wrong tense.
+*/
+console.log('outreach draft');
+{
+  const r = recommend(student({ firstName: 'Maya', interests: ['Recruiting'] }), [mentor()])[0];
+  const d = r.outreach!;
+  eq('addressed to the candidate', d.startsWith('Hi Drew'), true);
+  eq('names them once', (d.match(/Drew/g) ?? []).length, 1);
+  eq('written in first person', /\bI'm\b|\bI'd\b|\bI\b/.test(d), true);
+  // The opener is advice; the draft is a message. They must differ.
+  eq('draft is not the opener', d === r.opener, false);
+  eq('the opener still addresses the seeker', r.opener!.startsWith('Ask '), true);
+  // A goal-driven draft quotes the goal, not the reader-facing phrasing.
+  const g = recommend(student({ firstName: 'Maya', goals: ['Break into investment banking'] }), [mentor()])[0];
+  eq('a goal draft references the goal', g.outreach!.includes('break into investment banking'), true);
+  eq('no draft says "from where you are now"', /where you are now/.test(g.outreach!), false);
+}
+
 // ── Empty states tell the truth about WHY ──────────────────────────────────
 console.log('empty states');
 eq('an empty network says so', emptyReason(student({ interests: ['x'], goals: ['y'] }), 0), 'no_members');

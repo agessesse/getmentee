@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Avatar from '@/components/ui/Avatar';
-import { ArrowRight } from 'lucide-react';
+import RequestIntroduction from '@/components/profile/RequestIntroduction';
 import type { DiscoverView } from '@/lib/matching/discover';
 
 /**
@@ -27,7 +27,7 @@ export default function DiscoverList({ view }: { view: DiscoverView }) {
 
   return (
     <ul className="space-y-4">
-      {view.recommendations.map(({ candidate: c, reasons, opener }) => (
+      {view.recommendations.map(({ candidate: c, reasons, opener, outreach }) => (
         <li key={c.id} className="rounded-2xl border border-halo-rule p-5">
           <div className="flex items-start gap-4">
             <Avatar src={c.avatarUrl} name={c.fullName} size="md" />
@@ -69,18 +69,24 @@ export default function DiscoverList({ view }: { view: DiscoverView }) {
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            {/*
-              Links to the profile rather than firing a request. A first-
-              class introduction flow is the next build; a button that
-              looked like it sent one and did not would be worse than this.
-            */}
+          {/*
+            THE DEAD END IS GONE. This used to link to a profile and stop,
+            which meant the homepage promised an introduction the product
+            could not make. It now creates a real mentorship_request, which
+            the other person answers in /requests.
+          */}
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+            <RequestIntroduction
+              mentorId={c.id}
+              firstName={c.firstName}
+              suggestion={outreach ?? `Hi ${c.firstName} — I'd value twenty minutes of your time if you can spare it.`}
+              alreadyAsked={view.askedByCandidate[c.id] ?? null}
+            />
             <Link
               href={`/network/${c.id}`}
-              className="group inline-flex items-center gap-2 rounded-xl border border-halo-rule px-4 py-2 text-[13.5px] font-medium text-halo-ink hover:bg-halo-veil transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
+              className="text-[13px] font-medium text-halo-heather hover:text-halo-ink underline underline-offset-2 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-halo-purple"
             >
-              See {c.firstName}&rsquo;s profile
-              <ArrowRight className="h-3.5 w-3.5 arrow-slide group-hover:translate-x-0.5" aria-hidden="true" />
+              See full profile
             </Link>
           </div>
         </li>

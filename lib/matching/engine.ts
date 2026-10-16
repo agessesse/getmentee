@@ -77,6 +77,17 @@ export interface Recommendation {
   score: number;
   /** One line the two of them could actually open with. */
   opener: string | null;
+  /**
+   * A first draft of the message, addressed TO the candidate.
+   *
+   * Separate from `opener` because they are written for different
+   * readers and conflating them produced a real bug: the opener is advice
+   * to the seeker ("Ask how Drew would approach it"), and pasting it into
+   * a message to Drew read "Hi Drew — I wanted to ask how Drew would
+   * approach it starting from where you are now." Second person, his
+   * name once, addressed to him.
+   */
+  outreach: string | null;
 }
 
 /* Comparison that survives casing, plurals and punctuation without
@@ -215,6 +226,31 @@ export function reasonsFor(seeker: Seeker, c: Candidate): Reason[] {
   return reasons.sort((a, b) => b.weight - a.weight);
 }
 
+/**
+ * A draft message to the candidate, built from the same evidence.
+ *
+ * Always editable and never sent automatically. It exists because the
+ * empty box is the actual reason introductions do not happen, not because
+ * Mentable should write for people.
+ */
+export function outreachFor(seeker: Seeker, c: Candidate, reasons: Reason[]): string | null {
+  const top = reasons[0];
+  if (!top) return null;
+  const me = seeker.firstName ? `I'm ${seeker.firstName}. ` : '';
+  switch (top.kind) {
+    case 'goal':
+      return `Hi ${c.firstName} — ${me}I'm working toward ${(seeker.goals[0] ?? '').replace(/\.$/, '').toLowerCase()}, and it looks like you've done exactly that. Would you be open to a short conversation?`;
+    case 'expertise':
+      return `Hi ${c.firstName} — ${me}I'm trying to understand ${top.evidence[0]} and saw that's your area. Would you have twenty minutes to talk about what it's actually like?`;
+    case 'industry':
+      return `Hi ${c.firstName} — ${me}I'm hoping to get into ${top.evidence[0]} and would value hearing how you got there. Would you be open to a short conversation?`;
+    case 'school':
+      return `Hi ${c.firstName} — ${me}I'm at ${top.evidence[0]} too, and I'd value hearing how you decided what to do after. Would you have twenty minutes?`;
+    default:
+      return `Hi ${c.firstName} — ${me}I'd value twenty minutes of your time if you can spare it.`;
+  }
+}
+
 /** Something specific to actually ask, drawn from the strongest reason. */
 export function openerFor(c: Candidate, reasons: Reason[]): string | null {
   const top = reasons[0];
@@ -257,6 +293,7 @@ export function recommend(
       reasons,
       score: reasons.reduce((n, r) => n + r.weight, 0),
       opener: openerFor(c, reasons),
+      outreach: outreachFor(seeker, c, reasons),
     });
   }
 
