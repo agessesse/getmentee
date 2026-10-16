@@ -142,9 +142,23 @@ export default function MatchDemo() {
             </li>
           ))}
         </ul>
+        {/*
+          NOT "Introduction ready".
+
+          There is no introduction object in this product and there never
+          was one. The canonical model is recommendation -> request ->
+          approved request -> mentorship, and "ready" claimed a fifth thing
+          sitting in a queue waiting to be sent. Nothing was ever sent, and
+          nobody could have found the thing the label named.
+
+          What the engine actually did is a judgement, so the label is a
+          judgement: these two are worth introducing, and the reasons above
+          are why. A person still has to ask, and the other still has to
+          say yes.
+        */}
         <p className="mt-4 inline-flex items-center gap-2 rounded-xl bg-halo-veil border border-halo-rule px-3 py-1.5 text-[12.5px] font-medium text-halo-ink">
           <span className="h-1.5 w-1.5 rounded-full bg-halo-brand-line" aria-hidden="true" />
-          Introduction ready
+          Worth an introduction
         </p>
       </div>
 

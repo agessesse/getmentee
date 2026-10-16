@@ -21,7 +21,15 @@ import Rise from '@/components/marketing/Rise';
   mentorship. The section's job now is the harder claim: a matching
   algorithm on its own is easy to dismiss, and what makes Mentable
   defensible is owning what happens next. Six steps, because the sixth is
-  the point — the relationship persists, and the system learns from it.
+  the point: the relationship persists.
+
+  STEP SIX USED TO SAY "the outcome informs the next match". It does not.
+  Nothing in the product currently reads a finished conversation and
+  changes a future recommendation -- the weights in lib/matching/engine.ts
+  are hand-set constants, and relationship_outcomes has no rows in it yet.
+  A claim about learning is the easiest claim to make and the hardest for
+  a reader to check, which is exactly why it has to be earned first. When
+  there is outcome data and the engine reads it, this line can say so.
 */
 const STEPS = [
   { n: '01', k: 'Recommended', v: 'Mentable says who should meet, and why.' },
@@ -29,7 +37,7 @@ const STEPS = [
   { n: '03', k: 'Scheduled', v: 'A real conversation, in a real calendar.' },
   { n: '04', k: 'Met', v: 'Both arrive prepared, with something to cover.' },
   { n: '05', k: 'Followed up', v: 'What they agreed to does not evaporate.' },
-  { n: '06', k: 'Relationship', v: 'It keeps going, and the outcome informs the next match.' },
+  { n: '06', k: 'Relationship', v: 'It keeps going, and the history stays in one place.' },
 ];
 
 export default function HowItWorks() {

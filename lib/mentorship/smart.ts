@@ -14,6 +14,8 @@
  * fluency is worth less than the guarantee.
  */
 
+import { lowerFirst } from '@/lib/text';
+
 export interface SmartFields {
   specific: string;
   measurable: string;
@@ -92,28 +94,6 @@ export function consolidate(s: SmartFields): { title: string; description: strin
   if (clean(s.achievable)) parts.push(`It’s realistic because ${lowerFirst(clean(s.achievable))}.`);
 
   return { title, description: parts.join(' ') };
-}
-
-/*
-  Lower-casing the first letter lets an answer written as a standalone
-  sentence read correctly after a lead-in ("You'll know it's done when ...").
-
-  THREE THINGS ARE LEFT ALONE, and the first was a real bug caught by the
-  test suite:
-
-    "I"        the pronoun. "when i can explain the difference" is wrong
-               English, and this is the single most likely way a Measurable
-               answer begins.
-    acronyms   "UNC recruiting" must not become "uNC recruiting"
-    proper nouns, by the same test: a capital in the second position means
-               the word is not an ordinary sentence opener.
-*/
-function lowerFirst(v: string): string {
-  if (!v) return v;
-  // The pronoun I, alone or contracted (I'm, I've, I'll).
-  if (/^I(\s|’|'|$)/.test(v)) return v;
-  if (v.length > 1 && /[A-Z]/.test(v[1])) return v;
-  return v[0].toLowerCase() + v.slice(1);
 }
 
 /** Only persist fields that were actually filled in. */

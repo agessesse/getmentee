@@ -152,6 +152,146 @@ console.log('outreach draft');
   eq('no draft says "from where you are now"', /where you are now/.test(g.outreach!), false);
 }
 
+/*
+  ── RELATIONSHIP-INTELLIGENCE INPUTS (migration 0039) ───────────────────────
+
+  The engine's ceiling was never its ranking, it was its inputs: measured in
+  production, 25 of 25 mentors had an industry and ZERO had can_help_with.
+  These assertions cover the signals that read the richer fields, and two
+  properties that matter more than any individual sentence:
+
+    a missing field produces NO reason, never a weaker or guessed one
+    one fact produces ONE sentence, however many signals could claim it
+*/
+console.log('richer inputs');
+{
+  const kinds = (ss: Partial<Seeker>, mm: Partial<Candidate>) =>
+    reasonsFor(student(ss), mentor(mm)).map((r) => r.kind);
+
+  /*
+    Every new field, absent, is silent rather than speculative. The
+    baseline here is expertise + experience: the fixture mentor is five
+    years in, which is a real reason and fires on its own.
+  */
+  eq('no new fields means no new reasons',
+    kinds({ interests: ['Recruiting'] }, {}), ['expertise', 'experience']);
+
+  // 1. Transition: the strongest thing one person can tell another.
+  eq('a shared transition is named',
+    kinds({ transitionsNavigating: ['Consulting to private equity'] },
+          { transitionsMade: ['Consulting to private equity'] }), ['transition']);
+  eq('a transition they did not make is silent',
+    kinds({ transitionsNavigating: ['Banking to tech'] },
+          { transitionsMade: ['Consulting to private equity'] }), []);
+  {
+    const [r] = reasonsFor(
+      student({ transitionsNavigating: ['Consulting to private equity'] }),
+      mentor({ transitionsMade: ['Consulting to private equity'] }));
+    eq('the transition sentence keeps the tag intact',
+      r.text, 'Drew has made the same move you are making: Consulting to private equity.');
+  }
+
+  // 2. Situation: what they offered to help with, not what they are tagged with.
+  eq('an offered situation outranks subject overlap',
+    kinds({ interests: ['Leveraged Finance'],
+            intent: { objective: 'get through IB recruiting', lookingFor: ['Investment banking recruiting'] } },
+          { canHelpWith: ['Investment banking recruiting'] })[0], 'situation');
+  /*
+    The pre-0039 path: a subject named inside a situation. This is what
+    makes can_help_with worth filling in before member_intent exists.
+  */
+  eq('a subject named inside a situation counts',
+    kinds({ interests: ['Investment Banking'] },
+          { expertise: [], industry: null, yearsExperience: null,
+            canHelpWith: ['Investment banking recruiting'] }), ['situation']);
+  eq('an unrelated situation stays silent',
+    kinds({ interests: ['Real Estate'] },
+          { expertise: [], industry: null, yearsExperience: null,
+            canHelpWith: ['Investment banking recruiting'] }), []);
+  eq('usefulTo matched against a community counts as a situation',
+    kinds({ communities: ['First-generation students'] },
+          { usefulTo: ['First-generation students'] }), ['situation']);
+
+  // 3. Intent: dated, quoted back, and gone when the intent closes.
+  {
+    const [r] = reasonsFor(
+      student({ intent: { objective: 'decide between two offers in Private Equity', byDate: '2026-03-01' } }),
+      mentor({ expertise: ['Private Equity'] }));
+    eq('intent is quoted in the seeker\'s own words',
+      r.text.includes('decide between two offers'), true);
+    eq('a bare date is said, not printed', r.text.includes('March 1'), true);
+    eq('the ISO form never reaches the reader', r.text.includes('2026-03-01'), false);
+  }
+  eq('an intent nobody can serve is silent',
+    kinds({ intent: { objective: 'learn to sail' } }, {}), []);
+
+  // 4/5. Company and function.
+  eq('a target company is named',
+    kinds({ targetCompanies: ['Blackstone'] }, { companiesKnown: ['Blackstone'] }), ['company']);
+  eq('a shared function is named',
+    kinds({ functionsExploring: ['Product management'] }, { functions: ['Product management'] }), ['function']);
+
+  // 6. Enjoyment is a different fact from qualification, and outranks it.
+  {
+    const plain = reasonsFor(student({ interests: ['Recruiting'] }), mentor({}))[0];
+    const keen = reasonsFor(student({ interests: ['Recruiting'] }),
+                            mentor({ topicsEnjoyed: ['Recruiting'] }))[0];
+    eq('enjoying a subject is said out loud', keen.text.includes('enjoy'), true);
+    eq('enjoying a subject ranks higher', keen.weight > plain.weight, true);
+  }
+
+  // 9. Affiliation, minus the one the school reason already covers.
+  eq('a shared community is named',
+    kinds({ communities: ['Marine Corps'] }, { affiliations: ['Marine Corps'] }), ['affiliation']);
+  eq('the university is not repeated as an affiliation',
+    kinds({ university: 'UNC', communities: ['UNC'] },
+          { university: 'UNC', affiliations: ['UNC'] }), ['school']);
+
+  /*
+    ONE FACT, ONE SENTENCE. A mentor in Private Equity, tagged Private
+    Equity, who lists it as a function, for a student who wants all three,
+    used to earn three sentences from one fact -- and have it counted three
+    times in the score.
+  */
+  {
+    const rs = reasonsFor(
+      student({ interests: ['Private Equity'], industries: ['Private Equity'],
+                functionsExploring: ['Private Equity'] }),
+      mentor({ expertise: ['Private Equity'], industry: 'Private Equity',
+               functions: ['Private Equity'] }));
+    eq('one fact is claimed by one signal only',
+      rs.map((r) => r.kind), ['expertise', 'experience']);
+    eq('neither industry nor function repeats it',
+      rs.some((r) => r.kind === 'industry' || r.kind === 'function'), false);
+  }
+
+  // Ordering is the thesis: what you are doing beats what you are tagged with.
+  {
+    const rs = reasonsFor(
+      student({ interests: ['Leveraged Finance'], university: 'UNC',
+                transitionsNavigating: ['Consulting to private equity'] }),
+      mentor({ university: 'UNC', transitionsMade: ['Consulting to private equity'] }));
+    eq('a transition outranks a shared school',
+      rs.map((r) => r.kind), ['transition', 'expertise', 'school', 'experience']);
+  }
+
+  // Every new kind has an opener and a draft; none falls through silently.
+  for (const [kind, ss, mm] of [
+    ['transition', { transitionsNavigating: ['Consulting to private equity'] }, { transitionsMade: ['Consulting to private equity'] }],
+    ['situation', { communities: ['First-generation students'] }, { usefulTo: ['First-generation students'] }],
+    ['company', { targetCompanies: ['Blackstone'] }, { companiesKnown: ['Blackstone'] }],
+    ['function', { functionsExploring: ['Product management'] }, { functions: ['Product management'] }],
+    ['affiliation', { communities: ['Marine Corps'] }, { affiliations: ['Marine Corps'] }],
+  ] as [string, Partial<Seeker>, Partial<Candidate>][]) {
+    const r = recommend(student({ firstName: 'Maya', ...ss }), [mentor({ expertise: [], industry: null, ...mm })])[0];
+    eq(`${kind}: produces a recommendation`, r?.reasons[0]?.kind, kind);
+    eq(`${kind}: has a specific opener`, r.opener!.startsWith('Ask '), true);
+    eq(`${kind}: the draft is addressed to them`, r.outreach!.startsWith('Hi Drew'), true);
+    eq(`${kind}: the draft names them once`, (r.outreach!.match(/Drew/g) ?? []).length, 1);
+    eq(`${kind}: the draft is not the opener`, r.outreach === r.opener, false);
+  }
+}
+
 // ── Empty states tell the truth about WHY ──────────────────────────────────
 console.log('empty states');
 eq('an empty network says so', emptyReason(student({ interests: ['x'], goals: ['y'] }), 0), 'no_members');

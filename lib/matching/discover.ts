@@ -1,5 +1,6 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
+import { schemaCapabilities } from '@/lib/schema-capabilities';
 import {
   recommend, emptyReason,
   type Candidate, type Seeker, type Recommendation,
@@ -58,6 +59,44 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
 
   if (!me) return null;
 
+  /*
+    WHAT MIGRATION 0039 ADDED, AND WHY IT IS A SEPARATE QUERY.
+
+    PostgREST rejects the WHOLE select when one named column does not
+    exist, so folding these into the queries above would blank Discover
+    entirely for every user until the migration is applied. That exact
+    failure already shipped once in this codebase, when an unknown
+    career_interests column would have rendered the cohort pipeline empty.
+    The capability is asked for instead, and the engine simply produces
+    fewer reasons until the columns are there.
+  */
+  const caps = await schemaCapabilities();
+
+  let extra: Record<string, unknown> | null = null;
+  let intent: Seeker['intent'] = null;
+  if (caps.intelligenceInputs) {
+    const [{ data: ex }, { data: it }] = await Promise.all([
+      supabase.from('mentee_profiles')
+        .select('functions_exploring, transitions_navigating, communities, target_companies')
+        .eq('id', user.id).maybeSingle(),
+      /* One active intent per person, enforced by a partial unique index.
+         A closed one is deliberately NOT read: an expired need must stop
+         producing recommendations, which is the entire point of dating it. */
+      supabase.from('member_intent')
+        .select('objective, questions, looking_for, by_date')
+        .eq('profile_id', user.id).eq('status', 'active').maybeSingle(),
+    ]);
+    extra = ex ?? null;
+    intent = it?.objective
+      ? {
+          objective: it.objective as string,
+          questions: arr(it.questions),
+          lookingFor: arr(it.looking_for),
+          byDate: (it.by_date as string | null) ?? null,
+        }
+      : null;
+  }
+
   const goalsRaw = (menteeProfile as { goals?: unknown } | null)?.goals;
   const seeker: Seeker = {
     id: user.id,
@@ -71,6 +110,11 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
     major: (menteeProfile as { major?: string } | null)?.major ?? null,
     university: me.university ?? null,
     location: me.location ?? null,
+    functionsExploring: arr(extra?.functions_exploring),
+    transitionsNavigating: arr(extra?.transitions_navigating),
+    communities: arr(extra?.communities),
+    targetCompanies: arr(extra?.target_companies),
+    intent,
   };
 
   const alreadyConnected = new Set<string>();
@@ -79,9 +123,13 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
     if (m.mentor_id === user.id) alreadyConnected.add(m.mentee_id as string);
   }
 
+  const MENTOR_BASE = 'title, company, industry, expertise_tags, can_help_with, years_experience, is_available, max_mentees, is_founding_mentor';
+  const MENTOR_0039 = 'companies_known, functions, transitions_made, topics_enjoyed, useful_to, affiliations';
+  const mentorCols = caps.intelligenceInputs ? `${MENTOR_BASE}, ${MENTOR_0039}` : MENTOR_BASE;
+
   const { data: rows } = await supabase
     .from('public_profiles')
-    .select('id, first_name, last_name, avatar_url, headline, university, graduation_year, location, mentor_profiles!inner(title, company, industry, expertise_tags, can_help_with, years_experience, is_available, max_mentees, is_founding_mentor)')
+    .select(`id, first_name, last_name, avatar_url, headline, university, graduation_year, location, mentor_profiles!inner(${mentorCols})`)
     .eq('role', 'mentor')
     .eq('mentor_profiles.is_founding_mentor', true);
 
@@ -92,6 +140,8 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
       title: string | null; company: string | null; industry: string | null;
       expertise_tags: unknown; can_help_with: unknown; years_experience: number | null;
       is_available: boolean | null; max_mentees: number | null;
+      companies_known?: unknown; functions?: unknown; transitions_made?: unknown;
+      topics_enjoyed?: unknown; useful_to?: unknown; affiliations?: unknown;
     };
   };
 
@@ -105,7 +155,17 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
 
   const candidates: Candidate[] = ((rows ?? []) as unknown as Row[]).map((r) => {
     const mp = r.mentor_profiles;
-    const expertise = arr(mp?.can_help_with).length ? arr(mp?.can_help_with) : arr(mp?.expertise_tags);
+    /*
+      can_help_with USED TO SUBSTITUTE FOR expertise here, because the
+      engine had one field to put them in and can_help_with was the better
+      of the two. It now has its own signal, weighted above subject
+      overlap, so the two are passed separately and the fallback is gone.
+
+      The fallback could not have been doing anything anyway: measured in
+      production, can_help_with was empty for 25 of 25 mentors, so every
+      candidate took the expertise_tags branch every time.
+    */
+    const expertise = arr(mp?.expertise_tags);
     return {
       id: r.id,
       firstName: r.first_name ?? '',
@@ -123,6 +183,13 @@ export async function loadDiscover(): Promise<DiscoverView | null> {
       maxLoad: mp?.max_mentees ?? 0,
       available: mp?.is_available !== false,
       yearsExperience: mp?.years_experience ?? null,
+      canHelpWith: arr(mp?.can_help_with),
+      companiesKnown: arr(mp?.companies_known),
+      functions: arr(mp?.functions),
+      transitionsMade: arr(mp?.transitions_made),
+      topicsEnjoyed: arr(mp?.topics_enjoyed),
+      usefulTo: arr(mp?.useful_to),
+      affiliations: arr(mp?.affiliations),
     };
   });
 

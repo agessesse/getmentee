@@ -21,7 +21,9 @@
     "test:time": "tsx scripts/test-calendar-time.ts",
     "check:grants": "tsx scripts/check-scheduling-grants.ts",
     "test:cohort": "tsx scripts/test-cohort.ts",
-    "test:matching": "tsx scripts/test-matching.ts"
+    "test:matching": "tsx scripts/test-matching.ts",
+    "check:migration-grants": "tsx scripts/check-migration-grants.ts",
+    "test:claims": "tsx scripts/test-claims.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",
