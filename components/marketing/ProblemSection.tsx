@@ -41,21 +41,22 @@ export default function ProblemSection() {
           className="font-display text-halo-ink leading-[1.06] text-center mb-8 mx-auto max-w-2xl"
           style={{ fontSize: 'clamp(2rem, 4.4vw, 3rem)' }}
         >
-          Same ability.<br className="hidden sm:block" /> Different access.
+          Your network is bigger than<br className="hidden sm:block" /> your ability to navigate it.
         </h2>
 
         {/*
-          The gap, said plainly once.
+          The problem, restated for the company we are now.
 
-          The heading used to be "mentorship mostly depends on luck", which
-          named the symptom. The cause is that the information a student needs
-          early travels through people, and not everybody starts within reach
-          of those people. Kept to two sentences: this section's job is the
-          two voices below it, not an essay.
+          This used to read "Same ability. Different access.", which names a
+          real thing and names it as a social problem — the framing of a
+          mentorship programme. The same fact stated as an organisational
+          one is what Mentable actually sells against: the people who could
+          help are already inside the network, and nobody can see which
+          pairs matter. Two sentences; the two voices below do the work.
         */}
         <p className="text-center text-halo-heather text-[16px] leading-relaxed max-w-xl mx-auto mb-8">
-          Some students hear how it works at home. Others are expected to work it out
-          alone.
+          Organizations already contain the people who could help one another. Finding
+          the right one is still mostly manual, random, or down to who you happen to know.
         </p>
 
         <div className="flex justify-center mb-8">

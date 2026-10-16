@@ -4,18 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import IntroSequence from '@/components/marketing/IntroSequence';
 import SiteHeader from '@/components/marketing/SiteHeader';
-import HeroReveal from '@/components/marketing/HeroReveal';
-import HeroPair from '@/components/marketing/HeroPair';
-import MentorCarousel from '@/components/marketing/MentorCarousel';
-import MenteeCarousel from '@/components/marketing/MenteeCarousel';
 import ProblemSection from '@/components/marketing/ProblemSection';
-import ProductDemo from '@/components/marketing/ProductDemo';
 import HowItWorks from '@/components/marketing/HowItWorks';
-import TrajectoryViz from '@/components/marketing/TrajectoryViz';
-import CohortOne from '@/components/marketing/CohortOne';
-import Flywheel from '@/components/marketing/Flywheel';
-import BothDirections from '@/components/marketing/BothDirections';
-import { HERO_HAS_PAIR } from '@/components/marketing/HeroPair';
+import MatchDemo from '@/components/marketing/MatchDemo';
+import HowMentableThinks from '@/components/marketing/HowMentableThinks';
+import DiscoverShowcase from '@/components/marketing/DiscoverShowcase';
+import OneEngine from '@/components/marketing/OneEngine';
+import OrgPreview from '@/components/marketing/OrgPreview';
 import InviteModal from '@/components/marketing/InviteModal';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import HeroPin from '@/components/marketing/HeroPin';
@@ -57,28 +52,40 @@ export default function LandingPage() {
       <section className="w-full pt-5 pb-16 sm:pb-20 lg:pb-[clamp(2rem,5vh,4rem)] px-6 lg:px-10" aria-labelledby="hero-heading">
         <div className="max-w-6xl mx-auto">
           {/*
-            The second column holds the pair of profile cards, which only
-            render for people who have approved public use. When nobody has,
-            HeroPair returns null and a reserved 400px column would leave the
-            hero looking like something failed to load. `HERO_HAS_PAIR` decides
-            the grid instead, so the hero is either two columns with the cards
-            or one full-width editorial column, and both are deliberate.
+            Two columns from lg: the claim on the left, the product doing
+            the thing on the right. The second column used to hold portrait
+            cards and was conditional on anyone having approved public use;
+            it now holds the match demonstration, which always renders, so
+            the grid is unconditional.
+
+            460px rather than 400: the demo holds two profile cards side by
+            side plus a two-line explanation, and at 400 the reason text
+            wrapped to four lines and the column looked cramped next to a
+            56px headline.
           */}
-          <div className={`grid grid-cols-1 gap-12 lg:gap-16 items-center${
-            HERO_HAS_PAIR ? ' lg:grid-cols-[1fr,400px]' : ''
-          }`}>
+          <div className="grid grid-cols-1 gap-8 lg:gap-14 items-center lg:grid-cols-[1fr,460px]">
             {/* Outer block rises 20px, the headline inside it a further 30px,
                 both on load rather than on scroll: this is the first thing on
                 screen, so there is nothing to scroll into view. */}
             <div className="hero-rise-outer">
-              <HeroReveal />
+              {/*
+                The "Teachable. Coachable. Ready to grow." definition used
+                to open the page. It is a good line and it describes a
+                person, not a company — and reading it before the headline
+                told a visitor this was a mentorship brand before Mentable
+                had said otherwise. It keeps its home on /about, where
+                brand history belongs.
+              */}
+
+              <p className="font-ui text-[11px] font-semibold uppercase tracking-[0.14em] text-halo-brand-text mb-5">
+                Relationship intelligence
+              </p>
 
               <h1
                 id="hero-heading"
                 className="hero-rise-inner hero-headline font-display text-halo-ink leading-[0.98] tracking-tight mb-5 max-w-3xl"
               >
-                The right people are<br />
-                already in your network.
+                The right people are<br />already in your network.
               </h1>
 
               {/*
@@ -143,11 +150,14 @@ export default function LandingPage() {
 
             </div>
 
-            {HERO_HAS_PAIR && (
-              <div className="hidden lg:block">
-                <HeroPair />
-              </div>
-            )}
+            {/*
+              The product, not an illustration of it. Visible at every
+              width: on a phone it sits under the copy, which is the right
+              order anyway -- read the claim, then watch it happen.
+            */}
+            <div className="mt-8 lg:mt-0">
+              <MatchDemo />
+            </div>
           </div>
         </div>
       </section>
@@ -163,64 +173,27 @@ export default function LandingPage() {
       */}
       <div className="relative z-[1] bg-halo-ivory">
 
-      {/* ── 02. Problem ──────────────────────────────────────────────────────── */}
+      {/* ── 02. The problem ──────────────────────────────────────────────── */}
       <ProblemSection />
 
-      {/* ── 03. Cohort 001 ───────────────────────────────────────────────────── */}
-      {/* The first proof. Sits directly after the problem, so "same ability,
-          different access" is answered by something concrete and small rather
-          than by more argument. */}
-      <CohortOne />
+      {/* ── 03. How Mentable thinks ──────────────────────────────────────── */}
+      {/* The differentiator: an explanation, not a score. */}
+      <HowMentableThinks />
 
-      {/* ── 04. The two rosters ──────────────────────────────────────────────── */}
-      {/* Willing to teach, then ready to learn. Each section now carries its own
-          proof rail inside it, under the heading it is evidence for, instead of
-          sitting in a separate bordered band above it. The two sections are told
-          apart by alternating the ground, ivory then veil, rather than by a rule. */}
-      <MentorCarousel />
-      <MenteeCarousel />
+      {/* ── 04. Discover ─────────────────────────────────────────────────── */}
+      {/* The member surface, with reasons produced by the real engine. */}
+      <DiscoverShowcase />
 
-      {/* ── 05. Product ──────────────────────────────────────────────────────── */}
-      <ProductDemo />
+      {/* ── 05. One engine, many communities ─────────────────────────────── */}
+      <OneEngine />
 
-      {/* ── How it works ─────────────────────────────────────────────────────── */}
-      {/* After the product, not before it: show the thing, then name the
-          sequence it runs on. Reversed, the steps are abstract. */}
+      {/* ── 06. A match is only the beginning ────────────────────────────── */}
+      {/* The lifecycle after the recommendation, which is the half a
+          matching algorithm alone cannot claim. */}
       <HowItWorks />
 
-      {/* ── 06. The access gap ───────────────────────────────────────────────── */}
-      <TrajectoryViz />
-
-      {/* ── 07. Return on Impact ─────────────────────────────────────────────── */}
-      {/* The old "compounding effect" section, now named. It was already making
-          the return-on-impact argument; giving it the name means the idea is
-          stated once, well, instead of a fourth section repeating it. */}
-      <Flywheel />
-
-      {/* ── 08. Both directions ──────────────────────────────────────────────── */}
-      {/* Closes the three-part sequence that runs 06 → 07 → 08: what one person
-          can change for another, how far that reaches, and what each of them is
-          left holding. */}
-      <BothDirections />
-
-      {/*
-        ── Opportunity Fund: removed from the homepage sequence ──────────────
-
-        Not deleted. The section is about paying for recruiting costs for
-        students with demonstrated financial need, and it is honest that the
-        fund is not funded yet.
-
-        It comes out of the homepage because it introduces a second, different
-        definition of under-resourced. Cohort 001 is about access to people:
-        who you can ask, what you get told early, which mistakes you avoid. A
-        section immediately below it about household finances asks a visitor to
-        hold two theses at once, and promises a programme Mentable has not
-        built. When the fund exists, this comes back.
-
-        The component's markup lives in git history at a620521 and the
-        /opportunity-fund concept can return as its own page.
-      */}
-
+      {/* ── 07. For organizations ────────────────────────────────────────── */}
+      <OrgPreview />
 
       {/* ── 10. Final CTA ────────────────────────────────────────────────────── */}
       <div className="relative">
@@ -233,25 +206,33 @@ export default function LandingPage() {
               className="font-display text-halo-ink leading-[1.03] mb-8 max-w-2xl"
               style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)' }}
             >
-              Who helped you get here?<br />Help someone coming next.
+              Who should know whom?
             </h2>
           </Rise>
           {/*
-            The paragraph that used to sit here re-explained the product in
-            the last six lines of a page that had just spent nine sections
-            demonstrating it. By this point the reader either understands
-            Mentable or is not going to. Cut to nothing: the heading is the
-            closing argument and the buttons are the answer.
+            TWO INTENTS, AND ONLY TWO.
+
+            The page used to end on "Find mentorship", which is the old
+            company. The organization is the buyer, so it leads; a person
+            who wants in goes to the one funnel that exists. No third CTA,
+            and nothing here leads anywhere that is not built.
           */}
+          <p className="text-halo-heather text-[17px] leading-relaxed mb-8 max-w-md">
+            It is the only question Mentable tries to answer.
+          </p>
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             <CtaButton
-              href="/apply?role=mentee&cohort=cohort-001"
-              onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final' })}
+              href="/organizations#talk"
+              onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final_org' })}
             >
-              Find mentorship
+              Talk to us
             </CtaButton>
-            <CtaButton href="/organizations" variant="secondary">
-              Bring Mentable to your organization
+            <CtaButton
+              href="/apply?role=mentee&cohort=cohort-001"
+              onClick={() => trackLandingEvent('cohort_cta_clicked', { cta: 'final_join' })}
+              variant="secondary"
+            >
+              Join Mentable
             </CtaButton>
           </div>
           <p className="text-halo-mist-body text-sm mt-6">
