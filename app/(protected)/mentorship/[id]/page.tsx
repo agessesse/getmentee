@@ -8,6 +8,8 @@ import WhatsNext from '@/components/workspace/WhatsNext';
 import WorkingToward from '@/components/workspace/WorkingToward';
 import Commitments from '@/components/workspace/Commitments';
 import Conversations, { History } from '@/components/workspace/Conversations';
+import ConversationOutcome from '@/components/workspace/ConversationOutcome';
+import { pendingOutcome } from '@/lib/mentorship/outcome-data';
 
 export const metadata: Metadata = { title: 'Mentorship', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
@@ -65,6 +67,13 @@ export default async function MentorshipWorkspace({
   */
   const providers = (await listConnectionSummaries(w.viewerId)).map((c) => c.provider);
 
+  /*
+    Whether this person still owes an answer about their first completed
+    conversation. Null until migration 0039 is applied, and null forever
+    once they have answered — the prompt appears once and does not return.
+  */
+  const outcome = await pendingOutcome(w.mentorshipId, w.viewerId);
+
   // The dominant action comes from the same function the dashboard uses, with
   // a state containing this one relationship. Not a second opinion written
   // next to it: the same 36-state logic, asked a narrower question.
@@ -106,6 +115,25 @@ export default async function MentorshipWorkspace({
         }}
         providers={providers}
       />
+
+      {/*
+        Directly beneath What's next, and above everything reflective.
+
+        A conversation that already happened is the most recent thing in
+        this person's head, and the answer is worth least the longer it is
+        left. It sits below the upcoming conversation rather than above it
+        because a meeting on Tuesday is still the more urgent of the two.
+      */}
+      {outcome && (
+        <div className="mt-6">
+          <ConversationOutcome
+            mentorshipId={w.mentorshipId}
+            sessionId={outcome.sessionId}
+            role={w.viewerRole}
+            partnerFirstName={w.partner.firstName}
+          />
+        </div>
+      )}
 
       <div className="mt-8 space-y-7">
         <WorkingToward mentorshipId={w.mentorshipId} goals={w.goals} />
