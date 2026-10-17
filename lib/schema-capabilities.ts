@@ -76,21 +76,48 @@ async function hasColumn(base: string, key: string, table: string, column: strin
   }
 }
 
-async function hasFunction(base: string, key: string, fn: string): Promise<boolean> {
+/**
+ * Does this function exist, asked by calling it with its real signature
+ * and arguments chosen so the call cannot change anything.
+ *
+ * THE FIRST VERSION OF THIS WAS WRONG AND REPORTED A LIVE FUNCTION AS
+ * MISSING. It passed a deliberately bogus argument name, on the reasoning
+ * that a present function would answer 400 for the bad signature and an
+ * absent one 404. PostgREST does not work that way: it resolves an RPC by
+ * ARGUMENT NAMES, so an unknown name is indistinguishable from an unknown
+ * function and both answer 404 PGRST202. The probe could never return
+ * true, and it did not — it reported approve_mentorship_request missing
+ * minutes after that function was verified working in production.
+ *
+ * Caught only because the capability probe disagreed with a direct check
+ * standing next to it. A probe that can only ever answer one way is worse
+ * than no probe, because it looks like evidence.
+ *
+ * So: real argument names, and a value that makes the function bail on
+ * its first guard. approve_mentorship_request looks the request up before
+ * it checks anything else, so an all-zero UUID raises 'Request not found'
+ * and nothing is read, locked or written.
+ */
+async function hasFunction(
+  base: string,
+  key: string,
+  fn: string,
+  inertArgs: Record<string, unknown>,
+): Promise<boolean> {
   try {
-    /*
-      Called with a deliberately absent argument name so it cannot do
-      anything. A missing function answers 404 PGRST202; a present one
-      answers 400 for the bad signature. Either way nothing is written.
-    */
     const r = await fetch(`${base}/rest/v1/rpc/${fn}`, {
       method: 'POST',
       headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ __probe: null }),
+      body: JSON.stringify(inertArgs),
       cache: 'no-store',
     });
-    if (r.status === 404) return false;
+    if (r.ok) return true;
     const body = await r.text();
+    /*
+      PGRST202 is the only answer that means "no such function". Anything
+      else -- including the function raising its own exception, which is
+      the expected outcome here -- means it is installed and ran.
+    */
     return !/PGRST202|Could not find the function/i.test(body);
   } catch {
     return false;
@@ -107,7 +134,9 @@ export async function schemaCapabilities(): Promise<SchemaCapabilities> {
 
   const [atomicApprove, operatorMatches, relationshipOutcomes, intelligenceInputs] =
     await Promise.all([
-      hasFunction(base, key, 'approve_mentorship_request'),
+      hasFunction(base, key, 'approve_mentorship_request', {
+        p_request_id: '00000000-0000-0000-0000-000000000000',
+      }),
       hasColumn(base, key, 'mentorships', 'match_rationale'),
       hasColumn(base, key, 'relationship_outcomes', 'usefulness'),
       hasColumn(base, key, 'mentor_profiles', 'companies_known'),

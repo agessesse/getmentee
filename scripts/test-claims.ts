@@ -145,5 +145,28 @@ console.log('app writes stay inside the column grants');
     [...new Set(writes)].sort(), ['status']);
 }
 
+// ── 7. A capability probe that can only answer one way is not evidence ───
+/*
+  schema-capabilities.ts gates which fields the product shows. Its first
+  version probed for a function by sending a deliberately bogus argument
+  name, assuming a present function would answer 400 and an absent one
+  404. PostgREST resolves RPCs BY ARGUMENT NAME, so both answer 404
+  PGRST202 -- the probe could never return true, and it reported
+  approve_mentorship_request missing minutes after that function was
+  verified working in production.
+
+  Caught only because a direct check sat next to it and disagreed.
+*/
+console.log('capability probes can answer both ways');
+{
+  const src = codeOnly(read('lib/schema-capabilities.ts'));
+  eq('the function probe uses a real argument name',
+    /p_request_id:\s*'0{8}-0{4}-0{4}-0{4}-0{12}'/.test(src), true);
+  eq('no placeholder argument name survives', /__probe/.test(src), false);
+  eq('only PGRST202 is read as "missing"',
+    /PGRST202\|Could not find the function/.test(src), true);
+  eq('a successful call is treated as present', /if \(r\.ok\) return true/.test(src), true);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
