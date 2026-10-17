@@ -28,7 +28,7 @@ const DIR = 'supabase/migrations';
   UPDATE and its columns need no individual grant. Hard-coding both
   produced three false failures.
 */
-const CANDIDATES = ['mentor_profiles', 'mentee_profiles', 'profiles', 'sessions'];
+const CANDIDATES = ['mentor_profiles', 'mentee_profiles', 'profiles', 'sessions', 'mentorship_requests', 'mentorships'];
 
 let fail = 0;
 const sql = readdirSync(DIR).filter((f) => f.endsWith('.sql')).sort();
@@ -83,6 +83,8 @@ for (const table of CANDIDATES) {
     ],
     mentee_profiles: [],
     profiles: ['is_admin', 'is_demo'],
+    mentorship_requests: [],
+    mentorships: [],
     sessions: [
       /*
         Written with the service role after an explicit participant check

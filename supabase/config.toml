@@ -1,0 +1,21 @@
+# Supabase project configuration.
+#
+# DELIBERATELY MINIMAL, AND THAT IS THE POINT.
+#
+# The GitHub integration reads this file. Anything declared here can be
+# pushed to the live project, which makes an over-specified config.toml a
+# way to silently overwrite production settings from a file nobody
+# reviewed as a settings change.
+#
+# This project has already been bitten by exactly that class of problem in
+# the other direction: Supabase `site_url` was left at
+# http://localhost:3000 with an empty redirect allowlist, which was the
+# root cause of "buggy email verification" and took a production incident
+# to find. Those auth settings are now correct in the dashboard. Writing an
+# [auth] block here with CLI defaults would reset them on the next push.
+#
+# So: project_id only. Add a section here only when you intend that section
+# to become the source of truth for production, and treat adding one as a
+# production change requiring the same care as a migration.
+
+project_id = "iqplkvbpyhajpamjepfu"

@@ -131,10 +131,30 @@ export async function respondToIntroduction(
   if (req.mentor_id !== user.id) return { ok: false, error: 'Not found.' };
   if (req.status !== 'pending') return { ok: false, error: 'You already answered this one.' };
 
+  /*
+    STATUS ONLY, NEVER updated_at.
+
+    These three writes used to send { status, updated_at }. Two reasons
+    that was wrong, and the second is a live landmine:
+
+      1. mentorship_requests has had a set_updated_at trigger since 0002,
+         so writing the column by hand is redundant at best and a way to
+         disagree with the trigger at worst.
+
+      2. Migration 0018 revokes table-level UPDATE on this table and
+         re-grants exactly one column: GRANT UPDATE (status). 0018 is
+         only PARTIALLY applied in production -- its profiles half is
+         live, this half is not -- so the moment the rest of 0018 is
+         applied, every one of these writes would have started failing
+         with 42501 and accepting an introduction would have broken.
+
+    Verified against production: the privilege is currently still granted,
+    which is the only reason this has worked so far.
+  */
   if (!accept) {
     const { error } = await supabase
       .from('mentorship_requests')
-      .update({ status: 'declined', updated_at: new Date().toISOString() })
+      .update({ status: 'declined' })
       .eq('id', requestId);
     if (error) return { ok: false, error: error.message };
     revalidatePath('/requests');
@@ -154,7 +174,7 @@ export async function respondToIntroduction(
 
   const { error: flipError } = await supabase
     .from('mentorship_requests')
-    .update({ status: 'approved', updated_at: new Date().toISOString() })
+    .update({ status: 'approved' })
     .eq('id', requestId)
     .eq('status', 'pending');            // nobody else answered in between
   if (flipError) return { ok: false, error: flipError.message };
@@ -175,7 +195,7 @@ export async function respondToIntroduction(
     // dead request with no relationship behind it.
     await supabase
       .from('mentorship_requests')
-      .update({ status: 'pending', updated_at: new Date().toISOString() })
+      .update({ status: 'pending' })
       .eq('id', requestId);
     return { ok: false, error: 'Could not start the relationship. Nothing was changed — try again.' };
   }

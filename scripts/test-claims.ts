@@ -126,5 +126,24 @@ console.log('lifecycle steps are all built');
     /history stays in one place/.test(steps), true);
 }
 
+// ── 6. The app writes only what a grant covers ───────────────────────────
+/*
+  0018 revokes table-level UPDATE on mentorship_requests and re-grants
+  exactly one column. Only part of 0018 is live in production, so this
+  has not bitten yet -- but the app was sending { status, updated_at },
+  and the day the rest of 0018 lands, accepting an introduction would
+  start failing with 42501. updated_at is trigger-maintained since 0002
+  and was never the app's to write.
+*/
+console.log('app writes stay inside the column grants');
+{
+  const src = codeOnly(read('app/(protected)/network/actions.ts'))
+    + codeOnly(read('app/(protected)/requests/page.tsx'));
+  const writes = [...src.matchAll(/from\('mentorship_requests'\)[\s\S]{0,200}?\.update\(\s*\{([^}]*)\}/g)]
+    .flatMap((m) => m[1].split(',').map((kv) => kv.split(':')[0].trim()).filter(Boolean));
+  eq('every column written to mentorship_requests is granted',
+    [...new Set(writes)].sort(), ['status']);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

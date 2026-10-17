@@ -244,6 +244,26 @@ ALTER TABLE public.member_intent ENABLE ROW LEVEL SECURITY;
   already connected to or who have asked you -- never the whole network.
   Everything else (operator views, matching) runs service-role.
 */
+/*
+  DROP ... IF EXISTS before each CREATE, because CREATE POLICY has no
+  IF NOT EXISTS and a re-run would abort the whole migration with 42710.
+
+  That is not hypothetical here. This migration ships through the
+  GitHub -> Supabase pipeline, which can retry a failed deploy, and the
+  four statements below are the only part of this file that is not already
+  idempotent -- everything else is CREATE OR REPLACE, ADD COLUMN IF NOT
+  EXISTS, CREATE TABLE IF NOT EXISTS, or a GRANT. One non-re-runnable
+  statement is enough to turn a retry into a manual recovery.
+
+  Dropping a policy that was created moments earlier by this same
+  migration is safe; there is no window in which the table exists with
+  data and no policy, because the table is created in this transaction.
+*/
+DROP POLICY IF EXISTS "Own intent is readable"     ON public.member_intent;
+DROP POLICY IF EXISTS "Counterparts can read intent" ON public.member_intent;
+DROP POLICY IF EXISTS "Own intent is writable"     ON public.member_intent;
+DROP POLICY IF EXISTS "Own intent is closable"     ON public.member_intent;
+
 CREATE POLICY "Own intent is readable" ON public.member_intent
   FOR SELECT TO authenticated USING (profile_id = auth.uid());
 
