@@ -92,27 +92,47 @@ export async function requestIntroduction(
 /**
  * Accept or pass, as the person who was asked.
  *
- * WHY THIS IS NOT A SINGLE RPC CALL. Migration 0018 defines
- * approve_mentorship_request(), which does the status flip and the
- * mentorship insert atomically. That function IS NOT PRESENT in the
- * production database — verified by calling it as an authenticated mentor,
- * which answers "could not find the function". The /requests page has been
- * calling it, so accepting a request has been failing in production.
+ * ACCEPTING IS ONE TRANSACTION AGAIN.
  *
- * Creating the function needs DDL, which this environment cannot execute.
- * So the accept is done here instead, in the only order RLS permits: the
- * mentorships INSERT policy requires the request to ALREADY be approved,
- * so the status must flip first.
+ * This used to be a status flip, then a mentorship insert, then a
+ * compensating revert if the insert failed. That shape was forced on it:
+ * migration 0018 defines approve_mentorship_request() but had only
+ * partially applied in production, so the function did not exist and the
+ * page calling it got "could not find the function" every time. The
+ * work-around was correct in outcome and not atomic — between the flip
+ * and the insert there was a real window containing an approved request
+ * with no relationship behind it, and the revert was a best-effort
+ * apology for it.
  *
- * That order has a failure mode — approved request, no mentorship — which
- * is exactly what 0018 existed to prevent. It is handled by reverting the
- * status when the insert fails, so the worst case is a request that is
- * pending again and can be retried, rather than one that is permanently
- * approved with nothing behind it.
+ * 0039 installed the function. The three writes collapse back into one
+ * call, and the window is gone: the function takes FOR UPDATE on the
+ * request row, so a second concurrent approval waits and then fails the
+ * status check rather than producing two mentorships.
  *
- * The atomic function is still the right answer and the SQL is in the
- * report. This makes the loop work in the meantime without pretending.
+ * EVERYTHING THAT MATTERS IS DECIDED INSIDE THE FUNCTION, not here.
+ * It re-reads the request, checks the caller IS the mentor it was
+ * addressed to, checks it is still pending, and checks capacity — all
+ * from the row, never from an argument. The only thing crossing this
+ * boundary is a request id. The checks that used to live in this file
+ * are not duplicated below, because a second copy of an authorization
+ * rule is a second copy to get wrong.
  */
+
+/*
+  The function raises its own exceptions, and those strings are written
+  for a developer reading a log. Mapped to something a person can act on;
+  anything unrecognised becomes the generic line rather than leaking
+  Postgres text to the screen, which this codebase has done before.
+*/
+function approvalMessage(raw: string): string {
+  if (/No longer pending/i.test(raw))  return 'You already answered this one.';
+  if (/Capacity reached/i.test(raw))   return 'You are at your limit. Raise it in your profile if you want more.';
+  /* Not authorised and Request not found are the same answer on purpose:
+     distinguishing them tells a caller whether an id is real. */
+  if (/Not authorised|Request not found/i.test(raw)) return 'Not found.';
+  return 'Could not start the relationship. Nothing was changed — try again.';
+}
+
 export async function respondToIntroduction(
   requestId: string,
   accept: boolean,
@@ -121,82 +141,52 @@ export async function respondToIntroduction(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: 'Sign in first.' };
 
-  const { data: req } = await supabase
-    .from('mentorship_requests')
-    .select('id, mentee_id, mentor_id, status')
-    .eq('id', requestId)
-    .maybeSingle();
-
-  if (!req) return { ok: false, error: 'Not found.' };
-  if (req.mentor_id !== user.id) return { ok: false, error: 'Not found.' };
-  if (req.status !== 'pending') return { ok: false, error: 'You already answered this one.' };
-
-  /*
-    STATUS ONLY, NEVER updated_at.
-
-    These three writes used to send { status, updated_at }. Two reasons
-    that was wrong, and the second is a live landmine:
-
-      1. mentorship_requests has had a set_updated_at trigger since 0002,
-         so writing the column by hand is redundant at best and a way to
-         disagree with the trigger at worst.
-
-      2. Migration 0018 revokes table-level UPDATE on this table and
-         re-grants exactly one column: GRANT UPDATE (status). 0018 is
-         only PARTIALLY applied in production -- its profiles half is
-         live, this half is not -- so the moment the rest of 0018 is
-         applied, every one of these writes would have started failing
-         with 42501 and accepting an introduction would have broken.
-
-    Verified against production: the privilege is currently still granted,
-    which is the only reason this has worked so far.
-  */
   if (!accept) {
+    /*
+      Declining creates nothing, so it stays a plain status update. The
+      mentor check is still needed here because, unlike the accept path,
+      there is no SECURITY DEFINER function doing it.
+
+      STATUS ONLY, NEVER updated_at: mentorship_requests has had a
+      set_updated_at trigger since 0002, and 0018 re-grants UPDATE on the
+      status column alone. Sending updated_at would fail with 42501 the
+      day the rest of 0018 lands.
+    */
+    const { data: req } = await supabase
+      .from('mentorship_requests')
+      .select('id, mentor_id, status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (!req || req.mentor_id !== user.id) return { ok: false, error: 'Not found.' };
+    if (req.status !== 'pending') return { ok: false, error: 'You already answered this one.' };
+
     const { error } = await supabase
       .from('mentorship_requests')
       .update({ status: 'declined' })
       .eq('id', requestId);
-    if (error) return { ok: false, error: error.message };
+    if (error) {
+      console.error('[introductions] decline failed', error);
+      return { ok: false, error: 'Something went wrong. Please try again.' };
+    }
     revalidatePath('/requests');
     return { ok: true, message: 'Passed. They are told, without a reason.' };
   }
 
-  // Capacity, checked before anything is written.
-  const [{ data: profile }, { count: active }] = await Promise.all([
-    supabase.from('mentor_profiles').select('max_mentees').eq('id', user.id).maybeSingle(),
-    supabase.from('mentorships').select('*', { count: 'exact', head: true })
-      .eq('mentor_id', user.id).eq('status', 'active'),
-  ]);
-  const max = (profile as { max_mentees: number | null } | null)?.max_mentees ?? null;
-  if (max !== null && (active ?? 0) >= max) {
-    return { ok: false, error: 'You are at your limit. Raise it in your profile if you want more.' };
+  const { data: mentorshipId, error } = await supabase
+    .rpc('approve_mentorship_request', { p_request_id: requestId });
+
+  if (error) {
+    console.error('[introductions] approve failed', error);
+    return { ok: false, error: approvalMessage(error.message ?? '') };
   }
-
-  const { error: flipError } = await supabase
-    .from('mentorship_requests')
-    .update({ status: 'approved' })
-    .eq('id', requestId)
-    .eq('status', 'pending');            // nobody else answered in between
-  if (flipError) return { ok: false, error: flipError.message };
-
-  const { data: created, error: insertError } = await supabase
-    .from('mentorships')
-    .insert({
-      request_id: req.id,
-      mentee_id: req.mentee_id,
-      mentor_id: req.mentor_id,
-      status: 'active',
-    })
-    .select('id')
-    .single();
-
-  if (insertError || !created) {
-    // Compensating revert, so a failure here is retryable rather than a
-    // dead request with no relationship behind it.
-    await supabase
-      .from('mentorship_requests')
-      .update({ status: 'pending' })
-      .eq('id', requestId);
+  /*
+    The function RETURNS the new mentorship id, so a null here means it
+    somehow succeeded without creating one. Treated as a failure rather
+    than reported as success — the whole point of this path is that the
+    relationship exists when the caller is told it does.
+  */
+  if (!mentorshipId) {
+    console.error('[introductions] approve returned no mentorship id');
     return { ok: false, error: 'Could not start the relationship. Nothing was changed — try again.' };
   }
 

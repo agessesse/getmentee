@@ -262,18 +262,21 @@ export default function RequestsPage() {
 
     if (newStatus === 'approved') {
       /*
-        THIS WAS BROKEN IN PRODUCTION.
+        ONE CALL, ONE TRANSACTION.
 
-        It called the RPC approve_mentorship_request(), which migration
-        0018 defines but which is NOT PRESENT in the database — verified
-        by invoking it as an authenticated mentor, which answers "could
-        not find the function". Every mentor who pressed Approve got
-        "Something went wrong", so no request could become a relationship.
+        The server action now delegates to approve_mentorship_request(),
+        the SECURITY DEFINER function migration 0018 defined and 0039
+        finally installed. In between, this page went through a
+        work-around: flip the status, insert the mentorship, revert the
+        status if the insert failed. Correct in outcome, not atomic, and
+        it left a real window containing an approved request with no
+        relationship behind it.
 
-        Replaced with a server action that does the same work in the only
-        order RLS permits, and reverts the status if the mentorship insert
-        fails. Restoring the atomic function is still the better fix and
-        the SQL is in the handover; this makes accepting work today.
+        Still routed through the server action rather than calling
+        supabase.rpc() from here, because the action also revalidates
+        /mentorships and /network. This page keeps its own state, but
+        those two would otherwise serve a cache that does not know the
+        relationship exists.
       */
       const result = await respondToIntroduction(requestId, true);
 
